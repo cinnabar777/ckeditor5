@@ -29,7 +29,6 @@ import java.io.OutputStreamWriter
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var toolbar: MaterialToolbar
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
 
@@ -62,11 +61,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toolbar = findViewById(R.id.toolbar)
         webView = findViewById(R.id.webView)
         progressBar = findViewById(R.id.progressBar)
 
-        setSupportActionBar(toolbar)
         updateTitle()
 
         setupWebView()
@@ -139,22 +136,13 @@ class MainActivity : AppCompatActivity() {
     private fun updateTitle() {
         val dirtyIndicator = if (isDirty) " *" else ""
         val titleText = "$currentFileName$dirtyIndicator"
-        supportActionBar?.title = titleText
         val escapedTitle = JSONObjectWrapper.quote(titleText)
         webView.evaluateJavascript("window.editorBridge.setDocumentTitle($escapedTitle);", null)
     }
 
     private fun applyThemeAndFullscreenPreferences() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val fullscreen = prefs.getBoolean("pref_fullscreen", true)
         val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
-
-        val appBarLayout = findViewById<View>(R.id.appBarLayout)
-        if (fullscreen) {
-            appBarLayout?.visibility = View.GONE
-        } else {
-            appBarLayout?.visibility = View.VISIBLE
-        }
 
         val escapedTheme = JSONObjectWrapper.quote(themeMode)
         webView.evaluateJavascript("window.editorBridge.setTheme($escapedTheme);", null)

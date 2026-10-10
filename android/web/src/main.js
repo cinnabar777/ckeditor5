@@ -42,9 +42,8 @@ import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
 import '../../../packages/ckeditor5-ui/theme/index-editor.css';
 
 let editorInstance = null;
-let currentConfig = null;
 let isProgrammaticChange = false;
-let isToolbarExpanded = false;
+let isToolbarVisible = false;
 
 async function initEditor(disabledPlugins = [], isInitialInit = false) {
   if (editorInstance) {
@@ -174,50 +173,51 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
       }
     });
 
-    // Inject App Action Buttons and Toggle Button into Bottom Toolbar
-    const toolbarItemsContainer = document.querySelector('.ck-toolbar__items');
-    if (toolbarItemsContainer) {
-      if (!document.querySelector('.toolbar-app-actions')) {
-        const actionStrip = document.createElement('div');
-        actionStrip.className = 'toolbar-app-actions';
-        actionStrip.innerHTML = `
-          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
-          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
-          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
-          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
-          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
-          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
+    // Setup Header Row with Document Title & App Action Strip inside Bottom Bar Container
+    const topContainer = document.querySelector('.ck-editor__top');
+    if (topContainer) {
+      if (!document.querySelector('.toolbar-header-row')) {
+        const headerRow = document.createElement('div');
+        headerRow.className = 'toolbar-header-row';
+        headerRow.innerHTML = `
+          <div id="file-title" class="toolbar-title-container">Untitled.md</div>
+          <div class="toolbar-app-actions">
+            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
+            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
+            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
+            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
+            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
+            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
+          </div>
         `;
-        toolbarItemsContainer.prepend(actionStrip);
+        topContainer.prepend(headerRow);
       }
-
-      if (!document.querySelector('.toolbar-toggle-btn')) {
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'toolbar-toggle-btn';
-        toggleBtn.innerHTML = '⟨';
-        toggleBtn.title = 'Toggle Toolbar';
-        toggleBtn.onclick = () => {
-          isToolbarExpanded = !isToolbarExpanded;
-          if (isToolbarExpanded) {
-            toolbarItemsContainer.classList.remove('toolbar-items-collapsed');
-            toggleBtn.innerHTML = '⟩';
-          } else {
-            toolbarItemsContainer.classList.add('toolbar-items-collapsed');
-            toggleBtn.innerHTML = '⟨';
-          }
-        };
-        toolbarItemsContainer.appendChild(toggleBtn);
-      }
-
-      // Initial collapsed state
-      toolbarItemsContainer.classList.add('toolbar-items-collapsed');
     }
 
-    if (isInitialInit && window.AndroidNative && typeof window.AndroidNative.onEditorReady === 'function') {
-      window.AndroidNative.onEditorReady();
+    if (isInitialInit) {
+      setupFloatingToggle();
+      if (window.AndroidNative && typeof window.AndroidNative.onEditorReady === 'function') {
+        window.AndroidNative.onEditorReady();
+      }
     }
   } catch (error) {
     console.error('Failed to initialize CKEditor 5:', error);
+  }
+}
+
+function setupFloatingToggle() {
+  const toggleBtn = document.querySelector('#floating-toggle-btn');
+  if (toggleBtn) {
+    toggleBtn.onclick = () => {
+      isToolbarVisible = !isToolbarVisible;
+      if (isToolbarVisible) {
+        document.body.classList.remove('toolbar-hidden');
+        toggleBtn.innerHTML = '⟩';
+      } else {
+        document.body.classList.add('toolbar-hidden');
+        toggleBtn.innerHTML = '⟨';
+      }
+    };
   }
 }
 
