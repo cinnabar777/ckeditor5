@@ -107632,6 +107632,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
 
   // android/web/src/main.js
   var editorInstance = null;
+  var isProgrammaticChange = false;
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (editorInstance) {
       await editorInstance.destroy();
@@ -107722,7 +107723,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }
       });
       editorInstance.model.document.on("change:data", () => {
-        if (window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
+        if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
           window.AndroidNative.onContentChanged();
         }
       });
@@ -107740,7 +107741,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     },
     setMarkdown: function(markdownText) {
       if (!editorInstance) return;
+      isProgrammaticChange = true;
       editorInstance.setData(markdownText || "");
+      setTimeout(() => {
+        isProgrammaticChange = false;
+      }, 50);
     },
     insertImage: function(imageUrl, altText = "") {
       if (!editorInstance) return;
@@ -107758,10 +107763,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         console.error("Invalid disabledPlugins JSON:", e);
       }
       const currentText = window.editorBridge.getMarkdown();
+      isProgrammaticChange = true;
       initEditor(disabledPlugins).then(() => {
         if (currentText) {
-          window.editorBridge.setMarkdown(currentText);
+          editorInstance.setData(currentText);
         }
+        setTimeout(() => {
+          isProgrammaticChange = false;
+        }, 50);
       });
     }
   };

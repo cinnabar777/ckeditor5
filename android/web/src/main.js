@@ -44,6 +44,7 @@ import '../../../packages/ckeditor5-ui/theme/index-editor.css';
 
 let editorInstance = null;
 let currentConfig = null;
+let isProgrammaticChange = false;
 
 const ALL_PLUGINS = {
   Markdown,
@@ -194,7 +195,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     });
 
     editorInstance.model.document.on('change:data', () => {
-      if (window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
+      if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
         window.AndroidNative.onContentChanged();
       }
     });
@@ -215,7 +216,9 @@ window.editorBridge = {
   },
   setMarkdown: function(markdownText) {
     if (!editorInstance) return;
+    isProgrammaticChange = true;
     editorInstance.setData(markdownText || '');
+    setTimeout(() => { isProgrammaticChange = false; }, 50);
   },
   insertImage: function(imageUrl, altText = '') {
     if (!editorInstance) return;
@@ -233,10 +236,12 @@ window.editorBridge = {
       console.error('Invalid disabledPlugins JSON:', e);
     }
     const currentText = window.editorBridge.getMarkdown();
+    isProgrammaticChange = true;
     initEditor(disabledPlugins).then(() => {
       if (currentText) {
-        window.editorBridge.setMarkdown(currentText);
+        editorInstance.setData(currentText);
       }
+      setTimeout(() => { isProgrammaticChange = false; }, 50);
     });
   }
 };
