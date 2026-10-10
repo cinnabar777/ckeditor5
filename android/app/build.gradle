@@ -35,6 +35,13 @@ android {
     }
 }
 
+task buildWebAssets(type: Exec) {
+    workingDir "$projectDir/.."
+    commandLine 'node', 'web/build.cjs'
+}
+
+preBuild.dependsOn buildWebAssets
+
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.7.0'

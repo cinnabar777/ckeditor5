@@ -164,6 +164,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
   try {
     editorInstance = await ClassicEditor.create(document.querySelector('#editor'), {
+      licenseKey: 'GPL',
       plugins: pluginsToLoad,
       toolbar: {
         items: toolbarItems,

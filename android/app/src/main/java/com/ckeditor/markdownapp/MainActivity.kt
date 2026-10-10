@@ -50,6 +50,12 @@ class MainActivity : AppCompatActivity() {
         uri?.let { insertImageFromUri(it) }
     }
 
+    private val settingsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (isEditorReady) {
+            applyPluginPreferences()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -75,12 +81,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (isEditorReady) {
-            applyPluginPreferences()
-        }
-    }
 
     private fun setupWebView() {
         val assetLoader = WebViewAssetLoader.Builder()
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_settings -> {
-                startActivity(android.content.Intent(this, SettingsActivity::class.java))
+                settingsLauncher.launch(android.content.Intent(this, SettingsActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)

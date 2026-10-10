@@ -36,9 +36,9 @@
   ));
   var __publicField = (obj, key2, value) => __defNormalProp(obj, typeof key2 !== "symbol" ? key2 + "" : key2, value);
 
-  // node_modules/.pnpm/extend@3.0.2/node_modules/extend/index.js
+  // ../node_modules/.pnpm/extend@3.0.2/node_modules/extend/index.js
   var require_extend = __commonJS({
-    "node_modules/.pnpm/extend@3.0.2/node_modules/extend/index.js"(exports, module) {
+    "../node_modules/.pnpm/extend@3.0.2/node_modules/extend/index.js"(exports, module) {
       "use strict";
       var hasOwn = Object.prototype.hasOwnProperty;
       var toStr = Object.prototype.toString;
@@ -127,7 +127,7 @@
     }
   });
 
-  // packages/ckeditor5-utils/src/dom/global.ts
+  // ../packages/ckeditor5-utils/src/dom/global.ts
   var globalVar;
   try {
     globalVar = { window, document };
@@ -135,7 +135,7 @@
     globalVar = { window: {}, document: {} };
   }
 
-  // packages/ckeditor5-utils/src/env.ts
+  // ../packages/ckeditor5-utils/src/env.ts
   function getUserAgent() {
     try {
       return navigator.userAgent.toLowerCase();
@@ -198,7 +198,7 @@
     return globalVar.window.matchMedia ? globalVar.window.matchMedia("(prefers-reduced-motion)").matches : false;
   }
 
-  // packages/ckeditor5-utils/src/fastdiff.ts
+  // ../packages/ckeditor5-utils/src/fastdiff.ts
   function fastDiff(a2, b, cmp, atomicChanges) {
     cmp = cmp || function(a3, b2) {
       return a3 === b2;
@@ -273,7 +273,7 @@
     return result;
   }
 
-  // packages/ckeditor5-utils/src/diff.ts
+  // ../packages/ckeditor5-utils/src/diff.ts
   var diff = function(a2, b, cmp) {
     cmp = cmp || function(a3, b2) {
       return a3 === b2;
@@ -335,14 +335,14 @@
   };
   diff.fastDiff = fastDiff;
 
-  // packages/ckeditor5-utils/src/spy.ts
+  // ../packages/ckeditor5-utils/src/spy.ts
   function spy() {
     return function spy2() {
       spy2.called = true;
     };
   }
 
-  // packages/ckeditor5-utils/src/eventinfo.ts
+  // ../packages/ckeditor5-utils/src/eventinfo.ts
   var EventInfo = class {
     /**
      * @param source The emitter.
@@ -394,14 +394,14 @@
     }
   };
 
-  // packages/ckeditor5-utils/src/uid.ts
+  // ../packages/ckeditor5-utils/src/uid.ts
   var HEX_NUMBERS = new Array(256).fill("").map((_, index2) => ("0" + index2.toString(16)).slice(-2));
   function uid() {
     const [r1, r2, r3, r4] = crypto.getRandomValues(new Uint32Array(4));
     return "e" + HEX_NUMBERS[r1 >> 0 & 255] + HEX_NUMBERS[r1 >> 8 & 255] + HEX_NUMBERS[r1 >> 16 & 255] + HEX_NUMBERS[r1 >> 24 & 255] + HEX_NUMBERS[r2 >> 0 & 255] + HEX_NUMBERS[r2 >> 8 & 255] + HEX_NUMBERS[r2 >> 16 & 255] + HEX_NUMBERS[r2 >> 24 & 255] + HEX_NUMBERS[r3 >> 0 & 255] + HEX_NUMBERS[r3 >> 8 & 255] + HEX_NUMBERS[r3 >> 16 & 255] + HEX_NUMBERS[r3 >> 24 & 255] + HEX_NUMBERS[r4 >> 0 & 255] + HEX_NUMBERS[r4 >> 8 & 255] + HEX_NUMBERS[r4 >> 16 & 255] + HEX_NUMBERS[r4 >> 24 & 255];
   }
 
-  // packages/ckeditor5-utils/src/priorities.ts
+  // ../packages/ckeditor5-utils/src/priorities.ts
   var priorities = {
     get(priority = "normal") {
       if (typeof priority != "number") {
@@ -417,7 +417,7 @@
     lowest: -1e5
   };
 
-  // packages/ckeditor5-utils/src/inserttopriorityarray.ts
+  // ../packages/ckeditor5-utils/src/inserttopriorityarray.ts
   function insertToPriorityArray(objects, objectToInsert) {
     const priority = priorities.get(objectToInsert.priority);
     let left = 0;
@@ -434,7 +434,7 @@
     objects.splice(left, 0, objectToInsert);
   }
 
-  // packages/ckeditor5-utils/src/ckeditorerror.ts
+  // ../packages/ckeditor5-utils/src/ckeditorerror.ts
   var DOCUMENTATION_URL = "https://ckeditor.com/docs/ckeditor5/latest/support/error-codes.html";
   var CKEditorError = class _CKEditorError extends Error {
     /**
@@ -522,7 +522,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return data ? [errorName, data, documentationMessage] : [errorName, documentationMessage];
   }
 
-  // packages/ckeditor5-utils/src/version.ts
+  // ../packages/ckeditor5-utils/src/version.ts
   var version = "49.0.0";
   var releaseDate = new Date(2026, 5, 2);
   if (globalThis.CKEDITOR_VERSION) {
@@ -534,7 +534,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     globalThis.CKEDITOR_VERSION = version;
   }
 
-  // packages/ckeditor5-utils/src/emittermixin.ts
+  // ../packages/ckeditor5-utils/src/emittermixin.ts
   var _listeningTo = /* @__PURE__ */ Symbol("listeningTo");
   var _emitterId = /* @__PURE__ */ Symbol("emitterId");
   var _delegations = /* @__PURE__ */ Symbol("delegations");
@@ -823,12 +823,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArray.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArray.mjs
   function isArray(value) {
     return Array.isArray(value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isPlainObject.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isPlainObject.mjs
   function isPlainObject(object) {
     var _a;
     if (typeof object !== "object") return false;
@@ -845,27 +845,27 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Object.getPrototypeOf(object) === proto;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/eq.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/eq.mjs
   function eq(value, other) {
     return value === other || Number.isNaN(value) && Number.isNaN(other);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/noop.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/noop.mjs
   function noop() {
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/getSymbols.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/getSymbols.mjs
   function getSymbols(object) {
     return Object.getOwnPropertySymbols(object).filter((symbol) => Object.prototype.propertyIsEnumerable.call(object, symbol));
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/getTag.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/getTag.mjs
   function getTag(value) {
     if (value == null) return value === void 0 ? "[object Undefined]" : "[object Null]";
     return Object.prototype.toString.call(value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/tags.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/tags.mjs
   var regexpTag = "[object RegExp]";
   var stringTag = "[object String]";
   var numberTag = "[object Number]";
@@ -893,17 +893,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   var float32ArrayTag = "[object Float32Array]";
   var float64ArrayTag = "[object Float64Array]";
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/_internal/globalThis.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/_internal/globalThis.mjs
   var globalThis_ = typeof globalThis === "object" && globalThis || typeof window === "object" && window || typeof self === "object" && self || typeof global === "object" && global || /* @__PURE__ */ (function() {
     return this;
   })();
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isBuffer.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isBuffer.mjs
   function isBuffer(x) {
     return typeof globalThis_.Buffer !== "undefined" && globalThis_.Buffer.isBuffer(x);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isPlainObject.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isPlainObject.mjs
   function isPlainObject2(value) {
     if (!value || typeof value !== "object") return false;
     const proto = Object.getPrototypeOf(value);
@@ -911,7 +911,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Object.prototype.toString.call(value) === "[object Object]";
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isEqualWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isEqualWith.mjs
   function isEqualWith(a2, b, areValuesEqual) {
     return isEqualWithImpl(a2, b, void 0, void 0, void 0, void 0, areValuesEqual);
   }
@@ -1028,27 +1028,27 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isEqual.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isEqual.mjs
   function isEqual(a2, b) {
     return isEqualWith(a2, b, noop);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isLength.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isLength.mjs
   function isLength(value) {
     return Number.isSafeInteger(value) && value >= 0;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArrayLike.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArrayLike.mjs
   function isArrayLike(value) {
     return value != null && typeof value !== "function" && isLength(value.length);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isSymbol.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isSymbol.mjs
   function isSymbol(value) {
     return typeof value === "symbol" || value instanceof Symbol;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toString.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toString.mjs
   function toString(value) {
     if (value == null) return "";
     return baseToString(value);
@@ -1062,7 +1062,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/toKey.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/toKey.mjs
   function toKey(value) {
     var _a;
     if (typeof value === "string" || typeof value === "symbol") return value;
@@ -1070,7 +1070,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return String(value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toPath.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toPath.mjs
   function toPath(deepKey) {
     if (Array.isArray(deepKey)) return deepKey.map(toKey);
     if (typeof deepKey === "symbol") return [deepKey];
@@ -1124,12 +1124,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/_internal/isUnsafeProperty.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/_internal/isUnsafeProperty.mjs
   function isUnsafeProperty(key2) {
     return key2 === "__proto__";
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isDeepKey.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isDeepKey.mjs
   var regexIsDeepProp = /\.|(\[(?:[^[\]]*|(["'])(?:(?!\2)[^\\]|\\.)*?\2)\])/;
   function isDeepKey(key2) {
     switch (typeof key2) {
@@ -1144,7 +1144,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/get.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/get.mjs
   function get(object, path2, defaultValue) {
     if (object == null) return defaultValue;
     switch (typeof path2) {
@@ -1185,24 +1185,24 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return current;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/property.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/property.mjs
   function property(path2) {
     return function(object) {
       return get(object, path2);
     };
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isObject.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isObject.mjs
   function isObject(value) {
     return value !== null && (typeof value === "object" || typeof value === "function");
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isPrimitive.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isPrimitive.mjs
   function isPrimitive(value) {
     return value == null || typeof value !== "object" && typeof value !== "function";
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isMatchWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isMatchWith.mjs
   function isMatchWith(target, source, compare) {
     if (typeof compare !== "function") return isMatchWith(target, source, () => void 0);
     return isMatchWithInternal(target, source, function doesMatch(objValue, srcValue, key2, object, source2, stack) {
@@ -1291,17 +1291,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isArrayMatch([...target], [...source], compare, stack);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isMatch.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isMatch.mjs
   function isMatch(target, source) {
     return isMatchWith(target, source, () => void 0);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isTypedArray.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/predicate/isTypedArray.mjs
   function isTypedArray(x) {
     return ArrayBuffer.isView(x) && !(x instanceof DataView);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/cloneDeepWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/cloneDeepWith.mjs
   function cloneDeepWith(obj, cloneValue) {
     return cloneDeepWithImpl(obj, void 0, obj, /* @__PURE__ */ new Map(), cloneValue);
   }
@@ -1437,12 +1437,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/cloneDeep.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/cloneDeep.mjs
   function cloneDeep(obj) {
     return cloneDeepWithImpl(obj, void 0, obj, /* @__PURE__ */ new Map(), void 0);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/matches.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/matches.mjs
   function matches(source) {
     source = cloneDeep(source);
     return (target) => {
@@ -1450,7 +1450,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/cloneDeepWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/cloneDeepWith.mjs
   function cloneDeepWith2(obj, customizer) {
     return cloneDeepWith(obj, (value, key2, object, stack) => {
       const cloned = customizer == null ? void 0 : customizer(value, key2, object, stack);
@@ -1483,17 +1483,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/cloneDeep.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/cloneDeep.mjs
   function cloneDeep2(obj) {
     return cloneDeepWith2(obj);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArguments.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArguments.mjs
   function isArguments(value) {
     return value !== null && typeof value === "object" && getTag(value) === "[object Arguments]";
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isIndex.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isIndex.mjs
   var IS_UNSIGNED_INTEGER = /^(?:0|[1-9]\d*)$/;
   function isIndex(value, length = Number.MAX_SAFE_INTEGER) {
     switch (typeof value) {
@@ -1506,7 +1506,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/has.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/has.mjs
   function has(object, path2) {
     let resolvedPath;
     if (Array.isArray(path2)) resolvedPath = path2;
@@ -1524,7 +1524,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/matchesProperty.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/matchesProperty.mjs
   function matchesProperty(property2, source) {
     switch (typeof property2) {
       case "object":
@@ -1543,12 +1543,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/identity.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/identity.mjs
   function identity(x) {
     return x;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/iteratee.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/iteratee.mjs
   function iteratee(value) {
     if (value == null) return identity;
     switch (typeof value) {
@@ -1562,23 +1562,23 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isObjectLike.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isObjectLike.mjs
   function isObjectLike(value) {
     return typeof value === "object" && value !== null;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArrayLikeObject.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isArrayLikeObject.mjs
   function isArrayLikeObject(value) {
     return isObjectLike(value) && isArrayLike(value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toNumber.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toNumber.mjs
   function toNumber(value) {
     if (isSymbol(value)) return NaN;
     return Number(value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toFinite.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toFinite.mjs
   function toFinite(value) {
     if (!value) return value === 0 ? value : 0;
     value = toNumber(value);
@@ -1586,24 +1586,24 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value === value ? value : 0;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toInteger.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/toInteger.mjs
   function toInteger(value) {
     const finite = toFinite(value);
     const remainder = finite % 1;
     return remainder ? finite - remainder : finite;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isString.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isString.mjs
   function isString(value) {
     return typeof value === "string" || value instanceof String;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/function/identity.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/function/identity.mjs
   function identity2(x) {
     return x;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isKey.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isKey.mjs
   var regexIsDeepProp2 = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
   var regexIsPlainProp = /^\w*$/;
   function isKey(value, object) {
@@ -1612,12 +1612,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return typeof value === "string" && (regexIsPlainProp.test(value) || !regexIsDeepProp2.test(value)) || object != null && Object.hasOwn(object, value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isTypedArray.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isTypedArray.mjs
   function isTypedArray2(x) {
     return isTypedArray(x);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/times.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/util/times.mjs
   function times(n, getValue) {
     n = toInteger(n);
     if (n < 1 || !Number.isSafeInteger(n)) return [];
@@ -1626,29 +1626,29 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isPrototype.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/isPrototype.mjs
   function isPrototype(value) {
     const constructor = value == null ? void 0 : value.constructor;
     return value === (typeof constructor === "function" ? constructor.prototype : Object.prototype);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isNil.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isNil.mjs
   function isNil(x) {
     return x == null;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/assignValue.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/_internal/assignValue.mjs
   var assignValue = (object, key2, value) => {
     const objValue = object[key2];
     if (!(Object.hasOwn(object, key2) && eq(objValue, value)) || value === void 0 && !(key2 in object)) object[key2] = value;
   };
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/_internal/isUnsafeToWriteProperty.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/_internal/isUnsafeToWriteProperty.mjs
   function isUnsafeToWriteProperty(key2) {
     return key2 === "__proto__" || key2 === "constructor" || key2 === "prototype";
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/updateWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/updateWith.mjs
   function updateWith(obj, path2, updater, customizer) {
     if (obj == null && !isObject(obj)) return obj;
     let resolvedPath;
@@ -1673,12 +1673,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return obj;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/set.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/set.mjs
   function set(obj, path2, value) {
     return updateWith(obj, path2, () => value, () => void 0);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/debounce.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/debounce.mjs
   function debounce(func, debounceMs, { signal, edges } = {}) {
     let pendingThis = void 0;
     let pendingArgs = null;
@@ -1732,7 +1732,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return debounced;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/function/debounce.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/function/debounce.mjs
   function debounce2(func, debounceMs = 0, options = {}) {
     if (typeof options !== "object") options = {};
     const { leading = false, trailing = true, maxWait } = options;
@@ -1768,7 +1768,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return debounced;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/function/throttle.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/function/throttle.mjs
   function throttle(func, throttleMs = 0, options = {}) {
     const { leading = true, trailing = true } = options;
     return debounce2(func, throttleMs, {
@@ -1778,7 +1778,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/keysIn.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/keysIn.mjs
   function keysIn(object) {
     if (object == null) return [];
     switch (typeof object) {
@@ -1816,7 +1816,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return [...indices.filter((index2) => Object.hasOwn(object, index2)), ...inheritedKeys];
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/assignIn.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/assignIn.mjs
   function assignIn(object, ...sources) {
     for (let i = 0; i < sources.length; i++) assignInImpl(object, sources[i]);
     return object;
@@ -1829,7 +1829,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/clone.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/clone.mjs
   function clone(obj) {
     if (isPrimitive(obj)) return obj;
     const tag = getTag(obj);
@@ -1953,7 +1953,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/mapValues.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/mapValues.mjs
   function mapValues(object, getNewValue) {
     const result = {};
     const keys2 = Object.keys(object);
@@ -1965,13 +1965,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/mapValues.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/mapValues.mjs
   function mapValues2(object, getNewValue = identity) {
     if (object == null) return {};
     return mapValues(object, iteratee(getNewValue));
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/clone.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/object/clone.mjs
   function clone2(obj) {
     if (isPrimitive(obj)) return obj;
     if (Array.isArray(obj) || isTypedArray(obj) || obj instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer) return obj.slice(0);
@@ -2001,7 +2001,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return obj;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/mergeWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/mergeWith.mjs
   function mergeWith(object, ...otherArgs) {
     const sources = otherArgs.slice(0, -1);
     const merge3 = otherArgs[otherArgs.length - 1];
@@ -2054,12 +2054,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return target;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/merge.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/merge.mjs
   function merge(object, ...sources) {
     return mergeWith(object, ...sources, noop);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/pick.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/object/pick.mjs
   function pick(object, ...keysArr) {
     if (isNil(object)) return {};
     const result = {};
@@ -2086,17 +2086,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isFunction.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isFunction.mjs
   function isFunction(value) {
     return typeof value === "function";
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isElement.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isElement.mjs
   function isElement(value) {
     return isObjectLike(value) && value.nodeType === 1 && !isPlainObject(value);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isEmpty.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isEmpty.mjs
   function isEmpty(value) {
     if (value == null) return true;
     if (isArrayLike(value)) {
@@ -2112,7 +2112,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/after.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/function/after.mjs
   function after(n, func) {
     if (!Number.isInteger(n) || n < 0) throw new Error(`n must be a non-negative integer.`);
     let counter = 0;
@@ -2121,7 +2121,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isEqualWith.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/predicate/isEqualWith.mjs
   function isEqualWith2(a2, b, areValuesEqual) {
     if (typeof areValuesEqual !== "function") areValuesEqual = () => void 0;
     return isEqualWith(a2, b, (...args) => {
@@ -2132,27 +2132,27 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/string/escapeRegExp.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/string/escapeRegExp.mjs
   function escapeRegExp(str) {
     return str.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/string/escapeRegExp.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/string/escapeRegExp.mjs
   function escapeRegExp2(str) {
     return escapeRegExp(toString(str));
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/string/upperFirst.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/string/upperFirst.mjs
   function upperFirst(str) {
     return str.substring(0, 1).toUpperCase() + str.substring(1);
   }
 
-  // node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/string/upperFirst.mjs
+  // ../node_modules/.pnpm/es-toolkit@1.52.0/node_modules/es-toolkit/dist/compat/string/upperFirst.mjs
   function upperFirst2(str) {
     return upperFirst(toString(str));
   }
 
-  // packages/ckeditor5-utils/src/observablemixin.ts
+  // ../packages/ckeditor5-utils/src/observablemixin.ts
   var observablePropertiesSymbol = /* @__PURE__ */ Symbol("observableProperties");
   var boundObservablesSymbol = /* @__PURE__ */ Symbol("boundObservables");
   var boundPropertiesSymbol = /* @__PURE__ */ Symbol("boundProperties");
@@ -2447,7 +2447,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-utils/src/dom/isshadowroot.ts
+  // ../packages/ckeditor5-utils/src/dom/isshadowroot.ts
   function isShadowRoot(obj) {
     var _a;
     if (!obj) {
@@ -2460,12 +2460,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isShadowRoot(obj) && obj.synthetic !== true;
   }
 
-  // packages/ckeditor5-utils/src/dom/getparentnode.ts
+  // ../packages/ckeditor5-utils/src/dom/getparentnode.ts
   function getParentNode(node2) {
     return isShadowRoot(node2) ? node2.host : node2.parentNode;
   }
 
-  // packages/ckeditor5-utils/src/elementreplacer.ts
+  // ../packages/ckeditor5-utils/src/elementreplacer.ts
   var ElementReplacer = class {
     constructor() {
       /**
@@ -2503,7 +2503,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-utils/src/count.ts
+  // ../packages/ckeditor5-utils/src/count.ts
   function count(iterable) {
     let count2 = 0;
     for (const _ of iterable) {
@@ -2512,7 +2512,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return count2;
   }
 
-  // packages/ckeditor5-utils/src/comparearrays.ts
+  // ../packages/ckeditor5-utils/src/comparearrays.ts
   function compareArrays(a2, b) {
     const minLen = Math.min(a2.length, b.length);
     for (let i = 0; i < minLen; i++) {
@@ -2529,12 +2529,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-utils/src/isiterable.ts
+  // ../packages/ckeditor5-utils/src/isiterable.ts
   function isIterable(value) {
     return !!(value && value[Symbol.iterator]);
   }
 
-  // packages/ckeditor5-utils/src/dom/createelement.ts
+  // ../packages/ckeditor5-utils/src/dom/createelement.ts
   function createElement(doc, name, attributes = {}, children = []) {
     const namespace = attributes && attributes.xmlns;
     const element6 = namespace ? doc.createElementNS(namespace, name) : doc.createElement(name);
@@ -2553,7 +2553,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return element6;
   }
 
-  // packages/ckeditor5-utils/src/config.ts
+  // ../packages/ckeditor5-utils/src/config.ts
   var Config = class {
     /**
      * Creates an instance of the {@link ~Config} class.
@@ -2682,7 +2682,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isElement(value) || typeof value === "function" ? value : void 0;
   }
 
-  // packages/ckeditor5-utils/src/dom/isnode.ts
+  // ../packages/ckeditor5-utils/src/dom/isnode.ts
   function isNode(obj) {
     if (obj) {
       if (obj.defaultView) {
@@ -2694,7 +2694,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-utils/src/dom/iswindow.ts
+  // ../packages/ckeditor5-utils/src/dom/iswindow.ts
   function isWindow(obj) {
     const stringifiedObject = Object.prototype.toString.apply(obj);
     if (stringifiedObject == "[object Window]") {
@@ -2706,7 +2706,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-utils/src/dom/emittermixin.ts
+  // ../packages/ckeditor5-utils/src/dom/emittermixin.ts
   var defaultEmitterClass2 = /* @__PURE__ */ DomEmitterMixin(/* @__PURE__ */ EmitterMixin());
   var ProxyEmitterBase = /* @__PURE__ */ EmitterMixin();
   function DomEmitterMixin(base2) {
@@ -2881,18 +2881,18 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return id;
   }
 
-  // packages/ckeditor5-utils/src/dom/getparentelement.ts
+  // ../packages/ckeditor5-utils/src/dom/getparentelement.ts
   function getParentElement(node2) {
     const parent = node2.parentNode;
     return isShadowRoot(parent) ? parent.host : node2.parentElement;
   }
 
-  // packages/ckeditor5-utils/src/dom/getlayoutparentelement.ts
+  // ../packages/ckeditor5-utils/src/dom/getlayoutparentelement.ts
   function getLayoutParentElement(node2) {
     return node2.assignedSlot || getParentElement(node2);
   }
 
-  // packages/ckeditor5-utils/src/dom/findclosestscrollableancestor.ts
+  // ../packages/ckeditor5-utils/src/dom/findclosestscrollableancestor.ts
   function findClosestScrollableAncestor(domElement) {
     let element6 = getLayoutParentElement(domElement);
     if (!element6) {
@@ -2911,12 +2911,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return element6;
   }
 
-  // packages/ckeditor5-utils/src/dom/getlayoutparentnode.ts
+  // ../packages/ckeditor5-utils/src/dom/getlayoutparentnode.ts
   function getLayoutParentNode(node2) {
     return node2.assignedSlot || getParentNode(node2);
   }
 
-  // packages/ckeditor5-utils/src/dom/containsnode.ts
+  // ../packages/ckeditor5-utils/src/dom/containsnode.ts
   function containsNode(container, node2) {
     let current = node2;
     while (current) {
@@ -2928,7 +2928,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-utils/src/dom/getancestors.ts
+  // ../packages/ckeditor5-utils/src/dom/getancestors.ts
   function getAncestors(node2) {
     const nodes = [];
     let currentNode = node2;
@@ -2939,7 +2939,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return nodes;
   }
 
-  // packages/ckeditor5-utils/src/dom/getdatafromelement.ts
+  // ../packages/ckeditor5-utils/src/dom/getdatafromelement.ts
   function getDataFromElement(el) {
     if (el instanceof HTMLTextAreaElement) {
       return el.value;
@@ -2947,7 +2947,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return el.innerHTML;
   }
 
-  // packages/ckeditor5-utils/src/dom/getborderwidths.ts
+  // ../packages/ckeditor5-utils/src/dom/getborderwidths.ts
   function getBorderWidths(element6) {
     const style2 = element6.ownerDocument.defaultView.getComputedStyle(element6);
     return {
@@ -2958,7 +2958,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-utils/src/dom/getrangefrommouseevent.ts
+  // ../packages/ckeditor5-utils/src/dom/getrangefrommouseevent.ts
   function getRangeFromMouseEvent(domEvent) {
     if (!domEvent.target) {
       return null;
@@ -2990,7 +2990,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return domRange;
   }
 
-  // packages/ckeditor5-utils/src/dom/getelementfrompoint.ts
+  // ../packages/ckeditor5-utils/src/dom/getelementfrompoint.ts
   function getElementFromPoint(x, y, shadowRoots = []) {
     const doc = globalVar.document;
     const [firstRoot] = shadowRoots;
@@ -3016,7 +3016,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isElement(value);
   }
 
-  // packages/ckeditor5-utils/src/dom/getpositionedancestor.ts
+  // ../packages/ckeditor5-utils/src/dom/getpositionedancestor.ts
   function getPositionedAncestor(element6) {
     if (!element6 || !element6.isConnected) {
       return null;
@@ -3067,12 +3067,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!value && value !== initialValue;
   }
 
-  // packages/ckeditor5-utils/src/dom/getactiveelement.ts
+  // ../packages/ckeditor5-utils/src/dom/getactiveelement.ts
   function getActiveElement(node2) {
     return node2.getRootNode().activeElement ?? null;
   }
 
-  // packages/ckeditor5-utils/src/dom/getshadowroots.ts
+  // ../packages/ckeditor5-utils/src/dom/getshadowroots.ts
   function getShadowRoots(node2) {
     const shadowRoots = [];
     let current = node2;
@@ -3085,7 +3085,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return shadowRoots;
   }
 
-  // packages/ckeditor5-utils/src/dom/getoverlaymountroot.ts
+  // ../packages/ckeditor5-utils/src/dom/getoverlaymountroot.ts
   function getOverlayMountRoot(containerNode) {
     if (!containerNode.isConnected) {
       return null;
@@ -3094,7 +3094,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isNativeShadowRoot(root7) ? root7 : containerNode.ownerDocument.body;
   }
 
-  // packages/ckeditor5-utils/src/dom/adoptglobalstylesheet.ts
+  // ../packages/ckeditor5-utils/src/dom/adoptglobalstylesheet.ts
   var adoptedStyleSheets = /* @__PURE__ */ new WeakMap();
   function adoptGlobalStyleSheet(doc, css) {
     const adopted = adoptedStyleSheets.get(doc) || /* @__PURE__ */ new Set();
@@ -3108,12 +3108,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     doc.adoptedStyleSheets.push(styleSheet);
   }
 
-  // packages/ckeditor5-utils/src/toarray.ts
+  // ../packages/ckeditor5-utils/src/toarray.ts
   function toArray(data) {
     return Array.isArray(data) ? data : [data];
   }
 
-  // packages/ckeditor5-utils/src/dom/isdomselectionbackward.ts
+  // ../packages/ckeditor5-utils/src/dom/isdomselectionbackward.ts
   function isDomSelectionBackward(selection) {
     if (selection.isCollapsed) {
       return false;
@@ -3133,17 +3133,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return backward;
   }
 
-  // packages/ckeditor5-utils/src/dom/iscomment.ts
+  // ../packages/ckeditor5-utils/src/dom/iscomment.ts
   function isComment(obj) {
     return obj && obj.nodeType === Node.COMMENT_NODE;
   }
 
-  // packages/ckeditor5-utils/src/dom/istext.ts
+  // ../packages/ckeditor5-utils/src/dom/istext.ts
   function isText(obj) {
     return Object.prototype.toString.call(obj) == "[object Text]";
   }
 
-  // packages/ckeditor5-utils/src/dom/getselection.ts
+  // ../packages/ckeditor5-utils/src/dom/getselection.ts
   function getSelection(nodeOrNodes) {
     var _a;
     const nodes = toArray(nodeOrNodes);
@@ -3354,12 +3354,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return offset <= length;
   }
 
-  // packages/ckeditor5-utils/src/dom/isrange.ts
+  // ../packages/ckeditor5-utils/src/dom/isrange.ts
   function isRange(obj) {
     return Object.prototype.toString.apply(obj) == "[object Range]";
   }
 
-  // packages/ckeditor5-utils/src/dom/rect.ts
+  // ../packages/ckeditor5-utils/src/dom/rect.ts
   var RECT_PROPERTIES = ["top", "right", "bottom", "left", "width", "height"];
   var POSITIONING_VALUES = /* @__PURE__ */ new Set(["relative", "absolute", "fixed", "sticky"]);
   var Rect = class _Rect {
@@ -3786,7 +3786,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     rect.moveBy(moveX, moveY);
   }
 
-  // packages/ckeditor5-utils/src/dom/resizeobserver.ts
+  // ../packages/ckeditor5-utils/src/dom/resizeobserver.ts
   var _ResizeObserver = class _ResizeObserver {
     /**
      * Creates an instance of the `ResizeObserver` class.
@@ -3894,7 +3894,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   __publicField(_ResizeObserver, "_elementCallbacks", null);
   var ResizeObserver2 = _ResizeObserver;
 
-  // packages/ckeditor5-utils/src/dom/trustedtypes.ts
+  // ../packages/ckeditor5-utils/src/dom/trustedtypes.ts
   var POLICY_NAME = "ckeditor5";
   var PASS_THROUGH = {
     createHTML: (input2) => input2,
@@ -3954,7 +3954,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return PASS_THROUGH;
   }
 
-  // packages/ckeditor5-utils/src/dom/setdatainelement.ts
+  // ../packages/ckeditor5-utils/src/dom/setdatainelement.ts
   function setDataInElement(el, data) {
     if (el instanceof HTMLTextAreaElement) {
       el.value = data;
@@ -3962,12 +3962,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     el.innerHTML = trustedHtml(data);
   }
 
-  // packages/ckeditor5-utils/src/dom/tounit.ts
+  // ../packages/ckeditor5-utils/src/dom/tounit.ts
   function toUnit(unit) {
     return (value) => value + unit;
   }
 
-  // packages/ckeditor5-utils/src/dom/indexof.ts
+  // ../packages/ckeditor5-utils/src/dom/indexof.ts
   function indexOf(node2) {
     let index2 = 0;
     while (node2.previousSibling) {
@@ -3977,12 +3977,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return index2;
   }
 
-  // packages/ckeditor5-utils/src/dom/insertat.ts
+  // ../packages/ckeditor5-utils/src/dom/insertat.ts
   function insertAt(parentElement, index2, nodeToInsert) {
     parentElement.insertBefore(nodeToInsert, parentElement.childNodes[index2] || null);
   }
 
-  // packages/ckeditor5-utils/src/dom/isshadowhostof.ts
+  // ../packages/ckeditor5-utils/src/dom/isshadowhostof.ts
   function isShadowHostOf(node2, shadowRoots) {
     if (!node2) {
       return false;
@@ -3995,7 +3995,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-utils/src/dom/shadowrootregistry.ts
+  // ../packages/ckeditor5-utils/src/dom/shadowrootregistry.ts
   var ShadowRootRegistryBase = /* @__PURE__ */ EmitterMixin();
   var ShadowRootRegistry = class extends ShadowRootRegistryBase {
     constructor() {
@@ -4095,7 +4095,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return node2.isConnected ? getShadowRoots(node2) : [];
   }
 
-  // packages/ckeditor5-utils/src/dom/isvalidattributename.ts
+  // ../packages/ckeditor5-utils/src/dom/isvalidattributename.ts
   function isValidAttributeName(name) {
     try {
       globalVar.document.createAttribute(name);
@@ -4105,7 +4105,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // packages/ckeditor5-utils/src/dom/isvisible.ts
+  // ../packages/ckeditor5-utils/src/dom/isvisible.ts
   function isVisible(element6) {
     if (!element6) {
       return false;
@@ -4119,7 +4119,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-utils/src/dom/position.ts
+  // ../packages/ckeditor5-utils/src/dom/position.ts
   function getOptimalPosition({
     element: element6,
     target,
@@ -4291,7 +4291,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-utils/src/dom/remove.ts
+  // ../packages/ckeditor5-utils/src/dom/remove.ts
   function remove(node2) {
     const parent = getParentNode(node2);
     if (parent) {
@@ -4299,7 +4299,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-utils/src/dom/getvisualviewportoffset.ts
+  // ../packages/ckeditor5-utils/src/dom/getvisualviewportoffset.ts
   function getVisualViewportOffset() {
     const visualViewport = globalVar.window.visualViewport;
     if (!visualViewport || !(env.isiOS || env.isSafari)) {
@@ -4310,7 +4310,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { left, top };
   }
 
-  // packages/ckeditor5-utils/src/dom/scroll.ts
+  // ../packages/ckeditor5-utils/src/dom/scroll.ts
   function scrollViewportToShowTarget({
     target,
     viewportOffset = 0,
@@ -4505,7 +4505,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return viewportOffset;
   }
 
-  // packages/ckeditor5-utils/src/keyboard.ts
+  // ../packages/ckeditor5-utils/src/keyboard.ts
   var modifiersToGlyphsMac = {
     ctrl: "\u2303",
     cmd: "\u2318",
@@ -4648,7 +4648,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return keystroke.split("+").map((key2) => key2.trim());
   }
 
-  // packages/ckeditor5-utils/src/language.ts
+  // ../packages/ckeditor5-utils/src/language.ts
   var RTL_LANGUAGE_CODES = [
     "ar",
     "ara",
@@ -4677,7 +4677,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return RTL_LANGUAGE_CODES.includes(languageCode) ? "rtl" : "ltr";
   }
 
-  // packages/ckeditor5-utils/src/translation-service.ts
+  // ../packages/ckeditor5-utils/src/translation-service.ts
   if (!globalVar.window.CKEDITOR_TRANSLATIONS) {
     globalVar.window.CKEDITOR_TRANSLATIONS = {};
   }
@@ -4716,7 +4716,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Object.keys(translations).length;
   }
 
-  // packages/ckeditor5-utils/src/locale.ts
+  // ../packages/ckeditor5-utils/src/locale.ts
   var Locale = class {
     /**
      * Creates a new instance of the locale class. Learn more about
@@ -4841,7 +4841,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-utils/src/collection.ts
+  // ../packages/ckeditor5-utils/src/collection.ts
   var CollectionBase = /* @__PURE__ */ EmitterMixin();
   var Collection = class extends CollectionBase {
     constructor(initialItemsOrOptions = {}, options = {}) {
@@ -5354,7 +5354,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-utils/src/first.ts
+  // ../packages/ckeditor5-utils/src/first.ts
   function first(iterator) {
     const iteratorItem = iterator.next();
     if (iteratorItem.done) {
@@ -5363,7 +5363,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return iteratorItem.value;
   }
 
-  // packages/ckeditor5-utils/src/focustracker.ts
+  // ../packages/ckeditor5-utils/src/focustracker.ts
   var FocusTrackerBase = /* @__PURE__ */ DomEmitterMixin(/* @__PURE__ */ ObservableMixin());
   var FocusTracker = class extends FocusTrackerBase {
     // @if CK_DEBUG_FOCUSTRACKER // public _label?: string;
@@ -5576,7 +5576,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!view.element && view.element.contains(getActiveElement(view.element)) && subTreeRoot.contains(view.element);
   }
 
-  // packages/ckeditor5-utils/src/keystrokehandler.ts
+  // ../packages/ckeditor5-utils/src/keystrokehandler.ts
   var KeystrokeHandler = class {
     /**
      * Creates an instance of the keystroke handler.
@@ -5644,7 +5644,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-utils/src/objecttomap.ts
+  // ../packages/ckeditor5-utils/src/objecttomap.ts
   function objectToMap(obj) {
     const map4 = /* @__PURE__ */ new Map();
     for (const key2 in obj) {
@@ -5653,7 +5653,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return map4;
   }
 
-  // packages/ckeditor5-utils/src/tomap.ts
+  // ../packages/ckeditor5-utils/src/tomap.ts
   function toMap(data) {
     if (isIterable(data)) {
       return new Map(data);
@@ -5662,7 +5662,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-utils/src/splicearray.ts
+  // ../packages/ckeditor5-utils/src/splicearray.ts
   function spliceArray(targetArray, insertArray, index2) {
     const originalLength = targetArray.length;
     const insertLength = insertArray.length;
@@ -5674,7 +5674,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-utils/src/delay.ts
+  // ../packages/ckeditor5-utils/src/delay.ts
   function delay(func, wait2) {
     let timer;
     function delayed(...args) {
@@ -5687,7 +5687,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return delayed;
   }
 
-  // packages/ckeditor5-utils/src/parsebase64encodedobject.ts
+  // ../packages/ckeditor5-utils/src/parsebase64encodedobject.ts
   function parseBase64EncodedObject(encoded) {
     try {
       if (!encoded.startsWith("ey")) {
@@ -5700,7 +5700,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-utils/src/crc32.ts
+  // ../packages/ckeditor5-utils/src/crc32.ts
   function makeCrcTable() {
     const crcTable = [];
     for (let n = 0; n < 256; n++) {
@@ -5734,7 +5734,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return crc.toString(16).padStart(8, "0");
   }
 
-  // packages/ckeditor5-utils/src/formathtml.ts
+  // ../packages/ckeditor5-utils/src/formathtml.ts
   function formatHtml(input2) {
     const elementsToFormat = [
       { name: "address", isVoid: false },
@@ -5833,7 +5833,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-utils/src/unicode.ts
+  // ../packages/ckeditor5-utils/src/unicode.ts
   function isCombiningMark(character) {
     return !!character && character.length == 1 && /[\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]/.test(character);
   }
@@ -5871,7 +5871,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new RegExp(sequence, "ug");
   }
 
-  // packages/ckeditor5-utils/src/decodelicensekey.ts
+  // ../packages/ckeditor5-utils/src/decodelicensekey.ts
   function decodeLicenseKey(licenseKey) {
     if (!licenseKey) {
       return null;
@@ -5890,13 +5890,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return parts[1];
   }
 
-  // packages/ckeditor5-utils/src/isfeatureblockedbylicensekey.ts
+  // ../packages/ckeditor5-utils/src/isfeatureblockedbylicensekey.ts
   function isFeatureBlockedByLicenseKey(licensePayload, licenseFeatureCode) {
     const blockedFeatures = licensePayload.removeFeatures || [];
     return blockedFeatures.includes(licenseFeatureCode);
   }
 
-  // packages/ckeditor5-utils/src/parsedimensionwithunit.ts
+  // ../packages/ckeditor5-utils/src/parsedimensionwithunit.ts
   function tryParseDimensionWithUnit(dimension) {
     if (!dimension) {
       return null;
@@ -5924,7 +5924,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-ui/src/viewcollection.ts
+  // ../packages/ckeditor5-ui/src/viewcollection.ts
   var ViewCollection = class extends Collection {
     /**
      * Creates a new instance of the {@link module:ui/viewcollection~ViewCollection}.
@@ -6075,7 +6075,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return arr.every((a2) => typeof a2 == "string");
   }
 
-  // packages/ckeditor5-ui/src/template.ts
+  // ../packages/ckeditor5-ui/src/template.ts
   var xhtmlNs = "http://www.w3.org/1999/xhtml";
   var TemplateBase = /* @__PURE__ */ EmitterMixin();
   var Template = class extends TemplateBase {
@@ -6985,7 +6985,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return attrName == "class" || attrName == "style";
   }
 
-  // packages/ckeditor5-ui/src/view.ts
+  // ../packages/ckeditor5-ui/src/view.ts
   var ViewBase = /* @__PURE__ */ DomEmitterMixin(/* @__PURE__ */ ObservableMixin());
   var View = class extends ViewBase {
     /**
@@ -7374,7 +7374,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/arialiveannouncer.ts
+  // ../packages/ckeditor5-ui/src/arialiveannouncer.ts
   var AriaLiveAnnouncerPoliteness = {
     POLITE: "polite",
     ASSERTIVE: "assertive"
@@ -7525,7 +7525,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/bindings/clickoutsidehandler.ts
+  // ../packages/ckeditor5-ui/src/bindings/clickoutsidehandler.ts
   function clickOutsideHandler({ emitter, activator, callback, contextElements }) {
     const listenedRoots = /* @__PURE__ */ new WeakSet();
     let insideContext = false;
@@ -7569,7 +7569,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-ui/src/bindings/csstransitiondisablermixin.ts
+  // ../packages/ckeditor5-ui/src/bindings/csstransitiondisablermixin.ts
   function CssTransitionDisablerMixin(view) {
     class Mixin extends view {
       disableCssTransitions() {
@@ -7598,7 +7598,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Mixin;
   }
 
-  // packages/ckeditor5-ui/src/bindings/draggableviewmixin.ts
+  // ../packages/ckeditor5-ui/src/bindings/draggableviewmixin.ts
   function DraggableViewMixin(view) {
     class DraggableMixin extends view {
       /**
@@ -7712,7 +7712,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return DraggableMixin;
   }
 
-  // packages/ckeditor5-ui/src/bindings/submithandler.ts
+  // ../packages/ckeditor5-ui/src/bindings/submithandler.ts
   function submitHandler({ view }) {
     view.listenTo(view.element, "submit", (evt, domEvt) => {
       domEvt.preventDefault();
@@ -7720,7 +7720,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }, { useCapture: true });
   }
 
-  // packages/ckeditor5-ui/src/bindings/addkeyboardhandlingforgrid.ts
+  // ../packages/ckeditor5-ui/src/bindings/addkeyboardhandlingforgrid.ts
   function addKeyboardHandlingForGrid({ keystrokeHandler, focusTracker, gridItems, numberOfColumns, uiLanguageDirection }) {
     const getNumberOfColumns = typeof numberOfColumns === "number" ? () => numberOfColumns : numberOfColumns;
     keystrokeHandler.set("arrowright", getGridItemFocuser((focusedElementIndex, gridItems2) => {
@@ -7772,7 +7772,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-ui/src/label/labelview.ts
+  // ../packages/ckeditor5-ui/src/label/labelview.ts
   var LabelView = class extends View {
     /**
      * @inheritDoc
@@ -7807,7 +7807,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/editorui/accessibilityhelp/accessibilityhelpcontentview.ts
+  // ../packages/ckeditor5-ui/src/editorui/accessibilityhelp/accessibilityhelpcontentview.ts
   var AccessibilityHelpContentView = class extends View {
     /**
      * @inheritDoc
@@ -7898,7 +7898,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return definition3;
   }
 
-  // packages/ckeditor5-core/src/plugin.ts
+  // ../packages/ckeditor5-core/src/plugin.ts
   var PluginBase = /* @__PURE__ */ ObservableMixin();
   var Plugin = class extends PluginBase {
     /**
@@ -8018,7 +8018,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     evt.stop();
   }
 
-  // packages/ckeditor5-core/src/command.ts
+  // ../packages/ckeditor5-core/src/command.ts
   var CommandBase = /* @__PURE__ */ ObservableMixin();
   var Command = class extends CommandBase {
     /**
@@ -8214,7 +8214,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     evt.stop();
   }
 
-  // packages/ckeditor5-core/src/commandcollection.ts
+  // ../packages/ckeditor5-core/src/commandcollection.ts
   var CommandCollection = class {
     /**
      * Creates collection instance.
@@ -8286,7 +8286,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-core/src/plugincollection.ts
+  // ../packages/ckeditor5-core/src/plugincollection.ts
   var PluginCollectionBase = /* @__PURE__ */ EmitterMixin();
   var PluginCollection = class extends PluginCollectionBase {
     /**
@@ -8618,7 +8618,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-core/src/errorattribution/getsubnodes.ts
+  // ../packages/ckeditor5-core/src/errorattribution/getsubnodes.ts
   function getSubNodes(head2, excludedProperties = /* @__PURE__ */ new Set()) {
     const nodes = [head2];
     const subNodes = /* @__PURE__ */ new Set();
@@ -8659,7 +8659,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     node2 instanceof EventTarget || node2 instanceof Event);
   }
 
-  // packages/ckeditor5-core/src/errorattribution/liveeditors.ts
+  // ../packages/ckeditor5-core/src/errorattribution/liveeditors.ts
   var editors = /* @__PURE__ */ new Set();
   function _addLiveEditor(editor) {
     editors.add(new WeakRef(editor));
@@ -8712,7 +8712,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-core/src/errorattribution/areconnectedthroughproperties.ts
+  // ../packages/ckeditor5-core/src/errorattribution/areconnectedthroughproperties.ts
   function areConnectedThroughProperties2(target1, target2, excludedNodes = /* @__PURE__ */ new Set()) {
     if (target1 === target2 && isObject2(target1)) {
       return true;
@@ -8730,7 +8730,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return typeof structure === "object" && structure !== null;
   }
 
-  // packages/ckeditor5-engine/src/view/placeholder.ts
+  // ../packages/ckeditor5-engine/src/view/placeholder.ts
   var documentPlaceholders = /* @__PURE__ */ new WeakMap();
   var hasDisplayedPlaceholderDeprecationWarning = false;
   function enableViewPlaceholder({ view, element: element6, text: text10, isDirectHost = true, keepOnFocus = false }) {
@@ -8875,7 +8875,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     hasDisplayedPlaceholderDeprecationWarning = true;
   }
 
-  // packages/ckeditor5-engine/src/view/typecheckable.ts
+  // ../packages/ckeditor5-engine/src/view/typecheckable.ts
   var ViewTypeCheckable = class {
     /* v8 ignore next -- @preserve */
     is() {
@@ -8883,7 +8883,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/node.ts
+  // ../packages/ckeditor5-engine/src/view/node.ts
   var ViewNodeBase = /* @__PURE__ */ EmitterMixin(ViewTypeCheckable);
   var ViewNode = class extends ViewNodeBase {
     /**
@@ -9093,7 +9093,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "node" || type === "view:node";
   };
 
-  // packages/ckeditor5-engine/src/view/text.ts
+  // ../packages/ckeditor5-engine/src/view/text.ts
   var ViewText = class _ViewText extends ViewNode {
     /**
      * Creates a tree view text node.
@@ -9193,7 +9193,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     type === "node" || type === "view:node";
   };
 
-  // packages/ckeditor5-engine/src/view/textproxy.ts
+  // ../packages/ckeditor5-engine/src/view/textproxy.ts
   var ViewTextProxy = class extends ViewTypeCheckable {
     /**
      * Creates a text proxy.
@@ -9297,7 +9297,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     type === "textProxy" || type === "view:textProxy";
   };
 
-  // packages/ckeditor5-engine/src/conversion/viewconsumable.ts
+  // ../packages/ckeditor5-engine/src/conversion/viewconsumable.ts
   var ViewConsumable = class _ViewConsumable {
     constructor() {
       /**
@@ -9741,7 +9741,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/view/matcher.ts
+  // ../packages/ckeditor5-engine/src/view/matcher.ts
   var Matcher = class {
     /**
      * Creates new instance of Matcher.
@@ -9971,7 +9971,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return element6._collectAttributesMatch(normalizePatterns(patterns, "style"), match);
   }
 
-  // packages/ckeditor5-engine/src/view/stylesmap.ts
+  // ../packages/ckeditor5-engine/src/view/stylesmap.ts
   var StylesMap = class {
     /**
      * Creates Styles instance.
@@ -10842,7 +10842,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/view/tokenlist.ts
+  // ../packages/ckeditor5-engine/src/view/tokenlist.ts
   var ViewTokenList = class {
     constructor() {
       /**
@@ -11028,7 +11028,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/element.ts
+  // ../packages/ckeditor5-engine/src/view/element.ts
   var ViewElement = class _ViewElement extends ViewNode {
     /**
      * Creates a view element.
@@ -11998,7 +11998,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return key2 == "style";
   }
 
-  // packages/ckeditor5-engine/src/view/containerelement.ts
+  // ../packages/ckeditor5-engine/src/view/containerelement.ts
   var ViewContainerElement = class extends ViewElement {
     /**
      * Creates a container element.
@@ -12055,7 +12055,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return this.childCount;
   }
 
-  // packages/ckeditor5-engine/src/view/editableelement.ts
+  // ../packages/ckeditor5-engine/src/view/editableelement.ts
   var ViewEditableElementBase = /* @__PURE__ */ ObservableMixin(ViewContainerElement);
   var ViewEditableElement = class extends ViewEditableElementBase {
     /**
@@ -12109,7 +12109,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/rooteditableelement.ts
+  // ../packages/ckeditor5-engine/src/view/rooteditableelement.ts
   var rootNameSymbol = /* @__PURE__ */ Symbol("rootName");
   var ViewRootEditableElement = class extends ViewEditableElement {
     /**
@@ -12165,7 +12165,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/treewalker.ts
+  // ../packages/ckeditor5-engine/src/view/treewalker.ts
   var ViewTreeWalker = class {
     /**
      * Creates a range iterator. All parameters are optional, but you have to specify either `boundaries` or `startPosition`.
@@ -12500,7 +12500,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/position.ts
+  // ../packages/ckeditor5-engine/src/view/position.ts
   var ViewPosition = class _ViewPosition extends ViewTypeCheckable {
     /**
      * Creates a position.
@@ -12791,7 +12791,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "position" || type === "view:position";
   };
 
-  // packages/ckeditor5-engine/src/view/range.ts
+  // ../packages/ckeditor5-engine/src/view/range.ts
   var ViewRange = class _ViewRange extends ViewTypeCheckable {
     /**
      * Creates a range spanning from `start` position to `end` position.
@@ -13198,7 +13198,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-engine/src/view/selection.ts
+  // ../packages/ckeditor5-engine/src/view/selection.ts
   var ViewSelectionBase = /* @__PURE__ */ EmitterMixin(ViewTypeCheckable);
   var ViewSelection = class _ViewSelection extends ViewSelectionBase {
     /**
@@ -13728,7 +13728,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "selection" || type === "view:selection";
   };
 
-  // packages/ckeditor5-engine/src/view/documentselection.ts
+  // ../packages/ckeditor5-engine/src/view/documentselection.ts
   var ViewDocumentSelectionBase = /* @__PURE__ */ EmitterMixin(ViewTypeCheckable);
   var ViewDocumentSelection = class extends ViewDocumentSelectionBase {
     constructor(...args) {
@@ -13974,7 +13974,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "selection" || type == "documentSelection" || type == "view:selection" || type == "view:documentSelection";
   };
 
-  // packages/ckeditor5-engine/src/view/observer/bubblingeventinfo.ts
+  // ../packages/ckeditor5-engine/src/view/observer/bubblingeventinfo.ts
   var BubblingEventInfo = class extends EventInfo {
     /**
      * @param source The emitter.
@@ -14013,7 +14013,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/bubblingemittermixin.ts
+  // ../packages/ckeditor5-engine/src/view/observer/bubblingemittermixin.ts
   var bubblingEmitterSymbol = /* @__PURE__ */ Symbol("bubblingEmitter");
   var callbackMapSymbol = /* @__PURE__ */ Symbol("bubblingCallbacks");
   var contextsSymbol = /* @__PURE__ */ Symbol("bubblingContexts");
@@ -14156,7 +14156,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return startPath.length > endPath.length ? startParent : endParent;
   }
 
-  // packages/ckeditor5-engine/src/view/document.ts
+  // ../packages/ckeditor5-engine/src/view/document.ts
   var ViewDocumentBase = /* @__PURE__ */ BubblingEmitterMixin(/* @__PURE__ */ ObservableMixin());
   var ViewDocument = class extends ViewDocumentBase {
     /**
@@ -14292,7 +14292,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/view/attributeelement.ts
+  // ../packages/ckeditor5-engine/src/view/attributeelement.ts
   var DEFAULT_PRIORITY = 10;
   var ViewAttributeElement = class extends ViewElement {
     /**
@@ -14469,7 +14469,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.from(element6.getChildren()).filter((element7) => !element7.is("uiElement")).length;
   }
 
-  // packages/ckeditor5-engine/src/view/emptyelement.ts
+  // ../packages/ckeditor5-engine/src/view/emptyelement.ts
   var ViewEmptyElement = class extends ViewElement {
     /**
      * Creates new instance of ViewEmptyElement.
@@ -14527,7 +14527,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return null;
   }
 
-  // packages/ckeditor5-engine/src/view/uielement.ts
+  // ../packages/ckeditor5-engine/src/view/uielement.ts
   var ViewUIElement = class extends ViewElement {
     /**
      * Creates new instance of UIElement.
@@ -14656,7 +14656,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/view/rawelement.ts
+  // ../packages/ckeditor5-engine/src/view/rawelement.ts
   var ViewRawElement = class extends ViewElement {
     /**
      * Creates a new instance of a raw element.
@@ -14734,7 +14734,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return null;
   }
 
-  // packages/ckeditor5-engine/src/view/documentfragment.ts
+  // ../packages/ckeditor5-engine/src/view/documentfragment.ts
   var ViewDocumentFragmentBase = /* @__PURE__ */ EmitterMixin(ViewTypeCheckable);
   var ViewDocumentFragment = class extends ViewDocumentFragmentBase {
     /**
@@ -14976,7 +14976,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-engine/src/view/downcastwriter.ts
+  // ../packages/ckeditor5-engine/src/view/downcastwriter.ts
   var ViewDowncastWriter = class {
     /**
      * @param document The view document instance.
@@ -16233,7 +16233,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isPlainObject(childrenOrOptions);
   }
 
-  // packages/ckeditor5-engine/src/view/filler.ts
+  // ../packages/ckeditor5-engine/src/view/filler.ts
   var NBSP_FILLER = (domDocument) => domDocument.createTextNode("\xA0");
   var MARKED_NBSP_FILLER = (domDocument) => {
     const span = domDocument.createElement("span");
@@ -16280,7 +16280,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/view/renderer.ts
+  // ../packages/ckeditor5-engine/src/view/renderer.ts
   var ViewRendererBase = /* @__PURE__ */ ObservableMixin();
   var ViewRenderer = class extends ViewRendererBase {
     /**
@@ -17021,7 +17021,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return container;
   }
 
-  // packages/ckeditor5-engine/src/view/domconverter.ts
+  // ../packages/ckeditor5-engine/src/view/domconverter.ts
   var BR_FILLER_REF = BR_FILLER(globalVar.document);
   var NBSP_FILLER_REF = NBSP_FILLER(globalVar.document);
   var MARKED_NBSP_FILLER_REF = MARKED_NBSP_FILLER(globalVar.document);
@@ -18392,7 +18392,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-engine/src/view/observer/observer.ts
+  // ../packages/ckeditor5-engine/src/view/observer/observer.ts
   var ObserverBase = /* @__PURE__ */ DomEmitterMixin();
   var Observer = class extends ObserverBase {
     /**
@@ -18473,7 +18473,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/domeventdata.ts
+  // ../packages/ckeditor5-engine/src/view/observer/domeventdata.ts
   var ViewDocumentDomEventData = class {
     /**
      * @param view The instance of the view controller.
@@ -18523,7 +18523,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/domeventobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/domeventobserver.ts
   var DomEventObserver = class extends Observer {
     constructor() {
       super(...arguments);
@@ -18573,7 +18573,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/keyobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/keyobserver.ts
   var KeyObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -18600,7 +18600,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/fakeselectionobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/fakeselectionobserver.ts
   var FakeSelectionObserver = class extends Observer {
     /**
      * Creates new FakeSelectionObserver instance.
@@ -18672,7 +18672,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/mutationobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/mutationobserver.ts
   var MutationObserver2 = class extends Observer {
     /**
      * @inheritDoc
@@ -18839,7 +18839,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-engine/src/view/observer/focusobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/focusobserver.ts
   var FocusObserver = class extends DomEventObserver {
     /**
      * @inheritDoc
@@ -18928,7 +18928,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/selectionobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/selectionobserver.ts
   var SelectionObserver = class extends Observer {
     constructor(view) {
       super(view);
@@ -19122,7 +19122,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.from(selection.getRanges()).flatMap((range) => [range.start.root, range.end.root]).every((root7) => root7 && root7.is("rootElement"));
   }
 
-  // packages/ckeditor5-engine/src/view/observer/compositionobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/compositionobserver.ts
   var CompositionObserver = class extends DomEventObserver {
     /**
      * @inheritDoc
@@ -19151,7 +19151,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/datatransfer.ts
+  // ../packages/ckeditor5-engine/src/view/datatransfer.ts
   var ViewDataTransfer = class {
     /**
      * @param nativeDataTransfer The native [`DataTransfer`](https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer) object.
@@ -19244,7 +19244,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return items.filter((item) => item.kind === "file").map((item) => item.getAsFile());
   }
 
-  // packages/ckeditor5-engine/src/view/observer/inputobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/inputobserver.ts
   var InputObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -19366,7 +19366,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-engine/src/view/observer/arrowkeysobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/arrowkeysobserver.ts
   var ArrowKeysObserver = class extends Observer {
     /**
      * @inheritDoc
@@ -19395,7 +19395,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/tabobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/tabobserver.ts
   var TabObserver = class extends Observer {
     /**
      * @inheritDoc
@@ -19426,7 +19426,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/view.ts
+  // ../packages/ckeditor5-engine/src/view/view.ts
   var EditingViewBase = /* @__PURE__ */ ObservableMixin();
   var EditingView = class extends EditingViewBase {
     /**
@@ -19895,7 +19895,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/typecheckable.ts
+  // ../packages/ckeditor5-engine/src/model/typecheckable.ts
   var ModelTypeCheckable = class {
     /* v8 ignore next -- @preserve */
     is() {
@@ -19903,7 +19903,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/textproxy.ts
+  // ../packages/ckeditor5-engine/src/model/textproxy.ts
   var ModelTextProxy = class extends ModelTypeCheckable {
     /**
      * Creates a text proxy.
@@ -20065,7 +20065,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     type === "textProxy" || type === "model:textProxy";
   };
 
-  // packages/ckeditor5-engine/src/model/treewalker.ts
+  // ../packages/ckeditor5-engine/src/model/treewalker.ts
   var ModelTreeWalker = class {
     /**
      * Creates a range iterator. All parameters are optional, but you have to specify either `boundaries` or `startPosition`.
@@ -20344,7 +20344,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-engine/src/model/position.ts
+  // ../packages/ckeditor5-engine/src/model/position.ts
   var ModelPosition = class _ModelPosition extends ModelTypeCheckable {
     /**
      * Creates a position.
@@ -21154,7 +21154,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // packages/ckeditor5-engine/src/model/range.ts
+  // ../packages/ckeditor5-engine/src/model/range.ts
   var ModelRange = class _ModelRange extends ModelTypeCheckable {
     /**
      * Creates a range spanning from `start` position to `end` position.
@@ -21938,7 +21938,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "range" || type === "model:range";
   };
 
-  // packages/ckeditor5-engine/src/conversion/mapper.ts
+  // ../packages/ckeditor5-engine/src/conversion/mapper.ts
   var MapperBase = /* @__PURE__ */ EmitterMixin();
   var MapperCacheBase = /* @__PURE__ */ EmitterMixin();
   var Mapper = class extends MapperBase {
@@ -22773,7 +22773,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/conversion/modelconsumable.ts
+  // ../packages/ckeditor5-engine/src/conversion/modelconsumable.ts
   var ModelConsumable = class {
     constructor() {
       /**
@@ -22991,7 +22991,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return parts.length > 1 ? parts[0] + ":" + parts[1] : parts[0];
   }
 
-  // packages/ckeditor5-engine/src/conversion/comparemarkers.ts
+  // ../packages/ckeditor5-engine/src/conversion/comparemarkers.ts
   function compareMarkersForDowncast([name1, range1], [name2, range2]) {
     if (range1.end.compareWith(range2.start) !== "after") {
       return 1;
@@ -23016,7 +23016,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/conversion/downcastdispatcher.ts
+  // ../packages/ckeditor5-engine/src/conversion/downcastdispatcher.ts
   var DowncastDispatcherBase = /* @__PURE__ */ EmitterMixin();
   var DowncastDispatcher = class extends DowncastDispatcherBase {
     /**
@@ -23443,7 +23443,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-engine/src/model/node.ts
+  // ../packages/ckeditor5-engine/src/model/node.ts
   var ModelNode = class extends ModelTypeCheckable {
     /**
      * Creates a model node.
@@ -23763,7 +23763,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "node" || type === "model:node";
   };
 
-  // packages/ckeditor5-engine/src/model/selection.ts
+  // ../packages/ckeditor5-engine/src/model/selection.ts
   var ModelSelectionBase = /* @__PURE__ */ EmitterMixin(ModelTypeCheckable);
   var ModelSelection = class _ModelSelection extends ModelSelectionBase {
     /**
@@ -24448,7 +24448,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/model/liverange.ts
+  // ../packages/ckeditor5-engine/src/model/liverange.ts
   var ModelLiveRangeBase = /* @__PURE__ */ EmitterMixin(ModelRange);
   var ModelLiveRange = class _ModelLiveRange extends ModelLiveRangeBase {
     /**
@@ -24561,7 +24561,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-engine/src/model/text.ts
+  // ../packages/ckeditor5-engine/src/model/text.ts
   var ModelText = class _ModelText extends ModelNode {
     /**
      * Creates a text node.
@@ -24639,7 +24639,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     type === "node" || type === "model:node";
   };
 
-  // packages/ckeditor5-engine/src/model/documentselection.ts
+  // ../packages/ckeditor5-engine/src/model/documentselection.ts
   var storePrefix = "selection:";
   var ModelDocumentSelectionBase = /* @__PURE__ */ EmitterMixin(ModelTypeCheckable);
   var ModelDocumentSelection = class extends ModelDocumentSelectionBase {
@@ -25559,7 +25559,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/model/nodelist.ts
+  // ../packages/ckeditor5-engine/src/model/nodelist.ts
   var ModelNodeList = class {
     /**
      * Creates a node list.
@@ -25769,7 +25769,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return offsets;
   }
 
-  // packages/ckeditor5-engine/src/model/element.ts
+  // ../packages/ckeditor5-engine/src/model/element.ts
   var ModelElement = class _ModelElement extends ModelNode {
     /**
      * Creates a model element.
@@ -26106,7 +26106,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return clonedNodes;
   }
 
-  // packages/ckeditor5-engine/src/conversion/conversionhelpers.ts
+  // ../packages/ckeditor5-engine/src/conversion/conversionhelpers.ts
   var ConversionHelpers = class {
     /**
      * Creates a conversion helpers instance.
@@ -26131,7 +26131,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/conversion/downcasthelpers.ts
+  // ../packages/ckeditor5-engine/src/conversion/downcasthelpers.ts
   var DowncastHelpers = class extends ConversionHelpers {
     /**
      * Model element to view element conversion helper.
@@ -27677,7 +27677,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/model/utils/autoparagraphing.ts
+  // ../packages/ckeditor5-engine/src/model/utils/autoparagraphing.ts
   function autoParagraphEmptyRoots(writer) {
     const { schema, document: document4 } = writer.model;
     for (const root7 of document4.getRoots()) {
@@ -27706,7 +27706,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return writer.createPositionAt(paragraph3, 0);
   }
 
-  // packages/ckeditor5-engine/src/conversion/upcasthelpers.ts
+  // ../packages/ckeditor5-engine/src/conversion/upcasthelpers.ts
   var UpcastHelpers = class extends ConversionHelpers {
     /**
      * View element to model element conversion helper.
@@ -28410,7 +28410,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-engine/src/controller/editingcontroller.ts
+  // ../packages/ckeditor5-engine/src/controller/editingcontroller.ts
   var EditingControllerBase = /* @__PURE__ */ ObservableMixin();
   var EditingController = class extends EditingControllerBase {
     /**
@@ -28550,7 +28550,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/schema.ts
+  // ../packages/ckeditor5-engine/src/model/schema.ts
   var ModelSchemaBase = /* @__PURE__ */ ObservableMixin();
   var ModelSchema = class extends ModelSchemaBase {
     /**
@@ -29904,7 +29904,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/conversion/upcastdispatcher.ts
+  // ../packages/ckeditor5-engine/src/conversion/upcastdispatcher.ts
   var UpcastDispatcherBase = /* @__PURE__ */ EmitterMixin();
   var UpcastDispatcher = class extends UpcastDispatcherBase {
     /**
@@ -30208,7 +30208,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return position3;
   }
 
-  // packages/ckeditor5-engine/src/dataprocessor/basichtmlwriter.ts
+  // ../packages/ckeditor5-engine/src/dataprocessor/basichtmlwriter.ts
   var BasicHtmlWriter = class {
     /**
      * Returns an HTML string created from the document fragment.
@@ -30221,7 +30221,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/dataprocessor/htmldataprocessor.ts
+  // ../packages/ckeditor5-engine/src/dataprocessor/htmldataprocessor.ts
   var HtmlDataProcessor = class {
     /**
      * Creates a new instance of the HTML data processor class.
@@ -30310,7 +30310,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/controller/datacontroller.ts
+  // ../packages/ckeditor5-engine/src/controller/datacontroller.ts
   var DataControllerBase = /* @__PURE__ */ EmitterMixin();
   var DataController = class extends DataControllerBase {
     /**
@@ -30681,7 +30681,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new Map(result);
   }
 
-  // packages/ckeditor5-engine/src/conversion/conversion.ts
+  // ../packages/ckeditor5-engine/src/conversion/conversion.ts
   var Conversion = class {
     /**
      * Creates a new conversion instance.
@@ -31204,7 +31204,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/model/operation/operation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/operation.ts
   var Operation = class {
     /**
      * Base operation constructor.
@@ -31276,7 +31276,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/utils.ts
+  // ../packages/ckeditor5-engine/src/model/operation/utils.ts
   function _insert(position3, nodes) {
     const normalizedNodes = _normalizeNodes(nodes);
     const offset = normalizedNodes.reduce((sum, node2) => sum + node2.offsetSize, 0);
@@ -31388,7 +31388,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return iteratorB.next().done;
   }
 
-  // packages/ckeditor5-engine/src/model/operation/moveoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/moveoperation.ts
   var MoveOperation = class _MoveOperation extends Operation {
     /**
      * Creates a move operation.
@@ -31549,7 +31549,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/insertoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/insertoperation.ts
   var InsertOperation = class _InsertOperation extends Operation {
     /**
      * Creates an insert operation.
@@ -31681,7 +31681,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/splitoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/splitoperation.ts
   var SplitOperation = class _SplitOperation extends Operation {
     /**
      * Creates a split operation.
@@ -31859,7 +31859,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/mergeoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/mergeoperation.ts
   var MergeOperation = class _MergeOperation extends Operation {
     /**
      * Creates a merge operation.
@@ -32005,7 +32005,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/markeroperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/markeroperation.ts
   var MarkerOperation = class _MarkerOperation extends Operation {
     /**
      * @param name Marker name.
@@ -32143,7 +32143,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/attributeoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/attributeoperation.ts
   var AttributeOperation = class _AttributeOperation extends Operation {
     /**
      * Creates an operation that changes, removes or adds attributes.
@@ -32295,7 +32295,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/nooperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/nooperation.ts
   var NoOperation = class _NoOperation extends Operation {
     get type() {
       return "noop";
@@ -32332,7 +32332,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/renameoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/renameoperation.ts
   var RenameOperation = class _RenameOperation extends Operation {
     /**
      * Creates an operation that changes element's name.
@@ -32444,7 +32444,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/rootattributeoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/rootattributeoperation.ts
   var RootAttributeOperation = class _RootAttributeOperation extends Operation {
     /**
      * Creates an operation that changes, removes or adds attributes on root element.
@@ -32587,7 +32587,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/rootoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/rootoperation.ts
   var RootOperation = class _RootOperation extends Operation {
     /**
      * Creates an operation that creates or removes a root element.
@@ -32684,7 +32684,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/operationfactory.ts
+  // ../packages/ckeditor5-engine/src/model/operation/operationfactory.ts
   var operations = {};
   operations[AttributeOperation.className] = AttributeOperation;
   operations[InsertOperation.className] = InsertOperation;
@@ -32709,7 +32709,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/operation/transform.ts
+  // ../packages/ckeditor5-engine/src/model/operation/transform.ts
   var transformations = /* @__PURE__ */ new Map();
   function setTransformation(OperationA, OperationB, transformationFunction) {
     let aGroup = transformations.get(OperationA);
@@ -33762,7 +33762,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return operations2;
   }
 
-  // packages/ckeditor5-engine/src/model/liveposition.ts
+  // ../packages/ckeditor5-engine/src/model/liveposition.ts
   var ModelLivePositionBase = /* @__PURE__ */ EmitterMixin(ModelPosition);
   var ModelLivePosition = class extends ModelLivePositionBase {
     /**
@@ -33840,7 +33840,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/model/batch.ts
+  // ../packages/ckeditor5-engine/src/model/batch.ts
   var Batch = class {
     /**
      * Creates a batch instance.
@@ -33909,7 +33909,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/differ.ts
+  // ../packages/ckeditor5-engine/src/model/differ.ts
   var _Differ = class _Differ {
     /**
      * Creates a `Differ` instance.
@@ -34935,7 +34935,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !posInGy && !rangeInGy;
   }
 
-  // packages/ckeditor5-engine/src/model/history.ts
+  // ../packages/ckeditor5-engine/src/model/history.ts
   var History = class {
     constructor() {
       /**
@@ -35116,7 +35116,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/rootelement.ts
+  // ../packages/ckeditor5-engine/src/model/rootelement.ts
   var ModelRootElement = class extends ModelElement {
     /**
      * Creates root element.
@@ -35190,7 +35190,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     type === "element" || type === "model:element");
   };
 
-  // packages/ckeditor5-engine/src/model/document.ts
+  // ../packages/ckeditor5-engine/src/model/document.ts
   var graveyardName = "$graveyard";
   var ModelDocumentBase = /* @__PURE__ */ EmitterMixin();
   var ModelDocument = class extends ModelDocumentBase {
@@ -35531,7 +35531,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // packages/ckeditor5-engine/src/model/markercollection.ts
+  // ../packages/ckeditor5-engine/src/model/markercollection.ts
   var MarkerCollectionBase = /* @__PURE__ */ EmitterMixin();
   var MarkerBase = /* @__PURE__ */ EmitterMixin(ModelTypeCheckable);
   var MarkerCollection = class extends MarkerCollectionBase {
@@ -35863,7 +35863,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return type === "marker" || type === "model:marker";
   };
 
-  // packages/ckeditor5-engine/src/model/operation/detachoperation.ts
+  // ../packages/ckeditor5-engine/src/model/operation/detachoperation.ts
   var DetachOperation = class extends Operation {
     /**
      * Creates an insert operation.
@@ -35935,7 +35935,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // @if CK_DEBUG_ENGINE // }
   };
 
-  // packages/ckeditor5-engine/src/model/documentfragment.ts
+  // ../packages/ckeditor5-engine/src/model/documentfragment.ts
   var ModelDocumentFragment = class _ModelDocumentFragment extends ModelTypeCheckable {
     /**
      * Creates an empty `ModelDocumentFragment`.
@@ -36262,7 +36262,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-engine/src/model/writer.ts
+  // ../packages/ckeditor5-engine/src/model/writer.ts
   var ModelWriter = class {
     /**
      * Creates a writer instance.
@@ -37307,7 +37307,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-engine/src/model/utils/selection-post-fixer.ts
+  // ../packages/ckeditor5-engine/src/model/utils/selection-post-fixer.ts
   function injectSelectionPostFixer(model) {
     model.document.registerPostFixer((writer) => selectionPostFixer(writer, model));
   }
@@ -37436,7 +37436,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return node2 && schema.isSelectable(node2);
   }
 
-  // packages/ckeditor5-engine/src/model/utils/deletecontent.ts
+  // ../packages/ckeditor5-engine/src/model/utils/deletecontent.ts
   function deleteContent(model, selection, options = {}) {
     var _a;
     if (selection.isCollapsed) {
@@ -37688,7 +37688,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!(docSelRange == null ? void 0 : docSelRange.isIntersecting(selRange));
   }
 
-  // packages/ckeditor5-engine/src/model/utils/getselectedcontent.ts
+  // ../packages/ckeditor5-engine/src/model/utils/getselectedcontent.ts
   function getSelectedContent(model, selection) {
     return model.change((writer) => {
       const frag = writer.createDocumentFragment();
@@ -37745,7 +37745,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-engine/src/model/utils/insertcontent.ts
+  // ../packages/ckeditor5-engine/src/model/utils/insertcontent.ts
   function insertContent(model, content5, selectable) {
     return model.change((writer) => {
       const selection = selectable ? selectable : model.document.selection;
@@ -38268,7 +38268,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/model/utils/insertobject.ts
+  // ../packages/ckeditor5-engine/src/model/utils/insertobject.ts
   function insertObject(model, object, selectable, options = {}) {
     if (!model.schema.isObject(object)) {
       throw new CKEditorError("insertobject-element-not-an-object", model, { object });
@@ -38332,7 +38332,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-engine/src/model/utils/modifyselection.ts
+  // ../packages/ckeditor5-engine/src/model/utils/modifyselection.ts
   var wordBoundaryCharacters = ' ,.?!:;"-()';
   function modifySelection(model, selection, options = {}) {
     const schema = model.schema;
@@ -38436,7 +38436,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return offset === (isForward ? textNode.offsetSize : 0);
   }
 
-  // packages/ckeditor5-engine/src/model/model.ts
+  // ../packages/ckeditor5-engine/src/model/model.ts
   var ModelBase = /* @__PURE__ */ ObservableMixin();
   var Model = class extends ModelBase {
     // @if CK_DEBUG_ENGINE // private _operationLogs: Array<string>;
@@ -39252,7 +39252,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new ModelSelection(selectable);
   }
 
-  // packages/ckeditor5-engine/src/view/observer/clickobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/clickobserver.ts
   var ClickObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -39269,7 +39269,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/mouseobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/mouseobserver.ts
   var MouseObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -39286,7 +39286,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/touchobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/touchobserver.ts
   var TouchObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -39303,7 +39303,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/observer/pointerobserver.ts
+  // ../packages/ckeditor5-engine/src/view/observer/pointerobserver.ts
   var PointerObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -39320,7 +39320,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/upcastwriter.ts
+  // ../packages/ckeditor5-engine/src/view/upcastwriter.ts
   var ViewUpcastWriter = class {
     /**
      * @param document The view document instance in which this upcast writer operates.
@@ -39649,7 +39649,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-engine/src/view/styles/utils.ts
+  // ../packages/ckeditor5-engine/src/view/styles/utils.ts
   var HEX_COLOR_REGEXP = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
   var RGB_COLOR_REGEXP = /^rgb\([ ]?([0-9]{1,3}[ %]?,[ ]?){2,3}[0-9]{1,3}[ %]?\)$/i;
   var RGBA_COLOR_REGEXP = /^rgba\([ ]?([0-9]{1,3}[ %]?,[ ]?){3}(1|[0-9]+%|[0]?\.?[0-9]+)\)$/i;
@@ -39950,7 +39950,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.from(matches2).map((i) => i[0]);
   }
 
-  // packages/ckeditor5-engine/src/view/styles/background.ts
+  // ../packages/ckeditor5-engine/src/view/styles/background.ts
   var BACKGROUND_INITIAL_ARRAY_VALUES = {
     image: "none",
     repeat: "repeat",
@@ -40274,7 +40274,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return parts;
   }
 
-  // packages/ckeditor5-engine/src/view/styles/border.ts
+  // ../packages/ckeditor5-engine/src/view/styles/border.ts
   function addBorderStylesRules(stylesProcessor) {
     stylesProcessor.setNormalizer("border", getBorderNormalizer());
     stylesProcessor.setNormalizer("border-top", getBorderPositionNormalizer("top"));
@@ -40518,7 +40518,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-engine/src/view/styles/margin.ts
+  // ../packages/ckeditor5-engine/src/view/styles/margin.ts
   function addMarginStylesRules(stylesProcessor) {
     stylesProcessor.setNormalizer("margin", getPositionStyleShorthandNormalizer("margin"));
     stylesProcessor.setNormalizer("margin-top", (value) => ({ path: "margin.top", value }));
@@ -40529,7 +40529,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     stylesProcessor.setStyleRelation("margin", ["margin-top", "margin-right", "margin-bottom", "margin-left"]);
   }
 
-  // packages/ckeditor5-engine/src/view/styles/padding.ts
+  // ../packages/ckeditor5-engine/src/view/styles/padding.ts
   function addPaddingStylesRules(stylesProcessor) {
     stylesProcessor.setNormalizer("padding", getPositionStyleShorthandNormalizer("padding"));
     stylesProcessor.setNormalizer("padding-top", (value) => ({ path: "padding.top", value }));
@@ -40540,7 +40540,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     stylesProcessor.setStyleRelation("padding", ["padding-top", "padding-right", "padding-bottom", "padding-left"]);
   }
 
-  // packages/ckeditor5-core/src/editingkeystrokehandler.ts
+  // ../packages/ckeditor5-core/src/editingkeystrokehandler.ts
   var EditingKeystrokeHandler = class extends KeystrokeHandler {
     /**
      * Creates an instance of the keystroke handler.
@@ -40582,7 +40582,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-core/src/accessibility.ts
+  // ../packages/ckeditor5-core/src/accessibility.ts
   var DEFAULT_CATEGORY_ID = "contentEditing";
   var DEFAULT_GROUP_ID = "common";
   var Accessibility = class {
@@ -40887,7 +40887,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-core/src/editor/utils/editorusagedata.ts
+  // ../packages/ckeditor5-core/src/editor/utils/editorusagedata.ts
   function getEditorUsageData(editor) {
     return {
       sessionId: getSessionId(),
@@ -40996,7 +40996,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return globalVar.window.CKEDITOR_PAGE_SESSION_ID;
   }
 
-  // packages/ckeditor5-core/src/editor/editor.ts
+  // ../packages/ckeditor5-core/src/editor/editor.ts
   var EditorBase = /* @__PURE__ */ ObservableMixin();
   var Editor = class extends EditorBase {
     /**
@@ -41813,7 +41813,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return collectedData;
   }
 
-  // packages/ckeditor5-core/src/resolveerrorsource.ts
+  // ../packages/ckeditor5-core/src/resolveerrorsource.ts
   function resolveErrorSources(context) {
     if (context instanceof Editor) {
       return [context];
@@ -41840,7 +41840,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // packages/ckeditor5-core/src/errorreporter.ts
+  // ../packages/ckeditor5-core/src/errorreporter.ts
   var EditorErrorReporter = class {
     constructor() {
       /**
@@ -41928,7 +41928,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return reporter.add(callback);
   }
 
-  // packages/ckeditor5-core/src/context.ts
+  // ../packages/ckeditor5-core/src/context.ts
   var Context = class {
     /**
      * Creates a context instance with a given configuration.
@@ -42229,7 +42229,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
    */
   __publicField(Context, "builtinPlugins");
 
-  // packages/ckeditor5-core/src/contextplugin.ts
+  // ../packages/ckeditor5-core/src/contextplugin.ts
   var ContextPluginBase = /* @__PURE__ */ ObservableMixin();
   var ContextPlugin = class extends ContextPluginBase {
     /**
@@ -42269,7 +42269,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-core/src/editor/utils/attachtoform.ts
+  // ../packages/ckeditor5-core/src/editor/utils/attachtoform.ts
   function attachToForm(editor) {
     if (!isFunction(editor.updateSourceElement)) {
       throw new CKEditorError(
@@ -42302,7 +42302,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!sourceElement && sourceElement.tagName.toLowerCase() === "textarea";
   }
 
-  // packages/ckeditor5-core/src/editor/utils/elementapimixin.ts
+  // ../packages/ckeditor5-core/src/editor/utils/elementapimixin.ts
   function ElementApiMixin(base2) {
     class Mixin extends base2 {
       constructor() {
@@ -42329,7 +42329,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Mixin;
   }
 
-  // packages/ckeditor5-core/src/editor/utils/registerandinitializerootconfigattributes.ts
+  // ../packages/ckeditor5-core/src/editor/utils/registerandinitializerootconfigattributes.ts
   var CONFIG_FIELDS_AS_ROOT_ATTRIBUTES = [
     ["description", "$description"],
     ["title", "$title"]
@@ -42377,7 +42377,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-core/src/editor/utils/normalizerootsconfig.ts
+  // ../packages/ckeditor5-core/src/editor/utils/normalizerootsconfig.ts
   function normalizeRootsConfig(sourceElementsOrData, config, defaultRootName = "main", separateAttachTo = false) {
     const mainRootConfig = config.get("root");
     const rootsConfig = config.get("roots") || /* @__PURE__ */ Object.create(null);
@@ -42538,7 +42538,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isElement(value);
   }
 
-  // packages/ckeditor5-core/src/editor/utils/verifyrootelements.ts
+  // ../packages/ckeditor5-core/src/editor/utils/verifyrootelements.ts
   function verifyRootElements(editor) {
     const schema = editor.model.schema;
     const document4 = editor.model.document;
@@ -42555,13 +42555,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-core/src/editor/utils/rootacceptsblocks.ts
+  // ../packages/ckeditor5-core/src/editor/utils/rootacceptsblocks.ts
   function rootAcceptsBlocks(editor, rootName) {
     const root7 = editor.model.document.getRoot(rootName);
     return editor.model.schema.checkChild(root7, "$block");
   }
 
-  // packages/ckeditor5-core/src/pendingactions.ts
+  // ../packages/ckeditor5-core/src/pendingactions.ts
   var PendingActions = class extends ContextPlugin {
     constructor() {
       super(...arguments);
@@ -42634,241 +42634,241 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-icons/theme/icons/accessibility.svg
+  // ../packages/ckeditor5-icons/theme/icons/accessibility.svg
   var accessibility_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 6.628a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M8.5 9.125a.3.3 0 0 0-.253-.296L5.11 8.327a.75.75 0 1 1 .388-1.449l4.04.716c.267.072.624.08.893.009l4.066-.724a.75.75 0 1 1 .388 1.45l-3.132.5a.3.3 0 0 0-.253.296v1.357a.3.3 0 0 0 .018.102l1.615 4.438a.75.75 0 0 1-1.41.513l-1.35-3.71a.3.3 0 0 0-.281-.197h-.209a.3.3 0 0 0-.282.198l-1.35 3.711a.75.75 0 0 1-1.41-.513l1.64-4.509a.3.3 0 0 0 .019-.103z"/><path d="M10 18.5a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17m0 1.5c5.523 0 10-4.477 10-10S15.523 0 10 0 0 4.477 0 10s4.477 10 10 10" clip-rule="evenodd"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-bottom.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-bottom.svg
   var align_bottom_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m9.239 13.938-2.88-1.663a.75.75 0 0 1 .75-1.3L9 12.067V4.75a.75.75 0 1 1 1.5 0v7.318l1.89-1.093a.75.75 0 0 1 .75 1.3l-2.879 1.663a.75.75 0 0 1-.511.187.75.75 0 0 1-.511-.187M4.25 17a.75.75 0 1 1 0-1.5h10.5a.75.75 0 0 1 0 1.5z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-center.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-center.svg
   var align_center_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3.75c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0 8c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m2.286 4c0 .414.336.75.75.75h9.928a.75.75 0 1 0 0-1.5H5.036a.75.75 0 0 0-.75.75m0-8c0 .414.336.75.75.75h9.928a.75.75 0 1 0 0-1.5H5.036a.75.75 0 0 0-.75.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-justify.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-justify.svg
   var align_justify_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3.75c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0 8c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0 4c0 .414.336.75.75.75h9.929a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0-8c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-left.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-left.svg
   var align_left_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3.75c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0 8c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0 4c0 .414.336.75.75.75h9.929a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m0-8c0 .414.336.75.75.75h9.929a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-middle.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-middle.svg
   var align_middle_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.75 11.875a.75.75 0 0 1 .508.184l2.883 1.666a.75.75 0 0 1-.659 1.344l-.091-.044-1.892-1.093.001 4.318a.75.75 0 1 1-1.5 0v-4.317l-1.89 1.092a.75.75 0 0 1-.75-1.3l2.879-1.663a.75.75 0 0 1 .51-.187zM15.25 9a.75.75 0 1 1 0 1.5H4.75a.75.75 0 1 1 0-1.5zM9.75.375a.75.75 0 0 1 .75.75v4.318l1.89-1.093.092-.045a.75.75 0 0 1 .659 1.344l-2.883 1.667a.75.75 0 0 1-.508.184.75.75 0 0 1-.511-.187L6.359 5.65a.75.75 0 0 1 .75-1.299L9 5.442V1.125a.75.75 0 0 1 .75-.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-right.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-right.svg
   var align_right_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M18 3.75a.75.75 0 0 1-.75.75H2.75a.75.75 0 1 1 0-1.5h14.5a.75.75 0 0 1 .75.75m0 8a.75.75 0 0 1-.75.75H2.75a.75.75 0 1 1 0-1.5h14.5a.75.75 0 0 1 .75.75m0 4a.75.75 0 0 1-.75.75H7.321a.75.75 0 1 1 0-1.5h9.929a.75.75 0 0 1 .75.75m0-8a.75.75 0 0 1-.75.75H7.321a.75.75 0 1 1 0-1.5h9.929a.75.75 0 0 1 .75.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/align-top.svg
+  // ../packages/ckeditor5-icons/theme/icons/align-top.svg
   var align_top_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m10.261 7.062 2.88 1.663a.75.75 0 0 1-.75 1.3L10.5 8.933v7.317a.75.75 0 1 1-1.5 0V8.932l-1.89 1.093a.75.75 0 0 1-.75-1.3l2.879-1.663a.75.75 0 0 1 .511-.187.75.75 0 0 1 .511.187M15.25 4a.75.75 0 1 1 0 1.5H4.75a.75.75 0 0 1 0-1.5z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/bold.svg
+  // ../packages/ckeditor5-icons/theme/icons/bold.svg
   var bold_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10.187 17H5.773q-.956 0-1.364-.415-.41-.416-.409-1.323V4.738q0-.926.419-1.332.418-.405 1.354-.406h4.68q1.035 0 1.793.124.76.124 1.36.478.512.296.906.75a3.26 3.26 0 0 1 .808 2.162q0 2.102-2.167 3.075 2.846.879 2.847 3.421a3.76 3.76 0 0 1-2.296 3.504 6 6 0 0 1-1.517.377q-.857.11-2 .11zm-.217-6.217H7v4.087h3.069q2.965 0 2.965-2.072 0-1.061-.768-1.537-.768-.478-2.296-.478M7 5.13v3.619h2.606q1.093 0 1.69-.2a1.6 1.6 0 0 0 .91-.765q.247-.4.247-.897 0-1.06-.778-1.409-.778-.348-2.375-.348z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/bulleted-list.svg
+  // ../packages/ckeditor5-icons/theme/icons/bulleted-list.svg
   var bulleted_list_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 5.75c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75m-6 0C1 4.784 1.777 4 2.75 4c.966 0 1.75.777 1.75 1.75 0 .966-.777 1.75-1.75 1.75C1.784 7.5 1 6.723 1 5.75m6 9c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75m-6 0c0-.966.777-1.75 1.75-1.75.966 0 1.75.777 1.75 1.75 0 .966-.777 1.75-1.75 1.75-.966 0-1.75-.777-1.75-1.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/cancel.svg
+  // ../packages/ckeditor5-icons/theme/icons/cancel.svg
   var cancel_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m11.591 10.177 4.243 4.242a1 1 0 0 1-1.415 1.415l-4.242-4.243-4.243 4.243a1 1 0 0 1-1.414-1.415l4.243-4.242L4.52 5.934A1 1 0 0 1 5.934 4.52l4.243 4.243 4.242-4.243a1 1 0 1 1 1.415 1.414z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/caption.svg
+  // ../packages/ckeditor5-icons/theme/icons/caption.svg
   var caption_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 16h9a1 1 0 0 1 0 2H2a1 1 0 0 1 0-2"/><path fill-opacity=".6" d="M17 1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1.5H3a.5.5 0 0 0-.492.41L2.5 3v9a.5.5 0 0 0 .41.492L3 12.5h14a.5.5 0 0 0 .492-.41L17.5 12V3a.5.5 0 0 0-.41-.492z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/check.svg
+  // ../packages/ckeditor5-icons/theme/icons/check.svg
   var check_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6.972 16.615a1 1 0 0 1-.744-.292l-4.596-4.596a1 1 0 1 1 1.414-1.414l3.926 3.926 9.937-9.937a1 1 0 0 1 1.414 1.415L7.717 16.323a1 1 0 0 1-.745.292"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/code-block.svg
+  // ../packages/ckeditor5-icons/theme/icons/code-block.svg
   var code_block_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.87 12.61a.75.75 0 0 1-.089.976l-.085.07-3.154 2.254 3.412 2.414a.75.75 0 0 1 .237.95l-.057.095a.75.75 0 0 1-.95.237l-.096-.058-4.272-3.022-.003-1.223 4.01-2.867a.75.75 0 0 1 1.047.174m2.795-.231.095.057 4.011 2.867-.003 1.223-4.272 3.022-.095.058a.75.75 0 0 1-.88-.151l-.07-.086-.058-.095a.75.75 0 0 1 .15-.88l.087-.07 3.412-2.414-3.154-2.253-.085-.071a.75.75 0 0 1 .862-1.207M16 0a2 2 0 0 1 2 2v9.354l-.663-.492-.837-.001V2a.5.5 0 0 0-.5-.5H2a.5.5 0 0 0-.5.5v15a.5.5 0 0 0 .5.5h3.118L7.156 19H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zM5.009 15l.003 1H3v-1zm2.188-2-1.471 1H5v-1zM10 11v.095L8.668 12H7v-1zm4-2v1H7V9zm0-2v1H7V7zm-4-2v1H5V5zM6 3v1H3V3z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/code.svg
+  // ../packages/ckeditor5-icons/theme/icons/code.svg
   var code_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m12.5 5.7 5.2 3.9v1.3l-5.6 4c-.1.2-.3.2-.5.2-.3-.1-.6-.7-.6-1l.3-.4 4.7-3.5L11.5 7l-.2-.2c-.1-.3-.1-.6 0-.8.2-.2.5-.4.8-.4a.8.8 0 0 1 .4.1m-5.2 0L2 9.6v1.3l5.6 4c.1.2.3.2.5.2.3-.1.7-.7.6-1 0-.1 0-.3-.2-.4l-5-3.5L8.2 7l.2-.2c.1-.3.1-.6 0-.8-.2-.2-.5-.4-.8-.4a.8.8 0 0 0-.3.1"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/color-palette.svg
+  // ../packages/ckeditor5-icons/theme/icons/color-palette.svg
   var color_palette_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10.209 18.717A8.5 8.5 0 1 1 18.686 9.6h-.008l.002.12a3 3 0 0 1-2.866 2.997h-.268l-.046-.002v.002h-4.791a2 2 0 1 0 0 4 1 1 0 1 1-.128 1.992 9 9 0 0 1-.372.008m-3.918-7.01a1.25 1.25 0 1 0-2.415-.648 1.25 1.25 0 0 0 2.415.647ZM5.723 8.18a1.25 1.25 0 1 0 .647-2.414 1.25 1.25 0 0 0-.647 2.414M9.76 6.155a1.25 1.25 0 1 0 .647-2.415 1.25 1.25 0 0 0-.647 2.415m4.028 1.759a1.25 1.25 0 1 0 .647-2.415 1.25 1.25 0 0 0-.647 2.415"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/color-tile-check.svg
+  // ../packages/ckeditor5-icons/theme/icons/color-tile-check.svg
   var color_tile_check_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M16.935 5.328a2 2 0 0 1 0 2.829l-7.778 7.778a2 2 0 0 1-2.829 0L3.5 13.107a1.999 1.999 0 1 1 2.828-2.829l.707.707a1 1 0 0 0 1.414 0l5.658-5.657a2 2 0 0 1 2.828 0" class="ck-icon__fill"/><path d="M14.814 6.035 8.448 12.4a1 1 0 0 1-1.414 0l-1.413-1.415A1 1 0 1 0 4.207 12.4l2.829 2.829a1 1 0 0 0 1.414 0l7.778-7.778a1 1 0 1 0-1.414-1.415z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/drag-handle.svg
+  // ../packages/ckeditor5-icons/theme/icons/drag-handle.svg
   var drag_handle_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4 0v1H1v3H0V.5A.5.5 0 0 1 .5 0zm8 0h3.5a.5.5 0 0 1 .5.5V4h-1V1h-3zM4 16H.5a.5.5 0 0 1-.5-.5V12h1v3h3zm8 0v-1h3v-3h1v3.5a.5.5 0 0 1-.5.5z"/><path fill-opacity=".256" d="M1 1h14v14H1z"/><g class="ck-icon__selected-indicator"><path d="M7 0h2v1H7zM0 7h1v2H0zm15 0h1v2h-1zm-8 8h2v1H7z"/><path fill-opacity=".254" d="M1 1h14v14H1z"/></g></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/drag-indicator.svg
+  // ../packages/ckeditor5-icons/theme/icons/drag-indicator.svg
   var drag_indicator_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 3.25a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0m7 0a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0M5 10a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0m7 0a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0m-7 6.75a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0m7 0a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/dropdown-arrow.svg
+  // ../packages/ckeditor5-icons/theme/icons/dropdown-arrow.svg
   var dropdown_arrow_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path d="M.941 4.523a.75.75 0 1 1 1.06-1.06l3.006 3.005 3.005-3.005a.75.75 0 1 1 1.06 1.06l-3.549 3.55a.75.75 0 0 1-1.168-.136z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/eraser.svg
+  // ../packages/ckeditor5-icons/theme/icons/eraser.svg
   var eraser_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m8.636 9.531-2.758 3.94a.5.5 0 0 0 .122.696l3.224 2.284h1.314l2.636-3.736L8.636 9.53zm.288 8.451L5.14 15.396a2 2 0 0 1-.491-2.786l6.673-9.53a2 2 0 0 1 2.785-.49l3.742 2.62a2 2 0 0 1 .491 2.785l-7.269 10.053z"/><path d="M4 18h5.523v-1H4zm-2 0h1v-1H2z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/find-replace.svg
+  // ../packages/ckeditor5-icons/theme/icons/find-replace.svg
   var find_replace_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m12.87 13.786 1.532-1.286 3.857 4.596a1 1 0 1 1-1.532 1.286z"/><path d="M16.004 8.5a6.5 6.5 0 0 1-9.216 5.905c-1.154-.53-.863-1.415-.663-1.615.194-.194.564-.592 1.635-.141a4.5 4.5 0 0 0 5.89-5.904l-.104-.227 1.332-1.331c.045-.046.196-.041.224.007a6.47 6.47 0 0 1 .902 3.306m-3.4-5.715c.562.305.742 1.106.354 1.494s-.995.414-1.476.178a4.5 4.5 0 0 0-6.086 5.882l.114.236-1.348 1.349c-.038.037-.17.022-.198-.023a6.5 6.5 0 0 1 5.54-9.9 6.5 6.5 0 0 1 3.1.784"/><path d="M4.001 11.93.948 8.877a.2.2 0 0 1 .141-.341h6.106a.2.2 0 0 1 .141.341L4.283 11.93a.2.2 0 0 1-.282 0m11.083-6.789 3.053 3.053a.2.2 0 0 1-.14.342H11.89a.2.2 0 0 1-.14-.342l3.052-3.053a.2.2 0 0 1 .282 0"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/horizontal-line.svg
+  // ../packages/ckeditor5-icons/theme/icons/horizontal-line.svg
   var horizontal_line_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 9h16v2H2z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/image.svg
+  // ../packages/ckeditor5-icons/theme/icons/image.svg
   var image_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6.66 9.118a.693.693 0 0 1 .956.032l3.65 3.411 2.422-2.238a.695.695 0 0 1 .945 0L17.5 13.6V2.5h-15v11.1zM17.8 1c.652 0 1.2.47 1.2 1.1v14.362c0 .64-.532 1.038-1.184 1.038H2.184C1.532 17.5 1 17.103 1 16.462V2.1C1 1.47 1.537 1 2.2 1zm-5.655 6a2.13 2.13 0 0 1 .157-2.364A2.133 2.133 0 1 1 12.145 7"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/image-upload.svg
+  // ../packages/ckeditor5-icons/theme/icons/image-upload.svg
   var image_upload_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M1.201 1C.538 1 0 1.47 0 2.1v14.363c0 .64.534 1.037 1.186 1.037h9.494a3 3 0 0 1-.414-.287 3 3 0 0 1-1.055-2.03 3 3 0 0 1 .693-2.185l.383-.455-.02.018-3.65-3.41a.695.695 0 0 0-.957-.034L1.5 13.6V2.5h15v5.535a2.97 2.97 0 0 1 1.412.932l.088.105V2.1c0-.63-.547-1.1-1.2-1.1zm11.713 2.803a2.146 2.146 0 0 0-2.049 1.992 2.14 2.14 0 0 0 1.28 2.096 2.13 2.13 0 0 0 2.644-3.11 2.13 2.13 0 0 0-1.875-.978"/><path d="M15.522 19.1a.79.79 0 0 0 .79-.79v-5.373l2.059 2.455a.79.79 0 1 0 1.211-1.015l-3.352-3.995a.79.79 0 0 0-.995-.179.8.8 0 0 0-.299.221l-3.35 3.99a.79.79 0 1 0 1.21 1.017l1.936-2.306v5.185c0 .436.353.79.79.79"/><path d="M15.522 19.1a.79.79 0 0 0 .79-.79v-5.373l2.059 2.455a.79.79 0 1 0 1.211-1.015l-3.352-3.995a.79.79 0 0 0-.995-.179.8.8 0 0 0-.299.221l-3.35 3.99a.79.79 0 1 0 1.21 1.017l1.936-2.306v5.185c0 .436.353.79.79.79"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/image-url.svg
+  // ../packages/ckeditor5-icons/theme/icons/image-url.svg
   var image_url_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M1.201 1C.538 1 0 1.47 0 2.1v14.363c0 .64.534 1.037 1.186 1.037h7.029a5.4 5.4 0 0 1 .615-4.338l.762-1.232-2.975-2.78a.696.696 0 0 0-.957-.033L1.5 13.6V2.5h15v6.023q.675.195 1.307.573l.058.033q.068.042.135.086V2.1c0-.63-.547-1.1-1.2-1.1zm11.713 2.803a2.15 2.15 0 0 0-1.611.834 2.1 2.1 0 0 0-.438 1.158 2.14 2.14 0 0 0 1.277 2.096 2.132 2.132 0 0 0 2.645-3.11 2.13 2.13 0 0 0-1.873-.978"/><path d="M16.63 10.294a3.003 3.003 0 0 0-4.142.887l-.117.177a.65.65 0 0 0-.096.492.66.66 0 0 0 .278.418.7.7 0 0 0 .944-.234 1.74 1.74 0 0 1 2.478-.463 1.87 1.87 0 0 1 .476 2.55.64.64 0 0 0-.071.5.65.65 0 0 0 .309.396.627.627 0 0 0 .869-.19l.027-.041a3.226 3.226 0 0 0-.956-4.492Zm-6.061 3.78-.044.066a3.23 3.23 0 0 0 .82 4.403 3.005 3.005 0 0 0 4.275-.798l.13-.197a.63.63 0 0 0 .092-.475.64.64 0 0 0-.268-.402.713.713 0 0 0-.99.26l-.018.029a1.74 1.74 0 0 1-2.477.461 1.87 1.87 0 0 1-.475-2.55l.029-.047a.65.65 0 0 0 .086-.485.66.66 0 0 0-.275-.408l-.04-.027a.61.61 0 0 0-.845.17"/><path d="M15.312 13.925c.24-.36.154-.838-.19-1.067-.346-.23-.82-.124-1.059.236l-1.268 1.907c-.239.36-.153.838.192 1.067.345.23.818.123 1.057-.236z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/import-export.svg
+  // ../packages/ckeditor5-icons/theme/icons/import-export.svg
   var import_export_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M19 4.5 14 0H3v12.673l.868-1.041c.185-.222.4-.402.632-.54V1.5h8v5h5v7.626a2.24 2.24 0 0 1 1.5.822zM14 5V2l3.3 3zm-3.692 12.5q.093.157.213.303L11.52 19H8v-.876a2.24 2.24 0 0 0 1.82-.624zm7.518-.657a.75.75 0 0 0-1.152-.96L15.5 17.29V12H14v5.29l-1.174-1.408a.75.75 0 0 0-1.152.96l2.346 2.816a.95.95 0 0 0 1.46 0zm-15.056-.38a.75.75 0 0 1-.096-1.056l2.346-2.815a.95.95 0 0 1 1.46 0l2.346 2.815a.75.75 0 1 1-1.152.96L6.5 14.96V20H5v-5.04l-1.174 1.408a.75.75 0 0 1-1.056.096Z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/italic.svg
+  // ../packages/ckeditor5-icons/theme/icons/italic.svg
   var italic_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m9.586 14.633.021.004q-.054.502.393.962.123.125.274.201h1.474a.6.6 0 1 1 0 1.2H5.304a.6.6 0 0 1 0-1.2h1.15q.711-.106 1.005-.334.235-.182.404-.597l2.416-9.55a1.05 1.05 0 0 0-.281-.823 1.1 1.1 0 0 0-.442-.296H8.15a.6.6 0 0 1 0-1.2h6.443a.6.6 0 1 1 0 1.2h-1.195q-.564.084-.823.296-.323.263-.623.79z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/link.svg
+  // ../packages/ckeditor5-icons/theme/icons/link.svg
   var link_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m11.077 15 .991-1.416a.75.75 0 1 1 1.229.86l-1.148 1.64a.8.8 0 0 1-.217.206 5.251 5.251 0 0 1-8.503-5.955.7.7 0 0 1 .12-.274l1.147-1.639a.75.75 0 1 1 1.228.86L4.933 10.7l.006.003a3.75 3.75 0 0 0 6.132 4.294zm5.494-5.335a.8.8 0 0 1-.12.274l-1.147 1.639a.75.75 0 1 1-1.228-.86l.86-1.23a3.75 3.75 0 0 0-6.144-4.301l-.86 1.229a.75.75 0 0 1-1.229-.86l1.148-1.64a.8.8 0 0 1 .217-.206 5.251 5.251 0 0 1 8.503 5.955m-4.563-2.532a.75.75 0 0 1 .184 1.045l-3.155 4.505a.75.75 0 1 1-1.229-.86l3.155-4.506a.75.75 0 0 1 1.045-.184"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-circle.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-circle.svg
   var list_style_circle_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M11 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6m0 1a2 2 0 1 0 0 4 2 2 0 0 0 0-4m0-10a3 3 0 1 1 0 6 3 3 0 0 1 0-6m0 1a2 2 0 1 0 0 4 2 2 0 0 0 0-4m0-10a3 3 0 1 1 0 6 3 3 0 0 1 0-6m0 1a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-decimal-leading-zero.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-decimal-leading-zero.svg
   var list_style_decimal_leading_zero_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M5.714 15.11q.935 0 1.46-.66.632-.799.632-2.627 0-1.832-.629-2.624-.527-.668-1.463-.668t-1.459.66q-.633.8-.633 2.619 0 1.854.576 2.577.577.723 1.516.723m0-1.024a.6.6 0 0 1-.398-.14q-.173-.141-.287-.565-.115-.424-.115-1.558c0-1.134.043-1.294.128-1.613q.096-.37.272-.512a.62.62 0 0 1 .4-.143.6.6 0 0 1 .398.143q.173.143.288.567t.114 1.558c0 1.134-.043 1.292-.128 1.608q-.096.37-.272.512a.62.62 0 0 1-.4.143m6.078.914V8.531H10.79q-.21.59-.778 1.03-.567.442-1.05.6v1.121a4.3 4.3 0 0 0 1.595-.936V15zm3.344 0v-1.235h-1.235V15zm-9.422 9.11q.935 0 1.46-.66.632-.799.632-2.627 0-1.833-.629-2.624-.527-.668-1.463-.668t-1.459.66q-.633.8-.633 2.619 0 1.854.576 2.577.577.723 1.516.723m0-1.024a.6.6 0 0 1-.398-.14q-.173-.142-.287-.565-.115-.424-.115-1.558c0-1.134.043-1.294.128-1.613q.096-.37.272-.512a.62.62 0 0 1 .4-.143.6.6 0 0 1 .398.143q.173.142.288.567t.114 1.558c0 1.134-.043 1.292-.128 1.608q-.096.37-.272.512a.62.62 0 0 1-.4.143m7.088.914v-1.147H10.35q.097-.167.253-.343.155-.175.74-.712t.81-.821q.338-.431.493-.824.156-.394.156-.829 0-.765-.544-1.279-.546-.514-1.499-.514-.87 0-1.45.444t-.69 1.463l1.23.124q.036-.54.264-.774t.615-.233q.391 0 .613.222t.222.635q0 .374-.255.756-.189.277-1.024 1.055-1.037.962-1.388 1.544-.352.583-.422 1.233zm2.334 0v-1.235h-1.235V24zM5.714 34.11q.935 0 1.46-.66.632-.799.632-2.627 0-1.832-.629-2.624-.527-.668-1.463-.668t-1.459.66q-.633.8-.633 2.619 0 1.854.576 2.577.577.723 1.516.723m0-1.024a.6.6 0 0 1-.398-.14q-.173-.142-.287-.565-.115-.424-.115-1.558c0-1.134.043-1.294.128-1.613q.096-.37.272-.512a.62.62 0 0 1 .4-.143.6.6 0 0 1 .398.143q.173.142.288.567t.114 1.558c0 1.134-.043 1.292-.128 1.608q-.096.37-.272.512a.62.62 0 0 1-.4.143m4.992 1.024q.924 0 1.543-.598.62-.597.62-1.446 0-.585-.332-.997a1.5 1.5 0 0 0-.886-.532q.927-.505.927-1.353 0-.598-.452-1.073-.55-.58-1.46-.58a2.25 2.25 0 0 0-.96.2 1.6 1.6 0 0 0-.667.55q-.24.349-.359.933l1.139.194q.048-.422.272-.642t.54-.22q.321 0 .515.194c.194.194.193.302.193.518q0 .383-.264.613-.263.231-.764.218l-.136 1.006q.33-.092.566-.092.36 0 .611.272.25.273.25.739 0 .492-.26.782a.83.83 0 0 1-.644.29.84.84 0 0 1-.607-.242q-.25-.241-.308-.698l-1.195.145q.093.813.668 1.316t1.45.503m4.43-.11v-1.235h-1.235V34z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-decimal.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-decimal.svg
   var list_style_decimal_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M10.29 15V8.531H9.286q-.21.59-.778 1.03-.567.442-1.05.6v1.121a4.3 4.3 0 0 0 1.595-.936V15h1.235zm3.343 0v-1.235h-1.235V15zM11.3 24v-1.147H8.848q.096-.167.252-.343.156-.175.74-.712.585-.536.81-.821.338-.431.494-.824.156-.394.156-.829 0-.765-.545-1.279t-1.499-.514q-.87 0-1.45.444t-.69 1.463l1.23.124q.036-.54.264-.774.23-.233.616-.233.39 0 .613.222t.222.635q0 .374-.255.756-.19.277-1.024 1.055-1.038.962-1.389 1.544T6.971 24zm2.333 0v-1.235h-1.235V24zM9.204 34.11q.922 0 1.542-.598.62-.597.62-1.446 0-.585-.332-.997a1.5 1.5 0 0 0-.886-.532q.928-.505.928-1.353 0-.598-.453-1.073-.549-.58-1.459-.58a2.25 2.25 0 0 0-.96.2 1.6 1.6 0 0 0-.668.55q-.24.349-.358.933l1.138.194q.048-.422.272-.642t.54-.22q.322 0 .515.194c.193.194.193.302.193.518q0 .383-.263.613-.263.231-.765.218l-.136 1.006q.33-.092.567-.092.36 0 .61.272.251.273.251.739 0 .492-.261.782a.83.83 0 0 1-.644.29.84.84 0 0 1-.607-.242q-.251-.241-.307-.698l-1.196.145q.093.813.668 1.316t1.45.503zm4.43-.11v-1.235h-1.236V34h1.235z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-disc.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-disc.svg
   var list_style_disc_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M11 27a3 3 0 1 1 0 6 3 3 0 0 1 0-6m0-9a3 3 0 1 1 0 6 3 3 0 0 1 0-6m0-9a3 3 0 1 1 0 6 3 3 0 0 1 0-6"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-lower-latin.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-lower-latin.svg
   var list_style_lower_latin_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M9.62 14.105q.408 0 .768-.153c.36-.153.466-.257.677-.462q.013.036.044.145.07.242.119.365h1.221a2.7 2.7 0 0 1-.222-.626q-.06-.293-.059-.908l.013-1.441q0-.804-.165-1.105-.165-.302-.569-.497-.405-.195-1.23-.195-.91 0-1.371.325-.462.325-.65 1.002l1.12.202q.114-.326.299-.455.184-.13.514-.13.488 0 .663.152.176.151.176.508v.123q-.333.14-1.2.303-.641.123-.982.288t-.53.474a1.33 1.33 0 0 0-.188.706q0 .598.415.988.416.391 1.136.391zm.368-.87a.68.68 0 0 1-.492-.189.6.6 0 0 1-.193-.448q0-.263.241-.435.159-.105.673-.215a7 7 0 0 0 .751-.19v.247q0 .443-.048.602a.77.77 0 0 1-.295.409 1.07 1.07 0 0 1-.637.22zm4.645.765v-1.235h-1.235V14zM10.2 25.105q.813 0 1.382-.646.57-.645.57-1.84 0-1.156-.559-1.774a1.82 1.82 0 0 0-1.41-.617q-.783 0-1.354.65v-2.32H7.594V25h1.147v-.686a1.9 1.9 0 0 0 .67.592q.39.2.79.2zm-.299-.975q-.531 0-.852-.492-.23-.348-.229-1.073 0-.703.295-1.048a.93.93 0 0 1 .738-.345q.453 0 .743.354t.29 1.154q0 .751-.288 1.1t-.697.35m4.478.87v-1.235h-1.234V25zm-4.017 9.105q.9 0 1.437-.426.536-.426.725-1.261l-1.213-.207q-.092.489-.316.688a.83.83 0 0 1-.576.2.92.92 0 0 1-.75-.343q-.278-.343-.278-1.173 0-.747.274-1.066.275-.318.736-.318.348 0 .565.184t.28.55l1.216-.22q-.22-.751-.722-1.119-.504-.366-1.356-.366-1.042 0-1.653.643-.61.645-.61 1.8 0 1.143.608 1.788.609.646 1.633.646M14.633 34v-1.235h-1.235V34z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-lower-roman.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-lower-roman.svg
   var list_style_lower_roman_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M11.88 8.7V7.558h-1.234V8.7zm0 5.3V9.333h-1.234V14zm2.5 0v-1.235h-1.234V14zm-4.75 4.7v-1.142H8.395V18.7zm0 5.3v-4.667H8.395V24zm2.5-5.3v-1.142h-1.234V18.7zm0 5.3v-4.667h-1.234V24zm2.501 0v-1.235h-1.235V24zM7.38 28.7v-1.142H6.145V28.7zm0 5.3v-4.667H6.145V34zm2.5-5.3v-1.142H8.646V28.7zm0 5.3v-4.667H8.646V34zm2.5-5.3v-1.142h-1.234V28.7zm0 5.3v-4.667h-1.234V34zm2.501 0v-1.235h-1.235V34z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-square.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-square.svg
   var list_style_square_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M14 27v6H8v-6zm0-9v6H8v-6zm0-9v6H8V9z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-upper-latin.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-upper-latin.svg
   var list_style_upper_latin_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="m7.88 15 .532-1.463h2.575L11.549 15h1.415l-2.58-6.442H9.01L6.5 15zm2.69-2.549H8.811l.87-2.39.887 2.39zM14.88 15v-1.235h-1.234V15zM9.352 25q1.244-.009 1.569-.044.518-.057.872-.305.354-.249.558-.664t.205-.855q0-.558-.317-.97-.315-.414-.905-.585a1.5 1.5 0 0 0 .661-.567 1.5 1.5 0 0 0 .244-.83q0-.419-.197-.754a1.65 1.65 0 0 0-.495-.539 1.7 1.7 0 0 0-.672-.266q-.375-.063-1.14-.063H7.158V25zm.142-3.88H8.46v-1.49h.747q.918 0 1.112.022.325.04.49.226.165.188.165.486a.68.68 0 0 1-.192.503.86.86 0 0 1-.525.23 12 12 0 0 1-.944.023h.18zm.17 2.795H8.46v-1.723h1.05q.888 0 1.154.092.266.093.406.295a.84.84 0 0 1 .14.492q0 .342-.181.547a.8.8 0 0 1-.473.257q-.189.04-.892.04M14.88 25v-1.235h-1.234V25zm-5.018 9.11q1.037 0 1.711-.512t.965-1.567l-1.261-.4q-.163.708-.536 1.037-.375.33-.892.33-.704 0-1.143-.519-.44-.518-.44-1.74 0-1.15.447-1.665.445-.514 1.162-.514.52 0 .881.29.362.29.477.79l1.288-.307q-.22-.774-.66-1.187-.738-.698-1.92-.698-1.353 0-2.184.89-.83.89-.83 2.498 0 1.521.825 2.397.826.877 2.11.877M14.88 34v-1.235h-1.234V34z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-upper-roman.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-upper-roman.svg
   var list_style_upper_roman_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M11.916 15V8.558h-1.301V15zm2.465 0v-1.235h-1.235V15zM9.665 25v-6.442h-1.3V25zm2.5 0v-6.442h-1.3V25zm2.466 0v-1.235h-1.235V25zm-7.216 9v-6.442h-1.3V34zm2.5 0v-6.442h-1.3V34zm2.501 0v-6.442h-1.3V34zm2.465 0v-1.235h-1.235V34z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/list-style-arabic-indic.svg
+  // ../packages/ckeditor5-icons/theme/icons/list-style-arabic-indic.svg
   var list_style_arabic_indic_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M14.88 15v-1.235h-1.234V15zm0 10v-1.235h-1.234V25zm0 9v-1.235h-1.234V34z"/><text x="9" y="15" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle">\u0661</text><text x="9" y="25" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle">\u0662</text><text x="9" y="34" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle">\u0663</text></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/next-arrow.svg
+  // ../packages/ckeditor5-icons/theme/icons/next-arrow.svg
   var next_arrow_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M8.537 14.813a.888.888 0 1 1-1.254-1.255L10.84 10 7.283 6.442a.888.888 0 1 1 1.254-1.255L12.74 9.39a.888.888 0 0 1-.16 1.382z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/numbered-list.svg
+  // ../packages/ckeditor5-icons/theme/icons/numbered-list.svg
   var numbered_list_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 5.75c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75M3.5 3v5H2V3.7H1v-1h2.5zM.343 17.857l2.59-3.257H2.92a.6.6 0 1 0-1.04 0H.302a2 2 0 1 1 3.995 0h-.001q-.073.607-.333.988-.263.381-1.244 1.312H4.3v1h-4zM7 14.75a.75.75 0 0 1 .75-.75h9.5a.75.75 0 1 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-center.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-center.svg
   var object_center_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm0 12h16v1.5H2z" opacity=".5"/><path d="M15.003 7v5.5a1 1 0 0 1-1 1H5.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1m-1.506.5H6.5V12h6.997z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-full-width.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-full-width.svg
   var object_full_width_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm0 12h16v1.5H2z" opacity=".5"/><path d="M18 7v5.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1m-1.505.5H3.504V12h12.991z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-inline-left.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-inline-left.svg
   var object_inline_left_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm11.5 9H18v1.5h-4.5zm0-3H18v1.5h-4.5zm0-3H18v1.5h-4.5zM2 15h16v1.5H2z" opacity=".5"/><path d="M12.003 7v5.5a1 1 0 0 1-1 1H2.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1m-1.506.5H3.5V12h6.997z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-inline-right.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-inline-right.svg
   var object_inline_right_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm0 12h16v1.5H2zm0-9h5v1.5H2zm0 3h5v1.5H2zm0 3h5v1.5H2z" opacity=".5"/><path d="M18.003 7v5.5a1 1 0 0 1-1 1H8.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1m-1.506.5H9.5V12h6.997z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-inline.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-inline.svg
   var object_inline_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm11.5 9H18v1.5h-4.5zM2 15h16v1.5H2z" opacity=".5"/><path d="M12.003 7v5.5a1 1 0 0 1-1 1H2.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1m-1.506.5H3.5V12h6.997z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-left.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-left.svg
   var object_left_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm0 12h16v1.5H2z" opacity=".5"/><path d="M12.003 7v5.5a1 1 0 0 1-1 1H2.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1m-1.506.5H3.5V12h6.997z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-right.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-right.svg
   var object_right_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3h16v1.5H2zm0 12h16v1.5H2z" opacity=".5"/><path d="M18.003 7v5.5a1 1 0 0 1-1 1H8.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1m-1.506.5H9.5V12h6.997z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-size-custom.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-size-custom.svg
   var object_size_custom_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M.95 1.43a.95.95 0 0 0-.95.95v3.1a.95.95 0 0 0 .95.95h.75v6.3H.95a.95.95 0 0 0-.95.95v3.1a.95.95 0 0 0 .95.95h3.1a.95.95 0 0 0 .95-.95v-.65h1.932l1.539-1.5H5v-.95a.95.95 0 0 0-.95-.95H3.2v-6.3h.85A.95.95 0 0 0 5 5.48v-.55h10v.55a.95.95 0 0 0 .95.95h3.1a.95.95 0 0 0 .95-.95v-3.1a.95.95 0 0 0-.95-.95h-3.1a.95.95 0 0 0-.95.95v1.05H5V2.38a.95.95 0 0 0-.95-.95zm.55 3.5v-2h2v2zm0 9.3v2h2v-2zm15-11.3v2h2v-2zM8.139 20.004v-2.388l7.045-7.048 2.391 2.391-7.046 7.046zm11.421-9.101a.6.6 0 0 1-.138.206l-1.165 1.168-2.391-2.391 1.167-1.163a.6.6 0 0 1 .206-.138.6.6 0 0 1 .243-.049.63.63 0 0 1 .449.187l1.491 1.488c.059.059.108.129.138.206s.049.16.049.243a.6.6 0 0 1-.049.243"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-size-full.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-size-full.svg
   var object_size_full_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 17v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zM1 15.5v1H0v-1zm19 0v1h-1v-1zm-19-2v1H0v-1zm19 0v1h-1v-1zm-19-2v1H0v-1zm19 0v1h-1v-1zm-19-2v1H0v-1zm19 0v1h-1v-1zm-19-2v1H0v-1zm19 0v1h-1v-1zm-19-2v1H0v-1zm19 0v1h-1v-1zm0-2v1h-1v-1zm-19 0v1H0v-1zM14.5 2v1h-1V2zm2 0v1h-1V2zm2 0v1h-1V2zm-8 0v1h-1V2zm-2 0v1h-1V2zm-2 0v1h-1V2zm-2 0v1h-1V2zm8 0v1h-1V2zm-10 0v1h-1V2z"/><path d="M18.095 2H1.905C.853 2 0 2.895 0 4v12c0 1.105.853 2 1.905 2h16.19C19.147 18 20 17.105 20 16V4c0-1.105-.853-2-1.905-2m0 1.5c.263 0 .476.224.476.5v12c0 .276-.213.5-.476.5H1.905a.49.49 0 0 1-.476-.5V4c0-.276.213-.5.476-.5z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-size-large.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-size-large.svg
   var object_size_large_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 16.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zM1 15v1H0v-1zm19 0v1h-1v-1zM1 13v1H0v-1zm19 0v1h-1v-1zM1 11v1H0v-1zm19 0v1h-1v-1zM1 9v1H0V9zm19 0v1h-1V9zM1 7v1H0V7zm19 0v1h-1V7zM1 5v1H0V5zm19 0v1h-1V5zm0-2v1h-1V3zM1 3v1H0V3zm13.5-1.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm-8 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm8 0v1h-1v-1zm-10 0v1h-1v-1z"/><path d="M13 5.5H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2M13 7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-8A.5.5 0 0 1 2 7z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-size-medium.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-size-medium.svg
   var object_size_medium_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 16.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zM1 15v1H0v-1zm19 0v1h-1v-1zM1 13v1H0v-1zm19 0v1h-1v-1zM1 11v1H0v-1zm19 0v1h-1v-1zM1 9v1H0V9zm19 0v1h-1V9zM1 7v1H0V7zm19 0v1h-1V7zM1 5v1H0V5zm19 0v1h-1V5zm0-2v1h-1V3zM1 3v1H0V3zm13.5-1.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm-8 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm8 0v1h-1v-1zm-10 0v1h-1v-1z"/><path d="M10 7.5H2a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2M10 9a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-6A.5.5 0 0 1 2 9z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/object-size-small.svg
+  // ../packages/ckeditor5-icons/theme/icons/object-size-small.svg
   var object_size_small_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 16.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zM1 15v1H0v-1zm19 0v1h-1v-1zM1 13v1H0v-1zm19 0v1h-1v-1zM1 11v1H0v-1zm19 0v1h-1v-1zM1 9v1H0V9zm19 0v1h-1V9zM1 7v1H0V7zm19 0v1h-1V7zM1 5v1H0V5zm19 0v1h-1V5zm0-2v1h-1V3zM1 3v1H0V3zm13.5-1.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm-8 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm8 0v1h-1v-1zm-10 0v1h-1v-1z"/><path d="M7 9.5H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M7 11a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-4A.5.5 0 0 1 2 11z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/paragraph.svg
+  // ../packages/ckeditor5-icons/theme/icons/paragraph.svg
   var paragraph_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10.5 5.5H7v5h3.5a2.5 2.5 0 1 0 0-5M5 3h6.5v.025a5 5 0 0 1 0 9.95V13H7v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/pencil.svg
+  // ../packages/ckeditor5-icons/theme/icons/pencil.svg
   var pencil_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m7.3 17.37-.061.088a1.52 1.52 0 0 1-.934.535l-4.178.663-.806-4.153a1.5 1.5 0 0 1 .187-1.058l.056-.086L8.77 2.639c.958-1.351 2.803-1.076 4.296-.03 1.497 1.047 2.387 2.693 1.433 4.055zM9.14 4.728l-5.545 8.346 3.277 2.294 5.544-8.346zM6.07 16.512l-3.276-2.295.53 2.73zM9.994 3.506 13.271 5.8c.316-.452-.16-1.333-1.065-1.966-.905-.634-1.895-.78-2.212-.328M8 18.5 9.375 17H19v1.5z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/pilcrow.svg
+  // ../packages/ckeditor5-icons/theme/icons/pilcrow.svg
   var pilcrow_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6.999 2H15a1 1 0 0 1 0 2h-1.004v13a1 1 0 1 1-2 0V4H8.999v13a1 1 0 1 1-2 0v-7A4 4 0 0 1 3 6a4 4 0 0 1 3.999-4"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/plus.svg
+  // ../packages/ckeditor5-icons/theme/icons/plus.svg
   var plus_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 2a1 1 0 0 0-1 1v6H3a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6V3a1 1 0 0 0-1-1"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/previous-arrow.svg
+  // ../packages/ckeditor5-icons/theme/icons/previous-arrow.svg
   var previous_arrow_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M11.463 5.187a.888.888 0 1 1 1.254 1.255L9.16 10l3.557 3.557a.888.888 0 1 1-1.254 1.255L7.26 10.61a.888.888 0 0 1 .16-1.382l4.043-4.042z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/project-logo.svg
+  // ../packages/ckeditor5-icons/theme/icons/project-logo.svg
   var project_logo_default = '<svg xmlns="http://www.w3.org/2000/svg" width="53" height="10" viewBox="0 0 53 10"><path fill="#1C2331" d="M31.724 1.492a15.139 15.139 0 0 0 .045 1.16 2.434 2.434 0 0 0-.687-.34 3.68 3.68 0 0 0-1.103-.166 2.332 2.332 0 0 0-1.14.255 1.549 1.549 0 0 0-.686.87c-.15.41-.225.98-.225 1.712 0 .939.148 1.659.444 2.161.297.503.792.754 1.487.754.452.015.9-.094 1.294-.316.296-.174.557-.4.771-.669l.14.852h1.282V.007h-1.623v1.485ZM31 6.496a1.77 1.77 0 0 1-.494.061.964.964 0 0 1-.521-.127.758.758 0 0 1-.296-.466 3.984 3.984 0 0 1-.093-.992 4.208 4.208 0 0 1 .098-1.052.753.753 0 0 1 .307-.477 1.08 1.08 0 0 1 .55-.122c.233-.004.466.026.69.089l.483.144v2.553c-.11.076-.213.143-.307.2a1.73 1.73 0 0 1-.417.189ZM35.68 0l-.702.004c-.322.002-.482.168-.48.497l.004.581c.002.33.164.493.486.49l.702-.004c.322-.002.481-.167.48-.496L36.165.49c-.002-.33-.164-.493-.486-.491ZM36.145 2.313l-1.612.01.034 5.482 1.613-.01-.035-5.482ZM39.623.79 37.989.8 38 2.306l-.946.056.006 1.009.949-.006.024 2.983c.003.476.143.844.419 1.106.275.26.658.39 1.148.387.132 0 .293-.01.483-.03.19-.02.38-.046.57-.08.163-.028.324-.068.482-.119l-.183-1.095-.702.004a.664.664 0 0 1-.456-.123.553.553 0 0 1-.14-.422l-.016-2.621 1.513-.01-.006-1.064-1.514.01-.01-1.503ZM46.226 2.388c-.41-.184-.956-.274-1.636-.27-.673.004-1.215.101-1.627.29-.402.179-.72.505-.888.91-.18.419-.268.979-.264 1.68.004.688.1 1.24.285 1.655.172.404.495.724.9.894.414.18.957.268 1.63.264.68-.004 1.224-.099 1.632-.284.4-.176.714-.501.878-.905.176-.418.263-.971.258-1.658-.004-.702-.097-1.261-.28-1.677a1.696 1.696 0 0 0-.888-.9Zm-.613 3.607a.77.77 0 0 1-.337.501 1.649 1.649 0 0 1-1.317.009.776.776 0 0 1-.343-.497 4.066 4.066 0 0 1-.105-1.02 4.136 4.136 0 0 1 .092-1.03.786.786 0 0 1 .337-.507 1.59 1.59 0 0 1 1.316-.008.79.79 0 0 1 .344.502c.078.337.113.683.105 1.03.012.343-.019.685-.092 1.02ZM52.114 2.07a2.67 2.67 0 0 0-1.128.278c-.39.191-.752.437-1.072.73l-.157-.846-1.273.008.036 5.572 1.623-.01-.024-3.78c.35-.124.646-.22.887-.286.26-.075.53-.114.8-.118l.45-.003.144-1.546-.286.001ZM22.083 7.426l-1.576-2.532a2.137 2.137 0 0 0-.172-.253 1.95 1.95 0 0 0-.304-.29.138.138 0 0 1 .042-.04 1.7 1.7 0 0 0 .328-.374l1.75-2.71c.01-.015.025-.028.024-.048-.01-.01-.021-.007-.031-.007L20.49 1.17a.078.078 0 0 0-.075.045l-.868 1.384c-.23.366-.46.732-.688 1.099a.108.108 0 0 1-.112.06c-.098-.005-.196-.001-.294-.002-.018 0-.038.006-.055-.007.002-.02.002-.039.005-.058a4.6 4.6 0 0 0 .046-.701V1.203c0-.02-.009-.032-.03-.03h-.033L16.93 1.17c-.084 0-.073-.01-.073.076v6.491c-.001.018.006.028.025.027h1.494c.083 0 .072.007.072-.071v-2.19c0-.055-.003-.11-.004-.166a3.366 3.366 0 0 0-.05-.417h.06c.104 0 .209.002.313-.002a.082.082 0 0 1 .084.05c.535.913 1.07 1.824 1.607 2.736a.104.104 0 0 0 .103.062c.554-.003 1.107-.002 1.66-.002l.069-.003-.019-.032-.188-.304ZM27.112 6.555c-.005-.08-.004-.08-.082-.08h-2.414c-.053 0-.106-.003-.159-.011a.279.279 0 0 1-.246-.209.558.558 0 0 1-.022-.15c0-.382 0-.762-.002-1.143 0-.032.007-.049.042-.044h2.504c.029.003.037-.012.034-.038V3.814c0-.089.013-.078-.076-.078h-2.44c-.07 0-.062.003-.062-.06v-.837c0-.047.004-.093.013-.14a.283.283 0 0 1 .241-.246.717.717 0 0 1 .146-.011h2.484c.024.002.035-.009.036-.033l.003-.038.03-.496c.01-.183.024-.365.034-.548.005-.085.003-.087-.082-.094-.218-.018-.437-.038-.655-.05a17.845 17.845 0 0 0-.657-.026 72.994 72.994 0 0 0-1.756-.016 1.7 1.7 0 0 0-.471.064 1.286 1.286 0 0 0-.817.655c-.099.196-.149.413-.145.633v3.875c0 .072.003.144.011.216a1.27 1.27 0 0 0 .711 1.029c.228.113.48.167.734.158.757-.005 1.515.002 2.272-.042.274-.016.548-.034.82-.053.03-.002.043-.008.04-.041-.008-.104-.012-.208-.019-.312a69.964 69.964 0 0 1-.05-.768ZM16.14 7.415l-.127-1.075c-.004-.03-.014-.04-.044-.037a13.125 13.125 0 0 1-.998.073c-.336.01-.672.02-1.008.016-.116-.001-.233-.014-.347-.039a.746.746 0 0 1-.45-.262c-.075-.1-.132-.211-.167-.33a3.324 3.324 0 0 1-.126-.773 9.113 9.113 0 0 1-.015-.749c0-.285.022-.57.065-.852.023-.158.066-.312.127-.46a.728.728 0 0 1 .518-.443 1.64 1.64 0 0 1 .397-.048c.628-.001 1.255.003 1.882.05.022.001.033-.006.036-.026l.003-.031.06-.55c.019-.177.036-.355.057-.532.004-.034-.005-.046-.04-.056a5.595 5.595 0 0 0-1.213-.21 10.783 10.783 0 0 0-.708-.02c-.24-.003-.48.01-.719.041a3.477 3.477 0 0 0-.625.14 1.912 1.912 0 0 0-.807.497c-.185.2-.33.433-.424.688a4.311 4.311 0 0 0-.24 1.096c-.031.286-.045.572-.042.86-.006.43.024.86.091 1.286.04.25.104.497.193.734.098.279.26.53.473.734.214.205.473.358.756.446.344.11.702.17 1.063.177a8.505 8.505 0 0 0 1.578-.083 6.11 6.11 0 0 0 .766-.18c.03-.008.047-.023.037-.057a.157.157 0 0 1-.003-.025Z"/><path fill="#AFE229" d="M6.016 6.69a1.592 1.592 0 0 0-.614.21c-.23.132-.422.32-.56.546-.044.072-.287.539-.287.539l-.836 1.528.009.006c.038.025.08.046.123.063.127.046.26.07.395.073.505.023 1.011-.007 1.517-.003.29.009.58.002.869-.022a.886.886 0 0 0 .395-.116.962.962 0 0 0 .312-.286c.056-.083.114-.163.164-.249.24-.408.48-.816.718-1.226.075-.128.148-.257.222-.386l.112-.192a1.07 1.07 0 0 0 .153-.518l-1.304.023s-1.258-.005-1.388.01Z"/><path fill="#771BFF" d="m2.848 9.044.76-1.39.184-.352c-.124-.067-.245-.14-.367-.21-.346-.204-.706-.384-1.045-.6a.984.984 0 0 1-.244-.207c-.108-.134-.136-.294-.144-.46-.021-.409-.002-.818-.009-1.227-.003-.195 0-.39.003-.585.004-.322.153-.553.427-.713l.833-.488c.22-.13.44-.257.662-.385.05-.029.105-.052.158-.077.272-.128.519-.047.76.085l.044.028c.123.06.242.125.358.196.318.178.635.357.952.537.095.056.187.117.275.184.194.144.254.35.266.578.016.284.007.569.006.853-.001.28.004.558 0 .838.592-.003 1.259 0 1.259 0l.723-.013c-.003-.292-.007-.584-.007-.876 0-.524.015-1.048-.016-1.571-.024-.42-.135-.8-.492-1.067a5.02 5.02 0 0 0-.506-.339A400.52 400.52 0 0 0 5.94.787C5.722.664 5.513.524 5.282.423 5.255.406 5.228.388 5.2.373 4.758.126 4.305-.026 3.807.21c-.097.046-.197.087-.29.14A699.896 699.896 0 0 0 .783 1.948c-.501.294-.773.717-.778 1.31-.004.36-.009.718-.001 1.077.016.754-.017 1.508.024 2.261.016.304.07.6.269.848.127.15.279.28.448.382.622.4 1.283.734 1.92 1.11l.183.109Z"/></svg>\n';
 
-  // packages/ckeditor5-icons/theme/icons/quote.svg
+  // ../packages/ckeditor5-icons/theme/icons/quote.svg
   var quote_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M3 10.423a6.5 6.5 0 0 1 6.056-6.408l.038.67C6.448 5.423 5.354 7.663 5.22 10H9c.552 0 .5.432.5.986v4.511c0 .554-.448.503-1 .503h-5c-.552 0-.5-.449-.5-1.003zm8 0a6.5 6.5 0 0 1 6.056-6.408l.038.67c-2.646.739-3.74 2.979-3.873 5.315H17c.552 0 .5.432.5.986v4.511c0 .554-.448.503-1 .503h-5c-.552 0-.5-.449-.5-1.003z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/redo.svg
+  // ../packages/ckeditor5-icons/theme/icons/redo.svg
   var redo_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m14.958 9.367-2.189 1.837a.75.75 0 0 0 .965 1.149l3.788-3.18a.75.75 0 0 0 .21-.284.75.75 0 0 0-.17-.945L13.77 4.762a.75.75 0 1 0-.964 1.15l2.331 1.955H6.22A.8.8 0 0 0 6 7.9a4 4 0 1 0 1.477 7.718l-.344-1.489A2.5 2.5 0 1 1 6.039 9.4l-.008-.032z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/return-arrow.svg
+  // ../packages/ckeditor5-icons/theme/icons/return-arrow.svg
   var return_arrow_default = '<svg viewBox="0 0 10 8" xmlns="http://www.w3.org/2000/svg"><path d="M9.055.263v3.972h-6.77M1 4.216l2-2.038m-2 2 2 2.038"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/select-all.svg
+  // ../packages/ckeditor5-icons/theme/icons/select-all.svg
   var select_all_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M.75 15.5a.75.75 0 0 1 .75.75V18l.008.09A.5.5 0 0 0 2 18.5h1.75a.75.75 0 1 1 0 1.5H1.5l-.144-.007a1.5 1.5 0 0 1-1.35-1.349L0 18.5v-2.25a.75.75 0 0 1 .75-.75m18.5 0a.75.75 0 0 1 .75.75v2.25l-.007.144a1.5 1.5 0 0 1-1.349 1.35L18.5 20h-2.25a.75.75 0 1 1 0-1.5H18a.5.5 0 0 0 .492-.41L18.5 18v-1.75a.75.75 0 0 1 .75-.75m-10.45 3c.11 0 .2.09.2.2v1.1a.2.2 0 0 1-.2.2H7.2a.2.2 0 0 1-.2-.2v-1.1c0-.11.09-.2.2-.2zm4 0c.11 0 .2.09.2.2v1.1a.2.2 0 0 1-.2.2h-1.6a.2.2 0 0 1-.2-.2v-1.1c0-.11.09-.2.2-.2zm.45-5.5a.75.75 0 1 1 0 1.5h-8.5a.75.75 0 1 1 0-1.5zM1.3 11c.11 0 .2.09.2.2v1.6a.2.2 0 0 1-.2.2H.2a.2.2 0 0 1-.2-.2v-1.6c0-.11.09-.2.2-.2zm18.5 0c.11 0 .2.09.2.2v1.6a.2.2 0 0 1-.2.2h-1.1a.2.2 0 0 1-.2-.2v-1.6c0-.11.09-.2.2-.2zm-4.55-2a.75.75 0 1 1 0 1.5H4.75a.75.75 0 1 1 0-1.5zM1.3 7c.11 0 .2.09.2.2v1.6a.2.2 0 0 1-.2.2H.2a.2.2 0 0 1-.2-.2V7.2c0-.11.09-.2.2-.2zm18.5 0c.11 0 .2.09.2.2v1.6a.2.2 0 0 1-.2.2h-1.1a.2.2 0 0 1-.2-.2V7.2c0-.11.09-.2.2-.2zm-4.55-2a.75.75 0 1 1 0 1.5h-2.5a.75.75 0 1 1 0-1.5zm-5 0a.75.75 0 1 1 0 1.5h-5.5a.75.75 0 0 1 0-1.5zm-6.5-5a.75.75 0 0 1 0 1.5H2a.5.5 0 0 0-.492.41L1.5 2v1.75a.75.75 0 0 1-1.5 0V1.5l.007-.144A1.5 1.5 0 0 1 1.356.006L1.5 0zM18.5 0l.144.007a1.5 1.5 0 0 1 1.35 1.349L20 1.5v2.25a.75.75 0 1 1-1.5 0V2l-.008-.09A.5.5 0 0 0 18 1.5h-1.75a.75.75 0 1 1 0-1.5zM8.8 0c.11 0 .2.09.2.2v1.1a.2.2 0 0 1-.2.2H7.2a.2.2 0 0 1-.2-.2V.2c0-.11.09-.2.2-.2zm4 0c.11 0 .2.09.2.2v1.1a.2.2 0 0 1-.2.2h-1.6a.2.2 0 0 1-.2-.2V.2c0-.11.09-.2.2-.2z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/settings.svg
+  // ../packages/ckeditor5-icons/theme/icons/settings.svg
   var settings_default = '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.734 6.375H1.75a.75.75 0 0 1 0-1.5h1.984a2.626 2.626 0 0 1 5.032 0h9.48a.75.75 0 0 1 0 1.5h-9.48a2.626 2.626 0 0 1-5.032 0Zm1.141-.75a1.375 1.375 0 1 1 2.75 0 1.375 1.375 0 0 1-2.75 0ZM16.263 14.625h1.983a.75.75 0 0 1 0 1.5h-1.983a2.626 2.626 0 0 1-5.033 0H1.75a.75.75 0 0 1 0-1.5h9.48a2.626 2.626 0 0 1 5.033 0Zm-1.142.75a1.375 1.375 0 1 1-2.75 0 1.375 1.375 0 0 1 2.75 0Z"/></svg>\n';
 
-  // packages/ckeditor5-icons/theme/icons/source.svg
+  // ../packages/ckeditor5-icons/theme/icons/source.svg
   var source_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m12.5 0 5 4.5v15.003h-16V0zM3 1.5v3.25l-1.497 1-.003 8 1.5 1v3.254L7.685 18l-.001 1.504H17.5V8.002L16 9.428l-.004-4.22-4.222-3.692z"/><path d="M4.06 6.64a.75.75 0 0 1 .958 1.15l-.085.07L2.29 9.75l2.646 1.89c.302.216.4.62.232.951l-.058.095a.75.75 0 0 1-.951.232l-.095-.058-3.5-2.5V9.14zm4.194 6.22a.75.75 0 0 1-.958-1.149l.085-.07 2.643-1.89-2.646-1.89a.75.75 0 0 1-.232-.952l.058-.095a.75.75 0 0 1 .95-.232l.096.058 3.5 2.5v1.22zm7.644-.836 2.122 2.122-5.825 5.809-2.125-.005.003-2.116zm2.539-1.847 1.414 1.414a.5.5 0 0 1 0 .707l-1.06 1.06-2.122-2.12 1.061-1.061a.5.5 0 0 1 .707 0"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/strikethrough.svg
+  // ../packages/ckeditor5-icons/theme/icons/strikethrough.svg
   var strikethrough_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 16.4c-.8-.4-1.5-.9-2.2-1.5a.6.6 0 0 1-.2-.5l.3-.6h1c1 1.2 2.1 1.7 3.7 1.7 1 0 1.8-.3 2.3-.6.6-.4.6-1.2.6-1.3.2-1.2-.9-2.1-.9-2.1h2.1c.3.7.4 1.2.4 1.7v.8l-.6 1.2c-.6.8-1.1 1-1.6 1.2a6 6 0 0 1-2.4.6c-1 0-1.8-.3-2.5-.6M6.8 9 6 8.3c-.4-.5-.5-.8-.5-1.6 0-.7.1-1.3.5-1.8.4-.6 1-1 1.6-1.3a6.3 6.3 0 0 1 4.7 0 4 4 0 0 1 1.7 1l.3.7c0 .1.2.4-.2.7-.4.2-.9.1-1 0a3 3 0 0 0-1.2-1c-.4-.2-1-.3-2-.4-.7 0-1.4.2-2 .6-.8.6-1 .8-1 1.5 0 .8.5 1 1.2 1.5.6.4 1.1.7 1.9 1H6.8z"/><path d="M3 10.5V9h14v1.5z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/table-cell-properties.svg
+  // ../packages/ckeditor5-icons/theme/icons/table-cell-properties.svg
   var table_cell_properties_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m11.105 18-.17 1H2.5A1.5 1.5 0 0 1 1 17.5v-15A1.5 1.5 0 0 1 2.5 1h15A1.5 1.5 0 0 1 19 2.5v9.975l-.85-.124-.15-.302V8h-5v4h.021l-.172.351-1.916.28-.151.027c-.287.063-.54.182-.755.341L8 13v5zM2 12h5V8H2zm10-4H8v4h4zM2 2v5h5V2zm0 16h5v-5H2zM13 7h5V2h-5zM8 2v5h4V2z" opacity=".6"/><path d="m15.5 11.5 1.323 2.68 2.957.43-2.14 2.085.505 2.946L15.5 18.25l-2.645 1.39.505-2.945-2.14-2.086 2.957-.43zM13 6a1 1 0 0 1 1 1v3.172a2 2 0 0 0-.293.443l-.858 1.736-1.916.28-.151.027A1.98 1.98 0 0 0 9.315 14H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1zm-1 2H8v4h4z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/table-column.svg
+  // ../packages/ckeditor5-icons/theme/icons/table-column.svg
   var table_column_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 1h15A1.5 1.5 0 0 1 19 2.5v15a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 1 17.5v-15A1.5 1.5 0 0 1 2.5 1M2 2v16h16V2z" opacity=".6"/><path d="M18 7v1H2V7zm0 5v1H2v-1z" opacity=".6"/><path d="M14 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1m-2 1H8v4h4zm0 6H8v4h4zm0 6H8v4h4z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/table-merge-cell.svg
+  // ../packages/ckeditor5-icons/theme/icons/table-merge-cell.svg
   var table_merge_cell_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 1h15A1.5 1.5 0 0 1 19 2.5v15a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 1 17.5v-15A1.5 1.5 0 0 1 2.5 1M2 2v16h16V2z" opacity=".6"/><path d="M7 2h1v16H7zm5 0h1v7h-1zm6 5v1H2V7zM8 12v1H2v-1z" opacity=".6"/><path d="M7 7h12a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1m1 2v9h10V9z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/table-properties.svg
+  // ../packages/ckeditor5-icons/theme/icons/table-properties.svg
   var table_properties_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M8 2v5h4V2h1v5h5v1h-5v4h.021l-.172.351-1.916.28-.151.027c-.287.063-.54.182-.755.341L8 13v5H7v-5H2v-1h5V8H2V7h5V2zm4 6H8v4h4z" opacity=".6"/><path d="m15.5 11.5 1.323 2.68 2.957.43-2.14 2.085.505 2.946L15.5 18.25l-2.645 1.39.505-2.945-2.14-2.086 2.957-.43zM17 1a2 2 0 0 1 2 2v9.475l-.85-.124-.857-1.736a2 2 0 0 0-.292-.44L17 3H3v14h7.808l.402.392L10.935 19H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/table-row.svg
+  // ../packages/ckeditor5-icons/theme/icons/table-row.svg
   var table_row_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 1h15A1.5 1.5 0 0 1 19 2.5v15a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 1 17.5v-15A1.5 1.5 0 0 1 2.5 1M2 2v16h16V2z" opacity=".6"/><path d="M7 2h1v16H7zm5 0h1v16h-1z" opacity=".6"/><path d="M1 6h18a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1m1 2v4h4V8zm6 0v4h4V8zm6 0v4h4V8z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/table.svg
+  // ../packages/ckeditor5-icons/theme/icons/table.svg
   var table_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M3 5.5v3h4v-3zm0 4v3h4v-3zm0 4v3h4v-3zm5 3h4v-3H8zm5 0h4v-3h-4zm4-4v-3h-4v3zm0-4v-3h-4v3zm1.5 8A1.5 1.5 0 0 1 17 18H3a1.5 1.5 0 0 1-1.5-1.5V3c.222-.863 1.068-1.5 2-1.5h13c.932 0 1.778.637 2 1.5zm-6.5-4v-3H8v3zm0-4v-3H8v3z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/text-alternative.svg
+  // ../packages/ckeditor5-icons/theme/icons/text-alternative.svg
   var text_alternative_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M3.035 1C2.446 1 2 1.54 2 2.098V10.5h1.5v-8h13v8H18V2.098C18 1.539 17.48 1 16.9 1zm10.453 2.61a1.89 1.89 0 0 0-1.442.736 1.89 1.89 0 0 0 1.011 2.976 1.9 1.9 0 0 0 2.253-1.114 1.887 1.887 0 0 0-1.822-2.598M7.463 8.163a.6.6 0 0 0-.432.154L5.071 10.5h5.119L7.88 8.348a.63.63 0 0 0-.417-.185m6.236 1.059a.62.62 0 0 0-.42.164L12.07 10.5h2.969l-.92-1.113a.62.62 0 0 0-.42-.165M.91 11.5a.91.91 0 0 0-.91.912v6.877c0 .505.405.91.91.91h18.178a.91.91 0 0 0 .912-.91v-6.877a.91.91 0 0 0-.912-.912zM3.668 13h1.947l2.135 5.7H5.898l-.28-.946H3.601l-.278.945H1.516zm4.947 0h1.801v4.3h2.7v1.4h-4.5zm4.5 0h5.4v1.4h-1.798v4.3h-1.701v-4.3h-1.9zm-8.517 1.457-.614 2.059h1.262z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/text.svg
+  // ../packages/ckeditor5-icons/theme/icons/text.svg
   var text_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.816 11.5 7.038 4.785 4.261 11.5zm.62 1.5H3.641l-1.666 4.028H.312l5.789-14h1.875l5.789 14h-1.663z"/><path d="m12.09 17-.534-1.292.848-1.971.545 1.319L12.113 17zm1.142-5.187.545 1.319L15.5 9.13l1.858 4.316h-3.45l.398.965h3.467L18.887 17H20l-3.873-9h-1.254z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/three-vertical-dots.svg
+  // ../packages/ckeditor5-icons/theme/icons/three-vertical-dots.svg
   var three_vertical_dots_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="9.5" cy="4.5" r="1.5"/><circle cx="9.5" cy="10.5" r="1.5"/><circle cx="9.5" cy="16.5" r="1.5"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/todo-list.svg
+  // ../packages/ckeditor5-icons/theme/icons/todo-list.svg
   var todo_list_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m2.315 14.705 2.224-2.24a.69.69 0 0 1 .963 0 .664.664 0 0 1 0 .949L2.865 16.07a.7.7 0 0 1-.112.089.65.65 0 0 1-.852-.051L.688 14.886a.635.635 0 0 1 0-.903.647.647 0 0 1 .91 0zm5.185.045a.75.75 0 0 1 .75-.75h9.5a.75.75 0 1 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75M2.329 5.745l2.21-2.226a.69.69 0 0 1 .963 0 .664.664 0 0 1 0 .95L2.865 7.125a.7.7 0 0 1-.496.196.64.64 0 0 1-.468-.187L.688 5.912a.635.635 0 0 1 0-.903.647.647 0 0 1 .91 0l.73.736zM7.5 5.75A.75.75 0 0 1 8.25 5h9.5a.75.75 0 1 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/undo.svg
+  // ../packages/ckeditor5-icons/theme/icons/undo.svg
   var undo_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m5.042 9.367 2.189 1.837a.75.75 0 0 1-.965 1.149l-3.788-3.18a.75.75 0 0 1-.21-.284.75.75 0 0 1 .17-.945L6.23 4.762a.75.75 0 1 1 .964 1.15L4.863 7.866h8.917A.8.8 0 0 1 14 7.9a4 4 0 1 1-1.477 7.718l.344-1.489a2.5 2.5 0 1 0 1.094-4.73l.008-.032z"/></svg>';
 
-  // packages/ckeditor5-icons/theme/icons/unlink.svg
+  // ../packages/ckeditor5-icons/theme/icons/unlink.svg
   var unlink_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m11.077 15 .991-1.416a.75.75 0 1 1 1.229.86l-1.148 1.64a.8.8 0 0 1-.217.206 5.251 5.251 0 0 1-8.503-5.955.7.7 0 0 1 .12-.274l1.147-1.639a.75.75 0 1 1 1.228.86L4.933 10.7l.006.003a3.75 3.75 0 0 0 6.132 4.294zm5.494-5.335a.8.8 0 0 1-.12.274l-1.147 1.639a.75.75 0 1 1-1.228-.86l.86-1.23a3.75 3.75 0 0 0-6.144-4.301l-.86 1.229a.75.75 0 0 1-1.229-.86l1.148-1.64a.8.8 0 0 1 .217-.206 5.251 5.251 0 0 1 8.503 5.955m-4.563-2.532a.75.75 0 0 1 .184 1.045l-3.155 4.505a.75.75 0 1 1-1.229-.86l3.155-4.506a.75.75 0 0 1 1.045-.184m4.919 10.562-1.414 1.414a.75.75 0 1 1-1.06-1.06l1.414-1.415-1.415-1.414a.75.75 0 0 1 1.061-1.06l1.414 1.414 1.414-1.415a.75.75 0 0 1 1.061 1.061l-1.414 1.414 1.414 1.415a.75.75 0 0 1-1.06 1.06z"/></svg>';
 
-  // packages/ckeditor5-ui/src/icon/iconview.ts
+  // ../packages/ckeditor5-ui/src/icon/iconview.ts
   var _IconView = class _IconView extends View {
     /**
      * @inheritDoc
@@ -43022,7 +43022,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   ]);
   var IconView = _IconView;
 
-  // packages/ckeditor5-ui/src/button/buttonlabelview.ts
+  // ../packages/ckeditor5-ui/src/button/buttonlabelview.ts
   var ButtonLabelView = class extends View {
     /**
      * @inheritDoc
@@ -43054,7 +43054,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/button/buttonview.ts
+  // ../packages/ckeditor5-ui/src/button/buttonview.ts
   var ButtonView = class extends View {
     /**
      * Creates an instance of the button view class.
@@ -43314,7 +43314,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-ui/src/formheader/formheaderview.ts
+  // ../packages/ckeditor5-ui/src/formheader/formheaderview.ts
   var FormHeaderView = class extends View {
     /**
      * Creates an instance of the form header class.
@@ -43371,7 +43371,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/focuscycler.ts
+  // ../packages/ckeditor5-ui/src/focuscycler.ts
   var FocusCyclerBase = /* @__PURE__ */ EmitterMixin();
   var FocusCycler = class extends FocusCyclerBase {
     /**
@@ -43658,7 +43658,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isFocusable(view) && "focusCycler" in view && view.focusCycler instanceof FocusCycler;
   }
 
-  // packages/ckeditor5-ui/src/dialog/dialogactionsview.ts
+  // ../packages/ckeditor5-ui/src/dialog/dialogactionsview.ts
   var DialogActionsView = class extends View {
     /**
      * @inheritDoc
@@ -43766,7 +43766,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/dialog/dialogcontentview.ts
+  // ../packages/ckeditor5-ui/src/dialog/dialogcontentview.ts
   var DialogContentView = class extends View {
     /**
      * @inheritDoc
@@ -43796,7 +43796,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/dialog/dialogview.ts
+  // ../packages/ckeditor5-ui/src/dialog/dialogview.ts
   var DialogViewPosition = {
     SCREEN_CENTER: "screen-center",
     EDITOR_CENTER: "editor-center",
@@ -44246,7 +44246,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   __publicField(_DialogView, "defaultOffset", 15);
   var DialogView = _DialogView;
 
-  // packages/ckeditor5-ui/src/dialog/dialog.ts
+  // ../packages/ckeditor5-ui/src/dialog/dialog.ts
   var SCROLL_LOCK_STYLES = ".ck-dialog-scroll-locked{overflow:hidden}";
   var _Dialog = class _Dialog extends Plugin {
     /**
@@ -44574,7 +44574,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   __publicField(_Dialog, "_visibleDialogPlugin");
   var Dialog = _Dialog;
 
-  // packages/ckeditor5-ui/src/button/listitembuttonview.ts
+  // ../packages/ckeditor5-ui/src/button/listitembuttonview.ts
   var ListItemButtonView = class extends ButtonView {
     /**
      * @inheritDoc
@@ -44701,7 +44701,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenulistitembuttonview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenulistitembuttonview.ts
   var MenuBarMenuListItemButtonView = class extends ListItemButtonView {
     /**
      * Creates an instance of the menu bar list button view.
@@ -44724,7 +44724,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/editorui/accessibilityhelp/accessibilityhelp.ts
+  // ../packages/ckeditor5-ui/src/editorui/accessibilityhelp/accessibilityhelp.ts
   var AccessibilityHelp = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -44844,7 +44844,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/editorui/bodycollection.ts
+  // ../packages/ckeditor5-ui/src/editorui/bodycollection.ts
   var _BodyCollection = class _BodyCollection extends ViewCollection {
     /**
      * Creates a new instance of the {@link module:ui/editorui/bodycollection~BodyCollection}.
@@ -45027,7 +45027,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   __publicField(_BodyCollection, "_bodyWrappers", /* @__PURE__ */ new Map());
   var BodyCollection = _BodyCollection;
 
-  // packages/ckeditor5-ui/src/panel/balloon/balloonpanelview.ts
+  // ../packages/ckeditor5-ui/src/panel/balloon/balloonpanelview.ts
   var toPx2 = /* @__PURE__ */ toUnit("px");
   var POSITION_OFF_SCREEN = {
     top: -99999,
@@ -46039,7 +46039,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.from(roots);
   }
 
-  // packages/ckeditor5-ui/src/badge/badge.ts
+  // ../packages/ckeditor5-ui/src/badge/badge.ts
   var NARROW_ROOT_HEIGHT_THRESHOLD = 50;
   var NARROW_ROOT_WIDTH_THRESHOLD = 350;
   var BadgeBase = /* @__PURE__ */ DomEmitterMixin();
@@ -46237,7 +46237,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-ui/src/editorui/poweredby.ts
+  // ../packages/ckeditor5-ui/src/editorui/poweredby.ts
   var DEFAULT_LABEL = "Powered by";
   var PoweredBy = class extends Badge {
     constructor(editor) {
@@ -46337,7 +46337,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/button/switchbuttonview.ts
+  // ../packages/ckeditor5-ui/src/button/switchbuttonview.ts
   var SwitchButtonView = class extends ButtonView {
     /**
      * @inheritDoc
@@ -46392,7 +46392,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/button/filedialogbuttonview.ts
+  // ../packages/ckeditor5-ui/src/button/filedialogbuttonview.ts
   var FileDialogButtonViewMixinBase = /* @__PURE__ */ FileDialogViewMixin(ButtonView);
   var FileDialogListItemButtonViewMixinBase = /* @__PURE__ */ FileDialogViewMixin(ListItemButtonView);
   var FileDialogButtonView = class extends FileDialogButtonViewMixinBase {
@@ -46476,7 +46476,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/collapsible/collapsibleview.ts
+  // ../packages/ckeditor5-ui/src/collapsible/collapsibleview.ts
   var CollapsibleView = class extends View {
     /**
      * Creates an instance of the collapsible view.
@@ -46567,7 +46567,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/colorgrid/utils.ts
+  // ../packages/ckeditor5-ui/src/colorgrid/utils.ts
   var SHADED_LABEL_REGEXP = /^(.+) (\d+)$/;
   function getLocalizedColorOptions(locale, options) {
     const localizedColorNames = getLocalizedColorNames(locale);
@@ -46642,7 +46642,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-ui/src/colorgrid/colortileview.ts
+  // ../packages/ckeditor5-ui/src/colorgrid/colortileview.ts
   var ColorTileView = class extends ButtonView {
     constructor(locale) {
       super(locale);
@@ -46673,7 +46673,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/colorgrid/colors.ts
+  // ../packages/ckeditor5-ui/src/colorgrid/colors.ts
   var defaultColors = [
     { label: "Red 50", color: "hsl(351, 100%, 96%)" },
     { label: "Purple 50", color: "hsl(292, 44%, 93%)" },
@@ -46798,7 +46798,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   ];
   var defaultColorGridColumns = 12;
 
-  // packages/ckeditor5-ui/src/colorgrid/colorgridview.ts
+  // ../packages/ckeditor5-ui/src/colorgrid/colorgridview.ts
   var ColorGridView = class extends View {
     /**
      * Creates an instance of a color grid containing {@link module:ui/colorgrid/colortileview~ColorTileView tiles}.
@@ -46924,7 +46924,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // node_modules/.pnpm/color-name@2.1.0/node_modules/color-name/index.js
+  // ../node_modules/.pnpm/color-name@2.1.0/node_modules/color-name/index.js
   var colors = {
     aliceblue: [240, 248, 255],
     antiquewhite: [250, 235, 215],
@@ -47078,7 +47078,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   for (const key2 in colors) Object.freeze(colors[key2]);
   var color_name_default = Object.freeze(colors);
 
-  // node_modules/.pnpm/color-parse@2.0.2/node_modules/color-parse/index.js
+  // ../node_modules/.pnpm/color-parse@2.0.2/node_modules/color-parse/index.js
   var color_parse_default = parse;
   var baseHues = {
     red: 0,
@@ -47175,7 +47175,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/color-convert@3.1.0/node_modules/color-convert/conversions.js
+  // ../node_modules/.pnpm/color-convert@3.1.0/node_modules/color-convert/conversions.js
   var reverseKeywords = {};
   for (const key2 of Object.keys(color_name_default)) {
     reverseKeywords[color_name_default[key2]] = key2;
@@ -47923,7 +47923,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return [value / 255 * 100];
   };
 
-  // node_modules/.pnpm/color-convert@3.1.0/node_modules/color-convert/route.js
+  // ../node_modules/.pnpm/color-convert@3.1.0/node_modules/color-convert/route.js
   function buildGraph() {
     const graph = {};
     const models2 = Object.keys(conversions_default);
@@ -47989,7 +47989,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   }
   var route_default = route;
 
-  // node_modules/.pnpm/color-convert@3.1.0/node_modules/color-convert/index.js
+  // ../node_modules/.pnpm/color-convert@3.1.0/node_modules/color-convert/index.js
   var convert2 = {};
   var models = Object.keys(conversions_default);
   function wrapRaw(fn) {
@@ -48044,7 +48044,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   }
   var color_convert_default = convert2;
 
-  // packages/ckeditor5-ui/src/colorpicker/utils.ts
+  // ../packages/ckeditor5-ui/src/colorpicker/utils.ts
   function convertColor(color2, outputFormat) {
     if (!color2) {
       return "";
@@ -48123,7 +48123,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Object.keys(color_convert_default).includes(parsedColor.space);
   }
 
-  // packages/ckeditor5-ui/src/labeledfield/labeledfieldview.ts
+  // ../packages/ckeditor5-ui/src/labeledfield/labeledfieldview.ts
   var LabeledFieldView = class extends View {
     /**
      * Creates an instance of the labeled field view class using a provided creator function
@@ -48259,7 +48259,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/input/inputbase.ts
+  // ../packages/ckeditor5-ui/src/input/inputbase.ts
   var InputBase = class extends View {
     /**
      * @inheritDoc
@@ -48366,7 +48366,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !domElement.value;
   }
 
-  // packages/ckeditor5-ui/src/input/inputview.ts
+  // ../packages/ckeditor5-ui/src/input/inputview.ts
   var InputView = class extends InputBase {
     /**
      * @inheritDoc
@@ -48383,7 +48383,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/inputtext/inputtextview.ts
+  // ../packages/ckeditor5-ui/src/inputtext/inputtextview.ts
   var InputTextView = class extends InputView {
     /**
      * @inheritDoc
@@ -48401,7 +48401,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/inputnumber/inputnumberview.ts
+  // ../packages/ckeditor5-ui/src/inputnumber/inputnumberview.ts
   var InputNumberView = class extends InputView {
     /**
      * Creates an instance of the input number view.
@@ -48432,7 +48432,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/dropdown/dropdownpanelview.ts
+  // ../packages/ckeditor5-ui/src/dropdown/dropdownpanelview.ts
   var DropdownPanelView = class extends View {
     /**
      * @inheritDoc
@@ -48509,7 +48509,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/dropdown/dropdownview.ts
+  // ../packages/ckeditor5-ui/src/dropdown/dropdownview.ts
   var _DropdownView = class _DropdownView extends View {
     /**
      * Creates an instance of the dropdown.
@@ -48916,7 +48916,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   __publicField(_DropdownView, "_getOptimalPosition", getOptimalPosition);
   var DropdownView = _DropdownView;
 
-  // packages/ckeditor5-ui/src/dropdown/button/dropdownbuttonview.ts
+  // ../packages/ckeditor5-ui/src/dropdown/button/dropdownbuttonview.ts
   var DropdownButtonView = class extends ButtonView {
     /**
      * @inheritDoc
@@ -48958,7 +48958,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/list/listitemview.ts
+  // ../packages/ckeditor5-ui/src/list/listitemview.ts
   var ListItemView = class extends View {
     /**
      * @inheritDoc
@@ -48995,7 +48995,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/list/listseparatorview.ts
+  // ../packages/ckeditor5-ui/src/list/listseparatorview.ts
   var ListSeparatorView = class extends View {
     /**
      * @inheritDoc
@@ -49014,7 +49014,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/list/listitemgroupview.ts
+  // ../packages/ckeditor5-ui/src/list/listitemgroupview.ts
   var ListItemGroupView = class extends View {
     /**
      * Creates an instance of the list item group view class.
@@ -49083,7 +49083,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/list/listview.ts
+  // ../packages/ckeditor5-ui/src/list/listview.ts
   var ListView = class extends View {
     /**
      * @inheritDoc
@@ -49272,7 +49272,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/toolbar/toolbarseparatorview.ts
+  // ../packages/ckeditor5-ui/src/toolbar/toolbarseparatorview.ts
   var ToolbarSeparatorView = class extends View {
     /**
      * @inheritDoc
@@ -49291,7 +49291,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/toolbar/toolbarlinebreakview.ts
+  // ../packages/ckeditor5-ui/src/toolbar/toolbarlinebreakview.ts
   var ToolbarLineBreakView = class extends View {
     /**
      * @inheritDoc
@@ -49310,7 +49310,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/bindings/preventdefault.ts
+  // ../packages/ckeditor5-ui/src/bindings/preventdefault.ts
   function preventDefault(view) {
     return view.bindTemplate.to((evt) => {
       if (evt.target === view.element) {
@@ -49319,7 +49319,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-ui/src/toolbar/normalizetoolbarconfig.ts
+  // ../packages/ckeditor5-ui/src/toolbar/normalizetoolbarconfig.ts
   function normalizeToolbarConfig(config) {
     if (Array.isArray(config)) {
       return {
@@ -49340,7 +49340,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-ui/src/toolbar/toolbarview.ts
+  // ../packages/ckeditor5-ui/src/toolbar/toolbarview.ts
   var NESTED_TOOLBAR_ICONS = /* @__PURE__ */ (() => ({
     alignLeft: align_left_default,
     bold: bold_default,
@@ -50031,7 +50031,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/dropdown/button/splitbuttonview.ts
+  // ../packages/ckeditor5-ui/src/dropdown/button/splitbuttonview.ts
   var SplitButtonView = class extends View {
     /**
      * @inheritDoc
@@ -50189,7 +50189,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/dropdown/utils.ts
+  // ../packages/ckeditor5-ui/src/dropdown/utils.ts
   function createDropdown(locale, ButtonClassOrInstance = DropdownButtonView) {
     const buttonView = typeof ButtonClassOrInstance == "function" ? new ButtonClassOrInstance(locale) : ButtonClassOrInstance;
     const panelView = new DropdownPanelView(locale);
@@ -50449,7 +50449,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-ui/src/labeledfield/utils.ts
+  // ../packages/ckeditor5-ui/src/labeledfield/utils.ts
   var createLabeledInputText = (labeledFieldView, viewUid, statusUid) => {
     const inputView = new InputTextView(labeledFieldView.locale);
     inputView.set({
@@ -50489,7 +50489,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return dropdownView;
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/math.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/math.js
   var clamp = (number2, min = 0, max = 1) => {
     return number2 > max ? max : number2 < min ? min : number2;
   };
@@ -50497,7 +50497,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Math.round(base2 * number2) / base2;
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/convert.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/convert.js
   var angleUnits = {
     grad: 360 / 400,
     turn: 360,
@@ -50568,7 +50568,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/compare.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/compare.js
   var equalColorObjects = (first2, second) => {
     if (first2 === second)
       return true;
@@ -50584,7 +50584,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return equalColorObjects(hexToRgba(first2), hexToRgba(second));
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/dom.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/utils/dom.js
   var cache = {};
   var tpl = (html7) => {
     let template = cache[html7];
@@ -50602,7 +50602,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }));
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/slider.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/slider.js
   var hasTouched = false;
   var isTouch = (e) => "touches" in e;
   var isValid = (event) => {
@@ -50681,7 +50681,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/hue.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/hue.js
   var Hue = class extends Slider {
     constructor(root7) {
       super(root7, "hue", 'aria-label="Hue" aria-valuemin="0" aria-valuemax="360"', false);
@@ -50701,7 +50701,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/saturation.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/saturation.js
   var Saturation = class extends Slider {
     constructor(root7) {
       super(root7, "saturation", 'aria-label="Color"', true);
@@ -50728,16 +50728,16 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/styles/color-picker.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/styles/color-picker.js
   var color_picker_default = `:host{display:flex;flex-direction:column;position:relative;width:200px;height:200px;user-select:none;-webkit-user-select:none;cursor:default}:host([hidden]){display:none!important}[role=slider]{position:relative;touch-action:none;user-select:none;-webkit-user-select:none;outline:0}[role=slider]:last-child{border-radius:0 0 8px 8px}[part$=pointer]{position:absolute;z-index:1;box-sizing:border-box;width:28px;height:28px;display:flex;place-content:center center;transform:translate(-50%,-50%);background-color:#fff;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.2)}[part$=pointer]::after{content:"";width:100%;height:100%;border-radius:inherit;background-color:currentColor}[role=slider]:focus [part$=pointer]{transform:translate(-50%,-50%) scale(1.1)}`;
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/styles/hue.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/styles/hue.js
   var hue_default = `[part=hue]{flex:0 0 24px;background:linear-gradient(to right,red 0,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,red 100%)}[part=hue-pointer]{top:50%;z-index:2}`;
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/styles/saturation.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/styles/saturation.js
   var saturation_default = `[part=saturation]{flex-grow:1;border-color:transparent;border-bottom:12px solid #000;border-radius:8px 8px 0 0;background-image:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,rgba(255,255,255,0));box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}[part=saturation-pointer]{z-index:3}`;
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/color-picker.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/components/color-picker.js
   var $isSame = /* @__PURE__ */ Symbol("same");
   var $color = /* @__PURE__ */ Symbol("color");
   var $hsva = /* @__PURE__ */ Symbol("hsva");
@@ -50807,7 +50807,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/entrypoints/hex.js
+  // ../node_modules/.pnpm/vanilla-colorful@0.7.2/node_modules/vanilla-colorful/lib/entrypoints/hex.js
   var colorModel = {
     defaultColor: "#000",
     toHsva: hexToHsva,
@@ -50821,7 +50821,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/colorpicker/colorpickerview.ts
+  // ../packages/ckeditor5-ui/src/colorpicker/colorpickerview.ts
   var waitingTime = 150;
   var ColorPickerView = class extends View {
     /**
@@ -51102,7 +51102,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return `#${hashLessColor}`;
   }
 
-  // packages/ckeditor5-ui/src/colorselector/documentcolorcollection.ts
+  // ../packages/ckeditor5-ui/src/colorselector/documentcolorcollection.ts
   var DocumentColorCollectionBase = /* @__PURE__ */ ObservableMixin(Collection);
   var DocumentColorCollection = class extends DocumentColorCollectionBase {
     constructor(options) {
@@ -51138,7 +51138,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/colorselector/colorgridsfragmentview.ts
+  // ../packages/ckeditor5-ui/src/colorselector/colorgridsfragmentview.ts
   var ColorGridsFragmentView = class extends View {
     /**
      * Creates an instance of the view.
@@ -51490,7 +51490,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/colorselector/colorpickerfragmentview.ts
+  // ../packages/ckeditor5-ui/src/colorselector/colorpickerfragmentview.ts
   var ColorPickerFragmentView = class extends View {
     /**
      * Creates an instance of the view.
@@ -51730,7 +51730,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/colorselector/colorselectorview.ts
+  // ../packages/ckeditor5-ui/src/colorselector/colorselectorview.ts
   var ColorSelectorView = class extends View {
     /**
      * Creates a view to be inserted as a child of {@link module:ui/dropdown/dropdownview~DropdownView}.
@@ -51976,7 +51976,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/componentfactory.ts
+  // ../packages/ckeditor5-ui/src/componentfactory.ts
   var ComponentFactory = class {
     /**
      * Creates an instance of the factory.
@@ -52047,7 +52047,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return String(name).toLowerCase();
   }
 
-  // packages/ckeditor5-ui/src/tooltipmanager.ts
+  // ../packages/ckeditor5-ui/src/tooltipmanager.ts
   var BALLOON_CLASS = "ck-tooltip";
   var TooltipManagerBase = /* @__PURE__ */ DomEmitterMixin();
   var _TooltipManager = class _TooltipManager extends TooltipManagerBase {
@@ -52609,7 +52609,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-ui/src/overlayhost.ts
+  // ../packages/ckeditor5-ui/src/overlayhost.ts
   var OverlayHostBase = /* @__PURE__ */ EmitterMixin();
   var OverlayHost = class extends OverlayHostBase {
     /**
@@ -52741,7 +52741,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/editorui/evaluationbadge.ts
+  // ../packages/ckeditor5-ui/src/editorui/evaluationbadge.ts
   var EvaluationBadge = class extends Badge {
     constructor(editor) {
       super(editor, { balloonClass: "ck-evaluation-badge-balloon" });
@@ -52823,7 +52823,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return licenseContent.licenseType || "production";
   }
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenulistitemview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenulistitemview.ts
   var MenuBarMenuListItemView = class extends ListItemView {
     /**
      * Creates an instance of the list item view.
@@ -52847,7 +52847,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/menubar/utils.ts
+  // ../packages/ckeditor5-ui/src/menubar/utils.ts
   var NESTED_PANEL_HORIZONTAL_OFFSET = 5;
   var MenuBarBehaviors = {
     /**
@@ -53735,7 +53735,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return typeof definition3 === "object" && "menuId" in definition3;
   }
 
-  // packages/ckeditor5-ui/src/editorui/editorui.ts
+  // ../packages/ckeditor5-ui/src/editorui/editorui.ts
   var EditorUIBase = /* @__PURE__ */ ObservableMixin();
   var EditorUI = class extends EditorUIBase {
     /**
@@ -54314,7 +54314,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-ui/src/editorui/editoruiview.ts
+  // ../packages/ckeditor5-ui/src/editorui/editoruiview.ts
   var EditorUIView = class extends View {
     /**
      * Creates an instance of the editor UI view class.
@@ -54356,7 +54356,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/editorui/boxed/boxededitoruiview.ts
+  // ../packages/ckeditor5-ui/src/editorui/boxed/boxededitoruiview.ts
   var BoxedEditorUIView = class extends EditorUIView {
     /**
      * Creates an instance of the boxed editor UI view class.
@@ -54440,7 +54440,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/editableui/editableuiview.ts
+  // ../packages/ckeditor5-ui/src/editableui/editableuiview.ts
   var EditableUIView = class extends View {
     /**
      * Creates an instance of EditableUIView class.
@@ -54566,7 +54566,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isElement(value);
   }
 
-  // packages/ckeditor5-ui/src/editableui/inline/inlineeditableuiview.ts
+  // ../packages/ckeditor5-ui/src/editableui/inline/inlineeditableuiview.ts
   var InlineEditableUIView = class extends EditableUIView {
     /**
      * Creates an instance of the InlineEditableUIView class.
@@ -54630,7 +54630,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/formrow/formrowview.ts
+  // ../packages/ckeditor5-ui/src/formrow/formrowview.ts
   var FormRowView = class extends View {
     /**
      * Creates an instance of the form row class.
@@ -54675,7 +54675,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/notification/notification.ts
+  // ../packages/ckeditor5-ui/src/notification/notification.ts
   var Notification = class extends ContextPlugin {
     /**
      * @inheritDoc
@@ -54848,7 +54848,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/model.ts
+  // ../packages/ckeditor5-ui/src/model.ts
   var UIModelBase = /* @__PURE__ */ ObservableMixin();
   var UIModel = class extends UIModelBase {
     /**
@@ -54868,7 +54868,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/panel/balloon/contextualballoon.ts
+  // ../packages/ckeditor5-ui/src/panel/balloon/contextualballoon.ts
   var toPx3 = /* @__PURE__ */ toUnit("px");
   var ContextualBalloon = class extends Plugin {
     /**
@@ -55408,7 +55408,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/panel/sticky/stickypanelview.ts
+  // ../packages/ckeditor5-ui/src/panel/sticky/stickypanelview.ts
   var toPx4 = /* @__PURE__ */ toUnit("px");
   var StickyPanelView = class extends View {
     /**
@@ -55632,7 +55632,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenubuttonview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenubuttonview.ts
   var MenuBarMenuButtonView = class extends ListItemButtonView {
     /**
      * Creates an instance of the menu bar button view.
@@ -55687,7 +55687,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenupanelview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenupanelview.ts
   var MenuBarMenuPanelView = class extends View {
     /**
      * Creates an instance of the menu panel view.
@@ -55743,7 +55743,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenuview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenuview.ts
   var _MenuBarMenuView = class _MenuBarMenuView extends View {
     /**
      * Creates an instance of the menu view.
@@ -55937,7 +55937,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   __publicField(_MenuBarMenuView, "_getOptimalPosition", getOptimalPosition);
   var MenuBarMenuView = _MenuBarMenuView;
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenulistview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenulistview.ts
   var MenuBarMenuListView = class extends ListView {
     /**
      * Creates an instance of the list view.
@@ -55976,7 +55976,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return typeof item === "object" && "buttonView" in item && item.buttonView instanceof ButtonView;
   }
 
-  // packages/ckeditor5-ui/src/menubar/menubarmenulistitemfiledialogbuttonview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarmenulistitemfiledialogbuttonview.ts
   var MenuBarMenuListItemFileDialogButtonView = class extends FileDialogListItemButtonView {
     /**
      * Creates an instance of the menu bar list button view.
@@ -55999,7 +55999,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-ui/src/menubar/menubarview.ts
+  // ../packages/ckeditor5-ui/src/menubar/menubarview.ts
   var EVENT_NAME_DELEGATES = ["mouseenter", "arrowleft", "arrowright", "change:isOpen"];
   var MenuBarView = class extends View {
     /**
@@ -56238,7 +56238,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-upload/src/filereader.ts
+  // ../packages/ckeditor5-upload/src/filereader.ts
   var FileReaderBase = /* @__PURE__ */ ObservableMixin();
   var FileReader = class extends FileReaderBase {
     /**
@@ -56310,7 +56310,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-upload/src/filerepository.ts
+  // ../packages/ckeditor5-upload/src/filerepository.ts
   var FileLoaderBase = /* @__PURE__ */ ObservableMixin();
   var FileRepository = class extends Plugin {
     constructor() {
@@ -56629,7 +56629,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/utils/changebuffer.ts
+  // ../packages/ckeditor5-typing/src/utils/changebuffer.ts
   var TypingChangeBuffer = class {
     /**
      * Creates a new instance of the change buffer.
@@ -56750,7 +56750,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/inserttextcommand.ts
+  // ../packages/ckeditor5-typing/src/inserttextcommand.ts
   var InsertTextCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -56821,7 +56821,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/inserttextobserver.ts
+  // ../packages/ckeditor5-typing/src/inserttextobserver.ts
   var TYPING_INPUT_TYPES = [
     // For collapsed range:
     //	- This one is a regular typing (all browsers, all systems).
@@ -56898,7 +56898,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/input.ts
+  // ../packages/ckeditor5-typing/src/input.ts
   var Input = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -57197,7 +57197,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return node2;
   }
 
-  // packages/ckeditor5-typing/src/deletecommand.ts
+  // ../packages/ckeditor5-typing/src/deletecommand.ts
   var DeleteCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -57367,7 +57367,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/deleteobserver.ts
+  // ../packages/ckeditor5-typing/src/deleteobserver.ts
   var DELETE_CHARACTER = "character";
   var DELETE_WORD = "word";
   var DELETE_CODE_POINT = "codePoint";
@@ -57586,7 +57586,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-typing/src/delete.ts
+  // ../packages/ckeditor5-typing/src/delete.ts
   var Delete = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -57686,7 +57686,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/typing.ts
+  // ../packages/ckeditor5-typing/src/typing.ts
   var Typing = class extends Plugin {
     static get requires() {
       return [Input, Delete];
@@ -57705,7 +57705,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/utils/getlasttextline.ts
+  // ../packages/ckeditor5-typing/src/utils/getlasttextline.ts
   function getLastTextLine(range, model) {
     let start = range.start;
     const text10 = Array.from(range.getWalker({ ignoreElementEnd: false })).reduce((rangeText, { item }) => {
@@ -57718,7 +57718,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { text: text10, range: model.createRange(start, range.end) };
   }
 
-  // packages/ckeditor5-typing/src/textwatcher.ts
+  // ../packages/ckeditor5-typing/src/textwatcher.ts
   var TextWatcherBase = /* @__PURE__ */ ObservableMixin();
   var TextWatcher = class extends TextWatcherBase {
     /**
@@ -57823,7 +57823,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-typing/src/twostepcaretmovement.ts
+  // ../packages/ckeditor5-typing/src/twostepcaretmovement.ts
   var TwoStepCaretMovement = class extends Plugin {
     /**
      * @inheritDoc
@@ -58206,7 +58206,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-typing/src/texttransformation.ts
+  // ../packages/ckeditor5-typing/src/texttransformation.ts
   var TRANSFORMATIONS = {
     // Common symbols:
     copyright: { from: "(c)", to: "\xA9" },
@@ -58242,7 +58242,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new RegExp(`(^|\\s)(${quoteCharacter})([^${quoteCharacter}]*)(${quoteCharacter})$`);
   }
 
-  // packages/ckeditor5-typing/src/utils/findattributerange.ts
+  // ../packages/ckeditor5-typing/src/utils/findattributerange.ts
   function findAttributeRange(position3, attributeName, value, model) {
     return model.createRange(
       findAttributeRangeBound(position3, attributeName, value, true, model),
@@ -58259,7 +58259,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return lastNode ? model.createPositionAt(lastNode, lookBack ? "before" : "after") : position3;
   }
 
-  // packages/ckeditor5-typing/src/utils/inlinehighlight.ts
+  // ../packages/ckeditor5-typing/src/utils/inlinehighlight.ts
   function inlineHighlight(editor, attributeName, tagName, className) {
     const view = editor.editing.view;
     const highlightedElements = /* @__PURE__ */ new Set();
@@ -58300,7 +58300,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-basic-styles/src/attributecommand.ts
+  // ../packages/ckeditor5-basic-styles/src/attributecommand.ts
   var AttributeCommand = class extends Command {
     /**
      * @param attributeKey Attribute that will be set by the command.
@@ -58398,7 +58398,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/bold/boldediting.ts
+  // ../packages/ckeditor5-basic-styles/src/bold/boldediting.ts
   var BOLD = "bold";
   var BoldEditing = class extends Plugin {
     /**
@@ -58457,7 +58457,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/utils.ts
+  // ../packages/ckeditor5-basic-styles/src/utils.ts
   function getButtonCreator({
     editor,
     commandName,
@@ -58494,7 +58494,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-basic-styles/src/bold/boldui.ts
+  // ../packages/ckeditor5-basic-styles/src/bold/boldui.ts
   var BOLD2 = "bold";
   var BoldUI = class extends Plugin {
     /**
@@ -58528,7 +58528,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/bold.ts
+  // ../packages/ckeditor5-basic-styles/src/bold.ts
   var Bold = class extends Plugin {
     /**
      * @inheritDoc
@@ -58550,7 +58550,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/code/codeediting.ts
+  // ../packages/ckeditor5-basic-styles/src/code/codeediting.ts
   var CODE = "code";
   var HIGHLIGHT_CLASS = "ck-code_selected";
   var CodeEditing = class extends Plugin {
@@ -58604,7 +58604,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/code/codeui.ts
+  // ../packages/ckeditor5-basic-styles/src/code/codeui.ts
   var CODE2 = "code";
   var CodeUI = class extends Plugin {
     /**
@@ -58637,7 +58637,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/code.ts
+  // ../packages/ckeditor5-basic-styles/src/code.ts
   var Code = class extends Plugin {
     /**
      * @inheritDoc
@@ -58659,7 +58659,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/italic/italicediting.ts
+  // ../packages/ckeditor5-basic-styles/src/italic/italicediting.ts
   var ITALIC = "italic";
   var ItalicEditing = class extends Plugin {
     /**
@@ -58710,7 +58710,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/italic/italicui.ts
+  // ../packages/ckeditor5-basic-styles/src/italic/italicui.ts
   var ITALIC2 = "italic";
   var ItalicUI = class extends Plugin {
     /**
@@ -58744,7 +58744,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/italic.ts
+  // ../packages/ckeditor5-basic-styles/src/italic.ts
   var Italic = class extends Plugin {
     /**
      * @inheritDoc
@@ -58766,7 +58766,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/strikethrough/strikethroughediting.ts
+  // ../packages/ckeditor5-basic-styles/src/strikethrough/strikethroughediting.ts
   var STRIKETHROUGH = "strikethrough";
   var StrikethroughEditing = class extends Plugin {
     /**
@@ -58818,7 +58818,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/strikethrough/strikethroughui.ts
+  // ../packages/ckeditor5-basic-styles/src/strikethrough/strikethroughui.ts
   var STRIKETHROUGH2 = "strikethrough";
   var StrikethroughUI = class extends Plugin {
     /**
@@ -58852,7 +58852,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-basic-styles/src/strikethrough.ts
+  // ../packages/ckeditor5-basic-styles/src/strikethrough.ts
   var Strikethrough = class extends Plugin {
     /**
      * @inheritDoc
@@ -58874,7 +58874,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-enter/src/utils.ts
+  // ../packages/ckeditor5-enter/src/utils.ts
   function* getCopyOnEnterAttributes(schema, allAttributes) {
     for (const attribute of allAttributes) {
       if (attribute && schema.getAttributeProperties(attribute[0]).copyOnEnter) {
@@ -58883,7 +58883,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-enter/src/entercommand.ts
+  // ../packages/ckeditor5-enter/src/entercommand.ts
   var EnterCommand = class extends Command {
     /**
      * @inheritDoc
@@ -58956,7 +58956,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     writer.setSelection(splitPos.parent.nextSibling, 0);
   }
 
-  // packages/ckeditor5-enter/src/enterobserver.ts
+  // ../packages/ckeditor5-enter/src/enterobserver.ts
   var ENTER_EVENT_TYPES = {
     insertParagraph: { isSoft: false },
     insertLineBreak: { isSoft: true }
@@ -59006,7 +59006,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-enter/src/enter.ts
+  // ../packages/ckeditor5-enter/src/enter.ts
   var Enter = class extends Plugin {
     /**
      * @inheritDoc
@@ -59048,7 +59048,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-enter/src/shiftentercommand.ts
+  // ../packages/ckeditor5-enter/src/shiftentercommand.ts
   var ShiftEnterCommand = class extends Command {
     /**
      * @inheritDoc
@@ -59119,7 +59119,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return schema.isLimit(element6) || isInsideLimitElement(element6.parent, schema);
   }
 
-  // packages/ckeditor5-enter/src/shiftenter.ts
+  // ../packages/ckeditor5-enter/src/shiftenter.ts
   var ShiftEnter = class extends Plugin {
     /**
      * @inheritDoc
@@ -59214,7 +59214,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (node2 == null ? void 0 : node2.getAttribute(key2)) === value;
   }
 
-  // packages/ckeditor5-block-quote/src/blockquotecommand.ts
+  // ../packages/ckeditor5-block-quote/src/blockquotecommand.ts
   var BlockQuoteCommand = class extends Command {
     /**
      * @inheritDoc
@@ -59354,7 +59354,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // packages/ckeditor5-block-quote/src/blockquoteediting.ts
+  // ../packages/ckeditor5-block-quote/src/blockquoteediting.ts
   var BlockQuoteEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -59448,7 +59448,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-block-quote/src/blockquoteui.ts
+  // ../packages/ckeditor5-block-quote/src/blockquoteui.ts
   var BlockQuoteUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -59506,7 +59506,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-block-quote/src/blockquote.ts
+  // ../packages/ckeditor5-block-quote/src/blockquote.ts
   var BlockQuote = class extends Plugin {
     /**
      * @inheritDoc
@@ -59528,7 +59528,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-widget/src/highlightstack.ts
+  // ../packages/ckeditor5-widget/src/highlightstack.ts
   var WidgetHighlightStackBase = /* @__PURE__ */ EmitterMixin();
   var WidgetHighlightStack = class extends WidgetHighlightStackBase {
     constructor() {
@@ -59619,7 +59619,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.isArray(classes) ? classes.sort().join(",") : classes;
   }
 
-  // packages/ckeditor5-widget/src/utils.ts
+  // ../packages/ckeditor5-widget/src/utils.ts
   var WIDGET_CLASS_NAME = "ck-widget";
   var WIDGET_SELECTED_CLASS_NAME = "ck-widget_selected";
   function isWidget(node2) {
@@ -59784,7 +59784,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return resizeHostRect.width / parentWidth * 100;
   }
 
-  // packages/ckeditor5-widget/src/widgettypearound/utils.ts
+  // ../packages/ckeditor5-widget/src/widgettypearound/utils.ts
   var TYPE_AROUND_SELECTION_ATTRIBUTE = "widget-type-around";
   function isTypeAroundWidget(viewElement, modelElement, schema) {
     return !!viewElement && isWidget(viewElement) && !schema.isInline(modelElement);
@@ -59830,7 +59830,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-widget/src/widgettypearound/widgettypearound.ts
+  // ../packages/ckeditor5-widget/src/widgettypearound/widgettypearound.ts
   var POSSIBLE_INSERTION_POSITIONS = ["before", "after"];
   var RETURN_ARROW_ICON_ELEMENT = new DOMParser().parseFromString(trustedHtml(return_arrow_default), "image/svg+xml").firstChild;
   var PLUGIN_DISABLED_EDITING_ROOT_CLASS = "ck-widget__type-around_disabled";
@@ -60492,7 +60492,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return deepestEmptyAncestor;
   }
 
-  // packages/ckeditor5-widget/src/verticalnavigation.ts
+  // ../packages/ckeditor5-widget/src/verticalnavigation.ts
   function verticalWidgetNavigationHandler(editing) {
     const model = editing.model;
     return (evt, data) => {
@@ -60610,7 +60610,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // packages/ckeditor5-widget/src/widget.ts
+  // ../packages/ckeditor5-widget/src/widget.ts
   var Widget = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -61178,7 +61178,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return null;
   }
 
-  // packages/ckeditor5-widget/src/widgettoolbarrepository.ts
+  // ../packages/ckeditor5-widget/src/widgettoolbarrepository.ts
   var WidgetToolbarRepository = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -61391,7 +61391,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!(viewElement && isWidget(viewElement));
   }
 
-  // packages/ckeditor5-widget/src/widgetresize/resizerstate.ts
+  // ../packages/ckeditor5-widget/src/widgetresize/resizerstate.ts
   var WidgetResizeStateBase = /* @__PURE__ */ ObservableMixin();
   var WidgetResizeState = class extends WidgetResizeStateBase {
     /**
@@ -61527,7 +61527,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return `${replacements[parts[0]]}-${replacements[parts[1]]}`;
   }
 
-  // packages/ckeditor5-widget/src/widgetresize/sizeview.ts
+  // ../packages/ckeditor5-widget/src/widgetresize/sizeview.ts
   var SizeView = class extends View {
     constructor() {
       super();
@@ -61595,7 +61595,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-widget/src/widgetresize/resizer.ts
+  // ../packages/ckeditor5-widget/src/widgetresize/resizer.ts
   var WidgetResizerBase = /* @__PURE__ */ ObservableMixin();
   var WidgetResizer = class extends WidgetResizerBase {
     /**
@@ -61927,7 +61927,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-widget/src/widgetresize.ts
+  // ../packages/ckeditor5-widget/src/widgetresize.ts
   var WidgetResize = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -62102,7 +62102,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-clipboard/src/utils/plaintexttohtml.ts
+  // ../packages/ckeditor5-clipboard/src/utils/plaintexttohtml.ts
   function plainTextToHtml(text10) {
     text10 = text10.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r?\n\r?\n/g, "</p><p>").replace(/\r?\n/g, "<br>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;").replace(/^\s/, "&nbsp;").replace(/\s$/, "&nbsp;").replace(/\s\s/g, " &nbsp;");
     if (text10.includes("</p><p>") || text10.includes("<br>")) {
@@ -62111,7 +62111,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return text10;
   }
 
-  // packages/ckeditor5-clipboard/src/clipboardobserver.ts
+  // ../packages/ckeditor5-clipboard/src/clipboardobserver.ts
   var ClipboardObserver = class extends DomEventObserver {
     constructor(view) {
       super(view);
@@ -62170,7 +62170,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-clipboard/src/utils/normalizeclipboarddata.ts
+  // ../packages/ckeditor5-clipboard/src/utils/normalizeclipboarddata.ts
   function normalizeClipboardData(data) {
     return data.replace(/<span(?: class="Apple-converted-space"|)>(\s+)<\/span>/g, (fullMatch, spaces) => {
       if (spaces.length == 1) {
@@ -62180,7 +62180,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }).replace(/<!--[\s\S]*?-->/g, "");
   }
 
-  // packages/ckeditor5-clipboard/src/utils/viewtoplaintext.ts
+  // ../packages/ckeditor5-clipboard/src/utils/viewtoplaintext.ts
   var smallPaddingElements = ["figcaption", "li"];
   var listElements = ["ol", "ul"];
   function viewToPlainText(converter, viewItem) {
@@ -62241,7 +62241,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "\n\n";
   }
 
-  // packages/ckeditor5-clipboard/src/clipboardmarkersutils.ts
+  // ../packages/ckeditor5-clipboard/src/clipboardmarkersutils.ts
   var ClipboardMarkersUtils = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -62666,7 +62666,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-clipboard/src/clipboardpipeline.ts
+  // ../packages/ckeditor5-clipboard/src/clipboardpipeline.ts
   var ClipboardPipeline = class extends Plugin {
     /**
      * @inheritDoc
@@ -62810,7 +62810,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-clipboard/src/lineview.ts
+  // ../packages/ckeditor5-clipboard/src/lineview.ts
   var toPx5 = /* @__PURE__ */ toUnit("px");
   var LineView = class extends View {
     /**
@@ -62843,7 +62843,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-clipboard/src/dragdroptarget.ts
+  // ../packages/ckeditor5-clipboard/src/dragdroptarget.ts
   var DragDropTarget = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -63197,7 +63197,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return mapper.toModelElement(viewElement);
   }
 
-  // packages/ckeditor5-clipboard/src/dragdropblocktoolbar.ts
+  // ../packages/ckeditor5-clipboard/src/dragdropblocktoolbar.ts
   var DragDropBlockToolbar = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -63324,7 +63324,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return target && target.closest(".ck-editor__editable") ? target : null;
   }
 
-  // packages/ckeditor5-clipboard/src/dragdrop.ts
+  // ../packages/ckeditor5-clipboard/src/dragdrop.ts
   var DragDrop = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -63784,7 +63784,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return model.createRange(startPosition, endPosition);
   }
 
-  // packages/ckeditor5-clipboard/src/pasteplaintext.ts
+  // ../packages/ckeditor5-clipboard/src/pasteplaintext.ts
   var PastePlainText = class extends Plugin {
     /**
      * @inheritDoc
@@ -63855,7 +63855,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // packages/ckeditor5-clipboard/src/clipboard.ts
+  // ../packages/ckeditor5-clipboard/src/clipboard.ts
   var Clipboard = class extends Plugin {
     /**
      * @inheritDoc
@@ -63900,7 +63900,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/utils/automaticdecorators.ts
+  // ../packages/ckeditor5-link/src/utils/automaticdecorators.ts
   var AutomaticLinkDecorators = class {
     constructor() {
       /**
@@ -64058,7 +64058,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/utils.ts
+  // ../packages/ckeditor5-link/src/utils.ts
   var ATTRIBUTE_WHITESPACES = /[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205f\u3000]/g;
   var SAFE_URL_TEMPLATE = "^(?:(?:<protocols>):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))";
   var EMAIL_REG_EXP = /^[\S]+@((?![-_])(?:[-\w\u00a1-\uffff]{0,63}[^-_]\.))+(?:[a-z\u00a1-\uffff]{2,})$/i;
@@ -64145,7 +64145,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return text10;
   }
 
-  // packages/ckeditor5-link/src/utils/conflictingdecorators.ts
+  // ../packages/ckeditor5-link/src/utils/conflictingdecorators.ts
   function areDecoratorsConflicting(a2, b) {
     if (a2.attributes && b.attributes) {
       const hasConflict = Object.keys(a2.attributes).some(
@@ -64192,7 +64192,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return manualDecorators.filter((otherDecorator) => otherDecorator.id !== decoratorId && areDecoratorsConflicting(decorator, otherDecorator)).map((item) => item.id);
   }
 
-  // packages/ckeditor5-link/src/linkcommand.ts
+  // ../packages/ckeditor5-link/src/linkcommand.ts
   var LinkCommand = class extends Command {
     constructor() {
       super(...arguments);
@@ -64511,7 +64511,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-link/src/unlinkcommand.ts
+  // ../packages/ckeditor5-link/src/unlinkcommand.ts
   var UnlinkCommand = class extends Command {
     /**
      * @inheritDoc
@@ -64563,7 +64563,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/utils/manualdecorator.ts
+  // ../packages/ckeditor5-link/src/utils/manualdecorator.ts
   var LinkManualDecoratorBase = /* @__PURE__ */ ObservableMixin();
   var LinkManualDecorator = class extends LinkManualDecoratorBase {
     /**
@@ -64622,7 +64622,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/linkediting.ts
+  // ../packages/ckeditor5-link/src/linkediting.ts
   var HIGHLIGHT_CLASS2 = "ck-link_selected";
   var DECORATOR_AUTOMATIC = "automatic";
   var DECORATOR_MANUAL = "manual";
@@ -64976,7 +64976,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return textAttributes.filter((attribute) => attribute.startsWith("link"));
   }
 
-  // packages/ckeditor5-link/src/ui/linkpreviewbuttonview.ts
+  // ../packages/ckeditor5-link/src/ui/linkpreviewbuttonview.ts
   var LinkPreviewButtonView = class extends ButtonView {
     /**
      * @inheritDoc
@@ -65008,7 +65008,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/ui/linkformview.ts
+  // ../packages/ckeditor5-link/src/ui/linkformview.ts
   var LinkFormView = class extends View {
     /**
      * Creates an instance of the {@link module:link/ui/linkformview~LinkFormView} class.
@@ -65306,7 +65306,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/ui/linkprovideritemsview.ts
+  // ../packages/ckeditor5-link/src/ui/linkprovideritemsview.ts
   var LinkProviderItemsView = class extends View {
     /**
      * Creates an instance of the {@link module:link/ui/linkprovideritemsview~LinkProviderItemsView} class.
@@ -65496,7 +65496,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/ui/linkpropertiesview.ts
+  // ../packages/ckeditor5-link/src/ui/linkpropertiesview.ts
   var LinkPropertiesView = class extends View {
     /**
      * Creates an instance of the {@link module:link/ui/linkpropertiesview~LinkPropertiesView} class.
@@ -65647,7 +65647,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/ui/linkbuttonview.ts
+  // ../packages/ckeditor5-link/src/ui/linkbuttonview.ts
   var LinkButtonView = class extends ButtonView {
     /**
      * Creates an instance of the dropdown menu button view.
@@ -65691,7 +65691,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-link/src/linkui.ts
+  // ../packages/ckeditor5-link/src/linkui.ts
   var VISUAL_SELECTION_MARKER_NAME = "link-ui";
   var LinkUI = class extends Plugin {
     constructor() {
@@ -66696,7 +66696,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     ];
   }
 
-  // packages/ckeditor5-link/src/autolink.ts
+  // ../packages/ckeditor5-link/src/autolink.ts
   var MIN_LINK_LENGTH_WITH_SPACE_AT_END = 4;
   var URL_REG_EXP = new RegExp(
     // Group 1: Line start or after a space.
@@ -66939,7 +66939,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!item && item.hasAttribute("linkHref");
   }
 
-  // packages/ckeditor5-link/src/link.ts
+  // ../packages/ckeditor5-link/src/link.ts
   var Link = class extends Plugin {
     /**
      * @inheritDoc
@@ -66961,7 +66961,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-undo/src/basecommand.ts
+  // ../packages/ckeditor5-undo/src/basecommand.ts
   var UndoRedoBaseCommand = class extends Command {
     /**
      * @inheritDoc
@@ -67112,7 +67112,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return ranges.some((otherRange) => otherRange !== range && otherRange.containsRange(range, true));
   }
 
-  // packages/ckeditor5-undo/src/undocommand.ts
+  // ../packages/ckeditor5-undo/src/undocommand.ts
   var UndoCommand = class extends UndoRedoBaseCommand {
     /**
      * Executes the command. This method reverts a {@link module:engine/model/batch~Batch batch} added to the command's stack, transforms
@@ -67137,7 +67137,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-undo/src/redocommand.ts
+  // ../packages/ckeditor5-undo/src/redocommand.ts
   var RedoCommand = class extends UndoRedoBaseCommand {
     /**
      * Executes the command. This method reverts the last {@link module:engine/model/batch~Batch batch} added to
@@ -67162,7 +67162,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-undo/src/undoediting.ts
+  // ../packages/ckeditor5-undo/src/undoediting.ts
   var UndoEditing = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -67247,7 +67247,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-undo/src/undoui.ts
+  // ../packages/ckeditor5-undo/src/undoui.ts
   var UndoUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -67316,7 +67316,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-undo/src/undo.ts
+  // ../packages/ckeditor5-undo/src/undo.ts
   var Undo = class extends Plugin {
     /**
      * @inheritDoc
@@ -67338,7 +67338,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/utils.ts
+  // ../packages/ckeditor5-image/src/image/utils.ts
   function createInlineImageViewElement(writer) {
     return writer.createContainerElement(
       "span",
@@ -67380,7 +67380,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !!(widthStyle && heightStyle);
   }
 
-  // packages/ckeditor5-image/src/imageutils.ts
+  // ../packages/ckeditor5-image/src/imageutils.ts
   var IMAGE_WIDGETS_CLASSES_MATCH_REGEXP = /^(image|image-inline)$/;
   var ImageUtils = class extends Plugin {
     constructor() {
@@ -67663,10 +67663,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return schema.checkChild(selectable, "imageInline") ? "imageInline" : "imageBlock";
   }
 
-  // packages/ckeditor5-image/src/autoimage.ts
+  // ../packages/ckeditor5-image/src/autoimage.ts
   var IMAGE_URL_REGEXP = new RegExp(String(/^(http(s)?:\/\/)?[\w-]+\.[\w.~:/[\]@!$&'()*+,;=%-]+/.source + /\.(jpg|jpeg|png|gif|ico|webp|JPG|JPEG|PNG|GIF|ICO|WEBP)/.source + /(\?[\w.~:/[\]@!$&'()*+,;=%-]*)?/.source + /(#[\w.~:/[\]@!$&'()*+,;=%-]*)?$/.source));
 
-  // packages/ckeditor5-image/src/imagetextalternative/imagetextalternativecommand.ts
+  // ../packages/ckeditor5-image/src/imagetextalternative/imagetextalternativecommand.ts
   var ImageTextAlternativeCommand = class extends Command {
     /**
      * @inheritDoc
@@ -67700,7 +67700,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagetextalternative/imagetextalternativeediting.ts
+  // ../packages/ckeditor5-image/src/imagetextalternative/imagetextalternativeediting.ts
   var ImageTextAlternativeEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -67728,7 +67728,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagetextalternative/ui/textalternativeformview.ts
+  // ../packages/ckeditor5-image/src/imagetextalternative/ui/textalternativeformview.ts
   var TextAlternativeFormView = class extends View {
     /**
      * @inheritDoc
@@ -67898,7 +67898,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/ui/utils.ts
+  // ../packages/ckeditor5-image/src/image/ui/utils.ts
   function repositionContextualBalloon2(editor) {
     const balloon = editor.plugins.get("ContextualBalloon");
     const imageUtils = editor.plugins.get("ImageUtils");
@@ -67934,7 +67934,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-image/src/imagetextalternative/imagetextalternativeui.ts
+  // ../packages/ckeditor5-image/src/imagetextalternative/imagetextalternativeui.ts
   var ImageTextAlternativeUI = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -68093,7 +68093,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagetextalternative.ts
+  // ../packages/ckeditor5-image/src/imagetextalternative.ts
   var ImageTextAlternative = class extends Plugin {
     /**
      * @inheritDoc
@@ -68115,7 +68115,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/converters.ts
+  // ../packages/ckeditor5-image/src/image/converters.ts
   function upcastImageFigure(imageUtils) {
     const converter = (evt, data, conversionApi) => {
       if (!conversionApi.consumable.test(data.viewItem, { name: true, classes: "image" })) {
@@ -68211,7 +68211,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-image/src/image/imageloadobserver.ts
+  // ../packages/ckeditor5-image/src/image/imageloadobserver.ts
   var ImageLoadObserver = class extends Observer {
     /**
      * @inheritDoc
@@ -68248,7 +68248,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/insertimagecommand.ts
+  // ../packages/ckeditor5-image/src/image/insertimagecommand.ts
   var InsertImageCommand = class extends Command {
     /**
      * @inheritDoc
@@ -68306,7 +68306,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/replaceimagesourcecommand.ts
+  // ../packages/ckeditor5-image/src/image/replaceimagesourcecommand.ts
   var ReplaceImageSourceCommand = class extends Command {
     constructor(editor) {
       super(editor);
@@ -68362,7 +68362,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/imageediting.ts
+  // ../packages/ckeditor5-image/src/image/imageediting.ts
   var ImageEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -68410,7 +68410,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagesizeattributes.ts
+  // ../packages/ckeditor5-image/src/imagesizeattributes.ts
   var ImageSizeAttributes = class extends Plugin {
     /**
      * @inheritDoc
@@ -68553,7 +68553,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/imagetypecommand.ts
+  // ../packages/ckeditor5-image/src/image/imagetypecommand.ts
   var ImageTypeCommand = class extends Command {
     /**
      * @inheritDoc
@@ -68630,7 +68630,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/imageplaceholder.ts
+  // ../packages/ckeditor5-image/src/image/imageplaceholder.ts
   var ImagePlaceholder = class extends Plugin {
     /**
      * @inheritDoc
@@ -68734,7 +68734,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/imageblockediting.ts
+  // ../packages/ckeditor5-image/src/image/imageblockediting.ts
   var ImageBlockEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -68868,7 +68868,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinsert/ui/imageinsertformview.ts
+  // ../packages/ckeditor5-image/src/imageinsert/ui/imageinsertformview.ts
   var ImageInsertFormView = class extends View {
     /**
      * Creates a view for the dropdown panel of {@link module:image/imageinsert/imageinsertui~ImageInsertUI}.
@@ -68966,7 +68966,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinsert/imageinsertui.ts
+  // ../packages/ckeditor5-image/src/imageinsert/imageinsertui.ts
   var ImageInsertUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -69136,7 +69136,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageblock.ts
+  // ../packages/ckeditor5-image/src/imageblock.ts
   var ImageBlock = class extends Plugin {
     /**
      * @inheritDoc
@@ -69158,7 +69158,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image/imageinlineediting.ts
+  // ../packages/ckeditor5-image/src/image/imageinlineediting.ts
   var ImageInlineEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -69304,7 +69304,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinline.ts
+  // ../packages/ckeditor5-image/src/imageinline.ts
   var ImageInline = class extends Plugin {
     /**
      * @inheritDoc
@@ -69326,7 +69326,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/image.ts
+  // ../packages/ckeditor5-image/src/image.ts
   var Image = class extends Plugin {
     /**
      * @inheritDoc
@@ -69348,7 +69348,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagecaption/imagecaptionutils.ts
+  // ../packages/ckeditor5-image/src/imagecaption/imagecaptionutils.ts
   var ImageCaptionUtils = class extends Plugin {
     /**
      * @inheritDoc
@@ -69408,7 +69408,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagecaption/toggleimagecaptioncommand.ts
+  // ../packages/ckeditor5-image/src/imagecaption/toggleimagecaptioncommand.ts
   var ToggleImageCaptionCommand = class extends Command {
     /**
      * @inheritDoc
@@ -69511,7 +69511,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagecaption/imagecaptionediting.ts
+  // ../packages/ckeditor5-image/src/imagecaption/imagecaptionediting.ts
   var ImageCaptionEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -69711,7 +69711,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagecaption/imagecaptionui.ts
+  // ../packages/ckeditor5-image/src/imagecaption/imagecaptionui.ts
   var ImageCaptionUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -69766,7 +69766,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagecaption.ts
+  // ../packages/ckeditor5-image/src/imagecaption.ts
   var ImageCaption = class extends Plugin {
     /**
      * @inheritDoc
@@ -69788,7 +69788,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageupload/utils.ts
+  // ../packages/ckeditor5-image/src/imageupload/utils.ts
   function createImageTypeRegExp(types) {
     const regExpSafeNames = types.map((type) => type.replace("+", "\\+"));
     return new RegExp(`^image\\/(${regExpSafeNames.join("|")})$`);
@@ -69846,7 +69846,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-image/src/imageupload/imageuploadui.ts
+  // ../packages/ckeditor5-image/src/imageupload/imageuploadui.ts
   var ImageUploadUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -69968,7 +69968,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageupload/imageuploadprogress.ts
+  // ../packages/ckeditor5-image/src/imageupload/imageuploadprogress.ts
   var ImageUploadProgress = class extends Plugin {
     /**
      * @inheritDoc
@@ -70132,7 +70132,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-image/src/imageupload/uploadimagecommand.ts
+  // ../packages/ckeditor5-image/src/imageupload/uploadimagecommand.ts
   var UploadImageCommand = class extends Command {
     /**
      * Creates an instance of the `imageUlpoad` command. When executed, the command upload one of
@@ -70190,7 +70190,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageupload/imageuploadediting.ts
+  // ../packages/ckeditor5-image/src/imageupload/imageuploadediting.ts
   var ImageUploadEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -70556,7 +70556,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.from(editor.model.createRangeOn(item)).filter((value) => imageUtils.isImage(value.item)).map((value) => value.item);
   }
 
-  // packages/ckeditor5-image/src/imageupload.ts
+  // ../packages/ckeditor5-image/src/imageupload.ts
   var ImageUpload = class extends Plugin {
     /**
      * @inheritDoc
@@ -70578,7 +70578,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinsert/ui/imageinserturlview.ts
+  // ../packages/ckeditor5-image/src/imageinsert/ui/imageinserturlview.ts
   var ImageInsertUrlView = class extends View {
     /**
      * Creates a view for the dropdown panel of {@link module:image/imageinsert/imageinsertui~ImageInsertUI}.
@@ -70669,7 +70669,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinsert/imageinsertviaurlui.ts
+  // ../packages/ckeditor5-image/src/imageinsert/imageinsertviaurlui.ts
   var ImageInsertViaUrlUI = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -70831,7 +70831,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinsertviaurl.ts
+  // ../packages/ckeditor5-image/src/imageinsertviaurl.ts
   var ImageInsertViaUrl = class extends Plugin {
     /**
      * @inheritDoc
@@ -70853,7 +70853,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageinsert.ts
+  // ../packages/ckeditor5-image/src/imageinsert.ts
   var ImageInsert = class extends Plugin {
     /**
      * @inheritDoc
@@ -70875,7 +70875,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageresize/resizeimagecommand.ts
+  // ../packages/ckeditor5-image/src/imageresize/resizeimagecommand.ts
   var ResizeImageCommand = class extends Command {
     /**
      * @inheritDoc
@@ -70928,7 +70928,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageresize/imageresizeediting.ts
+  // ../packages/ckeditor5-image/src/imageresize/imageresizeediting.ts
   var ImageResizeEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -71120,7 +71120,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageresize/imageresizebuttons.ts
+  // ../packages/ckeditor5-image/src/imageresize/imageresizebuttons.ts
   var RESIZE_ICONS = /* @__PURE__ */ (() => ({
     small: object_size_small_default,
     medium: object_size_medium_default,
@@ -71400,7 +71400,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // packages/ckeditor5-image/src/imageresize/imageresizehandles.ts
+  // ../packages/ckeditor5-image/src/imageresize/imageresizehandles.ts
   var RESIZABLE_IMAGES_CSS_SELECTOR = "figure.image.ck-widget > img,figure.image.ck-widget > picture > img,figure.image.ck-widget > a > img,figure.image.ck-widget > a > picture > img,span.image-inline.ck-widget > img,span.image-inline.ck-widget > picture > img";
   var RESIZED_IMAGE_CLASS = "image_resized";
   var ImageResizeHandles = class extends Plugin {
@@ -71492,7 +71492,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageresize/utils/getselectedimageeditornodes.ts
+  // ../packages/ckeditor5-image/src/imageresize/utils/getselectedimageeditornodes.ts
   function getSelectedImageEditorNodes(editor) {
     const { editing } = editor;
     const imageUtils = editor.plugins.get("ImageUtils");
@@ -71509,7 +71509,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-image/src/imageresize/utils/getselectedimagewidthinunits.ts
+  // ../packages/ckeditor5-image/src/imageresize/utils/getselectedimagewidthinunits.ts
   function getSelectedImageWidthInUnits(editor, targetUnit) {
     const imageNodes = getSelectedImageEditorNodes(editor);
     if (!imageNodes) {
@@ -71532,7 +71532,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return tryCastDimensionsToUnit(imageParentWidthPx, imageHolderDimension, targetUnit);
   }
 
-  // packages/ckeditor5-image/src/imageresize/ui/imagecustomresizeformview.ts
+  // ../packages/ckeditor5-image/src/imageresize/ui/imagecustomresizeformview.ts
   var ImageCustomResizeFormView = class extends View {
     /**
      * @inheritDoc
@@ -71771,7 +71771,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imageresize/utils/getselectedimagepossibleresizerange.ts
+  // ../packages/ckeditor5-image/src/imageresize/utils/getselectedimagepossibleresizerange.ts
   function getSelectedImagePossibleResizeRange(editor, targetUnit) {
     const imageNodes = getSelectedImageEditorNodes(editor);
     if (!imageNodes) {
@@ -71791,7 +71791,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-image/src/imageresize/imagecustomresizeui.ts
+  // ../packages/ckeditor5-image/src/imageresize/imagecustomresizeui.ts
   var ImageCustomResizeUI = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -71940,7 +71940,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     ];
   }
 
-  // packages/ckeditor5-image/src/imageresize.ts
+  // ../packages/ckeditor5-image/src/imageresize.ts
   var ImageResize = class extends Plugin {
     /**
      * @inheritDoc
@@ -71967,7 +71967,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagestyle/imagestylecommand.ts
+  // ../packages/ckeditor5-image/src/imagestyle/imagestylecommand.ts
   var ImageStyleCommand = class extends Command {
     /**
      * Creates an instance of the image style command. When executed, the command applies one of
@@ -72095,7 +72095,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagestyle/utils.ts
+  // ../packages/ckeditor5-image/src/imagestyle/utils.ts
   var DEFAULT_OPTIONS = {
     // This style represents an image placed in the line of text.
     get inline() {
@@ -72293,7 +72293,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     warnInvalidStyle
   };
 
-  // packages/ckeditor5-image/src/imagestyle/converters.ts
+  // ../packages/ckeditor5-image/src/imagestyle/converters.ts
   function modelToViewStyleAttribute(styles) {
     return (evt, data, conversionApi) => {
       if (!conversionApi.consumable.consume(data.item, evt.name)) {
@@ -72364,7 +72364,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     conversionApi.consumable.consume(viewElement, { styles: ["float"] });
   }
 
-  // packages/ckeditor5-image/src/imagestyle/imagestyleediting.ts
+  // ../packages/ckeditor5-image/src/imagestyle/imagestyleediting.ts
   var ImageStyleEditing = class extends Plugin {
     constructor() {
       super(...arguments);
@@ -72497,7 +72497,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // packages/ckeditor5-image/src/imagestyle/imagestyleui.ts
+  // ../packages/ckeditor5-image/src/imagestyle/imagestyleui.ts
   var ImageStyleUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -72675,7 +72675,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (dropdownTitle ? dropdownTitle + ": " : "") + buttonTitle;
   }
 
-  // packages/ckeditor5-image/src/imagestyle.ts
+  // ../packages/ckeditor5-image/src/imagestyle.ts
   var ImageStyle = class extends Plugin {
     /**
      * @inheritDoc
@@ -72697,7 +72697,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-image/src/imagetoolbar.ts
+  // ../packages/ckeditor5-image/src/imagetoolbar.ts
   var ImageToolbar = class extends Plugin {
     /**
      * @inheritDoc
@@ -72736,7 +72736,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return config.map((item) => isObject(item) ? item.name : item);
   }
 
-  // packages/ckeditor5-code-block/src/utils.ts
+  // ../packages/ckeditor5-code-block/src/utils.ts
   function getNormalizedAndLocalizedLanguageDefinitions(editor) {
     const t = editor.t;
     const languageDefs = editor.config.get("codeBlock.languages");
@@ -72841,7 +72841,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return nodeAtStart && nodeAtStart.is("$text") ? nodeAtStart : null;
   }
 
-  // packages/ckeditor5-code-block/src/codeblockcommand.ts
+  // ../packages/ckeditor5-code-block/src/codeblockcommand.ts
   var CodeBlockCommand = class extends Command {
     /**
      * @inheritDoc
@@ -72965,7 +72965,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return defaultLanguage;
   }
 
-  // packages/ckeditor5-code-block/src/indentcodeblockcommand.ts
+  // ../packages/ckeditor5-code-block/src/indentcodeblockcommand.ts
   var IndentCodeBlockCommand = class extends Command {
     constructor(editor) {
       super(editor);
@@ -73009,7 +73009,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-code-block/src/outdentcodeblockcommand.ts
+  // ../packages/ckeditor5-code-block/src/outdentcodeblockcommand.ts
   var OutdentCodeBlockCommand = class extends Command {
     constructor(editor) {
       super(editor);
@@ -73083,7 +73083,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // packages/ckeditor5-code-block/src/converters.ts
+  // ../packages/ckeditor5-code-block/src/converters.ts
   function modelToViewCodeBlockInsertion(model, languageDefs, useLabels = false) {
     const languagesToClasses = getPropertyAssociation(languageDefs, "language", "class");
     const languagesToLabels = getPropertyAssociation(languageDefs, "language", "label");
@@ -73210,7 +73210,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-code-block/src/codeblockediting.ts
+  // ../packages/ckeditor5-code-block/src/codeblockediting.ts
   var DEFAULT_ELEMENT = "paragraph";
   var CodeBlockEditing = class extends Plugin {
     /**
@@ -73504,7 +73504,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return node2 && node2.is("element", "softBreak");
   }
 
-  // packages/ckeditor5-code-block/src/codeblockui.ts
+  // ../packages/ckeditor5-code-block/src/codeblockui.ts
   var CodeBlockUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -73622,7 +73622,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-code-block/src/codeblock.ts
+  // ../packages/ckeditor5-code-block/src/codeblock.ts
   var CodeBlock = class extends Plugin {
     /**
      * @inheritDoc
@@ -73644,7 +73644,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-editor-classic/src/classiceditorui.ts
+  // ../packages/ckeditor5-editor-classic/src/classiceditorui.ts
   var ClassicEditorUI = class extends EditorUI {
     /**
      * Creates an instance of the classic editor UI class.
@@ -73856,7 +73856,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-editor-classic/src/classiceditoruiview.ts
+  // ../packages/ckeditor5-editor-classic/src/classiceditoruiview.ts
   var ClassicEditorUIView = class extends BoxedEditorUIView {
     /**
      * Creates an instance of the classic editor UI view.
@@ -73913,7 +73913,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-editor-classic/src/classiceditor.ts
+  // ../packages/ckeditor5-editor-classic/src/classiceditor.ts
   var ClassicEditorBase = /* @__PURE__ */ ElementApiMixin(Editor);
   var ClassicEditor = class extends ClassicEditorBase {
     constructor(sourceElementOrDataOrConfig, config = {}) {
@@ -73984,7 +73984,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isElement(value);
   }
 
-  // packages/ckeditor5-mention/src/mentionui.ts
+  // ../packages/ckeditor5-mention/src/mentionui.ts
   var defaultHandledKeyCodes = [
     keyCodes.arrowup,
     keyCodes.arrowdown,
@@ -73995,7 +73995,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     keyCodes.tab
   ];
 
-  // packages/ckeditor5-select-all/src/selectallcommand.ts
+  // ../packages/ckeditor5-select-all/src/selectallcommand.ts
   var SelectAllCommand = class extends Command {
     /**
      * @inheritDoc
@@ -74028,7 +74028,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return schema.isLimit(element6) && (schema.checkChild(element6, "$text") || schema.checkChild(element6, "paragraph"));
   }
 
-  // packages/ckeditor5-select-all/src/selectallediting.ts
+  // ../packages/ckeditor5-select-all/src/selectallediting.ts
   var SELECT_ALL_KEYSTROKE = /* @__PURE__ */ parseKeystroke("Ctrl+A");
   var SelectAllEditing = class extends Plugin {
     /**
@@ -74069,7 +74069,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-select-all/src/selectallui.ts
+  // ../packages/ckeditor5-select-all/src/selectallui.ts
   var SelectAllUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -74122,7 +74122,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-select-all/src/selectall.ts
+  // ../packages/ckeditor5-select-all/src/selectall.ts
   var SelectAll = class extends Plugin {
     /**
      * @inheritDoc
@@ -74144,7 +74144,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-essentials/src/essentials.ts
+  // ../packages/ckeditor5-essentials/src/essentials.ts
   var Essentials = class extends Plugin {
     /**
      * @inheritDoc
@@ -74166,7 +74166,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/ui/findandreplaceformview.ts
+  // ../packages/ckeditor5-find-and-replace/src/ui/findandreplaceformview.ts
   var FindAndReplaceFormView = class extends View {
     /**
      * Creates a view of find and replace form.
@@ -74688,7 +74688,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findandreplaceui.ts
+  // ../packages/ckeditor5-find-and-replace/src/findandreplaceui.ts
   var FindAndReplaceUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -74929,7 +74929,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findcommand.ts
+  // ../packages/ckeditor5-find-and-replace/src/findcommand.ts
   var FindCommand = class extends Command {
     /**
      * Creates a new `FindCommand` instance.
@@ -75001,7 +75001,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findandreplacestate.ts
+  // ../packages/ckeditor5-find-and-replace/src/findandreplacestate.ts
   var FindAndReplaceStateBase = /* @__PURE__ */ ObservableMixin();
   var FindAndReplaceState = class extends FindAndReplaceStateBase {
     /**
@@ -75078,7 +75078,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // packages/ckeditor5-find-and-replace/src/replacecommandbase.ts
+  // ../packages/ckeditor5-find-and-replace/src/replacecommandbase.ts
   var FindReplaceCommandBase = class extends Command {
     /**
      * Creates a new `ReplaceCommand` instance.
@@ -75128,7 +75128,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/replacecommand.ts
+  // ../packages/ckeditor5-find-and-replace/src/replacecommand.ts
   var ReplaceCommand = class extends FindReplaceCommandBase {
     /**
      * Replace a given find result by a string or a callback.
@@ -75147,7 +75147,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/replaceallcommand.ts
+  // ../packages/ckeditor5-find-and-replace/src/replaceallcommand.ts
   var ReplaceAllCommand = class extends FindReplaceCommandBase {
     /**
      * Replaces all the occurrences of `textToReplace` with a given `newText` string.
@@ -75188,7 +75188,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findnextcommand.ts
+  // ../packages/ckeditor5-find-and-replace/src/findnextcommand.ts
   var FindNextCommand = class extends Command {
     /**
      * Creates a new `FindNextCommand` instance.
@@ -75226,7 +75226,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findpreviouscommand.ts
+  // ../packages/ckeditor5-find-and-replace/src/findpreviouscommand.ts
   var FindPreviousCommand = class extends FindNextCommand {
     /**
      * @inheritDoc
@@ -75239,7 +75239,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findandreplaceutils.ts
+  // ../packages/ckeditor5-find-and-replace/src/findandreplaceutils.ts
   var FindAndReplaceUtils = class extends Plugin {
     /**
      * @inheritDoc
@@ -75390,7 +75390,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-find-and-replace/src/findandreplaceediting.ts
+  // ../packages/ckeditor5-find-and-replace/src/findandreplaceediting.ts
   var HIGHLIGHT_CLASS3 = "ck-find-result_selected";
   var FindAndReplaceEditing = class extends Plugin {
     constructor() {
@@ -75620,7 +75620,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-find-and-replace/src/findandreplace.ts
+  // ../packages/ckeditor5-find-and-replace/src/findandreplace.ts
   var FindAndReplace = class extends Plugin {
     /**
      * @inheritDoc
@@ -75684,7 +75684,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-font/src/fontsize/utils.ts
+  // ../packages/ckeditor5-font/src/fontsize/utils.ts
   function normalizeOptions2(configuredOptions) {
     return configuredOptions.map((item) => getOptionDefinition(item)).filter((option2) => option2 !== void 0);
   }
@@ -75797,7 +75797,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isNaN(numberValue);
   }
 
-  // packages/ckeditor5-paragraph/src/paragraphcommand.ts
+  // ../packages/ckeditor5-paragraph/src/paragraphcommand.ts
   var ParagraphCommand = class extends Command {
     constructor(editor) {
       super(editor);
@@ -75843,7 +75843,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return schema.checkChild(block.parent, "paragraph") && !schema.isObject(block);
   }
 
-  // packages/ckeditor5-paragraph/src/insertparagraphcommand.ts
+  // ../packages/ckeditor5-paragraph/src/insertparagraphcommand.ts
   var InsertParagraphCommand = class extends Command {
     constructor(editor) {
       super(editor);
@@ -75902,7 +75902,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-paragraph/src/paragraph.ts
+  // ../packages/ckeditor5-paragraph/src/paragraph.ts
   var _Paragraph = class _Paragraph extends Plugin {
     /**
      * @inheritDoc
@@ -75992,7 +75992,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   ]));
   var Paragraph = _Paragraph;
 
-  // packages/ckeditor5-heading/src/headingcommand.ts
+  // ../packages/ckeditor5-heading/src/headingcommand.ts
   var HeadingCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -76044,7 +76044,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return schema.checkChild(block.parent, heading4) && !schema.isObject(block);
   }
 
-  // packages/ckeditor5-heading/src/headingediting.ts
+  // ../packages/ckeditor5-heading/src/headingediting.ts
   var defaultModelElement = "paragraph";
   var HeadingEditing = class extends Plugin {
     /**
@@ -76132,7 +76132,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-heading/src/utils.ts
+  // ../packages/ckeditor5-heading/src/utils.ts
   function getLocalizedOptions(editor) {
     const t = editor.t;
     const localizedTitles = {
@@ -76153,7 +76153,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
-  // packages/ckeditor5-heading/src/headingui.ts
+  // ../packages/ckeditor5-heading/src/headingui.ts
   var HeadingUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -76304,7 +76304,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-heading/src/heading.ts
+  // ../packages/ckeditor5-heading/src/heading.ts
   var Heading = class extends Plugin {
     /**
      * @inheritDoc
@@ -76326,7 +76326,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-horizontal-line/src/horizontallinecommand.ts
+  // ../packages/ckeditor5-horizontal-line/src/horizontallinecommand.ts
   var HorizontalLineCommand = class extends Command {
     /**
      * @inheritDoc
@@ -76363,7 +76363,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return parent;
   }
 
-  // packages/ckeditor5-horizontal-line/src/horizontallineediting.ts
+  // ../packages/ckeditor5-horizontal-line/src/horizontallineediting.ts
   var HorizontalLineEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -76417,7 +76417,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return toWidget(viewElement, writer, { label });
   }
 
-  // packages/ckeditor5-horizontal-line/src/horizontallineui.ts
+  // ../packages/ckeditor5-horizontal-line/src/horizontallineui.ts
   var HorizontalLineUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -76469,7 +76469,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-horizontal-line/src/horizontalline.ts
+  // ../packages/ckeditor5-horizontal-line/src/horizontalline.ts
   var HorizontalLine = class extends Plugin {
     /**
      * @inheritDoc
@@ -76491,7 +76491,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/list/utils/listwalker.ts
+  // ../packages/ckeditor5-list/src/list/utils/listwalker.ts
   var ListWalker = class {
     /**
      * Creates a document list iterator.
@@ -76683,7 +76683,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/list/utils/model.ts
+  // ../packages/ckeditor5-list/src/list/utils/model.ts
   var ListItemUid = class {
     /**
      * Returns the next ID.
@@ -76942,7 +76942,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return [];
   }
 
-  // packages/ckeditor5-list/src/list/listindentcommand.ts
+  // ../packages/ckeditor5-list/src/list/listindentcommand.ts
   var ListIndentCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -77052,7 +77052,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return blocks2;
   }
 
-  // packages/ckeditor5-list/src/list/listcommand.ts
+  // ../packages/ckeditor5-list/src/list/listcommand.ts
   var ListCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -77207,7 +77207,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/list/listmergecommand.ts
+  // ../packages/ckeditor5-list/src/list/listmergecommand.ts
   var ListMergeCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -77365,7 +77365,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/list/listsplitcommand.ts
+  // ../packages/ckeditor5-list/src/list/listsplitcommand.ts
   var ListSplitCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -77428,7 +77428,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listformatting/listitemboldintegration.ts
+  // ../packages/ckeditor5-list/src/listformatting/listitemboldintegration.ts
   var ListItemBoldIntegration = class extends Plugin {
     /**
      * @inheritDoc
@@ -77501,7 +77501,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listformatting/listitemitalicintegration.ts
+  // ../packages/ckeditor5-list/src/listformatting/listitemitalicintegration.ts
   var ListItemItalicIntegration = class extends Plugin {
     /**
      * @inheritDoc
@@ -77574,7 +77574,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listformatting/listitemfontsizeintegration.ts
+  // ../packages/ckeditor5-list/src/listformatting/listitemfontsizeintegration.ts
   var ListItemFontSizeIntegration = class extends Plugin {
     /**
      * @inheritDoc
@@ -77680,7 +77680,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listformatting/listitemfontcolorintegration.ts
+  // ../packages/ckeditor5-list/src/listformatting/listitemfontcolorintegration.ts
   var ListItemFontColorIntegration = class extends Plugin {
     /**
      * @inheritDoc
@@ -77759,7 +77759,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listformatting/listitemfontfamilyintegration.ts
+  // ../packages/ckeditor5-list/src/listformatting/listitemfontfamilyintegration.ts
   var ListItemFontFamilyIntegration = class extends Plugin {
     /**
      * @inheritDoc
@@ -77838,7 +77838,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listformatting.ts
+  // ../packages/ckeditor5-list/src/listformatting.ts
   var ListFormatting = class extends Plugin {
     /**
      * @inheritDoc
@@ -78025,7 +78025,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return ["numbered", "bulleted", "customNumbered", "customBulleted"].includes(listItem3.getAttribute("listType"));
   }
 
-  // packages/ckeditor5-list/src/list/listutils.ts
+  // ../packages/ckeditor5-list/src/list/listutils.ts
   var ListUtils = class extends Plugin {
     /**
      * @inheritDoc
@@ -78086,7 +78086,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/list/utils/view.ts
+  // ../packages/ckeditor5-list/src/list/utils/view.ts
   function isListView(viewElement) {
     return viewElement.is("element", "ol") || viewElement.is("element", "ul");
   }
@@ -78128,7 +78128,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return `list-${type}-${indent2}`;
   }
 
-  // packages/ckeditor5-list/src/list/utils/postfixers.ts
+  // ../packages/ckeditor5-list/src/list/utils/postfixers.ts
   function findAndAddListHeadToMap(position3, itemToListHead, visited) {
     const previousNode = position3.nodeBefore;
     if (!isListItemBlock(previousNode)) {
@@ -78218,7 +78218,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return applied;
   }
 
-  // packages/ckeditor5-list/src/list/converters.ts
+  // ../packages/ckeditor5-list/src/list/converters.ts
   function listItemSkipLevelConsumer() {
     return (evt, data, conversionApi) => {
       const viewItem = data.viewItem;
@@ -78724,7 +78724,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return blocks2.length < 2;
   }
 
-  // packages/ckeditor5-list/src/list/listediting.ts
+  // ../packages/ckeditor5-list/src/list/listediting.ts
   var LIST_BASE_ATTRIBUTES = ["listType", "listIndent", "listItemId"];
   var ListEditing = class extends Plugin {
     /**
@@ -79264,7 +79264,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isSingleListItem([positionParent, previousSibling]);
   }
 
-  // packages/ckeditor5-list/src/list/utils.ts
+  // ../packages/ckeditor5-list/src/list/utils.ts
   function createUIComponents(editor, commandName, label, icon) {
     editor.ui.componentFactory.add(commandName, () => {
       const buttonView = _createButton(ButtonView, editor, commandName, label, icon);
@@ -79298,7 +79298,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return view;
   }
 
-  // packages/ckeditor5-list/src/list/listui.ts
+  // ../packages/ckeditor5-list/src/list/listui.ts
   var ListUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -79326,7 +79326,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/list.ts
+  // ../packages/ckeditor5-list/src/list.ts
   var List = class extends Plugin {
     /**
      * @inheritDoc
@@ -79348,7 +79348,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listproperties/liststartcommand.ts
+  // ../packages/ckeditor5-list/src/listproperties/liststartcommand.ts
   var ListStartCommand = class extends Command {
     /**
      * @inheritDoc
@@ -79394,7 +79394,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listproperties/utils/style.ts
+  // ../packages/ckeditor5-list/src/listproperties/utils/style.ts
   var LIST_STYLE_TO_LIST_TYPE = {};
   var LIST_STYLE_TO_TYPE_ATTRIBUTE = {};
   var TYPE_ATTRIBUTE_TO_LIST_STYLE = {};
@@ -79442,7 +79442,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-list/src/listproperties/liststylecommand.ts
+  // ../packages/ckeditor5-list/src/listproperties/liststylecommand.ts
   var ListStyleCommand = class extends Command {
     /**
      * Creates an instance of the command.
@@ -79548,7 +79548,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listproperties/listreversedcommand.ts
+  // ../packages/ckeditor5-list/src/listproperties/listreversedcommand.ts
   var ListReversedCommand = class extends Command {
     /**
      * @inheritDoc
@@ -79589,7 +79589,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listproperties/converters.ts
+  // ../packages/ckeditor5-list/src/listproperties/converters.ts
   function listPropertiesUpcastConverter(strategy) {
     return (evt, data, conversionApi) => {
       const { writer, schema, consumable } = conversionApi;
@@ -79619,7 +79619,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-list/src/listproperties/listpropertiesutils.ts
+  // ../packages/ckeditor5-list/src/listproperties/listpropertiesutils.ts
   var ListPropertiesUtils = class extends Plugin {
     /**
      * @inheritDoc
@@ -79659,7 +79659,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listproperties/utils/config.ts
+  // ../packages/ckeditor5-list/src/listproperties/utils/config.ts
   function getNormalizedConfig(config) {
     const { startIndex, reversed, styles } = config;
     return {
@@ -79698,7 +79698,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return normalizedConfig;
   }
 
-  // packages/ckeditor5-list/src/listproperties/listpropertiesediting.ts
+  // ../packages/ckeditor5-list/src/listproperties/listpropertiesediting.ts
   var DEFAULT_LIST_TYPE = "default";
   var ListPropertiesEditing = class extends Plugin {
     /**
@@ -79953,7 +79953,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return strategies;
   }
 
-  // packages/ckeditor5-list/src/listproperties/ui/listpropertiesview.ts
+  // ../packages/ckeditor5-list/src/listproperties/ui/listpropertiesview.ts
   var ListPropertiesView = class extends View {
     /**
      * Creates an instance of the list properties view.
@@ -80236,7 +80236,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/listproperties/listpropertiesui.ts
+  // ../packages/ckeditor5-list/src/listproperties/listpropertiesui.ts
   var ListPropertiesUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -80563,7 +80563,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-list/src/listproperties.ts
+  // ../packages/ckeditor5-list/src/listproperties.ts
   var ListProperties = class extends Plugin {
     /**
      * @inheritDoc
@@ -80585,7 +80585,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/todolist/checktodolistcommand.ts
+  // ../packages/ckeditor5-list/src/todolist/checktodolistcommand.ts
   var CheckTodoListCommand = class extends Command {
     /**
      * @inheritDoc
@@ -80651,7 +80651,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/todolist/todocheckboxchangeobserver.ts
+  // ../packages/ckeditor5-list/src/todolist/todocheckboxchangeobserver.ts
   var TodoCheckboxChangeObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -80673,7 +80673,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/todolist/todolistediting.ts
+  // ../packages/ckeditor5-list/src/todolist/todolistediting.ts
   var ITEM_TOGGLE_KEYSTROKE = /* @__PURE__ */ parseKeystroke("Ctrl+Enter");
   var TodoListEditing = class extends Plugin {
     /**
@@ -81061,7 +81061,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return element6.getAttribute("listType") == "todo";
   }
 
-  // packages/ckeditor5-list/src/todolist/todolistui.ts
+  // ../packages/ckeditor5-list/src/todolist/todolistui.ts
   var TodoListUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -81084,7 +81084,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-list/src/todolist.ts
+  // ../packages/ckeditor5-list/src/todolist.ts
   var TodoList = class extends Plugin {
     /**
      * @inheritDoc
@@ -81106,21 +81106,21 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // node_modules/.pnpm/bail@2.0.2/node_modules/bail/index.js
+  // ../node_modules/.pnpm/bail@2.0.2/node_modules/bail/index.js
   function bail(error) {
     if (error) {
       throw error;
     }
   }
 
-  // node_modules/.pnpm/unified@11.0.5/node_modules/unified/lib/index.js
+  // ../node_modules/.pnpm/unified@11.0.5/node_modules/unified/lib/index.js
   var import_extend = __toESM(require_extend(), 1);
 
-  // node_modules/.pnpm/devlop@1.1.0/node_modules/devlop/lib/default.js
+  // ../node_modules/.pnpm/devlop@1.1.0/node_modules/devlop/lib/default.js
   function ok() {
   }
 
-  // node_modules/.pnpm/is-plain-obj@4.1.0/node_modules/is-plain-obj/index.js
+  // ../node_modules/.pnpm/is-plain-obj@4.1.0/node_modules/is-plain-obj/index.js
   function isPlainObject3(value) {
     if (typeof value !== "object" || value === null) {
       return false;
@@ -81129,7 +81129,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in value) && !(Symbol.iterator in value);
   }
 
-  // node_modules/.pnpm/trough@2.2.0/node_modules/trough/lib/index.js
+  // ../node_modules/.pnpm/trough@2.2.0/node_modules/trough/lib/index.js
   function trough() {
     const fns = [];
     const pipeline = { run, use };
@@ -81213,7 +81213,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/unist-util-stringify-position@4.0.0/node_modules/unist-util-stringify-position/lib/index.js
+  // ../node_modules/.pnpm/unist-util-stringify-position@4.0.0/node_modules/unist-util-stringify-position/lib/index.js
   function stringifyPosition(value) {
     if (!value || typeof value !== "object") {
       return "";
@@ -81239,7 +81239,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value && typeof value === "number" ? value : 1;
   }
 
-  // node_modules/.pnpm/vfile-message@4.0.3/node_modules/vfile-message/lib/index.js
+  // ../node_modules/.pnpm/vfile-message@4.0.3/node_modules/vfile-message/lib/index.js
   var VFileMessage = class extends Error {
     /**
      * Create a message for `reason`.
@@ -81375,7 +81375,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   VFileMessage.prototype.ruleId = void 0;
   VFileMessage.prototype.source = void 0;
 
-  // node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minpath.browser.js
+  // ../node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minpath.browser.js
   var minpath = { basename, dirname, extname, join, sep: "/" };
   function basename(path2, extname2) {
     if (extname2 !== void 0 && typeof extname2 !== "string") {
@@ -81588,13 +81588,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minproc.browser.js
+  // ../node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minproc.browser.js
   var minproc = { cwd };
   function cwd() {
     return "/";
   }
 
-  // node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minurl.shared.js
+  // ../node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minurl.shared.js
   function isUrl(fileUrlOrPath) {
     return Boolean(
       fileUrlOrPath !== null && typeof fileUrlOrPath === "object" && "href" in fileUrlOrPath && fileUrlOrPath.href && "protocol" in fileUrlOrPath && fileUrlOrPath.protocol && // @ts-expect-error: indexing is fine.
@@ -81602,7 +81602,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minurl.browser.js
+  // ../node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/minurl.browser.js
   function urlToPath(path2) {
     if (typeof path2 === "string") {
       path2 = new URL(path2);
@@ -81645,7 +81645,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return decodeURIComponent(pathname);
   }
 
-  // node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/index.js
+  // ../node_modules/.pnpm/vfile@6.0.3/node_modules/vfile/lib/index.js
   var order = (
     /** @type {const} */
     [
@@ -82101,7 +82101,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/unified@11.0.5/node_modules/unified/lib/callable-instance.js
+  // ../node_modules/.pnpm/unified@11.0.5/node_modules/unified/lib/callable-instance.js
   var CallableInstance = (
     /**
      * @type {new <Parameters extends Array<unknown>, Result>(property: string | symbol) => (...parameters: Parameters) => Result}
@@ -82130,7 +82130,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     })
   );
 
-  // node_modules/.pnpm/unified@11.0.5/node_modules/unified/lib/index.js
+  // ../node_modules/.pnpm/unified@11.0.5/node_modules/unified/lib/index.js
   var own = {}.hasOwnProperty;
   var Processor = class _Processor extends CallableInstance {
     /**
@@ -82766,7 +82766,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/ccount@2.0.1/node_modules/ccount/index.js
+  // ../node_modules/.pnpm/ccount@2.0.1/node_modules/ccount/index.js
   function ccount(value, character) {
     const source = String(value);
     if (typeof character !== "string") {
@@ -82781,7 +82781,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return count2;
   }
 
-  // node_modules/.pnpm/micromark-util-character@2.1.1/node_modules/micromark-util-character/index.js
+  // ../node_modules/.pnpm/micromark-util-character@2.1.1/node_modules/micromark-util-character/index.js
   var asciiAlpha = regexCheck(/[A-Za-z]/);
   var asciiAlphanumeric = regexCheck(/[\dA-Za-z]/);
   var asciiAtext = regexCheck(/[#-'*+\--9=?A-Z^-~]/);
@@ -82813,7 +82813,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/escape-string-regexp@5.0.0/node_modules/escape-string-regexp/index.js
+  // ../node_modules/.pnpm/escape-string-regexp@5.0.0/node_modules/escape-string-regexp/index.js
   function escapeStringRegexp(string3) {
     if (typeof string3 !== "string") {
       throw new TypeError("Expected a string");
@@ -82821,7 +82821,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return string3.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
   }
 
-  // node_modules/.pnpm/unist-util-is@6.0.1/node_modules/unist-util-is/lib/index.js
+  // ../node_modules/.pnpm/unist-util-is@6.0.1/node_modules/unist-util-is/lib/index.js
   var convert3 = (
     // Note: overloads in JSDoc can’t yet use different `@template`s.
     /**
@@ -82920,12 +82920,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value !== null && typeof value === "object" && "type" in value;
   }
 
-  // node_modules/.pnpm/unist-util-visit-parents@6.0.2/node_modules/unist-util-visit-parents/lib/color.js
+  // ../node_modules/.pnpm/unist-util-visit-parents@6.0.2/node_modules/unist-util-visit-parents/lib/color.js
   function color(d) {
     return d;
   }
 
-  // node_modules/.pnpm/unist-util-visit-parents@6.0.2/node_modules/unist-util-visit-parents/lib/index.js
+  // ../node_modules/.pnpm/unist-util-visit-parents@6.0.2/node_modules/unist-util-visit-parents/lib/index.js
   var empty = [];
   var CONTINUE = true;
   var EXIT = false;
@@ -83002,7 +83002,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value === null || value === void 0 ? empty : [value];
   }
 
-  // node_modules/.pnpm/mdast-util-find-and-replace@3.0.2/node_modules/mdast-util-find-and-replace/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-find-and-replace@3.0.2/node_modules/mdast-util-find-and-replace/lib/index.js
   function findAndReplace(tree, list7, options) {
     const settings = options || {};
     const ignored = convert3(settings.ignore || []);
@@ -83107,7 +83107,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/mdast-util-gfm-autolink-literal@2.0.1/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-autolink-literal@2.0.1/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
   var inConstruct = "phrasing";
   var notInConstruct = ["autolink", "link", "image", "label"];
   function gfmAutolinkLiteralFromMarkdown() {
@@ -83257,12 +83257,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     (!email || code5 !== 47);
   }
 
-  // node_modules/.pnpm/micromark-util-normalize-identifier@2.0.1/node_modules/micromark-util-normalize-identifier/index.js
+  // ../node_modules/.pnpm/micromark-util-normalize-identifier@2.0.1/node_modules/micromark-util-normalize-identifier/index.js
   function normalizeIdentifier(value) {
     return value.replace(/[\t\n\r ]+/g, " ").replace(/^ | $/g, "").toLowerCase().toUpperCase();
   }
 
-  // node_modules/.pnpm/mdast-util-gfm-footnote@2.1.0/node_modules/mdast-util-gfm-footnote/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-footnote@2.1.0/node_modules/mdast-util-gfm-footnote/lib/index.js
   footnoteReference.peek = footnoteReferencePeek;
   function enterFootnoteCallString() {
     this.buffer();
@@ -83375,7 +83375,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (blank ? "" : "    ") + line;
   }
 
-  // node_modules/.pnpm/mdast-util-gfm-strikethrough@2.0.0/node_modules/mdast-util-gfm-strikethrough/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-strikethrough@2.0.0/node_modules/mdast-util-gfm-strikethrough/lib/index.js
   var constructsWithoutStrikethrough = [
     "autolink",
     "destinationLiteral",
@@ -83427,7 +83427,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "~";
   }
 
-  // node_modules/.pnpm/markdown-table@3.0.4/node_modules/markdown-table/index.js
+  // ../node_modules/.pnpm/markdown-table@3.0.4/node_modules/markdown-table/index.js
   function defaultStringLength(value) {
     return value.length;
   }
@@ -83568,7 +83568,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return code5 === 67 || code5 === 99 ? 99 : code5 === 76 || code5 === 108 ? 108 : code5 === 82 || code5 === 114 ? 114 : 0;
   }
 
-  // node_modules/.pnpm/zwitch@2.0.4/node_modules/zwitch/index.js
+  // ../node_modules/.pnpm/zwitch@2.0.4/node_modules/zwitch/index.js
   var own2 = {}.hasOwnProperty;
   function zwitch(key2, options) {
     const settings = options || {};
@@ -83589,7 +83589,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return one6;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/configure.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/configure.js
   var own3 = {}.hasOwnProperty;
   function configure(base2, extension2) {
     let index2 = -1;
@@ -83637,7 +83637,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
   function blockquote(node2, _, state, info) {
     const exit3 = state.enter("blockquote");
     const tracker = state.createTracker(info);
@@ -83654,7 +83654,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return ">" + (blank ? "" : " ") + line;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
   function patternInScope(stack, pattern) {
     return listInScope(stack, pattern.inConstruct, true) && !listInScope(stack, pattern.notInConstruct, false);
   }
@@ -83674,7 +83674,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/break.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/break.js
   function hardBreak(_, _1, state, info) {
     let index2 = -1;
     while (++index2 < state.unsafe.length) {
@@ -83685,7 +83685,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "\\\n";
   }
 
-  // node_modules/.pnpm/longest-streak@3.1.0/node_modules/longest-streak/index.js
+  // ../node_modules/.pnpm/longest-streak@3.1.0/node_modules/longest-streak/index.js
   function longestStreak(value, substring) {
     const source = String(value);
     let index2 = source.indexOf(substring);
@@ -83709,7 +83709,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return max;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
   function formatCodeAsIndented(node2, state) {
     return Boolean(
       state.options.fences === false && node2.value && // If there’s no info…
@@ -83719,7 +83719,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-fence.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-fence.js
   function checkFence(state) {
     const marker = state.options.fence || "`";
     if (marker !== "`" && marker !== "~") {
@@ -83730,7 +83730,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/code.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/code.js
   function code(node2, _, state, info) {
     const marker = checkFence(state);
     const raw2 = node2.value || "";
@@ -83782,7 +83782,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (blank ? "" : "    ") + line;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-quote.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-quote.js
   function checkQuote(state) {
     const marker = state.options.quote || '"';
     if (marker !== '"' && marker !== "'") {
@@ -83793,7 +83793,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/definition.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/definition.js
   function definition(node2, _, state, info) {
     const quote = checkQuote(state);
     const suffix = quote === '"' ? "Quote" : "Apostrophe";
@@ -83849,7 +83849,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
   function checkEmphasis(state) {
     const marker = state.options.emphasis || "*";
     if (marker !== "*" && marker !== "_") {
@@ -83860,12 +83860,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
   function encodeCharacterReference(code5) {
     return "&#x" + code5.toString(16).toUpperCase() + ";";
   }
 
-  // node_modules/.pnpm/micromark-util-classify-character@2.0.1/node_modules/micromark-util-classify-character/index.js
+  // ../node_modules/.pnpm/micromark-util-classify-character@2.0.1/node_modules/micromark-util-classify-character/index.js
   function classifyCharacter(code5) {
     if (code5 === null || markdownLineEndingOrSpace(code5) || unicodeWhitespace(code5)) {
       return 1;
@@ -83875,7 +83875,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/encode-info.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/encode-info.js
   function encodeInfo(outside, inside, marker) {
     const outsideKind = classifyCharacter(outside);
     const insideKind = classifyCharacter(inside);
@@ -83917,7 +83917,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
   emphasis.peek = emphasisPeek;
   function emphasis(node2, _, state, info) {
     const marker = checkEmphasis(state);
@@ -83957,7 +83957,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.options.emphasis || "*";
   }
 
-  // node_modules/.pnpm/unist-util-visit@5.0.0/node_modules/unist-util-visit/lib/index.js
+  // ../node_modules/.pnpm/unist-util-visit@5.0.0/node_modules/unist-util-visit/lib/index.js
   function visit(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
     let reverse;
     let test;
@@ -83979,7 +83979,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-string@4.0.0/node_modules/mdast-util-to-string/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-to-string@4.0.0/node_modules/mdast-util-to-string/lib/index.js
   var emptyOptions = {};
   function toString2(value, options) {
     const settings = options || emptyOptions;
@@ -84016,7 +84016,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Boolean(value && typeof value === "object");
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
   function formatHeadingAsSetext(node2, state) {
     let literalWithBreak = false;
     visit(node2, function(node3) {
@@ -84030,7 +84030,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/heading.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/heading.js
   function heading(node2, _, state, info) {
     const rank = Math.max(Math.min(6, node2.depth || 1), 1);
     const tracker = state.createTracker(info);
@@ -84072,7 +84072,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/html.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/html.js
   html.peek = htmlPeek;
   function html(node2) {
     return node2.value || "";
@@ -84081,7 +84081,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "<";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/image.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/image.js
   image.peek = imagePeek;
   function image(node2, _, state, info) {
     const quote = checkQuote(state);
@@ -84138,7 +84138,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "!";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
   imageReference.peek = imageReferencePeek;
   function imageReference(node2, _, state, info) {
     const type = node2.referenceType;
@@ -84177,7 +84177,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "!";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
   inlineCode.peek = inlineCodePeek;
   function inlineCode(node2, _, state) {
     let value = node2.value || "";
@@ -84208,7 +84208,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "`";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
   function formatLinkAsAutolink(node2, state) {
     const raw2 = toString2(node2);
     return Boolean(
@@ -84223,7 +84223,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/link.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/link.js
   link2.peek = linkPeek;
   function link2(node2, _, state, info) {
     const quote = checkQuote(state);
@@ -84303,7 +84303,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return formatLinkAsAutolink(node2, state) ? "<" : "[";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
   linkReference.peek = linkReferencePeek;
   function linkReference(node2, _, state, info) {
     const type = node2.referenceType;
@@ -84342,7 +84342,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "[";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
   function checkBullet(state) {
     const marker = state.options.bullet || "*";
     if (marker !== "*" && marker !== "+" && marker !== "-") {
@@ -84353,7 +84353,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
   function checkBulletOther(state) {
     const bullet = checkBullet(state);
     const bulletOther = state.options.bulletOther;
@@ -84373,7 +84373,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return bulletOther;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
   function checkBulletOrdered(state) {
     const marker = state.options.bulletOrdered || ".";
     if (marker !== "." && marker !== ")") {
@@ -84384,7 +84384,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-rule.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-rule.js
   function checkRule(state) {
     const marker = state.options.rule || "*";
     if (marker !== "*" && marker !== "-" && marker !== "_") {
@@ -84395,7 +84395,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/list.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/list.js
   function list2(node2, parent, state, info) {
     const exit3 = state.enter("list");
     const bulletCurrent = state.bulletCurrent;
@@ -84435,7 +84435,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
   function checkListItemIndent(state) {
     const style2 = state.options.listItemIndent || "one";
     if (style2 !== "tab" && style2 !== "one" && style2 !== "mixed") {
@@ -84446,7 +84446,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return style2;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/list-item.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/list-item.js
   function listItem(node2, parent, state, info) {
     const listItemIndent = checkListItemIndent(state);
     let bullet = state.bulletCurrent || checkBullet(state);
@@ -84475,7 +84475,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
   function paragraph(node2, _, state, info) {
     const exit3 = state.enter("paragraph");
     const subexit = state.enter("phrasing");
@@ -84485,7 +84485,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value;
   }
 
-  // node_modules/.pnpm/mdast-util-phrasing@4.1.0/node_modules/mdast-util-phrasing/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-phrasing@4.1.0/node_modules/mdast-util-phrasing/lib/index.js
   var phrasing = (
     /** @type {(node?: unknown) => node is Exclude<PhrasingContent, Html>} */
     convert3([
@@ -84513,7 +84513,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     ])
   );
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/root.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/root.js
   function root(node2, _, state, info) {
     const hasPhrasing = node2.children.some(function(d) {
       return phrasing(d);
@@ -84522,7 +84522,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return container.call(state, node2, info);
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-strong.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-strong.js
   function checkStrong(state) {
     const marker = state.options.strong || "*";
     if (marker !== "*" && marker !== "_") {
@@ -84533,7 +84533,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return marker;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/strong.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/strong.js
   strong.peek = strongPeek;
   function strong(node2, _, state, info) {
     const marker = checkStrong(state);
@@ -84573,12 +84573,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.options.strong || "*";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/text.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/text.js
   function text(node2, _, state, info) {
     return state.safe(node2.value, info);
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
   function checkRuleRepetition(state) {
     const repetition = state.options.ruleRepetition || 3;
     if (repetition < 3) {
@@ -84589,13 +84589,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return repetition;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
   function thematicBreak(_, _1, state) {
     const value = (checkRule(state) + (state.options.ruleSpaces ? " " : "")).repeat(checkRuleRepetition(state));
     return state.options.ruleSpaces ? value.slice(0, -1) : value;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/index.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/handle/index.js
   var handle = {
     blockquote,
     break: hardBreak,
@@ -84619,7 +84619,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     thematicBreak
   };
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/join.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/join.js
   var join2 = [joinDefaults];
   function joinDefaults(left, right, parent, state) {
     if (right.type === "code" && formatCodeAsIndented(right, state) && (left.type === "list" || left.type === right.type && formatCodeAsIndented(left, state))) {
@@ -84635,7 +84635,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/unsafe.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/unsafe.js
   var fullPhrasingSpans = [
     "autolink",
     "destinationLiteral",
@@ -84769,7 +84769,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     { atBreak: true, character: "~" }
   ];
 
-  // node_modules/.pnpm/decode-named-character-reference@1.3.0/node_modules/decode-named-character-reference/index.dom.js
+  // ../node_modules/.pnpm/decode-named-character-reference@1.3.0/node_modules/decode-named-character-reference/index.dom.js
   var element = document.createElement("i");
   function decodeNamedCharacterReference(value) {
     const characterReference2 = "&" + value + ";";
@@ -84781,7 +84781,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return character === characterReference2 ? false : character;
   }
 
-  // node_modules/.pnpm/micromark-util-decode-numeric-character-reference@2.0.2/node_modules/micromark-util-decode-numeric-character-reference/index.js
+  // ../node_modules/.pnpm/micromark-util-decode-numeric-character-reference@2.0.2/node_modules/micromark-util-decode-numeric-character-reference/index.js
   function decodeNumericCharacterReference(value, base2) {
     const code5 = Number.parseInt(value, base2);
     if (
@@ -84799,7 +84799,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return String.fromCodePoint(code5);
   }
 
-  // node_modules/.pnpm/micromark-util-decode-string@2.0.1/node_modules/micromark-util-decode-string/index.js
+  // ../node_modules/.pnpm/micromark-util-decode-string@2.0.1/node_modules/micromark-util-decode-string/index.js
   var characterEscapeOrReference = /\\([!-/:-@[-`{-~])|&(#(?:\d{1,7}|x[\da-f]{1,6})|[\da-z]{1,31});/gi;
   function decodeString(value) {
     return value.replace(characterEscapeOrReference, decode);
@@ -84817,7 +84817,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return decodeNamedCharacterReference($2) || $0;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/association.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/association.js
   function association(node2) {
     if (node2.label || !node2.identifier) {
       return node2.label || "";
@@ -84825,7 +84825,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return decodeString(node2.identifier);
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/compile-pattern.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/compile-pattern.js
   function compilePattern(pattern) {
     if (!pattern._compiled) {
       const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
@@ -84837,7 +84837,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return pattern._compiled;
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
   function containerPhrasing(parent, state, info) {
     const indexStack = state.indexStack;
     const children = parent.children || [];
@@ -84896,7 +84896,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return results.join("");
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/container-flow.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/container-flow.js
   function containerFlow(parent, state, info) {
     const indexStack = state.indexStack;
     const children = parent.children || [];
@@ -84945,7 +84945,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "\n\n";
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
   var eol = /\r?\n|\r/g;
   function indentLines(value, map4) {
     const result = [];
@@ -84965,7 +84965,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/safe.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/safe.js
   function safe(state, input2, config) {
     const value = (config.before || "") + (input2 || "") + (config.after || "");
     const positions = [];
@@ -85047,7 +85047,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return results.join("");
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/track.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/util/track.js
   function track(config) {
     const options = config || {};
     const now = options.now || {};
@@ -85071,7 +85071,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-to-markdown@2.1.2/node_modules/mdast-util-to-markdown/lib/index.js
   function toMarkdown(tree, options) {
     const settings = options || {};
     const state = {
@@ -85146,7 +85146,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return safe(this, value, config);
   }
 
-  // node_modules/.pnpm/mdast-util-gfm-table@2.0.0/node_modules/mdast-util-gfm-table/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-table@2.0.0/node_modules/mdast-util-gfm-table/lib/index.js
   function gfmTableFromMarkdown() {
     return {
       enter: {
@@ -85299,7 +85299,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-gfm-task-list-item@2.0.0/node_modules/mdast-util-gfm-task-list-item/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-task-list-item@2.0.0/node_modules/mdast-util-gfm-task-list-item/lib/index.js
   function gfmTaskListItemFromMarkdown() {
     return {
       exit: {
@@ -85372,7 +85372,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-gfm@3.1.0/node_modules/mdast-util-gfm/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm@3.1.0/node_modules/mdast-util-gfm/lib/index.js
   function gfmFromMarkdown() {
     return [
       gfmAutolinkLiteralFromMarkdown(),
@@ -85394,7 +85394,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/micromark-util-chunked@2.0.1/node_modules/micromark-util-chunked/index.js
+  // ../node_modules/.pnpm/micromark-util-chunked@2.0.1/node_modules/micromark-util-chunked/index.js
   function splice(list7, start, remove3, items) {
     const end = list7.length;
     let chunkStart = 0;
@@ -85428,7 +85428,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return items;
   }
 
-  // node_modules/.pnpm/micromark-util-combine-extensions@2.0.1/node_modules/micromark-util-combine-extensions/index.js
+  // ../node_modules/.pnpm/micromark-util-combine-extensions@2.0.1/node_modules/micromark-util-combine-extensions/index.js
   var hasOwnProperty = {}.hasOwnProperty;
   function combineExtensions(extensions) {
     const all7 = {};
@@ -85468,7 +85468,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     splice(existing, 0, 0, before);
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-autolink-literal@2.1.0/node_modules/micromark-extension-gfm-autolink-literal/lib/syntax.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-autolink-literal@2.1.0/node_modules/micromark-extension-gfm-autolink-literal/lib/syntax.js
   var wwwPrefix = {
     tokenize: tokenizeWwwPrefix,
     partial: true
@@ -85810,7 +85810,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/micromark-util-sanitize-uri@2.0.1/node_modules/micromark-util-sanitize-uri/index.js
+  // ../node_modules/.pnpm/micromark-util-sanitize-uri@2.0.1/node_modules/micromark-util-sanitize-uri/index.js
   function normalizeUri(value) {
     const result = [];
     let index2 = -1;
@@ -85849,7 +85849,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result.join("") + value.slice(start);
   }
 
-  // node_modules/.pnpm/micromark-util-resolve-all@2.0.1/node_modules/micromark-util-resolve-all/index.js
+  // ../node_modules/.pnpm/micromark-util-resolve-all@2.0.1/node_modules/micromark-util-resolve-all/index.js
   function resolveAll(constructs2, events, context) {
     const called = [];
     let index2 = -1;
@@ -85863,7 +85863,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return events;
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/attention.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/attention.js
   var attention = {
     name: "attention",
     resolveAll: resolveAllAttention,
@@ -85994,7 +85994,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     point4._bufferIndex += offset;
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/autolink.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/autolink.js
   var autolink = {
     name: "autolink",
     tokenize: tokenizeAutolink
@@ -86095,7 +86095,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-factory-space@2.0.1/node_modules/micromark-factory-space/index.js
+  // ../node_modules/.pnpm/micromark-factory-space@2.0.1/node_modules/micromark-factory-space/index.js
   function factorySpace(effects, ok3, type, max) {
     const limit = max ? max - 1 : Number.POSITIVE_INFINITY;
     let size = 0;
@@ -86117,7 +86117,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/blank-line.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/blank-line.js
   var blankLine = {
     partial: true,
     tokenize: tokenizeBlankLine
@@ -86132,7 +86132,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/block-quote.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/block-quote.js
   var blockQuote = {
     continuation: {
       tokenize: tokenizeBlockQuoteContinuation
@@ -86190,7 +86190,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     effects.exit("blockQuote");
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/character-escape.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/character-escape.js
   var characterEscape = {
     name: "characterEscape",
     tokenize: tokenizeCharacterEscape
@@ -86216,7 +86216,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/character-reference.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/character-reference.js
   var characterReference = {
     name: "characterReference",
     tokenize: tokenizeCharacterReference
@@ -86281,7 +86281,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/code-fenced.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/code-fenced.js
   var nonLazyContinuation = {
     partial: true,
     tokenize: tokenizeNonLazyContinuation
@@ -86464,7 +86464,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/code-indented.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/code-indented.js
   var codeIndented = {
     name: "codeIndented",
     tokenize: tokenizeCodeIndented
@@ -86528,7 +86528,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/code-text.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/code-text.js
   var codeText = {
     name: "codeText",
     previous: previous2,
@@ -86643,7 +86643,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-util-subtokenize@2.1.0/node_modules/micromark-util-subtokenize/lib/splice-buffer.js
+  // ../node_modules/.pnpm/micromark-util-subtokenize@2.1.0/node_modules/micromark-util-subtokenize/lib/splice-buffer.js
   var SpliceBuffer = class {
     /**
      * @param {ReadonlyArray<T> | null | undefined} [initial]
@@ -86836,7 +86836,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-util-subtokenize@2.1.0/node_modules/micromark-util-subtokenize/index.js
+  // ../node_modules/.pnpm/micromark-util-subtokenize@2.1.0/node_modules/micromark-util-subtokenize/index.js
   function subtokenize(eventsArray) {
     const jumps = {};
     let index2 = -1;
@@ -86989,7 +86989,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return gaps;
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/content.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/content.js
   var content = {
     resolve: resolveContent,
     tokenize: tokenizeContent
@@ -87060,7 +87060,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-factory-destination@2.0.1/node_modules/micromark-factory-destination/index.js
+  // ../node_modules/.pnpm/micromark-factory-destination@2.0.1/node_modules/micromark-factory-destination/index.js
   function factoryDestination(effects, ok3, nok, type, literalType, literalMarkerType, rawType, stringType, max) {
     const limit = max || Number.POSITIVE_INFINITY;
     let balance = 0;
@@ -87152,7 +87152,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-factory-label@2.0.1/node_modules/micromark-factory-label/index.js
+  // ../node_modules/.pnpm/micromark-factory-label@2.0.1/node_modules/micromark-factory-label/index.js
   function factoryLabel(effects, ok3, nok, type, markerType, stringType) {
     const self2 = this;
     let size = 0;
@@ -87213,7 +87213,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-factory-title@2.0.1/node_modules/micromark-factory-title/index.js
+  // ../node_modules/.pnpm/micromark-factory-title@2.0.1/node_modules/micromark-factory-title/index.js
   function factoryTitle(effects, ok3, nok, type, markerType, stringType) {
     let marker;
     return start;
@@ -87275,7 +87275,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-factory-whitespace@2.0.1/node_modules/micromark-factory-whitespace/index.js
+  // ../node_modules/.pnpm/micromark-factory-whitespace@2.0.1/node_modules/micromark-factory-whitespace/index.js
   function factoryWhitespace(effects, ok3) {
     let seen;
     return start;
@@ -87294,7 +87294,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/definition.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/definition.js
   var definition2 = {
     name: "definition",
     tokenize: tokenizeDefinition
@@ -87380,7 +87380,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/hard-break-escape.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/hard-break-escape.js
   var hardBreakEscape = {
     name: "hardBreakEscape",
     tokenize: tokenizeHardBreakEscape
@@ -87401,7 +87401,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/heading-atx.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/heading-atx.js
   var headingAtx = {
     name: "headingAtx",
     resolve: resolveHeadingAtx,
@@ -87492,7 +87492,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-util-html-tag-name@2.0.1/node_modules/micromark-util-html-tag-name/index.js
+  // ../node_modules/.pnpm/micromark-util-html-tag-name@2.0.1/node_modules/micromark-util-html-tag-name/index.js
   var htmlBlockNames = [
     "address",
     "article",
@@ -87559,7 +87559,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   ];
   var htmlRawNames = ["pre", "script", "style", "textarea"];
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/html-flow.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/html-flow.js
   var htmlFlow = {
     concrete: true,
     name: "htmlFlow",
@@ -87938,7 +87938,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/html-text.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/html-text.js
   var htmlText = {
     name: "htmlText",
     tokenize: tokenizeHtmlText
@@ -88244,7 +88244,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/label-end.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/label-end.js
   var labelEnd = {
     name: "labelEnd",
     resolveAll: resolveAllLabelEnd,
@@ -88470,7 +88470,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/label-start-image.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/label-start-image.js
   var labelStartImage = {
     name: "labelStartImage",
     resolveAll: labelEnd.resolveAll,
@@ -88501,7 +88501,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/label-start-link.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/label-start-link.js
   var labelStartLink = {
     name: "labelStartLink",
     resolveAll: labelEnd.resolveAll,
@@ -88523,7 +88523,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/line-ending.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/line-ending.js
   var lineEnding = {
     name: "lineEnding",
     tokenize: tokenizeLineEnding
@@ -88538,7 +88538,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/thematic-break.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/thematic-break.js
   var thematicBreak2 = {
     name: "thematicBreak",
     tokenize: tokenizeThematicBreak
@@ -88577,7 +88577,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/list.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/list.js
   var list3 = {
     continuation: {
       tokenize: tokenizeListContinuation
@@ -88707,7 +88707,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/setext-underline.js
+  // ../node_modules/.pnpm/micromark-core-commonmark@2.0.3/node_modules/micromark-core-commonmark/lib/setext-underline.js
   var setextUnderline = {
     name: "setextUnderline",
     resolveTo: resolveToSetextUnderline,
@@ -88799,7 +88799,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-footnote@2.1.0/node_modules/micromark-extension-gfm-footnote/lib/syntax.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-footnote@2.1.0/node_modules/micromark-extension-gfm-footnote/lib/syntax.js
   var indent = {
     tokenize: tokenizeIndent2,
     partial: true
@@ -89074,7 +89074,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-strikethrough@2.1.0/node_modules/micromark-extension-gfm-strikethrough/lib/syntax.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-strikethrough@2.1.0/node_modules/micromark-extension-gfm-strikethrough/lib/syntax.js
   function gfmStrikethrough(options) {
     const options_ = options || {};
     let single = options_.singleTilde;
@@ -89168,7 +89168,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-table@2.1.1/node_modules/micromark-extension-gfm-table/lib/edit-map.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-table@2.1.1/node_modules/micromark-extension-gfm-table/lib/edit-map.js
   var EditMap = class {
     /**
      * Create a new edit map.
@@ -89247,7 +89247,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     editMap.map.push([at, remove3, add2]);
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-table@2.1.1/node_modules/micromark-extension-gfm-table/lib/infer.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-table@2.1.1/node_modules/micromark-extension-gfm-table/lib/infer.js
   function gfmTableAlign(events, index2) {
     let inDelimiterRow = false;
     const align = [];
@@ -89274,7 +89274,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return align;
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-table@2.1.1/node_modules/micromark-extension-gfm-table/lib/syntax.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-table@2.1.1/node_modules/micromark-extension-gfm-table/lib/syntax.js
   function gfmTable() {
     return {
       flow: {
@@ -89660,7 +89660,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return event[1][side];
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm-task-list-item@2.1.0/node_modules/micromark-extension-gfm-task-list-item/lib/syntax.js
+  // ../node_modules/.pnpm/micromark-extension-gfm-task-list-item@2.1.0/node_modules/micromark-extension-gfm-task-list-item/lib/syntax.js
   var tasklistCheck = {
     name: "tasklistCheck",
     tokenize: tokenizeTasklistCheck
@@ -89734,7 +89734,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark-extension-gfm@3.0.0/node_modules/micromark-extension-gfm/index.js
+  // ../node_modules/.pnpm/micromark-extension-gfm@3.0.0/node_modules/micromark-extension-gfm/index.js
   function gfm(options) {
     return combineExtensions([
       gfmAutolinkLiteral(),
@@ -89745,7 +89745,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     ]);
   }
 
-  // node_modules/.pnpm/remark-gfm@4.0.1/node_modules/remark-gfm/lib/index.js
+  // ../node_modules/.pnpm/remark-gfm@4.0.1/node_modules/remark-gfm/lib/index.js
   var emptyOptions2 = {};
   function remarkGfm(options) {
     const self2 = (
@@ -89762,7 +89762,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     toMarkdownExtensions.push(gfmToMarkdown(settings));
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/content.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/content.js
   var content2 = {
     tokenize: initializeContent
   };
@@ -89812,7 +89812,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/document.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/document.js
   var document2 = {
     tokenize: initializeDocument
   };
@@ -89994,7 +89994,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return factorySpace(effects, effects.attempt(this.parser.constructs.document, ok3, nok), "linePrefix", this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4);
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/flow.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/flow.js
   var flow = {
     tokenize: initializeFlow
   };
@@ -90032,7 +90032,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/text.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/text.js
   var resolver = {
     resolveAll: createResolver()
   };
@@ -90171,7 +90171,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return events;
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/constructs.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/constructs.js
   var constructs_exports = {};
   __export(constructs_exports, {
     attentionMarkers: () => attentionMarkers,
@@ -90246,7 +90246,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     null: []
   };
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/create-tokenizer.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/create-tokenizer.js
   function createTokenizer(parser, initialize, from) {
     let point4 = {
       _bufferIndex: -1,
@@ -90569,7 +90569,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result.join("");
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/parse.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/parse.js
   function parse2(options) {
     const settings = options || {};
     const constructs2 = (
@@ -90595,14 +90595,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/postprocess.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/postprocess.js
   function postprocess(events) {
     while (!subtokenize(events)) {
     }
     return events;
   }
 
-  // node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/preprocess.js
+  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/preprocess.js
   var search = /[\0\t\n\r]/g;
   function preprocess() {
     let column = 1;
@@ -90681,7 +90681,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-from-markdown@2.0.3/node_modules/mdast-util-from-markdown/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-from-markdown@2.0.3/node_modules/mdast-util-from-markdown/lib/index.js
   var own4 = {}.hasOwnProperty;
   function fromMarkdown(value, encoding, options) {
     if (encoding && typeof encoding === "object") {
@@ -91390,7 +91390,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/remark-parse@11.0.0/node_modules/remark-parse/lib/index.js
+  // ../node_modules/.pnpm/remark-parse@11.0.0/node_modules/remark-parse/lib/index.js
   function remarkParse(options) {
     const self2 = this;
     self2.parser = parser;
@@ -91407,7 +91407,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/blockquote.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/blockquote.js
   function blockquote2(state, node2) {
     const result = {
       type: "element",
@@ -91419,14 +91419,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/break.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/break.js
   function hardBreak2(state, node2) {
     const result = { type: "element", tagName: "br", properties: {}, children: [] };
     state.patch(node2, result);
     return [state.applyData(node2, result), { type: "text", value: "\n" }];
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/code.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/code.js
   function code3(state, node2) {
     const value = node2.value ? node2.value + "\n" : "";
     const properties = {};
@@ -91450,7 +91450,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/delete.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/delete.js
   function strikethrough(state, node2) {
     const result = {
       type: "element",
@@ -91462,7 +91462,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/emphasis.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/emphasis.js
   function emphasis2(state, node2) {
     const result = {
       type: "element",
@@ -91474,7 +91474,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/footnote-reference.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/footnote-reference.js
   function footnoteReference2(state, node2) {
     const clobberPrefix = typeof state.options.clobberPrefix === "string" ? state.options.clobberPrefix : "user-content-";
     const id = String(node2.identifier).toUpperCase();
@@ -91513,7 +91513,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, sup);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/heading.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/heading.js
   function heading2(state, node2) {
     const result = {
       type: "element",
@@ -91525,7 +91525,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/html.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/html.js
   function html2(state, node2) {
     if (state.options.allowDangerousHtml) {
       const result = { type: "raw", value: node2.value };
@@ -91535,7 +91535,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return void 0;
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/revert.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/revert.js
   function revert(state, node2) {
     const subtype = node2.referenceType;
     let suffix = "]";
@@ -91563,7 +91563,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return contents;
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/image-reference.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/image-reference.js
   function imageReference2(state, node2) {
     const id = String(node2.identifier).toUpperCase();
     const definition3 = state.definitionById.get(id);
@@ -91579,7 +91579,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/image.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/image.js
   function image2(state, node2) {
     const properties = { src: normalizeUri(node2.url) };
     if (node2.alt !== null && node2.alt !== void 0) {
@@ -91593,7 +91593,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/inline-code.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/inline-code.js
   function inlineCode2(state, node2) {
     const text10 = { type: "text", value: node2.value.replace(/\r?\n|\r/g, " ") };
     state.patch(node2, text10);
@@ -91607,7 +91607,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/link-reference.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/link-reference.js
   function linkReference2(state, node2) {
     const id = String(node2.identifier).toUpperCase();
     const definition3 = state.definitionById.get(id);
@@ -91628,7 +91628,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/link.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/link.js
   function link3(state, node2) {
     const properties = { href: normalizeUri(node2.url) };
     if (node2.title !== null && node2.title !== void 0) {
@@ -91644,7 +91644,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/list-item.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/list-item.js
   function listItem2(state, node2, parent) {
     const results = state.all(node2);
     const loose = parent ? listLoose(parent) : listItemLoose(node2);
@@ -91707,7 +91707,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return spread === null || spread === void 0 ? node2.children.length > 1 : spread;
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/list.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/list.js
   function list4(state, node2) {
     const properties = {};
     const results = state.all(node2);
@@ -91732,7 +91732,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/paragraph.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/paragraph.js
   function paragraph2(state, node2) {
     const result = {
       type: "element",
@@ -91744,14 +91744,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/root.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/root.js
   function root2(state, node2) {
     const result = { type: "root", children: state.wrap(state.all(node2)) };
     state.patch(node2, result);
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/strong.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/strong.js
   function strong2(state, node2) {
     const result = {
       type: "element",
@@ -91763,7 +91763,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/unist-util-position@5.0.0/node_modules/unist-util-position/lib/index.js
+  // ../node_modules/.pnpm/unist-util-position@5.0.0/node_modules/unist-util-position/lib/index.js
   var pointEnd = point3("end");
   var pointStart = point3("start");
   function point3(type) {
@@ -91787,7 +91787,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/table.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/table.js
   function table(state, node2) {
     const rows = state.all(node2);
     const firstRow = rows.shift();
@@ -91824,7 +91824,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/table-row.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/table-row.js
   function tableRow(state, node2, parent) {
     const siblings2 = parent ? parent.children : void 0;
     const rowIndex = siblings2 ? siblings2.indexOf(node2) : 1;
@@ -91858,7 +91858,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/table-cell.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/table-cell.js
   function tableCell(state, node2) {
     const result = {
       type: "element",
@@ -91871,7 +91871,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/trim-lines@3.0.1/node_modules/trim-lines/index.js
+  // ../node_modules/.pnpm/trim-lines@3.0.1/node_modules/trim-lines/index.js
   var tab = 9;
   var space = 32;
   function trimLines(value) {
@@ -91911,14 +91911,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return endIndex > startIndex ? value.slice(startIndex, endIndex) : "";
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/text.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/text.js
   function text5(state, node2) {
     const result = { type: "text", value: trimLines(String(node2.value)) };
     state.patch(node2, result);
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/thematic-break.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/thematic-break.js
   function thematicBreak3(state, node2) {
     const result = {
       type: "element",
@@ -91930,7 +91930,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.applyData(node2, result);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/index.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/handlers/index.js
   var handlers = {
     blockquote: blockquote2,
     break: hardBreak2,
@@ -91965,7 +91965,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return void 0;
   }
 
-  // node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/types.js
+  // ../node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/types.js
   var VOID = -1;
   var PRIMITIVE = 0;
   var ARRAY = 1;
@@ -91977,7 +91977,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   var ERROR = 7;
   var BIGINT = 8;
 
-  // node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/deserialize.js
+  // ../node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/deserialize.js
   var env2 = typeof self === "object" ? self : globalThis;
   var guard = (name, init) => {
     switch (name) {
@@ -92055,7 +92055,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   };
   var deserialize = (serialized) => deserializer(/* @__PURE__ */ new Map(), serialized)(0);
 
-  // node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/serialize.js
+  // ../node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/serialize.js
   var EMPTY = "";
   var { toString: toString3 } = {};
   var { keys } = Object;
@@ -92188,13 +92188,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return serializer(!(json || lossy), !!json, /* @__PURE__ */ new Map(), _)(value), _;
   };
 
-  // node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/index.js
+  // ../node_modules/.pnpm/@ungap+structured-clone@1.3.1/node_modules/@ungap/structured-clone/esm/index.js
   var esm_default = typeof structuredClone === "function" ? (
     /* c8 ignore start */
     (any, options) => options && ("json" in options || "lossy" in options) ? deserialize(serialize2(any, options)) : structuredClone(any)
   ) : (any, options) => deserialize(serialize2(any, options));
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/footer.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/footer.js
   function defaultFootnoteBackContent(_, rereferenceIndex) {
     const result = [{ type: "text", value: "\u21A9" }];
     if (rereferenceIndex > 1) {
@@ -92304,7 +92304,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/state.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/state.js
   var own5 = {}.hasOwnProperty;
   var emptyOptions3 = {};
   function createState(tree, options) {
@@ -92446,7 +92446,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value.slice(index2);
   }
 
-  // node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-to-hast@13.2.1/node_modules/mdast-util-to-hast/lib/index.js
   function toHast(tree, options) {
     const state = createState(tree, options);
     const node2 = state.one(tree, void 0);
@@ -92459,7 +92459,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/remark-rehype@11.1.2/node_modules/remark-rehype/lib/index.js
+  // ../node_modules/.pnpm/remark-rehype@11.1.2/node_modules/remark-rehype/lib/index.js
   function remarkRehype(destination, options) {
     if (destination && "run" in destination) {
       return async function(tree, file) {
@@ -92478,7 +92478,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/mdast-util-newline-to-break@2.0.0/node_modules/mdast-util-newline-to-break/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-newline-to-break@2.0.0/node_modules/mdast-util-newline-to-break/lib/index.js
   function newlineToBreak(tree) {
     findAndReplace(tree, [/\r?\n|\r/g, replace2]);
   }
@@ -92486,14 +92486,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { type: "break" };
   }
 
-  // node_modules/.pnpm/remark-breaks@4.0.0/node_modules/remark-breaks/lib/index.js
+  // ../node_modules/.pnpm/remark-breaks@4.0.0/node_modules/remark-breaks/lib/index.js
   function remarkBreaks() {
     return function(tree) {
       newlineToBreak(tree);
     };
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/schema.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/schema.js
   var Schema = class {
     /**
      * @param {SchemaType['property']} property
@@ -92517,7 +92517,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   Schema.prototype.property = {};
   Schema.prototype.space = void 0;
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/merge.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/merge.js
   function merge2(definitions, space2) {
     const property2 = {};
     const normal = {};
@@ -92528,12 +92528,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new Schema(property2, normal, space2);
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/normalize.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/normalize.js
   function normalize7(value) {
     return value.toLowerCase();
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/info.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/info.js
   var Info = class {
     /**
      * @param {string} property
@@ -92561,7 +92561,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   Info.prototype.spaceSeparated = false;
   Info.prototype.space = void 0;
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/types.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/types.js
   var types_exports = {};
   __export(types_exports, {
     boolean: () => boolean,
@@ -92584,7 +92584,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return 2 ** ++powers;
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/defined-info.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/defined-info.js
   var checks = (
     /** @type {ReadonlyArray<keyof typeof types>} */
     Object.keys(types_exports)
@@ -92622,7 +92622,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/create.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/create.js
   function create(definition3) {
     const properties = {};
     const normals = {};
@@ -92643,7 +92643,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new Schema(properties, normals, definition3.space);
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/aria.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/aria.js
   var aria = create({
     properties: {
       ariaActiveDescendant: null,
@@ -92701,17 +92701,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   });
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/case-sensitive-transform.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/case-sensitive-transform.js
   function caseSensitiveTransform(attributes, attribute) {
     return attribute in attributes ? attributes[attribute] : attribute;
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/case-insensitive-transform.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/util/case-insensitive-transform.js
   function caseInsensitiveTransform(attributes, property2) {
     return caseSensitiveTransform(attributes, property2.toLowerCase());
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/html.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/html.js
   var html3 = create({
     attributes: {
       acceptcharset: "accept-charset",
@@ -93085,7 +93085,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     transform: caseInsensitiveTransform
   });
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/svg.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/svg.js
   var svg = create({
     attributes: {
       accentHeight: "accent-height",
@@ -93649,7 +93649,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     transform: caseSensitiveTransform
   });
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/xlink.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/xlink.js
   var xlink = create({
     properties: {
       xLinkActuate: null,
@@ -93666,7 +93666,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   });
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/xmlns.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/xmlns.js
   var xmlns = create({
     attributes: { xmlnsxlink: "xmlns:xlink" },
     properties: { xmlnsXLink: null, xmlns: null },
@@ -93674,7 +93674,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     transform: caseInsensitiveTransform
   });
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/xml.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/xml.js
   var xml = create({
     properties: { xmlBase: null, xmlLang: null, xmlSpace: null },
     space: "xml",
@@ -93683,7 +93683,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   });
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/find.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/lib/find.js
   var cap = /[A-Z]/g;
   var dash = /-[a-z]/g;
   var valid = /^data[-\w.:]+$/i;
@@ -93719,11 +93719,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return $0.charAt(1).toUpperCase();
   }
 
-  // node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/index.js
+  // ../node_modules/.pnpm/property-information@7.2.0/node_modules/property-information/index.js
   var html4 = merge2([aria, html3, xlink, xmlns, xml], "html");
   var svg2 = merge2([aria, svg, xlink, xmlns, xml], "svg");
 
-  // node_modules/.pnpm/web-namespaces@2.0.1/node_modules/web-namespaces/index.js
+  // ../node_modules/.pnpm/web-namespaces@2.0.1/node_modules/web-namespaces/index.js
   var webNamespaces = {
     html: "http://www.w3.org/1999/xhtml",
     mathml: "http://www.w3.org/1998/Math/MathML",
@@ -93733,7 +93733,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     xmlns: "http://www.w3.org/2000/xmlns/"
   };
 
-  // node_modules/.pnpm/hast-util-to-dom@4.0.1/node_modules/hast-util-to-dom/lib/index.js
+  // ../node_modules/.pnpm/hast-util-to-dom@4.0.1/node_modules/hast-util-to-dom/lib/index.js
   var own6 = {}.hasOwnProperty;
   function toDom(tree, options) {
     const config = options || {};
@@ -93864,7 +93864,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/rehype-dom-stringify@4.0.2/node_modules/rehype-dom-stringify/lib/index.js
+  // ../node_modules/.pnpm/rehype-dom-stringify@4.0.2/node_modules/rehype-dom-stringify/lib/index.js
   function stringify(options) {
     const self2 = this;
     const settings = { ...self2.data("settings"), ...options };
@@ -93890,7 +93890,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return template.innerHTML;
   }
 
-  // node_modules/.pnpm/html-void-elements@3.0.0/node_modules/html-void-elements/index.js
+  // ../node_modules/.pnpm/html-void-elements@3.0.0/node_modules/html-void-elements/index.js
   var htmlVoidElements = [
     "area",
     "base",
@@ -93914,7 +93914,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     "wbr"
   ];
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/core.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/core.js
   var defaultSubsetRegex = /["&'<>`]/g;
   var surrogatePairsRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
   var controlCharactersRegex = (
@@ -93964,21 +93964,21 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return new RegExp("(?:" + groups.join("|") + ")", "g");
   }
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/to-hexadecimal.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/to-hexadecimal.js
   var hexadecimalRegex = /[\dA-Fa-f]/;
   function toHexadecimal(code5, next, omit) {
     const value = "&#x" + code5.toString(16).toUpperCase();
     return omit && next && !hexadecimalRegex.test(String.fromCharCode(next)) ? value : value + ";";
   }
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/to-decimal.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/to-decimal.js
   var decimalRegex = /\d/;
   function toDecimal(code5, next, omit) {
     const value = "&#" + String(code5);
     return omit && next && !decimalRegex.test(String.fromCharCode(next)) ? value : value + ";";
   }
 
-  // node_modules/.pnpm/character-entities-legacy@3.0.0/node_modules/character-entities-legacy/index.js
+  // ../node_modules/.pnpm/character-entities-legacy@3.0.0/node_modules/character-entities-legacy/index.js
   var characterEntitiesLegacy = [
     "AElig",
     "AMP",
@@ -94088,7 +94088,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     "yuml"
   ];
 
-  // node_modules/.pnpm/character-entities-html4@2.1.0/node_modules/character-entities-html4/index.js
+  // ../node_modules/.pnpm/character-entities-html4@2.1.0/node_modules/character-entities-html4/index.js
   var characterEntitiesHtml4 = {
     nbsp: "\xA0",
     iexcl: "\xA1",
@@ -94344,7 +94344,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     euro: "\u20AC"
   };
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/constant/dangerous.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/constant/dangerous.js
   var dangerous = [
     "cent",
     "copy",
@@ -94356,7 +94356,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     "times"
   ];
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/to-named.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/to-named.js
   var own7 = {}.hasOwnProperty;
   var characters = {};
   var key;
@@ -94379,7 +94379,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return "";
   }
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/format-smart.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/util/format-smart.js
   function formatSmart(code5, next, options) {
     let numeric = toHexadecimal(code5, next, options.omitOptionalSemicolons);
     let named;
@@ -94400,12 +94400,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return named && (!options.useShortestReferences || named.length < numeric.length) ? named : numeric;
   }
 
-  // node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/index.js
+  // ../node_modules/.pnpm/stringify-entities@4.0.4/node_modules/stringify-entities/lib/index.js
   function stringifyEntities(value, options) {
     return core(value, Object.assign({ format: formatSmart }, options));
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/comment.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/comment.js
   var htmlCommentRegex = /^>|^->|<!--|-->|--!>|<!-$/g;
   var bogusCommentEntitySubset = [">"];
   var commentEntitySubset = ["<", ">"];
@@ -94426,12 +94426,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/doctype.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/doctype.js
   function doctype2(_1, _2, _3, state) {
     return "<!" + (state.settings.upperDoctype ? "DOCTYPE" : "doctype") + (state.settings.tightDoctype ? "" : " ") + "html>";
   }
 
-  // node_modules/.pnpm/comma-separated-tokens@2.0.3/node_modules/comma-separated-tokens/index.js
+  // ../node_modules/.pnpm/comma-separated-tokens@2.0.3/node_modules/comma-separated-tokens/index.js
   function parse3(value) {
     const tokens = [];
     const input2 = String(value || "");
@@ -94460,7 +94460,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     ).trim();
   }
 
-  // node_modules/.pnpm/space-separated-tokens@2.0.2/node_modules/space-separated-tokens/index.js
+  // ../node_modules/.pnpm/space-separated-tokens@2.0.2/node_modules/space-separated-tokens/index.js
   function parse4(value) {
     const input2 = String(value || "").trim();
     return input2 ? input2.split(/[ \t\n\r\f]+/g) : [];
@@ -94469,7 +94469,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return values.join(" ").trim();
   }
 
-  // node_modules/.pnpm/hast-util-whitespace@3.0.0/node_modules/hast-util-whitespace/lib/index.js
+  // ../node_modules/.pnpm/hast-util-whitespace@3.0.0/node_modules/hast-util-whitespace/lib/index.js
   var re = /[ \t\n\f\r]/g;
   function whitespace(thing) {
     return typeof thing === "object" ? thing.type === "text" ? empty2(thing.value) : false : empty2(thing);
@@ -94478,7 +94478,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value.replace(re, "") === "";
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/util/siblings.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/util/siblings.js
   var siblingAfter = siblings(1);
   var siblingBefore = siblings(-1);
   var emptyChildren = [];
@@ -94498,7 +94498,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/omission.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/omission.js
   var own8 = {}.hasOwnProperty;
   function omission(handlers3) {
     return omit;
@@ -94507,7 +94507,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/closing.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/closing.js
   var closing = omission({
     body,
     caption: headOrColgroupOrCaption,
@@ -94594,7 +94594,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return !next || next.type === "element" && (next.tagName === "td" || next.tagName === "th");
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/opening.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/omission/opening.js
   var opening = omission({
     body: body2,
     colgroup,
@@ -94638,7 +94638,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Boolean(head2 && head2.type === "element" && head2.tagName === "tr");
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/element.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/element.js
   var constants = {
     // See: <https://html.spec.whatwg.org/#attribute-name-state>.
     name: [
@@ -94765,7 +94765,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return name + (result ? "=" + result : result);
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/text.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/text.js
   var textEntitySubset = ["<", "&"];
   function text7(node2, _, parent, state) {
     return parent && parent.type === "element" && (parent.tagName === "script" || parent.tagName === "style") ? node2.value : stringifyEntities(
@@ -94776,17 +94776,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/raw.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/raw.js
   function raw(node2, index2, parent, state) {
     return state.settings.allowDangerousHtml ? node2.value : text7(node2, index2, parent, state);
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/root.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/root.js
   function root4(node2, _1, _2, state) {
     return state.all(node2);
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/index.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/handle/index.js
   var handle2 = zwitch("type", {
     invalid: invalid2,
     unknown: unknown2,
@@ -94803,7 +94803,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     throw new Error("Cannot compile unknown node `" + node2.type + "`");
   }
 
-  // node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/index.js
+  // ../node_modules/.pnpm/hast-util-to-html@9.0.5/node_modules/hast-util-to-html/lib/index.js
   var emptyOptions4 = {};
   var emptyCharacterReferences = {};
   var emptyChildren2 = [];
@@ -94859,7 +94859,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return results.join("");
   }
 
-  // node_modules/.pnpm/hast-util-parse-selector@4.0.0/node_modules/hast-util-parse-selector/lib/index.js
+  // ../node_modules/.pnpm/hast-util-parse-selector@4.0.0/node_modules/hast-util-parse-selector/lib/index.js
   var search2 = /[#.]/g;
   function parseSelector(selector, defaultTagName) {
     const value = selector || "";
@@ -94897,7 +94897,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/hastscript@9.0.1/node_modules/hastscript/lib/create-h.js
+  // ../node_modules/.pnpm/hastscript@9.0.1/node_modules/hastscript/lib/create-h.js
   function createH(schema, defaultTagName, caseSensitive) {
     const adjust = caseSensitive ? createAdjustMap(caseSensitive) : void 0;
     function h2(selector, properties, ...children) {
@@ -95049,7 +95049,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hastscript@9.0.1/node_modules/hastscript/lib/svg-case-sensitive-tag-names.js
+  // ../node_modules/.pnpm/hastscript@9.0.1/node_modules/hastscript/lib/svg-case-sensitive-tag-names.js
   var svgCaseSensitiveTagNames = [
     "altGlyph",
     "altGlyphDef",
@@ -95092,11 +95092,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     "textPath"
   ];
 
-  // node_modules/.pnpm/hastscript@9.0.1/node_modules/hastscript/lib/index.js
+  // ../node_modules/.pnpm/hastscript@9.0.1/node_modules/hastscript/lib/index.js
   var h = createH(html4, "div");
   var s = createH(svg2, "g", svgCaseSensitiveTagNames);
 
-  // node_modules/.pnpm/hast-util-from-dom@5.0.1/node_modules/hast-util-from-dom/lib/index.js
+  // ../node_modules/.pnpm/hast-util-from-dom@5.0.1/node_modules/hast-util-from-dom/lib/index.js
   function fromDom(tree, options) {
     return transform5(tree, options || {}) || { type: "root", children: [] };
   }
@@ -95197,7 +95197,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return children;
   }
 
-  // packages/ckeditor5-markdown-gfm/src/markdown2html/markdown2html.ts
+  // ../packages/ckeditor5-markdown-gfm/src/markdown2html/markdown2html.ts
   var MarkdownGfmMdToHtmlDefaultPlugins = Object.freeze({
     // Parses Markdown to an abstract syntax tree (AST).
     remarkParse,
@@ -95266,7 +95266,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (node2.type === "root" || node2.type === "element") && node2.children;
   }
 
-  // node_modules/.pnpm/hast-util-is-element@3.0.0/node_modules/hast-util-is-element/lib/index.js
+  // ../node_modules/.pnpm/hast-util-is-element@3.0.0/node_modules/hast-util-is-element/lib/index.js
   var isElement7 = (
     // Note: overloads in JSDoc can’t yet use different `@template`s.
     /**
@@ -95374,7 +95374,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value !== null && typeof value === "object" && "type" in value && "tagName" in value;
   }
 
-  // node_modules/.pnpm/hast-util-embedded@3.0.0/node_modules/hast-util-embedded/lib/index.js
+  // ../node_modules/.pnpm/hast-util-embedded@3.0.0/node_modules/hast-util-embedded/lib/index.js
   var embedded = convertElement(
     /**
      * @param element
@@ -95385,7 +95385,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   );
 
-  // node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/block.js
+  // ../node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/block.js
   var blocks = [
     "address",
     // Flow content.
@@ -95505,7 +95505,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     // Flow content, legacy
   ];
 
-  // node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/content.js
+  // ../node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/content.js
   var content3 = [
     // Form.
     "button",
@@ -95514,7 +95514,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     "textarea"
   ];
 
-  // node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/skippable.js
+  // ../node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/skippable.js
   var skippable = [
     "area",
     "base",
@@ -95536,7 +95536,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     "title"
   ];
 
-  // node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/index.js
+  // ../node_modules/.pnpm/hast-util-minify-whitespace@1.0.1/node_modules/hast-util-minify-whitespace/lib/index.js
   var emptyOptions5 = {};
   var ignorableNode = convert3(["comment", "doctype"]);
   function minifyWhitespace(tree, options) {
@@ -95700,14 +95700,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return state.whitespace;
   }
 
-  // node_modules/.pnpm/rehype-minify-whitespace@6.0.2/node_modules/rehype-minify-whitespace/lib/index.js
+  // ../node_modules/.pnpm/rehype-minify-whitespace@6.0.2/node_modules/rehype-minify-whitespace/lib/index.js
   function rehypeMinifyWhitespace(options) {
     return function(tree) {
       minifyWhitespace(tree, options);
     };
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/a.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/a.js
   function a(state, node2) {
     const properties = node2.properties || {};
     const children = (
@@ -95724,7 +95724,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/base.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/base.js
   function base(state, node2) {
     if (!state.baseFound) {
       state.frozenBaseUrl = String(node2.properties && node2.properties.href || "") || void 0;
@@ -95732,21 +95732,21 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/blockquote.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/blockquote.js
   function blockquote3(state, node2) {
     const result = { type: "blockquote", children: state.toFlow(state.all(node2)) };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/br.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/br.js
   function br(state, node2) {
     const result = { type: "break" };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/unist-util-find-after@5.0.0/node_modules/unist-util-find-after/lib/index.js
+  // ../node_modules/.pnpm/unist-util-find-after@5.0.0/node_modules/unist-util-find-after/lib/index.js
   var findAfter = (
     // Note: overloads like this are needed to support optional generics.
     /**
@@ -95785,7 +95785,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     })
   );
 
-  // node_modules/.pnpm/hast-util-to-text@4.0.2/node_modules/hast-util-to-text/lib/index.js
+  // ../node_modules/.pnpm/hast-util-to-text@4.0.2/node_modules/hast-util-to-text/lib/index.js
   var searchLineFeeds = /\n/g;
   var searchTabOrSpaces = /[\t ]+/g;
   var br2 = convertElement("br");
@@ -96091,7 +96091,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return node2.tagName === "dialog" && !(node2.properties || {}).open;
   }
 
-  // node_modules/.pnpm/trim-trailing-lines@2.1.0/node_modules/trim-trailing-lines/index.js
+  // ../node_modules/.pnpm/trim-trailing-lines@2.1.0/node_modules/trim-trailing-lines/index.js
   function trimTrailingLines(value) {
     const input2 = String(value);
     let end = input2.length;
@@ -96106,7 +96106,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return input2.slice(0, end);
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/code.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/code.js
   var prefix = "language-";
   function code4(state, node2) {
     const children = node2.children;
@@ -96141,7 +96141,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/comment.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/comment.js
   function comment4(state, node2) {
     const result = {
       type: "html",
@@ -96151,7 +96151,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/del.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/del.js
   function del(state, node2) {
     const children = (
       /** @type {Array<PhrasingContent>} */
@@ -96162,7 +96162,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/list-items-spread.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/list-items-spread.js
   function listItemsSpread(children) {
     let index2 = -1;
     if (children.length > 1) {
@@ -96175,7 +96175,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/dl.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/dl.js
   function dl(state, node2) {
     const clean = [];
     const groups = [];
@@ -96255,7 +96255,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { type: "listItem", spread: false, checked: null, children: [] };
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/em.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/em.js
   function em(state, node2) {
     const children = (
       /** @type {Array<PhrasingContent>} */
@@ -96266,7 +96266,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/drop-surrounding-breaks.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/drop-surrounding-breaks.js
   function dropSurroundingBreaks(nodes) {
     let start = 0;
     let end = nodes.length;
@@ -96275,7 +96275,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return start === 0 && end === nodes.length ? nodes : nodes.slice(start, end);
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/heading.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/heading.js
   function heading3(state, node2) {
     const depth = (
       /** @type {Heading['depth']} */
@@ -96291,14 +96291,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/hr.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/hr.js
   function hr(state, node2) {
     const result = { type: "thematicBreak" };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/iframe.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/iframe.js
   function iframe(state, node2) {
     const properties = node2.properties || {};
     const source = String(properties.src || "");
@@ -96315,7 +96315,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/img.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/img.js
   function img(state, node2) {
     const properties = node2.properties || {};
     const result = {
@@ -96328,14 +96328,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/inline-code.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/inline-code.js
   function inlineCode3(state, node2) {
     const result = { type: "inlineCode", value: toText(node2) };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/find-selected-options.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/find-selected-options.js
   function findSelectedOptions(node2, explicitProperties) {
     const selectedOptions = [];
     const values = [];
@@ -96377,7 +96377,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return results;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/input.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/input.js
   var defaultChecked = "[x]";
   var defaultUnchecked = "[ ]";
   function input(state, node2) {
@@ -96457,14 +96457,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-has-property@3.0.0/node_modules/hast-util-has-property/lib/index.js
+  // ../node_modules/.pnpm/hast-util-has-property@3.0.0/node_modules/hast-util-has-property/lib/index.js
   var own9 = {}.hasOwnProperty;
   function hasProperty(node2, name) {
     const value = node2.type === "element" && own9.call(node2.properties, name) && node2.properties[name];
     return value !== null && value !== void 0 && value !== false;
   }
 
-  // node_modules/.pnpm/hast-util-is-body-ok-link@3.0.1/node_modules/hast-util-is-body-ok-link/lib/index.js
+  // ../node_modules/.pnpm/hast-util-is-body-ok-link@3.0.1/node_modules/hast-util-is-body-ok-link/lib/index.js
   var list5 = /* @__PURE__ */ new Set(["pingback", "prefetch", "stylesheet"]);
   function isBodyOkLink(node2) {
     if (node2.type !== "element" || node2.tagName !== "link") {
@@ -96486,7 +96486,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return true;
   }
 
-  // node_modules/.pnpm/hast-util-phrasing@3.0.1/node_modules/hast-util-phrasing/lib/index.js
+  // ../node_modules/.pnpm/hast-util-phrasing@3.0.1/node_modules/hast-util-phrasing/lib/index.js
   var basic = convertElement([
     "a",
     "abbr",
@@ -96543,7 +96543,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     );
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/li.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/li.js
   function li2(state, node2) {
     const { rest, checkbox } = extractLeadingCheckbox(node2);
     const checked = checkbox ? Boolean(checkbox.properties.checked) : null;
@@ -96584,7 +96584,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { checkbox: void 0, rest: node2 };
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/list.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/list.js
   function list6(state, node2) {
     const ordered = node2.tagName === "ol";
     const children = state.toSpecificContent(state.all(node2), create3);
@@ -96606,7 +96606,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { type: "listItem", spread: false, checked: null, children: [] };
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/wrap.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/util/wrap.js
   function wrapNeeded(nodes) {
     let index2 = -1;
     while (++index2 < nodes.length) {
@@ -96689,7 +96689,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return esm_default({ ...node2, children: [] });
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/media.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/media.js
   function media(state, node2) {
     const properties = node2.properties || {};
     const poster = node2.tagName === "video" ? String(properties.poster || "") : "";
@@ -96737,7 +96737,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/p.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/p.js
   function p3(state, node2) {
     const children = dropSurroundingBreaks(
       // Allow potentially “invalid” nodes, they might be unknown.
@@ -96752,7 +96752,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/q.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/q.js
   var defaultQuotes = ['"'];
   function q(state, node2) {
     const quotes = state.options.quotes || defaultQuotes;
@@ -96777,7 +96777,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return contents;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/root.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/root.js
   function root6(state, node2) {
     let children = state.all(node2);
     if (state.options.document || wrapNeeded(children)) {
@@ -96788,7 +96788,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/select.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/select.js
   function select(state, node2) {
     const values = findSelectedOptions(node2);
     let index2 = -1;
@@ -96804,7 +96804,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/strong.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/strong.js
   function strong3(state, node2) {
     const children = (
       /** @type {Array<PhrasingContent>} */
@@ -96815,7 +96815,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/table-cell.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/table-cell.js
   function tableCell2(state, node2) {
     const children = (
       /** @type {Array<PhrasingContent>} */
@@ -96838,7 +96838,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/table-row.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/table-row.js
   function tableRow2(state, node2) {
     const children = state.toSpecificContent(state.all(node2), create4);
     const result = { type: "tableRow", children };
@@ -96849,7 +96849,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { type: "tableCell", children: [] };
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/table.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/table.js
   function table2(state, node2) {
     if (state.inTable) {
       const result2 = { type: "text", value: toText(node2) };
@@ -96961,28 +96961,28 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return { type: "tableRow", children: [] };
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/text.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/text.js
   function text9(state, node2) {
     const result = { type: "text", value: node2.value };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/textarea.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/textarea.js
   function textarea(state, node2) {
     const result = { type: "text", value: toText(node2) };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/wbr.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/wbr.js
   function wbr(state, node2) {
     const result = { type: "text", value: "\u200B" };
     state.patch(node2, result);
     return result;
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/index.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/handlers/index.js
   var nodeHandlers = {
     comment: comment4,
     doctype: ignore2,
@@ -97151,7 +97151,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   function ignore2() {
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/state.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/state.js
   var own10 = {}.hasOwnProperty;
   function createState2(options) {
     return {
@@ -97261,7 +97261,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/index.js
+  // ../node_modules/.pnpm/hast-util-to-mdast@10.1.2/node_modules/hast-util-to-mdast/lib/index.js
   var emptyOptions6 = {};
   function toMdast(tree, options) {
     const cleanTree = esm_default(tree);
@@ -97321,7 +97321,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return mdast;
   }
 
-  // node_modules/.pnpm/rehype-remark@10.0.1/node_modules/rehype-remark/lib/index.js
+  // ../node_modules/.pnpm/rehype-remark@10.0.1/node_modules/rehype-remark/lib/index.js
   var defaults = { document: true };
   function rehypeRemark(destination, options) {
     if (destination && "run" in destination) {
@@ -97338,7 +97338,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // node_modules/.pnpm/remark-stringify@11.0.0/node_modules/remark-stringify/lib/index.js
+  // ../node_modules/.pnpm/remark-stringify@11.0.0/node_modules/remark-stringify/lib/index.js
   function remarkStringify(options) {
     const self2 = this;
     self2.compiler = compiler2;
@@ -97354,7 +97354,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-markdown-gfm/src/html2markdown/html2markdown.ts
+  // ../packages/ckeditor5-markdown-gfm/src/html2markdown/html2markdown.ts
   var MarkdownGfmHtmlToMd = class {
     constructor() {
       __publicField(this, "_processor");
@@ -97426,7 +97426,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-markdown-gfm/src/gfmdataprocessor.ts
+  // ../packages/ckeditor5-markdown-gfm/src/gfmdataprocessor.ts
   var MarkdownGfmDataProcessor = class {
     /**
      * Creates a new instance of the Markdown data processor class.
@@ -97500,7 +97500,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-markdown-gfm/src/markdown.ts
+  // ../packages/ckeditor5-markdown-gfm/src/markdown.ts
   var Markdown = class extends Plugin {
     /**
      * @inheritDoc
@@ -97523,7 +97523,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-source-editing/src/sourceediting.ts
+  // ../packages/ckeditor5-source-editing/src/sourceediting.ts
   var COMMAND_FORCE_DISABLE_ID = "SourceEditingMode";
   var SourceEditing = class extends Plugin {
     /**
@@ -97866,7 +97866,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return input2.startsWith("<");
   }
 
-  // packages/ckeditor5-table/src/converters/tableproperties.ts
+  // ../packages/ckeditor5-table/src/converters/tableproperties.ts
   var ALIGN_VALUES_REG_EXP = /^(left|center|right)$/;
   var FLOAT_VALUES_REG_EXP = /^(left|none|right)$/;
   function upcastStyleToAttribute(conversion, options) {
@@ -98292,7 +98292,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablewalker.ts
+  // ../packages/ckeditor5-table/src/tablewalker.ts
   var TableWalker = class {
     /**
      * Creates an instance of the table walker.
@@ -98745,12 +98745,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/tablecellpropertiesutils.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/tablecellpropertiesutils.ts
   function isTableHeaderCellType(cellType) {
     return cellType === "header" || cellType === "header-row" || cellType === "header-column";
   }
 
-  // packages/ckeditor5-table/src/utils/common.ts
+  // ../packages/ckeditor5-table/src/utils/common.ts
   function updateNumericAttribute(key2, value, item, writer, defaultValue = 1) {
     if (value !== void 0 && value !== null && defaultValue !== void 0 && defaultValue !== null && value > defaultValue) {
       writer.setAttribute(key2, value, item);
@@ -98832,7 +98832,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-table/src/utils/structure.ts
+  // ../packages/ckeditor5-table/src/utils/structure.ts
   function cropTableToDimensions(sourceTable, cropDimensions, writer) {
     const { startRow, startColumn, endRow, endColumn } = cropDimensions;
     const croppedTable = writer.createElement("table");
@@ -99045,7 +99045,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-table/src/converters/upcasttable.ts
+  // ../packages/ckeditor5-table/src/converters/upcasttable.ts
   function upcastTableFigure() {
     return (dispatcher) => {
       dispatcher.on("element:figure", (evt, data, conversionApi) => {
@@ -99270,7 +99270,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return slots;
   }
 
-  // packages/ckeditor5-table/src/tablecolumnresize/utils.ts
+  // ../packages/ckeditor5-table/src/tablecolumnresize/utils.ts
   function getColumnGroupElement(element6) {
     if (element6.is("element", "tableColumnGroup")) {
       return element6;
@@ -99286,7 +99286,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Array.from(columnGroupElement.getChildren());
   }
 
-  // packages/ckeditor5-table/src/tableutils.ts
+  // ../packages/ckeditor5-table/src/tableutils.ts
   var TableUtils = class extends Plugin {
     /**
      * @inheritDoc
@@ -100490,7 +100490,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     writer.setAttribute("tableCellType", headerCellType, cell2);
   }
 
-  // packages/ckeditor5-table/src/utils/table-properties.ts
+  // ../packages/ckeditor5-table/src/utils/table-properties.ts
   function getSingleValue(objectOrString) {
     if (!objectOrString || !isObject(objectOrString)) {
       return objectOrString;
@@ -100555,7 +100555,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }, options);
   }
 
-  // packages/ckeditor5-table/src/converters/downcast.ts
+  // ../packages/ckeditor5-table/src/converters/downcast.ts
   function downcastTable(tableUtils, options) {
     return (table3, { writer }) => {
       const headingRows = table3.getAttribute("headingRows") || 0;
@@ -100801,7 +100801,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return hasTableLayout && (stripFigureFromContentTable || tableType === "layout");
   }
 
-  // packages/ckeditor5-table/src/commands/inserttablecommand.ts
+  // ../packages/ckeditor5-table/src/commands/inserttablecommand.ts
   var InsertTableCommand = class extends Command {
     /**
      * @inheritDoc
@@ -100876,7 +100876,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return schema.checkChild(validParent, "table");
   }
 
-  // packages/ckeditor5-table/src/commands/insertrowcommand.ts
+  // ../packages/ckeditor5-table/src/commands/insertrowcommand.ts
   var InsertRowCommand = class extends Command {
     /**
      * Creates a new `InsertRowCommand` instance.
@@ -100922,7 +100922,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/insertcolumncommand.ts
+  // ../packages/ckeditor5-table/src/commands/insertcolumncommand.ts
   var InsertColumnCommand = class extends Command {
     /**
      * Creates a new `InsertColumnCommand` instance.
@@ -100969,7 +100969,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/splitcellcommand.ts
+  // ../packages/ckeditor5-table/src/commands/splitcellcommand.ts
   var SplitCellCommand = class extends Command {
     /**
      * Creates a new `SplitCellCommand` instance.
@@ -101012,7 +101012,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/mergecellcommand.ts
+  // ../packages/ckeditor5-table/src/commands/mergecellcommand.ts
   var MergeCellCommand = class extends Command {
     /**
      * Creates a new `MergeCellCommand` instance.
@@ -101169,7 +101169,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return tableCell3.childCount == 1 && firstTableChild.is("element", "paragraph") && firstTableChild.isEmpty;
   }
 
-  // packages/ckeditor5-table/src/commands/removerowcommand.ts
+  // ../packages/ckeditor5-table/src/commands/removerowcommand.ts
   var RemoveRowCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101225,7 +101225,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return cellToFocus;
   }
 
-  // packages/ckeditor5-table/src/commands/removecolumncommand.ts
+  // ../packages/ckeditor5-table/src/commands/removecolumncommand.ts
   var RemoveColumnCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101292,7 +101292,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return firstCell.isBefore(lastCell) ? returnValue : returnValue.reverse();
   }
 
-  // packages/ckeditor5-table/src/commands/setheaderrowcommand.ts
+  // ../packages/ckeditor5-table/src/commands/setheaderrowcommand.ts
   var SetHeaderRowCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101352,7 +101352,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/setfooterrowcommand.ts
+  // ../packages/ckeditor5-table/src/commands/setfooterrowcommand.ts
   var SetFooterRowCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101417,7 +101417,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/setheadercolumncommand.ts
+  // ../packages/ckeditor5-table/src/commands/setheadercolumncommand.ts
   var SetHeaderColumnCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101468,7 +101468,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/mergecellscommand.ts
+  // ../packages/ckeditor5-table/src/commands/mergecellscommand.ts
   var MergeCellsCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101532,7 +101532,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Math.max(currentMaxOffset, start + dimensionValue);
   }
 
-  // packages/ckeditor5-table/src/commands/selectrowcommand.ts
+  // ../packages/ckeditor5-table/src/commands/selectrowcommand.ts
   var SelectRowCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101570,7 +101570,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/commands/selectcolumncommand.ts
+  // ../packages/ckeditor5-table/src/commands/selectcolumncommand.ts
   var SelectColumnCommand = class extends Command {
     /**
      * @inheritDoc
@@ -101611,7 +101611,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/converters/table-layout-post-fixer.ts
+  // ../packages/ckeditor5-table/src/converters/table-layout-post-fixer.ts
   function injectTableLayoutPostFixer(model) {
     model.document.registerPostFixer((writer) => tableLayoutPostFixer(writer, model));
   }
@@ -101724,7 +101724,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return key2 === "headingRows" || key2 === "colspan" || key2 === "rowspan";
   }
 
-  // packages/ckeditor5-table/src/converters/table-cell-paragraph-post-fixer.ts
+  // ../packages/ckeditor5-table/src/converters/table-cell-paragraph-post-fixer.ts
   function injectTableCellParagraphPostFixer(model) {
     model.document.registerPostFixer((writer) => tableCellContentsPostFixer(writer, model));
   }
@@ -101781,7 +101781,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return entry.type == "insert" && entry.name == "$text" || entry.type == "remove";
   }
 
-  // packages/ckeditor5-table/src/converters/table-structure-post-fixer.ts
+  // ../packages/ckeditor5-table/src/converters/table-structure-post-fixer.ts
   function injectTableStructurePostFixer(editor) {
     const { model } = editor;
     const tableUtils = editor.plugins.get(TableUtils);
@@ -101822,7 +101822,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return false;
   }
 
-  // packages/ckeditor5-table/src/converters/table-structure-refresh-handler.ts
+  // ../packages/ckeditor5-table/src/converters/table-structure-refresh-handler.ts
   function tableStructureRefreshHandler(model, editing) {
     const differ = model.document.differ;
     const movedRows = /* @__PURE__ */ new Set();
@@ -101874,7 +101874,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // packages/ckeditor5-table/src/converters/table-cell-refresh-handler.ts
+  // ../packages/ckeditor5-table/src/converters/table-cell-refresh-handler.ts
   function tableCellRefreshHandler(model, editing) {
     const differ = model.document.differ;
     const cellsToCheck = /* @__PURE__ */ new Set();
@@ -101902,7 +101902,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isSingleParagraphWithoutAttributes(child) !== viewElement.is("element", "span");
   }
 
-  // packages/ckeditor5-table/src/tableediting.ts
+  // ../packages/ckeditor5-table/src/tableediting.ts
   var TableEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -102117,7 +102117,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     };
   }
 
-  // packages/ckeditor5-table/src/ui/inserttableview.ts
+  // ../packages/ckeditor5-table/src/ui/inserttableview.ts
   var InsertTableView = class extends View {
     /**
      * @inheritDoc
@@ -102286,7 +102286,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableui.ts
+  // ../packages/ckeditor5-table/src/tableui.ts
   var TableUI = class extends Plugin {
     /**
      * @inheritDoc
@@ -102592,7 +102592,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     itemDefinitions.add(option2);
   }
 
-  // packages/ckeditor5-table/src/tableselection.ts
+  // ../packages/ckeditor5-table/src/tableselection.ts
   var TableSelection = class extends Plugin {
     /**
      * @inheritDoc
@@ -102885,7 +102885,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableclipboard.ts
+  // ../packages/ckeditor5-table/src/tableclipboard.ts
   var TableClipboard = class extends Plugin {
     /**
      * @inheritDoc
@@ -103251,7 +103251,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return isInsideSelection || overlapsSelectionFromOutside;
   }
 
-  // packages/ckeditor5-table/src/tablekeyboard.ts
+  // ../packages/ckeditor5-table/src/tablekeyboard.ts
   var TableKeyboard = class extends Plugin {
     /**
      * @inheritDoc
@@ -103499,7 +103499,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablemouse/mouseeventsobserver.ts
+  // ../packages/ckeditor5-table/src/tablemouse/mouseeventsobserver.ts
   var MouseEventsObserver = class extends DomEventObserver {
     constructor() {
       super(...arguments);
@@ -103516,7 +103516,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablemouse.ts
+  // ../packages/ckeditor5-table/src/tablemouse.ts
   var TableMouse = class extends Plugin {
     /**
      * @inheritDoc
@@ -103655,7 +103655,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return cellA.parent.parent == cellB.parent.parent;
   }
 
-  // packages/ckeditor5-table/src/table.ts
+  // ../packages/ckeditor5-table/src/table.ts
   var Table = class extends Plugin {
     /**
      * @inheritDoc
@@ -103685,7 +103685,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/utils/ui/widget.ts
+  // ../packages/ckeditor5-table/src/utils/ui/widget.ts
   function getSelectionAffectedTableWidget(selection) {
     const selectedTable = getSelectedTableWidget(selection);
     if (selectedTable) {
@@ -103718,7 +103718,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return viewNode.is("element") && !!viewNode.getCustomProperty("table") && isWidget(viewNode);
   }
 
-  // packages/ckeditor5-table/src/tabletoolbar.ts
+  // ../packages/ckeditor5-table/src/tabletoolbar.ts
   var TableToolbar = class extends Plugin {
     /**
      * @inheritDoc
@@ -103764,7 +103764,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/ui/colorinputview.ts
+  // ../packages/ckeditor5-table/src/ui/colorinputview.ts
   var ColorInputView = class extends View {
     /**
      * Creates an instance of the color input view.
@@ -104035,7 +104035,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return colorString.replace(/([(,])\s+/g, "$1").replace(/^\s+|\s+(?=[),\s]|$)/g, "").replace(/,|\s/g, " ");
   }
 
-  // packages/ckeditor5-table/src/utils/ui/table-properties.ts
+  // ../packages/ckeditor5-table/src/utils/ui/table-properties.ts
   var isEmpty4 = (val) => val === "";
   function getBorderStyleLabels(t) {
     return {
@@ -104162,7 +104162,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }));
   }
 
-  // packages/ckeditor5-table/src/tablecellproperties/ui/tablecellpropertiesview.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/ui/tablecellpropertiesview.ts
   var TableCellPropertiesView = class extends View {
     /**
      * @param locale The {@link module:core/editor/editor~Editor#locale} instance.
@@ -104845,7 +104845,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value !== "none";
   }
 
-  // packages/ckeditor5-table/src/utils/ui/contextualballoon.ts
+  // ../packages/ckeditor5-table/src/utils/ui/contextualballoon.ts
   var BALLOON_POSITIONS = /* @__PURE__ */ (() => [
     BalloonPanelView.defaultPositions.northArrowSouth,
     BalloonPanelView.defaultPositions.northArrowSouthWest,
@@ -104911,7 +104911,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Rect.getBoundingRect(rects);
   }
 
-  // packages/ckeditor5-table/src/tablecellproperties/tablecellpropertiesui.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/tablecellpropertiesui.ts
   var ERROR_TEXT_TIMEOUT = 500;
   var propertyToCommandMap = {
     borderStyle: "tableCellBorderStyle",
@@ -105291,7 +105291,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellpropertycommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellpropertycommand.ts
   var TableCellPropertyCommand = class extends Command {
     /**
      * Creates a new `TableCellPropertyCommand` instance.
@@ -105413,7 +105413,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellwidth/commands/tablecellwidthcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellwidth/commands/tablecellwidthcommand.ts
   var TableCellWidthCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellWidthCommand` instance.
@@ -105436,7 +105436,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellwidth/tablecellwidthediting.ts
+  // ../packages/ckeditor5-table/src/tablecellwidth/tablecellwidthediting.ts
   var TableCellWidthEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -105475,7 +105475,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellpaddingcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellpaddingcommand.ts
   var TableCellPaddingCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellPaddingCommand` instance.
@@ -105511,7 +105511,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellheightcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellheightcommand.ts
   var TableCellHeightCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellHeightCommand` instance.
@@ -105534,7 +105534,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellbackgroundcolorcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellbackgroundcolorcommand.ts
   var TableCellBackgroundColorCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellBackgroundColorCommand` instance.
@@ -105547,7 +105547,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellverticalalignmentcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellverticalalignmentcommand.ts
   var TableCellVerticalAlignmentCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellVerticalAlignmentCommand` instance.
@@ -105560,7 +105560,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellhorizontalalignmentcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellhorizontalalignmentcommand.ts
   var TableCellHorizontalAlignmentCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellHorizontalAlignmentCommand` instance.
@@ -105573,7 +105573,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellborderstylecommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellborderstylecommand.ts
   var TableCellBorderStyleCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellBorderStyleCommand` instance.
@@ -105599,7 +105599,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellbordercolorcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellbordercolorcommand.ts
   var TableCellBorderColorCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellBorderColorCommand` instance.
@@ -105625,7 +105625,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecellborderwidthcommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecellborderwidthcommand.ts
   var TableCellBorderWidthCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellBorderWidthCommand` instance.
@@ -105661,7 +105661,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tablecellproperties/commands/tablecelltypecommand.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/commands/tablecelltypecommand.ts
   var TableCellTypeCommand = class extends TableCellPropertyCommand {
     /**
      * Creates a new `TableCellTypeCommand` instance.
@@ -105762,7 +105762,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return Math.min(size, totalRowsOrColumns);
   }
 
-  // packages/ckeditor5-table/src/tablecellproperties/tablecellpropertiesediting.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties/tablecellpropertiesediting.ts
   var VALIGN_VALUES_REG_EXP = /^(top|middle|bottom)$/;
   var ALIGN_VALUES_REG_EXP2 = /^(left|center|right|justify)$/;
   var TableCellPropertiesEditing = class extends Plugin {
@@ -106167,7 +106167,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     upcastTableCellPaddingAttribute(editor, "th", defaultPadding);
   }
 
-  // packages/ckeditor5-table/src/tablecellproperties.ts
+  // ../packages/ckeditor5-table/src/tablecellproperties.ts
   var TableCellProperties = class extends Plugin {
     /**
      * @inheritDoc
@@ -106189,7 +106189,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tablepropertycommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tablepropertycommand.ts
   var TablePropertyCommand = class extends Command {
     /**
      * Creates a new `TablePropertyCommand` instance.
@@ -106280,7 +106280,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tablebackgroundcolorcommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tablebackgroundcolorcommand.ts
   var TableBackgroundColorCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableBackgroundColorCommand` instance.
@@ -106293,7 +106293,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tablebordercolorcommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tablebordercolorcommand.ts
   var TableBorderColorCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableBorderColorCommand` instance.
@@ -106319,7 +106319,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tableborderstylecommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tableborderstylecommand.ts
   var TableBorderStyleCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableBorderStyleCommand` instance.
@@ -106345,7 +106345,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tableborderwidthcommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tableborderwidthcommand.ts
   var TableBorderWidthCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableBorderWidthCommand` instance.
@@ -106381,7 +106381,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tablewidthcommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tablewidthcommand.ts
   var TableWidthCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableWidthCommand` instance.
@@ -106404,7 +106404,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tableheightcommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tableheightcommand.ts
   var TableHeightCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableHeightCommand` instance.
@@ -106427,7 +106427,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/commands/tablealignmentcommand.ts
+  // ../packages/ckeditor5-table/src/tableproperties/commands/tablealignmentcommand.ts
   var TableAlignmentCommand = class extends TablePropertyCommand {
     /**
      * Creates a new `TableAlignmentCommand` instance.
@@ -106440,7 +106440,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties/tablepropertiesediting.ts
+  // ../packages/ckeditor5-table/src/tableproperties/tablepropertiesediting.ts
   var TablePropertiesEditing = class extends Plugin {
     /**
      * @inheritDoc
@@ -106773,7 +106773,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return viewElement.name == "figure" && !viewElement.hasClass("table");
   }
 
-  // packages/ckeditor5-table/src/tableproperties/ui/tablepropertiesview.ts
+  // ../packages/ckeditor5-table/src/tableproperties/ui/tablepropertiesview.ts
   var TablePropertiesView = class extends View {
     /**
      * @param locale The {@link module:core/editor/editor~Editor#locale} instance.
@@ -107273,7 +107273,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value !== "none";
   }
 
-  // packages/ckeditor5-table/src/tableproperties/tablepropertiesui.ts
+  // ../packages/ckeditor5-table/src/tableproperties/tablepropertiesui.ts
   var ERROR_TEXT_TIMEOUT2 = 500;
   var propertyToCommandMap2 = {
     borderStyle: "tableBorderStyle",
@@ -107608,7 +107608,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // packages/ckeditor5-table/src/tableproperties.ts
+  // ../packages/ckeditor5-table/src/tableproperties.ts
   var TableProperties = class extends Plugin {
     /**
      * @inheritDoc
@@ -107630,7 +107630,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
-  // android/web/src/main.js
+  // web/src/main.js
   var editorInstance = null;
   var isProgrammaticChange = false;
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
@@ -107693,6 +107693,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     addIfEnabled("findAndReplace", FindAndReplace, "findAndReplace");
     try {
       editorInstance = await ClassicEditor.create(document.querySelector("#editor"), {
+        licenseKey: "GPL",
         plugins: pluginsToLoad,
         toolbar: {
           items: toolbarItems,
