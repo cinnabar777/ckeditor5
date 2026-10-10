@@ -107725,6 +107725,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             { language: "yaml", label: "YAML" }
           ]
         },
+        image: {
+          toolbar: ["imageTextAlternative", "imageStyle:inline", "imageStyle:block"]
+        },
         table: {
           contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"]
         }

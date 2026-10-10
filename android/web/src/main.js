@@ -196,6 +196,9 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           { language: 'yaml', label: 'YAML' }
         ]
       },
+      image: {
+        toolbar: [ 'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block' ]
+      },
       table: {
         contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
       }

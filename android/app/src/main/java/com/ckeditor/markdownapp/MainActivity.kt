@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         val fullscreen = prefs.getBoolean("pref_fullscreen", true)
         val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
 
-        val appBarLayout = findViewById<com.google.android.material.appbar.AppBarLayout>(R.id.toolbar)?.parent as? View
+        val appBarLayout = findViewById<View>(R.id.appBarLayout)
         if (fullscreen) {
             appBarLayout?.visibility = View.GONE
         } else {
