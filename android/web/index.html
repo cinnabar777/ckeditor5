@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CKEditor 5 Markdown Editor</title>
+  <title>CKE5</title>
   <style>
     :root {
       --bg-color: #000000;
       --text-color: #ffffff;
       --toolbar-bg: #121212;
-      --border-color: #262626;
+      --border-color: #222222;
       --button-hover: #1f1f1f;
+      --body-font-size: 16px;
+      --heading-scale: 1.0;
+      --bold-color: inherit;
+      --italic-color: inherit;
     }
 
     body.light-theme {
@@ -41,62 +45,22 @@
       position: relative;
     }
 
-    /* Top Native Bar inside Web */
-    #native-action-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: var(--toolbar-bg);
-      border-bottom: 1px solid var(--border-color);
-      padding: 4px 8px;
-      z-index: 101;
-    }
-
-    #file-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-color);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-right: 8px;
-    }
-
-    .action-btn-group {
-      display: flex;
-      gap: 4px;
-    }
-
-    .action-btn {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .action-btn:active {
-      background-color: var(--button-hover);
-    }
-
-    /* CKEditor Custom Overrides */
+    /* Main Editor Area */
     .ck-editor {
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse; /* Reverses order so toolbar is at bottom */
       height: 100% !important;
       width: 100% !important;
       border: none !important;
+      box-shadow: none !important;
     }
 
     .ck-editor__top {
-      position: sticky;
-      top: 0;
-      z-index: 100;
       background: var(--toolbar-bg) !important;
-      transition: max-height 0.25s ease, opacity 0.25s ease;
-      overflow: hidden;
+      border: none !important;
+      border-top: 1px solid var(--border-color) !important;
+      transition: max-height 0.2s ease, opacity 0.2s ease;
+      z-index: 100;
     }
 
     .ck-editor__top.toolbar-collapsed {
@@ -106,7 +70,7 @@
     .ck-toolbar {
       background: var(--toolbar-bg) !important;
       border: none !important;
-      border-bottom: 1px solid var(--border-color) !important;
+      padding: 4px !important;
     }
 
     .ck-toolbar .ck-button,
@@ -123,12 +87,31 @@
 
     .ck-content {
       min-height: 100% !important;
-      padding: 8px !important; /* Minimized side padding for maximum screen real estate */
+      padding: 8px !important; /* Compact side padding */
       box-sizing: border-box;
-      font-size: 16px;
+      font-size: var(--body-font-size) !important;
       line-height: 1.6;
       background-color: var(--bg-color) !important;
       color: var(--text-color) !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Relative Heading Scalings */
+    .ck-content h1 { font-size: calc(2.0em * var(--heading-scale)) !important; }
+    .ck-content h2 { font-size: calc(1.6em * var(--heading-scale)) !important; }
+    .ck-content h3 { font-size: calc(1.3em * var(--heading-scale)) !important; }
+    .ck-content h4 { font-size: calc(1.1em * var(--heading-scale)) !important; }
+    .ck-content h5 { font-size: calc(1.0em * var(--heading-scale)) !important; }
+    .ck-content h6 { font-size: calc(0.9em * var(--heading-scale)) !important; }
+
+    /* Custom Bold / Italic Colors */
+    .ck-content strong, .ck-content b {
+      color: var(--bold-color) !important;
+    }
+    .ck-content em, .ck-content i {
+      color: var(--italic-color) !important;
     }
 
     /* Dark Mode CKEditor Specific Adjustments */
@@ -142,6 +125,45 @@
     body:not(.light-theme) .ck-balloon-panel {
       background: #181818 !important;
       border-color: #333333 !important;
+    }
+
+    /* Web App Bar inside Bottom Toolbar */
+    #bottom-app-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--toolbar-bg);
+      padding: 4px 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    #file-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 6px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .action-btn:active {
+      background-color: var(--button-hover);
     }
 
     /* Floating Toolbar Toggle Button */
@@ -160,7 +182,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
       z-index: 200;
       cursor: pointer;
     }
@@ -168,17 +190,6 @@
 </head>
 <body>
   <div id="editor-container">
-    <div id="native-action-bar">
-      <span id="file-title">Untitled.md</span>
-      <div class="action-btn-group">
-        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
-        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
-        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
-        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
-        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
-        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
-      </div>
-    </div>
     <div id="editor"></div>
     <button id="fab-toolbar-toggle" title="Toggle Toolbar">⟨</button>
   </div>

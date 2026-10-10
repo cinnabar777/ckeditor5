@@ -2,6 +2,42 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory app:title="Font &amp; Text Styling Settings">
+        <SeekBarPreference
+            app:key="pref_body_font_size"
+            app:title="Body Text Size (px)"
+            app:summary="Adjust font size for regular editor text"
+            app:min="12"
+            android:max="32"
+            app:defaultValue="16"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            app:key="pref_heading_scale_percent"
+            app:title="Heading Size Scale (%)"
+            app:summary="Scales all heading levels relative to text"
+            app:min="50"
+            android:max="200"
+            app:defaultValue="100"
+            app:showSeekBarValue="true" />
+
+        <ListPreference
+            app:key="pref_bold_color"
+            app:title="Bold Text Color"
+            app:summary="Select custom highlight color for bold text"
+            app:entries="@array/pref_color_entries"
+            app:entryValues="@array/pref_color_values"
+            app:defaultValue="default" />
+
+        <ListPreference
+            app:key="pref_italic_color"
+            app:title="Italic Text Color"
+            app:summary="Select custom highlight color for italic text"
+            app:entries="@array/pref_color_entries"
+            app:entryValues="@array/pref_color_values"
+            app:defaultValue="default" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="App Display &amp; Theme Settings">
         <ListPreference
             app:key="pref_app_theme"

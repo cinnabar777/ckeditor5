@@ -107737,6 +107737,23 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           window.AndroidNative.onContentChanged();
         }
       });
+      const topBar = document.querySelector(".ck-editor__top");
+      if (topBar && !document.querySelector("#bottom-app-actions")) {
+        const actionsDiv = document.createElement("div");
+        actionsDiv.id = "bottom-app-actions";
+        actionsDiv.innerHTML = `
+        <span id="file-title">Untitled.md</span>
+        <div class="action-btn-group">
+          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
+          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
+          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
+          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
+          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
+          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
+        </div>
+      `;
+        topBar.prepend(actionsDiv);
+      }
       if (isInitialInit && window.AndroidNative && typeof window.AndroidNative.onEditorReady === "function") {
         window.AndroidNative.onEditorReady();
       }
@@ -107772,6 +107789,24 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       const titleEl = document.querySelector("#file-title");
       if (titleEl) {
         titleEl.textContent = title;
+      }
+    },
+    setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor) {
+      if (bodyFontSizePx) {
+        document.documentElement.style.setProperty("--body-font-size", bodyFontSizePx + "px");
+      }
+      if (headingScale) {
+        document.documentElement.style.setProperty("--heading-scale", headingScale);
+      }
+      if (boldColor && boldColor !== "default") {
+        document.documentElement.style.setProperty("--bold-color", boldColor);
+      } else {
+        document.documentElement.style.setProperty("--bold-color", "inherit");
+      }
+      if (italicColor && italicColor !== "default") {
+        document.documentElement.style.setProperty("--italic-color", italicColor);
+      } else {
+        document.documentElement.style.setProperty("--italic-color", "inherit");
       }
     },
     configurePlugins: function(disabledPluginsJson) {

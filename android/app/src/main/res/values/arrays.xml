@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="pref_color_entries">
+        <item>Default (Theme Color)</item>
+        <item>Light Blue (#00B0FF)</item>
+        <item>Cyan (#00E5FF)</item>
+        <item>Yellow (#FFEA00)</item>
+        <item>Orange (#FF9100)</item>
+        <item>Green (#00E676)</item>
+        <item>Pink (#FF4081)</item>
+    </string-array>
+    <string-array name="pref_color_values">
+        <item>default</item>
+        <item>#00B0FF</item>
+        <item>#00E5FF</item>
+        <item>#FFEA00</item>
+        <item>#FF9100</item>
+        <item>#00E676</item>
+        <item>#FF4081</item>
+    </string-array>
     <string-array name="pref_theme_entries">
         <item>Dark AMOLED (Black)</item>
         <item>Light Mode</item>

@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var currentFileName: String = "Untitled.md"
     private var isDirty: Boolean = false
     private var isEditorReady: Boolean = false
+    private var pendingOpenUri: Uri? = null
 
     private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let { openFile(it) }
@@ -80,6 +81,27 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        handleIntent(intent)
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: android.content.Intent?) {
+        if (intent == null) return
+        val action = intent.action
+        val data: Uri? = intent.data
+        if (action == android.content.Intent.ACTION_VIEW && data != null) {
+            if (isEditorReady) {
+                openFile(data)
+            } else {
+                pendingOpenUri = data
+            }
+        }
     }
 
 
@@ -136,6 +158,14 @@ class MainActivity : AppCompatActivity() {
 
         val escapedTheme = JSONObjectWrapper.quote(themeMode)
         webView.evaluateJavascript("window.editorBridge.setTheme($escapedTheme);", null)
+
+        val bodyFontSize = prefs.getInt("pref_body_font_size", 16)
+        val headingScalePercent = prefs.getInt("pref_heading_scale_percent", 100)
+        val headingScale = headingScalePercent / 100.0
+        val boldColor = JSONObjectWrapper.quote(prefs.getString("pref_bold_color", "default"))
+        val italicColor = JSONObjectWrapper.quote(prefs.getString("pref_italic_color", "default"))
+
+        webView.evaluateJavascript("window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor);", null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -198,6 +228,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openFile(uri: Uri) {
+        if (!isEditorReady) {
+            pendingOpenUri = uri
+            return
+        }
         try {
             contentResolver.openInputStream(uri)?.use { inputStream ->
                 val reader = BufferedReader(InputStreamReader(inputStream))
@@ -359,6 +393,12 @@ class MainActivity : AppCompatActivity() {
                 isEditorReady = true
                 applyPluginPreferences()
                 applyThemeAndFullscreenPreferences()
+                updateTitle()
+
+                pendingOpenUri?.let { uri ->
+                    pendingOpenUri = null
+                    openFile(uri)
+                }
             }
         }
 
