@@ -1,6 +1,5 @@
 import {
   ClassicEditor,
-  ClassicEditorUI,
   Markdown,
   Essentials,
   Paragraph,
@@ -100,11 +99,18 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     editorInstance = null;
   }
 
+  const container = document.querySelector('#editor-container');
+  let editorElement = document.querySelector('#editor');
+  if (!editorElement && container) {
+    editorElement = document.createElement('div');
+    editorElement.id = 'editor';
+    container.appendChild(editorElement);
+  }
+
   const pluginsToLoad = [
     Essentials,
     Paragraph,
-    Markdown,
-    ClassicEditorUI
+    Markdown
   ];
 
   const toolbarItems = [];
@@ -163,7 +169,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
   addIfEnabled('findAndReplace', FindAndReplace, 'findAndReplace');
 
   try {
-    editorInstance = await ClassicEditor.create(document.querySelector('#editor'), {
+    editorInstance = await ClassicEditor.create(editorElement, {
       licenseKey: 'GPL',
       plugins: pluginsToLoad,
       toolbar: {

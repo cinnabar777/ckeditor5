@@ -107638,11 +107638,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       await editorInstance.destroy();
       editorInstance = null;
     }
+    const container = document.querySelector("#editor-container");
+    let editorElement = document.querySelector("#editor");
+    if (!editorElement && container) {
+      editorElement = document.createElement("div");
+      editorElement.id = "editor";
+      container.appendChild(editorElement);
+    }
     const pluginsToLoad = [
       Essentials,
       Paragraph,
-      Markdown,
-      ClassicEditorUI
+      Markdown
     ];
     const toolbarItems = [];
     const addIfEnabled = (pluginKey, pluginClass, toolbarKey) => {
@@ -107692,7 +107698,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     addIfEnabled("sourceEditing", SourceEditing, "sourceEditing");
     addIfEnabled("findAndReplace", FindAndReplace, "findAndReplace");
     try {
-      editorInstance = await ClassicEditor.create(document.querySelector("#editor"), {
+      editorInstance = await ClassicEditor.create(editorElement, {
         licenseKey: "GPL",
         plugins: pluginsToLoad,
         toolbar: {
