@@ -107633,6 +107633,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   // web/src/main.js
   var editorInstance = null;
   var isProgrammaticChange = false;
+  var isToolbarExpanded = false;
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (editorInstance) {
       await editorInstance.destroy();
@@ -107703,7 +107704,18 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         plugins: pluginsToLoad,
         toolbar: {
           items: toolbarItems,
-          shouldNotGroupWhenFull: false
+          shouldNotGroupWhenFull: true
+        },
+        heading: {
+          options: [
+            { model: "paragraph", title: "Paragraph", class: "ck-heading_paragraph" },
+            { model: "heading1", view: "h1", title: "Heading 1", class: "ck-heading_heading1" },
+            { model: "heading2", view: "h2", title: "Heading 2", class: "ck-heading_heading2" },
+            { model: "heading3", view: "h3", title: "Heading 3", class: "ck-heading_heading3" },
+            { model: "heading4", view: "h4", title: "Heading 4", class: "ck-heading_heading4" },
+            { model: "heading5", view: "h5", title: "Heading 5", class: "ck-heading_heading5" },
+            { model: "heading6", view: "h6", title: "Heading 6", class: "ck-heading_heading6" }
+          ]
         },
         codeBlock: {
           languages: [
@@ -107737,22 +107749,39 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           window.AndroidNative.onContentChanged();
         }
       });
-      const topBar = document.querySelector(".ck-editor__top");
-      if (topBar && !document.querySelector("#bottom-app-actions")) {
-        const actionsDiv = document.createElement("div");
-        actionsDiv.id = "bottom-app-actions";
-        actionsDiv.innerHTML = `
-        <span id="file-title">Untitled.md</span>
-        <div class="action-btn-group">
-          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
-          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
-          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
-          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
-          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
-          <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
-        </div>
-      `;
-        topBar.prepend(actionsDiv);
+      const toolbarItemsContainer = document.querySelector(".ck-toolbar__items");
+      if (toolbarItemsContainer) {
+        if (!document.querySelector(".toolbar-app-actions")) {
+          const actionStrip = document.createElement("div");
+          actionStrip.className = "toolbar-app-actions";
+          actionStrip.innerHTML = `
+          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
+          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
+          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
+          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
+          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
+          <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
+        `;
+          toolbarItemsContainer.prepend(actionStrip);
+        }
+        if (!document.querySelector(".toolbar-toggle-btn")) {
+          const toggleBtn = document.createElement("button");
+          toggleBtn.className = "toolbar-toggle-btn";
+          toggleBtn.innerHTML = "\u27E8";
+          toggleBtn.title = "Toggle Toolbar";
+          toggleBtn.onclick = () => {
+            isToolbarExpanded = !isToolbarExpanded;
+            if (isToolbarExpanded) {
+              toolbarItemsContainer.classList.remove("toolbar-items-collapsed");
+              toggleBtn.innerHTML = "\u27E9";
+            } else {
+              toolbarItemsContainer.classList.add("toolbar-items-collapsed");
+              toggleBtn.innerHTML = "\u27E8";
+            }
+          };
+          toolbarItemsContainer.appendChild(toggleBtn);
+        }
+        toolbarItemsContainer.classList.add("toolbar-items-collapsed");
       }
       if (isInitialInit && window.AndroidNative && typeof window.AndroidNative.onEditorReady === "function") {
         window.AndroidNative.onEditorReady();
@@ -107834,17 +107863,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   };
   window.addEventListener("DOMContentLoaded", () => {
     initEditor([], true);
-    const fab = document.querySelector("#fab-toolbar-toggle");
-    if (fab) {
-      fab.addEventListener("click", () => {
-        const topBar = document.querySelector(".ck-editor__top");
-        if (topBar) {
-          topBar.classList.toggle("toolbar-collapsed");
-          const isCollapsed = topBar.classList.contains("toolbar-collapsed");
-          fab.textContent = isCollapsed ? "\u27E9" : "\u27E8";
-        }
-      });
-    }
   });
 })();
 /**

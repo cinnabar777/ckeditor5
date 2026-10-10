@@ -45,37 +45,60 @@
       position: relative;
     }
 
-    /* Main Editor Area */
+    #editor {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* CKEditor Custom Edge-to-Edge Styles */
     .ck-editor {
       display: flex;
-      flex-direction: column-reverse; /* Reverses order so toolbar is at bottom */
+      flex-direction: column-reverse; /* Places toolbar at the bottom */
       height: 100% !important;
       width: 100% !important;
       border: none !important;
       box-shadow: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
     .ck-editor__top {
       background: var(--toolbar-bg) !important;
       border: none !important;
       border-top: 1px solid var(--border-color) !important;
-      transition: max-height 0.2s ease, opacity 0.2s ease;
       z-index: 100;
-    }
-
-    .ck-editor__top.toolbar-collapsed {
-      display: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
     .ck-toolbar {
       background: var(--toolbar-bg) !important;
       border: none !important;
-      padding: 4px !important;
+      padding: 4px 8px !important;
+      margin: 0 !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
     }
 
     .ck-toolbar .ck-button,
     .ck-toolbar .ck-dropdown__button {
       color: var(--text-color) !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    /* Force Dropdown and Panel Popups to Open UPWARDS from Bottom Toolbar */
+    .ck-dropdown__panel {
+      bottom: 100% !important;
+      top: auto !important;
+      margin-bottom: 4px !important;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .ck-balloon-panel {
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5) !important;
     }
 
     .ck-editor__main {
@@ -83,11 +106,14 @@
       overflow-y: auto;
       height: 100% !important;
       background-color: var(--bg-color) !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
     .ck-content {
       min-height: 100% !important;
-      padding: 8px !important; /* Compact side padding */
+      padding: 8px 12px !important; /* Zero top margin, compact side padding */
+      margin: 0 !important;
       box-sizing: border-box;
       font-size: var(--body-font-size) !important;
       line-height: 1.6;
@@ -127,71 +153,52 @@
       border-color: #333333 !important;
     }
 
-    /* Web App Bar inside Bottom Toolbar */
-    #bottom-app-actions {
+    /* Toolbar Action Button Strip */
+    .toolbar-app-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      background-color: var(--toolbar-bg);
-      padding: 4px 8px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    #file-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-color);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      gap: 6px;
+      padding-right: 6px;
+      border-right: 1px solid var(--border-color);
       margin-right: 6px;
     }
 
-    .action-btn-group {
-      display: flex;
-      gap: 4px;
-    }
-
-    .action-btn {
+    .toolbar-app-btn {
       background: transparent;
-      border: 1px solid var(--border-color);
+      border: none;
       color: var(--text-color);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 4px 6px;
       cursor: pointer;
+      border-radius: 4px;
     }
 
-    .action-btn:active {
+    .toolbar-app-btn:active {
       background-color: var(--button-hover);
     }
 
-    /* Floating Toolbar Toggle Button */
-    #fab-toolbar-toggle {
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      width: 44px;
-      height: 44px;
-      border-radius: 22px;
-      background-color: #0288D1;
-      color: #ffffff;
-      border: none;
-      font-size: 20px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      z-index: 200;
+    /* Integrated Bottom Toolbar Toggle Button (replacing 3 dots) */
+    .toolbar-toggle-btn {
+      background: transparent !important;
+      border: none !important;
+      color: #0288D1 !important;
+      font-size: 18px !important;
+      font-weight: bold !important;
       cursor: pointer;
+      padding: 4px 8px !important;
+      margin-left: auto !important;
+    }
+
+    /* Collapsed Secondary Tools Row */
+    .ck-toolbar__items.toolbar-items-collapsed > *:nth-child(n+10):not(.toolbar-toggle-btn) {
+      display: none !important;
     }
   </style>
 </head>
 <body>
   <div id="editor-container">
     <div id="editor"></div>
-    <button id="fab-toolbar-toggle" title="Toggle Toolbar">⟨</button>
   </div>
   <script type="module" src="./src/main.js"></script>
 </body>
