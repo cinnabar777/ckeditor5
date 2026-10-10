@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CKEditor 5 Markdown Editor</title>
   <style>
+    :root {
+      --bg-color: #000000;
+      --text-color: #ffffff;
+      --toolbar-bg: #121212;
+      --border-color: #262626;
+      --button-hover: #1f1f1f;
+    }
+
+    body.light-theme {
+      --bg-color: #ffffff;
+      --text-color: #111111;
+      --toolbar-bg: #f8f9fa;
+      --border-color: #e0e0e0;
+      --button-hover: #e9ecef;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -12,15 +28,60 @@
       width: 100%;
       overflow: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #ffffff;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
+
     #editor-container {
       display: flex;
       flex-direction: column;
       height: 100vh;
       width: 100vw;
       box-sizing: border-box;
+      position: relative;
     }
+
+    /* Top Native Bar inside Web */
+    #native-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--toolbar-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 4px 8px;
+      z-index: 101;
+    }
+
+    #file-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 8px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .action-btn:active {
+      background-color: var(--button-hover);
+    }
+
+    /* CKEditor Custom Overrides */
     .ck-editor {
       display: flex;
       flex-direction: column;
@@ -28,30 +89,99 @@
       width: 100% !important;
       border: none !important;
     }
+
     .ck-editor__top {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: #f8f9fa;
+      background: var(--toolbar-bg) !important;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+      overflow: hidden;
     }
+
+    .ck-editor__top.toolbar-collapsed {
+      display: none !important;
+    }
+
+    .ck-toolbar {
+      background: var(--toolbar-bg) !important;
+      border: none !important;
+      border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    .ck-toolbar .ck-button,
+    .ck-toolbar .ck-dropdown__button {
+      color: var(--text-color) !important;
+    }
+
     .ck-editor__main {
       flex: 1;
       overflow-y: auto;
-      height: calc(100% - 40px) !important;
+      height: 100% !important;
+      background-color: var(--bg-color) !important;
     }
+
     .ck-content {
       min-height: 100% !important;
-      padding: 16px !important;
+      padding: 8px !important; /* Minimized side padding for maximum screen real estate */
       box-sizing: border-box;
       font-size: 16px;
       line-height: 1.6;
+      background-color: var(--bg-color) !important;
+      color: var(--text-color) !important;
+    }
+
+    /* Dark Mode CKEditor Specific Adjustments */
+    body:not(.light-theme) .ck.ck-reset_all,
+    body:not(.light-theme) .ck.ck-reset_all * {
+      color: #ffffff !important;
+    }
+
+    body:not(.light-theme) .ck-dropdown__panel,
+    body:not(.light-theme) .ck-list,
+    body:not(.light-theme) .ck-balloon-panel {
+      background: #181818 !important;
+      border-color: #333333 !important;
+    }
+
+    /* Floating Toolbar Toggle Button */
+    #fab-toolbar-toggle {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      background-color: #0288D1;
+      color: #ffffff;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 200;
+      cursor: pointer;
     }
   </style>
   <link rel="stylesheet" href="./bundle.css">
 </head>
 <body>
   <div id="editor-container">
+    <div id="native-action-bar">
+      <span id="file-title">Untitled.md</span>
+      <div class="action-btn-group">
+        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
+        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
+        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
+        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
+        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
+        <button class="action-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
+      </div>
+    </div>
     <div id="editor"></div>
+    <button id="fab-toolbar-toggle" title="Toggle Toolbar">⟨</button>
   </div>
   <script type="module" src="./bundle.js"></script>
 </body>

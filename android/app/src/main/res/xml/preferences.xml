@@ -2,6 +2,22 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory app:title="App Display &amp; Theme Settings">
+        <ListPreference
+            app:key="pref_app_theme"
+            app:title="App Theme"
+            app:summary="Select dark amoled or light mode"
+            app:entries="@array/pref_theme_entries"
+            app:entryValues="@array/pref_theme_values"
+            app:defaultValue="amoled" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_fullscreen"
+            app:title="Full Screen Mode"
+            app:summary="Hide native app bar for maximum screen real estate"
+            app:defaultValue="true" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Image Settings">
         <ListPreference
             app:key="pref_image_mode"

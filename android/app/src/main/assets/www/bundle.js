@@ -107758,6 +107758,19 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       if (!editorInstance) return;
       editorInstance.execute("insertImage", { source: imageUrl, alt: altText });
     },
+    setTheme: function(themeName) {
+      if (themeName === "light") {
+        document.body.classList.add("light-theme");
+      } else {
+        document.body.classList.remove("light-theme");
+      }
+    },
+    setDocumentTitle: function(title) {
+      const titleEl = document.querySelector("#file-title");
+      if (titleEl) {
+        titleEl.textContent = title;
+      }
+    },
     configurePlugins: function(disabledPluginsJson) {
       let disabledPlugins = [];
       try {
@@ -107783,6 +107796,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   };
   window.addEventListener("DOMContentLoaded", () => {
     initEditor([], true);
+    const fab = document.querySelector("#fab-toolbar-toggle");
+    if (fab) {
+      fab.addEventListener("click", () => {
+        const topBar = document.querySelector(".ck-editor__top");
+        if (topBar) {
+          topBar.classList.toggle("toolbar-collapsed");
+          const isCollapsed = topBar.classList.contains("toolbar-collapsed");
+          fab.textContent = isCollapsed ? "\u27E9" : "\u27E8";
+        }
+      });
+    }
   });
 })();
 /**

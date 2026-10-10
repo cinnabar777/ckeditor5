@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     private val settingsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (isEditorReady) {
             applyPluginPreferences()
+            applyThemeAndFullscreenPreferences()
         }
     }
 
@@ -115,7 +116,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateTitle() {
         val dirtyIndicator = if (isDirty) " *" else ""
-        supportActionBar?.title = "$currentFileName$dirtyIndicator"
+        val titleText = "$currentFileName$dirtyIndicator"
+        supportActionBar?.title = titleText
+        val escapedTitle = JSONObjectWrapper.quote(titleText)
+        webView.evaluateJavascript("window.editorBridge.setDocumentTitle($escapedTitle);", null)
+    }
+
+    private fun applyThemeAndFullscreenPreferences() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val fullscreen = prefs.getBoolean("pref_fullscreen", true)
+        val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
+
+        val appBarLayout = findViewById<com.google.android.material.appbar.AppBarLayout>(R.id.toolbar)?.parent as? View
+        if (fullscreen) {
+            appBarLayout?.visibility = View.GONE
+        } else {
+            appBarLayout?.visibility = View.VISIBLE
+        }
+
+        val escapedTheme = JSONObjectWrapper.quote(themeMode)
+        webView.evaluateJavascript("window.editorBridge.setTheme($escapedTheme);", null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -338,6 +358,21 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 isEditorReady = true
                 applyPluginPreferences()
+                applyThemeAndFullscreenPreferences()
+            }
+        }
+
+        @JavascriptInterface
+        fun onNativeAction(action: String) {
+            runOnUiThread {
+                when (action) {
+                    "new" -> handleNewFile()
+                    "open" -> handleOpenFile()
+                    "save" -> handleSaveFile()
+                    "save_as" -> handleSaveAsFile()
+                    "image" -> handleInsertImage()
+                    "settings" -> settingsLauncher.launch(android.content.Intent(this@MainActivity, SettingsActivity::class.java))
+                }
             }
         }
     }
