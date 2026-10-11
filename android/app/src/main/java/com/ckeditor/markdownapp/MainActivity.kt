@@ -332,6 +332,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun captureWidgetSnapshot() {
+        val uri = currentFileUri ?: return
+        val path = WidgetSnapshotHelper.captureAndSaveSnapshot(this, webView, currentFileName)
+        if (path != null) {
+            WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
+            NoteWidgetProvider.updateAllWidgets(this)
+        }
+    }
+
     private fun handleSaveAsFile() {
         createDocumentLauncher.launch(currentFileName)
     }
@@ -349,6 +358,7 @@ class MainActivity : AppCompatActivity() {
                 currentFileName = getFileNameFromUri(uri)
                 isDirty = false
                 updateTitle()
+                captureWidgetSnapshot()
                 Toast.makeText(this, "File saved successfully", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(this, "Failed to save file: ${e.localizedMessage}", Toast.LENGTH_LONG).show()

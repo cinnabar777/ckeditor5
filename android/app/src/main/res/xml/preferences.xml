@@ -86,6 +86,17 @@
             app:defaultValue="picker" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Home Screen Widget Settings">
+        <Preference
+            app:key="pref_widget_manage"
+            app:title="Manage Widget Notes"
+            app:summary="Add, reorder, or remove Markdown notes for the Home Screen Widget">
+            <intent
+                android:targetPackage="com.ckeditor.markdownapp"
+                android:targetClass="com.ckeditor.markdownapp.WidgetSettingsActivity" />
+        </Preference>
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
         <EditTextPreference
             app:key="pref_hotkey_new"

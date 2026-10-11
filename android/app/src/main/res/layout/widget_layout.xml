@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#121212"
+    android:padding="4dp">
+
+    <!-- Top Widget Navigation Toolbar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="#1E1E1E">
+
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CKE5 Notes"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <Button
+            android:id="@+id/widget_btn_prev"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="◀"
+            android:textSize="12sp"
+            android:textColor="#0288D1"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <Button
+            android:id="@+id/widget_btn_next"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="▶"
+            android:textSize="12sp"
+            android:textColor="#0288D1"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <Button
+            android:id="@+id/widget_btn_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="⚙"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:background="?android:attr/selectableItemBackground" />
+
+    </LinearLayout>
+
+    <!-- AdapterViewFlipper for horizontal note switching -->
+    <AdapterViewFlipper
+        android:id="@+id/widget_flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:autoStart="false"
+        android:loopViews="true" />
+
+    <TextView
+        android:id="@+id/widget_empty_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No Widget Notes Configured\nTap ⚙ to add notes"
+        android:textColor="#888888"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+</LinearLayout>
