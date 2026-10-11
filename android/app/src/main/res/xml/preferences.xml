@@ -86,7 +86,7 @@
             app:defaultValue="picker" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Custom Keyboard Hotkeys">
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
         <EditTextPreference
             app:key="pref_hotkey_new"
             app:title="New Document Shortcut"
@@ -128,6 +128,137 @@
             app:title="Toggle Bottom Toolbar Shortcut"
             app:summary="Key combination (e.g. ctrl+t)"
             app:defaultValue="ctrl+t" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Formatting &amp; Tools)">
+        <EditTextPreference
+            app:key="pref_hotkey_bold"
+            app:title="Bold Shortcut"
+            app:defaultValue="ctrl+b" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_italic"
+            app:title="Italic Shortcut"
+            app:defaultValue="ctrl+i" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_strikethrough"
+            app:title="Strikethrough Shortcut"
+            app:defaultValue="ctrl+shift+x" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_code"
+            app:title="Inline Code Shortcut"
+            app:defaultValue="ctrl+e" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_link"
+            app:title="Link Shortcut"
+            app:defaultValue="ctrl+k" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_blockQuote"
+            app:title="Block Quote Shortcut"
+            app:defaultValue="ctrl+shift+q" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_codeBlock"
+            app:title="Code Block Shortcut"
+            app:defaultValue="ctrl+shift+c" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_bulletedList"
+            app:title="Bulleted List Shortcut"
+            app:defaultValue="ctrl+shift+8" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_numberedList"
+            app:title="Numbered List Shortcut"
+            app:defaultValue="ctrl+shift+7" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_todoList"
+            app:title="To-Do List Shortcut"
+            app:defaultValue="ctrl+shift+l" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_horizontalLine"
+            app:title="Horizontal Line Shortcut"
+            app:defaultValue="ctrl+shift+h" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_findAndReplace"
+            app:title="Find &amp; Replace Shortcut"
+            app:defaultValue="ctrl+f" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_sourceEditing"
+            app:title="Source Code View Shortcut"
+            app:defaultValue="ctrl+shift+u" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Headings)">
+        <EditTextPreference
+            app:key="pref_hotkey_heading_p"
+            app:title="Paragraph / Normal Text Shortcut"
+            app:defaultValue="ctrl+alt+0" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_heading_1"
+            app:title="Heading 1 Shortcut"
+            app:defaultValue="ctrl+alt+1" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_heading_2"
+            app:title="Heading 2 Shortcut"
+            app:defaultValue="ctrl+alt+2" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_heading_3"
+            app:title="Heading 3 Shortcut"
+            app:defaultValue="ctrl+alt+3" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_heading_4"
+            app:title="Heading 4 Shortcut"
+            app:defaultValue="ctrl+alt+4" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_heading_5"
+            app:title="Heading 5 Shortcut"
+            app:defaultValue="ctrl+alt+5" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_heading_6"
+            app:title="Heading 6 Shortcut"
+            app:defaultValue="ctrl+alt+6" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers)">
+        <EditTextPreference
+            app:key="pref_hotkey_highlight_yellow"
+            app:title="Yellow Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+y" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_highlight_green"
+            app:title="Green Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+g" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_highlight_pink"
+            app:title="Pink Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+p" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_highlight_blue"
+            app:title="Blue Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+b" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_highlight_remove"
+            app:title="Remove Highlight Shortcut"
+            app:defaultValue="ctrl+alt+r" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Editor Plugins &amp; Toolbar Tools">

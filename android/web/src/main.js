@@ -55,7 +55,32 @@ let customHotkeys = {
   save_as: 'ctrl+shift+s',
   image: 'ctrl+shift+i',
   settings: 'ctrl+,',
-  toggle_toolbar: 'ctrl+t'
+  toggle_toolbar: 'ctrl+t',
+  bold: 'ctrl+b',
+  italic: 'ctrl+i',
+  strikethrough: 'ctrl+shift+x',
+  code: 'ctrl+e',
+  link: 'ctrl+k',
+  blockQuote: 'ctrl+shift+q',
+  codeBlock: 'ctrl+shift+c',
+  bulletedList: 'ctrl+shift+8',
+  numberedList: 'ctrl+shift+7',
+  todoList: 'ctrl+shift+l',
+  horizontalLine: 'ctrl+shift+h',
+  findAndReplace: 'ctrl+f',
+  sourceEditing: 'ctrl+shift+u',
+  heading_p: 'ctrl+alt+0',
+  heading_1: 'ctrl+alt+1',
+  heading_2: 'ctrl+alt+2',
+  heading_3: 'ctrl+alt+3',
+  heading_4: 'ctrl+alt+4',
+  heading_5: 'ctrl+alt+5',
+  heading_6: 'ctrl+alt+6',
+  highlight_yellow: 'ctrl+alt+y',
+  highlight_green: 'ctrl+alt+g',
+  highlight_pink: 'ctrl+alt+p',
+  highlight_blue: 'ctrl+alt+b',
+  highlight_remove: 'ctrl+alt+r'
 };
 
 async function initEditor(disabledPlugins = [], isInitialInit = false) {
@@ -283,6 +308,7 @@ function parseAndMatchHotkey(event, shortcutString) {
 
 function setupKeyboardShortcuts() {
   window.addEventListener('keydown', (e) => {
+    // Actions
     if (parseAndMatchHotkey(e, customHotkeys.new)) {
       e.preventDefault();
       window.AndroidNative && window.AndroidNative.onNativeAction('new');
@@ -304,6 +330,48 @@ function setupKeyboardShortcuts() {
     } else if (parseAndMatchHotkey(e, customHotkeys.toggle_toolbar)) {
       e.preventDefault();
       toggleBottomToolbar();
+    }
+
+    // Formatting Commands
+    else if (editorInstance) {
+      const exec = (cmdName, options) => {
+        e.preventDefault();
+        try {
+          editorInstance.execute(cmdName, options);
+        } catch (err) {
+          console.error(`Command ${cmdName} failed:`, err);
+        }
+      };
+
+      if (parseAndMatchHotkey(e, customHotkeys.bold)) exec('bold');
+      else if (parseAndMatchHotkey(e, customHotkeys.italic)) exec('italic');
+      else if (parseAndMatchHotkey(e, customHotkeys.strikethrough)) exec('strikethrough');
+      else if (parseAndMatchHotkey(e, customHotkeys.code)) exec('code');
+      else if (parseAndMatchHotkey(e, customHotkeys.link)) exec('link');
+      else if (parseAndMatchHotkey(e, customHotkeys.blockQuote)) exec('blockQuote');
+      else if (parseAndMatchHotkey(e, customHotkeys.codeBlock)) exec('codeBlock');
+      else if (parseAndMatchHotkey(e, customHotkeys.bulletedList)) exec('bulletedList');
+      else if (parseAndMatchHotkey(e, customHotkeys.numberedList)) exec('numberedList');
+      else if (parseAndMatchHotkey(e, customHotkeys.todoList)) exec('todoList');
+      else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) exec('horizontalLine');
+      else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) exec('findAndReplace');
+      else if (parseAndMatchHotkey(e, customHotkeys.sourceEditing)) exec('sourceEditing');
+
+      // Headings
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_p)) exec('heading', { value: 'paragraph' });
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_1)) exec('heading', { value: 'heading1' });
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_2)) exec('heading', { value: 'heading2' });
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_3)) exec('heading', { value: 'heading3' });
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_4)) exec('heading', { value: 'heading4' });
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_5)) exec('heading', { value: 'heading5' });
+      else if (parseAndMatchHotkey(e, customHotkeys.heading_6)) exec('heading', { value: 'heading6' });
+
+      // Highlight Markers
+      else if (parseAndMatchHotkey(e, customHotkeys.highlight_yellow)) exec('highlight', { value: 'yellowMarker' });
+      else if (parseAndMatchHotkey(e, customHotkeys.highlight_green)) exec('highlight', { value: 'greenMarker' });
+      else if (parseAndMatchHotkey(e, customHotkeys.highlight_pink)) exec('highlight', { value: 'pinkMarker' });
+      else if (parseAndMatchHotkey(e, customHotkeys.highlight_blue)) exec('highlight', { value: 'blueMarker' });
+      else if (parseAndMatchHotkey(e, customHotkeys.highlight_remove)) exec('highlight', { value: null });
     }
   });
 }

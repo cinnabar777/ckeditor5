@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             null
         )
 
-        // Read and pass custom hotkey preferences
+        // Read and pass all custom hotkey preferences
         val hotkeys = mapOf(
             "new" to prefs.getString("pref_hotkey_new", "ctrl+n"),
             "open" to prefs.getString("pref_hotkey_open", "ctrl+o"),
@@ -182,7 +182,32 @@ class MainActivity : AppCompatActivity() {
             "save_as" to prefs.getString("pref_hotkey_save_as", "ctrl+shift+s"),
             "image" to prefs.getString("pref_hotkey_image", "ctrl+shift+i"),
             "settings" to prefs.getString("pref_hotkey_settings", "ctrl+,"),
-            "toggle_toolbar" to prefs.getString("pref_hotkey_toggle_toolbar", "ctrl+t")
+            "toggle_toolbar" to prefs.getString("pref_hotkey_toggle_toolbar", "ctrl+t"),
+            "bold" to prefs.getString("pref_hotkey_bold", "ctrl+b"),
+            "italic" to prefs.getString("pref_hotkey_italic", "ctrl+i"),
+            "strikethrough" to prefs.getString("pref_hotkey_strikethrough", "ctrl+shift+x"),
+            "code" to prefs.getString("pref_hotkey_code", "ctrl+e"),
+            "link" to prefs.getString("pref_hotkey_link", "ctrl+k"),
+            "blockQuote" to prefs.getString("pref_hotkey_blockQuote", "ctrl+shift+q"),
+            "codeBlock" to prefs.getString("pref_hotkey_codeBlock", "ctrl+shift+c"),
+            "bulletedList" to prefs.getString("pref_hotkey_bulletedList", "ctrl+shift+8"),
+            "numberedList" to prefs.getString("pref_hotkey_numberedList", "ctrl+shift+7"),
+            "todoList" to prefs.getString("pref_hotkey_todoList", "ctrl+shift+l"),
+            "horizontalLine" to prefs.getString("pref_hotkey_horizontalLine", "ctrl+shift+h"),
+            "findAndReplace" to prefs.getString("pref_hotkey_findAndReplace", "ctrl+f"),
+            "sourceEditing" to prefs.getString("pref_hotkey_sourceEditing", "ctrl+shift+u"),
+            "heading_p" to prefs.getString("pref_hotkey_heading_p", "ctrl+alt+0"),
+            "heading_1" to prefs.getString("pref_hotkey_heading_1", "ctrl+alt+1"),
+            "heading_2" to prefs.getString("pref_hotkey_heading_2", "ctrl+alt+2"),
+            "heading_3" to prefs.getString("pref_hotkey_heading_3", "ctrl+alt+3"),
+            "heading_4" to prefs.getString("pref_hotkey_heading_4", "ctrl+alt+4"),
+            "heading_5" to prefs.getString("pref_hotkey_heading_5", "ctrl+alt+5"),
+            "heading_6" to prefs.getString("pref_hotkey_heading_6", "ctrl+alt+6"),
+            "highlight_yellow" to prefs.getString("pref_hotkey_highlight_yellow", "ctrl+alt+y"),
+            "highlight_green" to prefs.getString("pref_hotkey_highlight_green", "ctrl+alt+g"),
+            "highlight_pink" to prefs.getString("pref_hotkey_highlight_pink", "ctrl+alt+p"),
+            "highlight_blue" to prefs.getString("pref_hotkey_highlight_blue", "ctrl+alt+b"),
+            "highlight_remove" to prefs.getString("pref_hotkey_highlight_remove", "ctrl+alt+r")
         )
         val hotkeysJson = org.json.JSONObject(hotkeys).toString()
         val escapedHotkeys = JSONObjectWrapper.quote(hotkeysJson)
