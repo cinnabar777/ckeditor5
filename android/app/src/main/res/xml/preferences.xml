@@ -109,6 +109,11 @@
             app:defaultValue="true" />
 
         <SwitchPreferenceCompat
+            app:key="pref_plugin_highlight"
+            app:title="Highlight / Markers"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
             app:key="pref_plugin_code"
             app:title="Inline Code"
             app:defaultValue="true" />

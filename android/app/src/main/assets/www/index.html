@@ -246,15 +246,36 @@
       box-sizing: border-box !important;
     }
 
-    /* Dark Mode CKEditor Specific Adjustments */
+    /* Dark Mode CKEditor Forms & Find/Replace Panel Adjustments */
+    body:not(.light-theme) .ck-find-and-replace-form,
+    body:not(.light-theme) .ck-form,
+    body:not(.light-theme) .ck-balloon-panel,
+    body:not(.light-theme) .ck-dropdown__panel {
+      background-color: #1e1e1e !important;
+      color: #ffffff !important;
+      border-color: #333333 !important;
+    }
+
+    body:not(.light-theme) .ck-labeled-field-view,
+    body:not(.light-theme) .ck-labeled-field-view *,
+    body:not(.light-theme) .ck-label,
+    body:not(.light-theme) .ck-input {
+      background-color: #2a2a2a !important;
+      color: #ffffff !important;
+      border-color: #444444 !important;
+    }
+
+    body:not(.light-theme) .ck-input::placeholder {
+      color: #888888 !important;
+    }
+
     body:not(.light-theme) .ck.ck-reset_all,
     body:not(.light-theme) .ck.ck-reset_all * {
       color: #ffffff !important;
     }
 
     body:not(.light-theme) .ck-dropdown__panel,
-    body:not(.light-theme) .ck-list,
-    body:not(.light-theme) .ck-balloon-panel {
+    body:not(.light-theme) .ck-list {
       background: #181818 !important;
       border-color: #333333 !important;
     }

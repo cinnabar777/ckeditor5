@@ -35,11 +35,14 @@ import {
   Undo,
   SourceEditing,
   HtmlEmbed,
-  Font
+  Font,
+  Highlight
 } from 'ckeditor5';
 
 import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
 import '../../../packages/ckeditor5-ui/theme/index-editor.css';
+import '../../../packages/ckeditor5-highlight/theme/index-editor.css';
+import '../../../packages/ckeditor5-highlight/theme/index-content.css';
 
 let editorInstance = null;
 let isProgrammaticChange = false;
@@ -87,6 +90,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
   addIfEnabled('bold', Bold, 'bold');
   addIfEnabled('italic', Italic, 'italic');
   addIfEnabled('strikethrough', Strikethrough, 'strikethrough');
+  addIfEnabled('highlight', Highlight, 'highlight');
   addIfEnabled('code', Code, 'code');
   if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== '|') {
     toolbarItems.push('|');

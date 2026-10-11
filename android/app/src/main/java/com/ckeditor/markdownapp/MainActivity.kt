@@ -338,7 +338,7 @@ class MainActivity : AppCompatActivity() {
         val disabledPlugins = mutableListOf<String>()
 
         val keys = listOf(
-            "heading", "bold", "italic", "strikethrough", "code", "link",
+            "heading", "bold", "italic", "strikethrough", "highlight", "code", "link",
             "image", "blockQuote", "codeBlock", "table", "list",
             "todoList", "horizontalLine", "sourceEditing", "findAndReplace"
         )

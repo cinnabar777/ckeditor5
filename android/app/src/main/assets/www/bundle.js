@@ -42751,6 +42751,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   // ../packages/ckeditor5-icons/theme/icons/list-style-arabic-indic.svg
   var list_style_arabic_indic_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill-opacity=".163" d="M35 29a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1zm0-9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H18a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/><path d="M14.88 15v-1.235h-1.234V15zm0 10v-1.235h-1.234V25zm0 9v-1.235h-1.234V34z"/><text x="9" y="15" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle">\u0661</text><text x="9" y="25" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle">\u0662</text><text x="9" y="34" font-family="sans-serif" font-size="8" font-weight="bold" text-anchor="middle">\u0663</text></svg>';
 
+  // ../packages/ckeditor5-icons/theme/icons/marker.svg
+  var marker_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10.798 1.59 3.002 12.875l1.895 1.852 2.521 1.402 6.997-12.194z" class="ck-icon__fill"/><path d="m2.556 16.727.234-.348q-.445-.226-.498-.426-.054-.206.115-.837.14-.375.169-.595a4.5 4.5 0 0 0 0-.725q-.313-.931-.284-1.26.03-.327.475-.862l6.77-9.414q.808-1.365 3.199.18 2.39 1.549 1.784 2.686l-5.877 10.36q-.237.618-.526.782-.29.163-1.232.21-.543.196-.738.318t-.526.47q-.44.397-.632.397-.143 0-.524-.226l-.31.41zm-.279.415 1.575 1.103-.392.515H1.19zm8.1-13.656-4.953 6.9L8.75 12.57l4.247-7.574q.263-.375-1.092-1.192-1.354-.819-1.528-.32zM8.244 18.5 9.59 17h9.406v1.5z"/></svg>';
+
   // ../packages/ckeditor5-icons/theme/icons/next-arrow.svg
   var next_arrow_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M8.537 14.813a.888.888 0 1 1-1.254-1.255L10.84 10 7.283 6.442a.888.888 0 1 1 1.254-1.255L12.74 9.39a.888.888 0 0 1-.16 1.382z"/></svg>';
 
@@ -42798,6 +42801,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
 
   // ../packages/ckeditor5-icons/theme/icons/pencil.svg
   var pencil_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m7.3 17.37-.061.088a1.52 1.52 0 0 1-.934.535l-4.178.663-.806-4.153a1.5 1.5 0 0 1 .187-1.058l.056-.086L8.77 2.639c.958-1.351 2.803-1.076 4.296-.03 1.497 1.047 2.387 2.693 1.433 4.055zM9.14 4.728l-5.545 8.346 3.277 2.294 5.544-8.346zM6.07 16.512l-3.276-2.295.53 2.73zM9.994 3.506 13.271 5.8c.316-.452-.16-1.333-1.065-1.966-.905-.634-1.895-.78-2.212-.328M8 18.5 9.375 17H19v1.5z"/></svg>';
+
+  // ../packages/ckeditor5-icons/theme/icons/pen.svg
+  var pen_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10.126 2.268 2.002 13.874l1.895 1.852 2.521 1.402L14.47 5.481l-1.543-2.568z" class="ck-icon__fill"/><path d="m4.5 18.088-2.645-1.852-.04-2.95-.006-.005.006-.008v-.025l.011.008L8.73 2.97q.249-.348.567-.557l-1.212.308L4.604 7.9l-.83-.558 3.694-5.495 2.708-.69 1.65 1.145.046.018.85-1.216 2.16 1.512-.856 1.222c.828.967 1.144 2.141.432 3.158L7.55 17.286l.006.005zm-.634.166-1.976.516-.026-1.918zM9.968 3.817l-.006-.004-6.123 9.184 3.277 2.294 6.108-9.162.005.003c.317-.452-.16-1.332-1.064-1.966-.891-.624-1.865-.776-2.197-.349M8.245 18.5 9.59 17h9.406v1.5z"/></svg>';
 
   // ../packages/ckeditor5-icons/theme/icons/pilcrow.svg
   var pilcrow_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6.999 2H15a1 1 0 0 1 0 2h-1.004v13a1 1 0 1 1-2 0V4H8.999v13a1 1 0 1 1-2 0v-7A4 4 0 0 1 3 6a4 4 0 0 1 3.999-4"/></svg>';
@@ -76326,6 +76332,416 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
+  // ../packages/ckeditor5-highlight/src/highlightcommand.ts
+  var HighlightCommand = class extends Command {
+    /**
+     * @inheritDoc
+     */
+    refresh() {
+      const model = this.editor.model;
+      const doc = model.document;
+      this.value = doc.selection.getAttribute("highlight");
+      this.isEnabled = model.schema.checkAttributeInSelection(doc.selection, "highlight");
+    }
+    /**
+     * Executes the command.
+     *
+     * @param options Options for the executed command.
+     * @param options.value The value to apply.
+     *
+     * @fires execute
+     */
+    execute(options = {}) {
+      const model = this.editor.model;
+      const document4 = model.document;
+      const selection = document4.selection;
+      const highlighter = options.value;
+      model.change((writer) => {
+        if (selection.isCollapsed) {
+          const position3 = selection.getFirstPosition();
+          if (selection.hasAttribute("highlight")) {
+            const isSameHighlight = (value) => {
+              return value.item.hasAttribute("highlight") && value.item.getAttribute("highlight") === this.value;
+            };
+            const highlightStart = position3.getLastMatchingPosition(isSameHighlight, { direction: "backward" });
+            const highlightEnd = position3.getLastMatchingPosition(isSameHighlight);
+            const highlightRange = writer.createRange(highlightStart, highlightEnd);
+            if (!highlighter || this.value === highlighter) {
+              if (!position3.isEqual(highlightEnd)) {
+                writer.removeAttribute("highlight", highlightRange);
+              }
+              writer.removeSelectionAttribute("highlight");
+            } else {
+              if (!position3.isEqual(highlightEnd)) {
+                writer.setAttribute("highlight", highlighter, highlightRange);
+              }
+              writer.setSelectionAttribute("highlight", highlighter);
+            }
+          } else if (highlighter) {
+            writer.setSelectionAttribute("highlight", highlighter);
+          }
+        } else {
+          const ranges = model.schema.getValidRanges(selection.getRanges(), "highlight", {
+            includeEmptyRanges: true
+          });
+          for (const range of ranges) {
+            let itemOrRange = range;
+            let attributeKey = "highlight";
+            if (range.isCollapsed) {
+              itemOrRange = range.start.parent;
+              attributeKey = ModelDocumentSelection._getStoreAttributeKey("highlight");
+            }
+            if (highlighter) {
+              writer.setAttribute(attributeKey, highlighter, itemOrRange);
+            } else {
+              writer.removeAttribute(attributeKey, itemOrRange);
+            }
+          }
+        }
+      });
+    }
+  };
+
+  // ../packages/ckeditor5-highlight/src/highlightediting.ts
+  var HighlightEditing = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "HighlightEditing";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    constructor(editor) {
+      super(editor);
+      editor.config.define("highlight", {
+        options: [
+          {
+            model: "yellowMarker",
+            class: "marker-yellow",
+            title: "Yellow marker",
+            color: "var(--ck-content-highlight-marker-yellow)",
+            type: "marker"
+          },
+          {
+            model: "greenMarker",
+            class: "marker-green",
+            title: "Green marker",
+            color: "var(--ck-content-highlight-marker-green)",
+            type: "marker"
+          },
+          {
+            model: "pinkMarker",
+            class: "marker-pink",
+            title: "Pink marker",
+            color: "var(--ck-content-highlight-marker-pink)",
+            type: "marker"
+          },
+          {
+            model: "blueMarker",
+            class: "marker-blue",
+            title: "Blue marker",
+            color: "var(--ck-content-highlight-marker-blue)",
+            type: "marker"
+          },
+          {
+            model: "redPen",
+            class: "pen-red",
+            title: "Red pen",
+            color: "var(--ck-content-highlight-pen-red)",
+            type: "pen"
+          },
+          {
+            model: "greenPen",
+            class: "pen-green",
+            title: "Green pen",
+            color: "var(--ck-content-highlight-pen-green)",
+            type: "pen"
+          }
+        ]
+      });
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      editor.model.schema.extend("$text", { allowAttributes: "highlight" });
+      const options = editor.config.get("highlight.options");
+      editor.conversion.attributeToElement(_buildDefinition(options));
+      editor.commands.add("highlight", new HighlightCommand(editor));
+    }
+  };
+  function _buildDefinition(options) {
+    const definition3 = {
+      model: {
+        key: "highlight",
+        values: []
+      },
+      view: {}
+    };
+    for (const option2 of options) {
+      definition3.model.values.push(option2.model);
+      definition3.view[option2.model] = {
+        name: "mark",
+        classes: option2.class
+      };
+    }
+    return definition3;
+  }
+
+  // ../packages/ckeditor5-highlight/src/highlightui.ts
+  var HighlightUI = class extends Plugin {
+    /**
+     * Returns the localized option titles provided by the plugin.
+     *
+     * The following localized titles corresponding with default
+     * {@link module:highlight/highlightconfig~HighlightConfig#options} are available:
+     *
+     * * `'Yellow marker'`,
+     * * `'Green marker'`,
+     * * `'Pink marker'`,
+     * * `'Blue marker'`,
+     * * `'Red pen'`,
+     * * `'Green pen'`.
+     */
+    get localizedOptionTitles() {
+      const t = this.editor.t;
+      return {
+        "Yellow marker": t("Yellow marker"),
+        "Green marker": t("Green marker"),
+        "Pink marker": t("Pink marker"),
+        "Blue marker": t("Blue marker"),
+        "Red pen": t("Red pen"),
+        "Green pen": t("Green pen")
+      };
+    }
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "HighlightUI";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const options = this.editor.config.get("highlight.options");
+      for (const option2 of options) {
+        this._addHighlighterButton(option2);
+      }
+      this._addRemoveHighlightButton();
+      this._addDropdown(options);
+      this._addMenuBarButton(options);
+    }
+    /**
+     * Creates the "Remove highlight" button.
+     */
+    _addRemoveHighlightButton() {
+      const t = this.editor.t;
+      const command = this.editor.commands.get("highlight");
+      this._addButton("removeHighlight", t("Remove highlight"), eraser_default, null, (button) => {
+        button.bind("isEnabled").to(command, "isEnabled");
+      });
+    }
+    /**
+     * Creates a toolbar button from the provided highlight option.
+     */
+    _addHighlighterButton(option2) {
+      const command = this.editor.commands.get("highlight");
+      this._addButton("highlight:" + option2.model, option2.title, getIconForType(option2.type), option2.model, decorateHighlightButton);
+      function decorateHighlightButton(button) {
+        button.bind("isEnabled").to(command, "isEnabled");
+        button.bind("isOn").to(command, "value", (value) => value === option2.model);
+        button.iconView.fillColor = option2.color;
+        button.isToggleable = true;
+      }
+    }
+    /**
+     * Internal method for creating highlight buttons.
+     *
+     * @param name The name of the button.
+     * @param label The label for the button.
+     * @param icon The button icon.
+     * @param value The `value` property passed to the executed command.
+     * @param decorateButton A callback getting ButtonView instance so that it can be further customized.
+     */
+    _addButton(name, label, icon, value, decorateButton) {
+      const editor = this.editor;
+      editor.ui.componentFactory.add(name, (locale) => {
+        const buttonView = new ButtonView(locale);
+        const localized = this.localizedOptionTitles[label] ? this.localizedOptionTitles[label] : label;
+        buttonView.set({
+          label: localized,
+          icon,
+          tooltip: true
+        });
+        buttonView.on("execute", () => {
+          editor.execute("highlight", { value });
+          editor.editing.view.focus();
+        });
+        decorateButton(buttonView);
+        return buttonView;
+      });
+    }
+    /**
+     * Creates the split button dropdown UI from the provided highlight options.
+     */
+    _addDropdown(options) {
+      const editor = this.editor;
+      const t = editor.t;
+      const componentFactory = editor.ui.componentFactory;
+      const startingHighlighter = options[0];
+      const optionsMap = options.reduce((retVal, option2) => {
+        retVal[option2.model] = option2;
+        return retVal;
+      }, {});
+      componentFactory.add("highlight", (locale) => {
+        const command = editor.commands.get("highlight");
+        const dropdownView = createDropdown(locale, SplitButtonView);
+        const splitButtonView = dropdownView.buttonView;
+        splitButtonView.set({
+          label: t("Highlight"),
+          tooltip: true,
+          // Holds last executed highlighter.
+          lastExecuted: startingHighlighter.model,
+          // Holds current highlighter to execute (might be different then last used).
+          commandValue: startingHighlighter.model,
+          isToggleable: true
+        });
+        splitButtonView.bind("icon").to(command, "value", (value) => getIconForType(getActiveOption(value, "type")));
+        splitButtonView.bind("color").to(command, "value", (value) => getActiveOption(value, "color"));
+        splitButtonView.bind("commandValue").to(command, "value", (value) => getActiveOption(value, "model"));
+        splitButtonView.bind("isOn").to(command, "value", (value) => !!value);
+        splitButtonView.delegate("execute").to(dropdownView);
+        const buttonsCreator = () => {
+          const buttons = options.map((option2) => {
+            const buttonView = componentFactory.create("highlight:" + option2.model);
+            this.listenTo(buttonView, "execute", () => {
+              dropdownView.buttonView.set({ lastExecuted: option2.model });
+            });
+            return buttonView;
+          });
+          buttons.push(new ToolbarSeparatorView());
+          buttons.push(componentFactory.create("removeHighlight"));
+          return buttons;
+        };
+        dropdownView.bind("isEnabled").to(command, "isEnabled");
+        addToolbarToDropdown(dropdownView, buttonsCreator, {
+          enableActiveItemFocusOnDropdownOpen: true,
+          ariaLabel: t("Text highlight toolbar")
+        });
+        bindToolbarIconStyleToActiveColor(dropdownView);
+        splitButtonView.on("execute", () => {
+          editor.execute("highlight", { value: splitButtonView.commandValue });
+        });
+        this.listenTo(dropdownView, "execute", () => {
+          editor.editing.view.focus();
+        });
+        function getActiveOption(current, key2) {
+          const whichHighlighter = !current || current === splitButtonView.lastExecuted ? splitButtonView.lastExecuted : current;
+          return optionsMap[whichHighlighter][key2];
+        }
+        return dropdownView;
+      });
+    }
+    /**
+     * Creates the menu bar button for highlight including submenu with available options.
+     */
+    _addMenuBarButton(options) {
+      const editor = this.editor;
+      const t = editor.t;
+      const command = editor.commands.get("highlight");
+      editor.ui.componentFactory.add("menuBar:highlight", (locale) => {
+        const menuView = new MenuBarMenuView(locale);
+        menuView.buttonView.set({
+          label: t("Highlight"),
+          icon: getIconForType("marker")
+        });
+        menuView.bind("isEnabled").to(command);
+        menuView.buttonView.iconView.fillColor = "transparent";
+        const listView = new MenuBarMenuListView(locale);
+        for (const option2 of options) {
+          const listItemView2 = new MenuBarMenuListItemView(locale, menuView);
+          const buttonView2 = new MenuBarMenuListItemButtonView(locale);
+          buttonView2.set({
+            label: option2.title,
+            icon: getIconForType(option2.type),
+            role: "menuitemradio",
+            isToggleable: true
+          });
+          buttonView2.iconView.fillColor = option2.color;
+          buttonView2.delegate("execute").to(menuView);
+          buttonView2.bind("isOn").to(command, "value", (value) => value === option2.model);
+          buttonView2.on("execute", () => {
+            editor.execute("highlight", { value: option2.model });
+            editor.editing.view.focus();
+          });
+          listItemView2.children.add(buttonView2);
+          listView.items.add(listItemView2);
+        }
+        listView.items.add(new ListSeparatorView(locale));
+        const listItemView = new MenuBarMenuListItemView(locale, menuView);
+        const buttonView = new MenuBarMenuListItemButtonView(locale);
+        buttonView.set({
+          label: t("Remove highlight"),
+          icon: eraser_default
+        });
+        buttonView.delegate("execute").to(menuView);
+        buttonView.on("execute", () => {
+          editor.execute("highlight", { value: null });
+          editor.editing.view.focus();
+        });
+        listItemView.children.add(buttonView);
+        listView.items.add(listItemView);
+        menuView.panelView.children.add(listView);
+        return menuView;
+      });
+    }
+  };
+  function bindToolbarIconStyleToActiveColor(dropdownView) {
+    const actionView = dropdownView.buttonView.actionView;
+    actionView.iconView.bind("fillColor").to(dropdownView.buttonView, "color");
+  }
+  function getIconForType(type) {
+    return type === "marker" ? marker_default : pen_default;
+  }
+
+  // ../packages/ckeditor5-highlight/src/highlight.ts
+  var Highlight = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get requires() {
+      return [HighlightEditing, HighlightUI];
+    }
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "Highlight";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+  };
+
   // ../packages/ckeditor5-horizontal-line/src/horizontallinecommand.ts
   var HorizontalLineCommand = class extends Command {
     /**
@@ -107669,6 +108085,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     addIfEnabled("bold", Bold, "bold");
     addIfEnabled("italic", Italic, "italic");
     addIfEnabled("strikethrough", Strikethrough, "strikethrough");
+    addIfEnabled("highlight", Highlight, "highlight");
     addIfEnabled("code", Code, "code");
     if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== "|") {
       toolbarItems.push("|");
