@@ -292,53 +292,70 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Entering Source Mode: Calculate target block index from WYSIWYG selection path
-          let targetBlockIndex = 0;
-          let innerOffset = 0;
-          try {
-            const selState = window.editorBridge.getSelectionState();
-            if (selState && Array.isArray(selState.path) && selState.path.length > 0) {
-              targetBlockIndex = selState.path[0] || 0;
-              if (selState.path.length > 1) {
-                innerOffset = selState.path[selState.path.length - 1] || 0;
-              }
-            }
-          } catch (e) {
-            console.error('Error reading WYSIWYG block index:', e);
-          }
-
+          // Entering Source Mode
           let attempts = 0;
           const setupSourceTextarea = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
+              const bindSourceEvents = () => {
+                lastSourceScrollTop = textarea.scrollTop;
+                lastSourceSelectionStart = textarea.selectionStart || 0;
+              };
+
+              textarea.addEventListener('scroll', bindSourceEvents, { passive: true });
+              textarea.addEventListener('keyup', bindSourceEvents, { passive: true });
+              textarea.addEventListener('mouseup', bindSourceEvents, { passive: true });
+              textarea.addEventListener('touchend', bindSourceEvents, { passive: true });
+
               textarea.focus();
-              const fullText = textarea.value || '';
-              // Split text into line blocks separated by blank lines or line breaks
-              const lines = fullText.split('\n');
-              let currentBlock = 0;
-              let charIndex = 0;
 
-              for (let i = 0; i < lines.length; i++) {
-                if (currentBlock >= targetBlockIndex) {
-                  charIndex += Math.min(innerOffset, lines[i].length);
-                  break;
+              if (lastSourceSelectionStart > 0 || lastSourceScrollTop > 0) {
+                // If user has navigated or typed in Source View previously, restore exact last source position
+                const safePos = Math.min(lastSourceSelectionStart, textarea.value.length);
+                textarea.setSelectionRange(safePos, safePos);
+                textarea.scrollTop = lastSourceScrollTop;
+              } else {
+                // Calculate position based on current WYSIWYG selection
+                let targetBlockIndex = 0;
+                let innerOffset = 0;
+                try {
+                  const selState = window.editorBridge.getSelectionState();
+                  if (selState && Array.isArray(selState.path) && selState.path.length > 0) {
+                    targetBlockIndex = selState.path[0] || 0;
+                    if (selState.path.length > 1) {
+                      innerOffset = selState.path[selState.path.length - 1] || 0;
+                    }
+                  }
+                } catch (e) {}
+
+                const fullText = textarea.value || '';
+                const lines = fullText.split('\n');
+                let currentBlock = 0;
+                let charIndex = 0;
+
+                for (let i = 0; i < lines.length; i++) {
+                  if (currentBlock >= targetBlockIndex) {
+                    charIndex += Math.min(innerOffset, lines[i].length);
+                    break;
+                  }
+                  charIndex += lines[i].length + 1;
+                  if (lines[i].trim().length > 0 || (i < lines.length - 1 && lines[i + 1].trim().length > 0)) {
+                    currentBlock++;
+                  }
                 }
-                charIndex += lines[i].length + 1; // +1 for newline
-                // Treat non-empty lines or blank line transitions as block boundaries
-                if (lines[i].trim().length > 0 || (i < lines.length - 1 && lines[i + 1].trim().length > 0)) {
-                  currentBlock++;
-                }
+
+                const safePos = Math.min(Math.max(0, charIndex), fullText.length);
+                textarea.setSelectionRange(safePos, safePos);
+
+                const textBefore = fullText.substring(0, safePos);
+                const targetLineNum = textBefore.split('\n').length;
+                const totalLines = lines.length || 1;
+                const scrollRatio = Math.max(0, (targetLineNum - 1) / totalLines);
+                textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
+
+                lastSourceScrollTop = textarea.scrollTop;
+                lastSourceSelectionStart = safePos;
               }
-
-              const safePos = Math.min(Math.max(0, charIndex), fullText.length);
-              textarea.setSelectionRange(safePos, safePos);
-
-              // Scroll textarea to the calculated line position
-              const textBefore = fullText.substring(0, safePos);
-              const targetLineNum = textBefore.split('\n').length;
-              const totalLines = lines.length || 1;
-              const scrollRatio = Math.max(0, (targetLineNum - 1) / totalLines);
-              textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
             } else if (attempts < 15) {
               attempts++;
               setTimeout(setupSourceTextarea, 30);
@@ -346,8 +363,14 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           };
           setTimeout(setupSourceTextarea, 20);
         } else {
-          // Exiting Source Mode back to WYSIWYG: Block listener spikes during setData
+          // Exiting Source Mode back to WYSIWYG
           isProgrammaticChange = true;
+          const textarea = document.querySelector('.ck-source-editing-area textarea');
+          if (textarea) {
+            lastSourceScrollTop = textarea.scrollTop;
+            lastSourceSelectionStart = textarea.selectionStart || 0;
+          }
+
           setTimeout(() => {
             if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
               window.AndroidNative.restoreNativeCursorAndScrollState();
