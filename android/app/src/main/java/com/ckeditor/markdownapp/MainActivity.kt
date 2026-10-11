@@ -213,6 +213,27 @@ class MainActivity : AppCompatActivity() {
             null
         )
 
+        // Pass Typography settings
+        val justifyParagraph = prefs.getBoolean("pref_justify_paragraph", false)
+        val paragraphLineHeight = JSONObjectWrapper.quote(prefs.getString("pref_paragraph_line_height", "1.6"))
+        val letterSpacing = JSONObjectWrapper.quote(prefs.getString("pref_letter_spacing", "0px"))
+
+        webView.evaluateJavascript(
+            "window.editorBridge.setTypographySettings($justifyParagraph, $paragraphLineHeight, $letterSpacing);",
+            null
+        )
+
+        // Pass Blockquote & Callout line settings
+        val bqThickness = prefs.getInt("pref_blockquote_line_thickness", 4)
+        val bqColor = JSONObjectWrapper.quote(prefs.getString("pref_blockquote_line_color", "default"))
+        val calloutThickness = prefs.getInt("pref_callout_line_thickness", 4)
+        val calloutColor = JSONObjectWrapper.quote(prefs.getString("pref_callout_line_color", "default"))
+
+        webView.evaluateJavascript(
+            "window.editorBridge.setBlockquoteAndCalloutSettings($bqThickness, $bqColor, $calloutThickness, $calloutColor);",
+            null
+        )
+
         // Read and pass all custom hotkey preferences
         val hotkeys = mapOf(
             "new" to prefs.getString("pref_hotkey_new", "ctrl+n"),
@@ -224,6 +245,7 @@ class MainActivity : AppCompatActivity() {
             "toggle_toolbar" to prefs.getString("pref_hotkey_toggle_toolbar", "ctrl+t"),
             "bold" to prefs.getString("pref_hotkey_bold", "ctrl+b"),
             "italic" to prefs.getString("pref_hotkey_italic", "ctrl+i"),
+            "underline" to prefs.getString("pref_hotkey_underline", "ctrl+u"),
             "strikethrough" to prefs.getString("pref_hotkey_strikethrough", "ctrl+shift+x"),
             "code" to prefs.getString("pref_hotkey_code", "ctrl+e"),
             "link" to prefs.getString("pref_hotkey_link", "ctrl+k"),

@@ -42868,6 +42868,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   // ../packages/ckeditor5-icons/theme/icons/todo-list.svg
   var todo_list_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m2.315 14.705 2.224-2.24a.69.69 0 0 1 .963 0 .664.664 0 0 1 0 .949L2.865 16.07a.7.7 0 0 1-.112.089.65.65 0 0 1-.852-.051L.688 14.886a.635.635 0 0 1 0-.903.647.647 0 0 1 .91 0zm5.185.045a.75.75 0 0 1 .75-.75h9.5a.75.75 0 1 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75M2.329 5.745l2.21-2.226a.69.69 0 0 1 .963 0 .664.664 0 0 1 0 .95L2.865 7.125a.7.7 0 0 1-.496.196.64.64 0 0 1-.468-.187L.688 5.912a.635.635 0 0 1 0-.903.647.647 0 0 1 .91 0l.73.736zM7.5 5.75A.75.75 0 0 1 8.25 5h9.5a.75.75 0 1 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75"/></svg>';
 
+  // ../packages/ckeditor5-icons/theme/icons/underline.svg
+  var underline_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M3 18v-1.5h14V18zm2.2-8V3.6c0-.4.4-.6.8-.6.3 0 .7.2.7.6v6.2c0 2 1.3 2.8 3.2 2.8s3.4-.9 3.4-2.9V3.6c0-.3.4-.5.8-.5.3 0 .7.2.7.5V10c0 2.7-2.2 4-4.9 4-2.6 0-4.7-1.2-4.7-4"/></svg>';
+
   // ../packages/ckeditor5-icons/theme/icons/undo.svg
   var undo_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m5.042 9.367 2.189 1.837a.75.75 0 0 1-.965 1.149l-3.788-3.18a.75.75 0 0 1-.21-.284.75.75 0 0 1 .17-.945L6.23 4.762a.75.75 0 1 1 .964 1.15L4.863 7.866h8.917A.8.8 0 0 1 14 7.9a4 4 0 1 1-1.477 7.718l.344-1.489a2.5 2.5 0 1 0 1.094-4.73l.008-.032z"/></svg>';
 
@@ -58871,6 +58874,110 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
      */
     static get pluginName() {
       return "Strikethrough";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+  };
+
+  // ../packages/ckeditor5-basic-styles/src/underline/underlineediting.ts
+  var UNDERLINE = "underline";
+  var UnderlineEditing = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "UnderlineEditing";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      const t = this.editor.t;
+      editor.model.schema.extend("$text", { allowAttributes: UNDERLINE });
+      editor.model.schema.setAttributeProperties(UNDERLINE, {
+        isFormatting: true,
+        copyOnEnter: true
+      });
+      editor.conversion.attributeToElement({
+        model: UNDERLINE,
+        view: "u",
+        upcastAlso: {
+          styles: {
+            "text-decoration": "underline"
+          }
+        }
+      });
+      editor.commands.add(UNDERLINE, new AttributeCommand(editor, UNDERLINE));
+      editor.keystrokes.set("CTRL+U", "underline");
+      editor.accessibility.addKeystrokeInfos({
+        keystrokes: [
+          {
+            label: t("Underline text"),
+            keystroke: "CTRL+U"
+          }
+        ]
+      });
+    }
+  };
+
+  // ../packages/ckeditor5-basic-styles/src/underline/underlineui.ts
+  var UNDERLINE2 = "underline";
+  var UnderlineUI = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "UnderlineUI";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      const t = editor.locale.t;
+      const createButton = getButtonCreator({
+        editor,
+        commandName: UNDERLINE2,
+        plugin: this,
+        icon: underline_default,
+        label: t("Underline"),
+        keystroke: "CTRL+U"
+      });
+      editor.ui.componentFactory.add(UNDERLINE2, () => createButton(ButtonView));
+      editor.ui.componentFactory.add("menuBar:" + UNDERLINE2, () => createButton(MenuBarMenuListItemButtonView));
+    }
+  };
+
+  // ../packages/ckeditor5-basic-styles/src/underline.ts
+  var Underline = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get requires() {
+      return [UnderlineEditing, UnderlineUI];
+    }
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "Underline";
     }
     /**
      * @inheritDoc
@@ -109281,6 +109388,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     toggle_toolbar: "ctrl+t",
     bold: "ctrl+b",
     italic: "ctrl+i",
+    underline: "ctrl+u",
     strikethrough: "ctrl+shift+x",
     code: "ctrl+e",
     link: "ctrl+k",
@@ -109340,6 +109448,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     if (addIfEnabled("heading", Heading)) toolbarItems.push("heading", "|");
     addIfEnabled("bold", Bold, "bold");
     addIfEnabled("italic", Italic, "italic");
+    addIfEnabled("underline", Underline, "underline");
     addIfEnabled("strikethrough", Strikethrough, "strikethrough");
     addIfEnabled("highlight", Highlight, "highlight");
     addIfEnabled("code", Code, "code");
@@ -109457,6 +109566,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
       let wysiwygScrollTop = 0;
       let sourceScrollTop = 0;
+      let sourceSelectionStart = 0;
       const mainAreaForScroll = document.querySelector(".ck-editor__main");
       if (mainAreaForScroll) {
         mainAreaForScroll.addEventListener("scroll", () => {
@@ -109477,9 +109587,16 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             const checkAndSyncTextarea = () => {
               const textarea2 = document.querySelector(".ck-source-editing-area textarea");
               if (textarea2) {
-                textarea2.addEventListener("scroll", () => {
+                const saveSourcePos = () => {
                   sourceScrollTop = textarea2.scrollTop;
-                }, { passive: true });
+                  sourceSelectionStart = textarea2.selectionStart || 0;
+                };
+                textarea2.addEventListener("scroll", saveSourcePos, { passive: true });
+                textarea2.addEventListener("keyup", saveSourcePos, { passive: true });
+                textarea2.addEventListener("mouseup", saveSourcePos, { passive: true });
+                textarea2.focus();
+                const pos = Math.min(sourceSelectionStart, textarea2.value.length);
+                textarea2.setSelectionRange(pos, pos);
                 textarea2.scrollTop = sourceScrollTop;
               } else if (attempts < 15) {
                 attempts++;
@@ -109491,6 +109608,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             const textarea2 = document.querySelector(".ck-source-editing-area textarea");
             if (textarea2) {
               sourceScrollTop = textarea2.scrollTop;
+              sourceSelectionStart = textarea2.selectionStart || 0;
             }
             let attempts = 0;
             const checkAndSyncWysiwyg = () => {
@@ -109505,6 +109623,37 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             setTimeout(checkAndSyncWysiwyg, 30);
           }
         });
+      }
+      const findPlugin = editorInstance.plugins.get("FindAndReplace");
+      if (findPlugin) {
+        const observer = new MutationObserver(() => {
+          const form = document.querySelector(".ck-find-and-replace-form");
+          if (form && !form.querySelector(".regex-toggle-row")) {
+            const row2 = document.createElement("div");
+            row2.className = "regex-toggle-row";
+            row2.innerHTML = `
+            <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+              <input type="checkbox" id="find-regex-chk"> Use RegEx (.*)
+            </label>
+          `;
+            form.insertBefore(row2, form.lastElementChild);
+            const chk = row2.querySelector("#find-regex-chk");
+            if (chk) {
+              chk.onchange = () => {
+                const findInput = form.querySelector(".ck-labeled-field-view input");
+                if (findInput && findInput.value) {
+                  try {
+                    const pattern = chk.checked ? new RegExp(findInput.value, "g") : findInput.value;
+                    findPlugin.find(pattern);
+                  } catch (err) {
+                    console.error("Invalid RegEx pattern:", err);
+                  }
+                }
+              };
+            }
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
       }
       if (isInitialInit) {
         setupFloatingToggle();
@@ -109522,7 +109671,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     const panel = document.querySelector("#toc-panel");
     const overlay = document.querySelector("#toc-overlay");
     const tocContent = document.querySelector("#toc-content");
+    const globalToggleBtn = document.querySelector("#toc-global-toggle");
     if (!panel || !overlay) return;
+    let isAllCollapsed = false;
     const openToc = () => {
       buildTocTree();
       panel.classList.add("open");
@@ -109533,6 +109684,23 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       overlay.classList.remove("open");
     };
     overlay.onclick = closeToc;
+    if (globalToggleBtn) {
+      globalToggleBtn.onclick = () => {
+        isAllCollapsed = !isAllCollapsed;
+        const itemRows = Array.from(tocContent.querySelectorAll(".toc-item"));
+        itemRows.forEach((row2) => {
+          const toggle = row2.querySelector(".toc-toggle");
+          const level = parseInt(row2.dataset.level, 10) || 1;
+          if (isAllCollapsed) {
+            if (level > 1) row2.style.display = "none";
+            if (toggle) toggle.textContent = "+";
+          } else {
+            row2.style.display = "flex";
+            if (toggle) toggle.textContent = "-";
+          }
+        });
+      };
+    }
     let touchStartX = 0;
     let touchStartY = 0;
     let isSwiping = false;
@@ -109557,6 +109725,20 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }
       }
     }, { passive: true });
+    function findActiveHeadingIndex(headings) {
+      if (!headings || headings.length === 0) return -1;
+      const mainArea = document.querySelector(".ck-editor__main");
+      const scrollPos = mainArea ? mainArea.scrollTop : 0;
+      let activeIdx = 0;
+      for (let i = 0; i < headings.length; i++) {
+        if (headings[i].offsetTop <= scrollPos + 100) {
+          activeIdx = i;
+        } else {
+          break;
+        }
+      }
+      return activeIdx;
+    }
     function buildTocTree() {
       if (!tocContent || !editorInstance) return;
       const editable = document.querySelector(".ck-content");
@@ -109567,21 +109749,40 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         return;
       }
       tocContent.innerHTML = "";
+      const activeHeadingIdx = findActiveHeadingIndex(headings);
+      const activePathIndices = /* @__PURE__ */ new Set();
+      if (activeHeadingIdx >= 0) {
+        activePathIndices.add(activeHeadingIdx);
+        let currLevel = parseInt(headings[activeHeadingIdx].tagName.substring(1), 10);
+        for (let i = activeHeadingIdx - 1; i >= 0; i--) {
+          const lvl = parseInt(headings[i].tagName.substring(1), 10);
+          if (lvl < currLevel) {
+            activePathIndices.add(i);
+            currLevel = lvl;
+          }
+        }
+      }
       headings.forEach((headingEl, index2) => {
         const level = parseInt(headingEl.tagName.substring(1), 10) || 1;
         const titleText = headingEl.textContent.trim() || `Heading ${index2 + 1}`;
         const itemRow = document.createElement("div");
         itemRow.className = `toc-item level-${level}`;
+        itemRow.dataset.level = level;
+        itemRow.dataset.index = index2;
+        if (index2 === activeHeadingIdx) {
+          itemRow.classList.add("active-section");
+        }
         const hasSubHeadings = index2 < headings.length - 1 && parseInt(headings[index2 + 1].tagName.substring(1), 10) > level;
+        const shouldBeExpanded = level === 1 || activePathIndices.has(index2);
         let toggleBtn = null;
         if (hasSubHeadings) {
           toggleBtn = document.createElement("span");
           toggleBtn.className = "toc-toggle";
-          toggleBtn.textContent = "-";
+          toggleBtn.textContent = shouldBeExpanded ? "-" : "+";
           itemRow.appendChild(toggleBtn);
         } else {
           const spacer = document.createElement("span");
-          spacer.style.width = "26px";
+          spacer.style.width = "40px";
           spacer.style.display = "inline-block";
           itemRow.appendChild(spacer);
         }
@@ -109589,6 +109790,18 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         textSpan.className = "toc-text";
         textSpan.textContent = titleText;
         itemRow.appendChild(textSpan);
+        if (level > 1 && !activePathIndices.has(index2)) {
+          let parentIdx = -1;
+          for (let i = index2 - 1; i >= 0; i--) {
+            if (parseInt(headings[i].tagName.substring(1), 10) < level) {
+              parentIdx = i;
+              break;
+            }
+          }
+          if (parentIdx !== -1 && !activePathIndices.has(parentIdx) && parseInt(headings[parentIdx].tagName.substring(1), 10) !== 1) {
+            itemRow.style.display = "none";
+          }
+        }
         itemRow.onclick = (e) => {
           if (toggleBtn && (e.target === toggleBtn || toggleBtn.contains(e.target))) {
             e.stopPropagation();
@@ -109686,6 +109899,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         };
         if (parseAndMatchHotkey(e, customHotkeys.bold)) exec("bold");
         else if (parseAndMatchHotkey(e, customHotkeys.italic)) exec("italic");
+        else if (parseAndMatchHotkey(e, customHotkeys.underline)) exec("underline");
         else if (parseAndMatchHotkey(e, customHotkeys.strikethrough)) exec("strikethrough");
         else if (parseAndMatchHotkey(e, customHotkeys.code)) exec("code");
         else if (parseAndMatchHotkey(e, customHotkeys.link)) exec("link");
@@ -109890,6 +110104,37 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
       if (widthPercent) {
         document.documentElement.style.setProperty("--hr-width", widthPercent + "%");
+      }
+    },
+    setTypographySettings: function(justifyParagraph, paragraphLineHeight, letterSpacing) {
+      document.documentElement.style.setProperty("--paragraph-justify", justifyParagraph ? "justify" : "left");
+      if (paragraphLineHeight && paragraphLineHeight !== "default") {
+        document.documentElement.style.setProperty("--paragraph-line-height", paragraphLineHeight);
+      } else {
+        document.documentElement.style.removeProperty("--paragraph-line-height");
+      }
+      if (letterSpacing && letterSpacing !== "default") {
+        document.documentElement.style.setProperty("--letter-spacing", letterSpacing);
+      } else {
+        document.documentElement.style.removeProperty("--letter-spacing");
+      }
+    },
+    setBlockquoteAndCalloutSettings: function(bqThicknessPx, bqColorHex, calloutThicknessPx, calloutColorHex) {
+      if (bqThicknessPx) {
+        document.documentElement.style.setProperty("--blockquote-border-width", bqThicknessPx + "px");
+      }
+      if (bqColorHex && bqColorHex !== "default") {
+        document.documentElement.style.setProperty("--blockquote-border-color", bqColorHex);
+      } else {
+        document.documentElement.style.removeProperty("--blockquote-border-color");
+      }
+      if (calloutThicknessPx) {
+        document.documentElement.style.setProperty("--callout-border-width", calloutThicknessPx + "px");
+      }
+      if (calloutColorHex && calloutColorHex !== "default") {
+        document.documentElement.style.setProperty("--callout-border-color", calloutColorHex);
+      } else {
+        document.documentElement.style.removeProperty("--callout-border-color");
       }
     },
     configurePlugins: function(disabledPluginsJson) {

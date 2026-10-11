@@ -58,6 +58,7 @@ let customHotkeys = {
   toggle_toolbar: 'ctrl+t',
   bold: 'ctrl+b',
   italic: 'ctrl+i',
+  underline: 'ctrl+u',
   strikethrough: 'ctrl+shift+x',
   code: 'ctrl+e',
   link: 'ctrl+k',
@@ -125,6 +126,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
   addIfEnabled('bold', Bold, 'bold');
   addIfEnabled('italic', Italic, 'italic');
+  addIfEnabled('underline', Underline, 'underline');
   addIfEnabled('strikethrough', Strikethrough, 'strikethrough');
   addIfEnabled('highlight', Highlight, 'highlight');
   addIfEnabled('code', Code, 'code');
@@ -251,9 +253,10 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
       }
     }
 
-    // Independent scroll position memory for WYSIWYG View and Source Editing View
+    // Independent scroll and cursor position memory for WYSIWYG View and Source Editing View
     let wysiwygScrollTop = 0;
     let sourceScrollTop = 0;
+    let sourceSelectionStart = 0;
 
     const mainAreaForScroll = document.querySelector('.ck-editor__main');
     if (mainAreaForScroll) {
@@ -278,10 +281,18 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           const checkAndSyncTextarea = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
-              textarea.addEventListener('scroll', () => {
+              const saveSourcePos = () => {
                 sourceScrollTop = textarea.scrollTop;
-              }, { passive: true });
+                sourceSelectionStart = textarea.selectionStart || 0;
+              };
 
+              textarea.addEventListener('scroll', saveSourcePos, { passive: true });
+              textarea.addEventListener('keyup', saveSourcePos, { passive: true });
+              textarea.addEventListener('mouseup', saveSourcePos, { passive: true });
+
+              textarea.focus();
+              const pos = Math.min(sourceSelectionStart, textarea.value.length);
+              textarea.setSelectionRange(pos, pos);
               textarea.scrollTop = sourceScrollTop;
             } else if (attempts < 15) {
               attempts++;
@@ -294,6 +305,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           const textarea = document.querySelector('.ck-source-editing-area textarea');
           if (textarea) {
             sourceScrollTop = textarea.scrollTop;
+            sourceSelectionStart = textarea.selectionStart || 0;
           }
 
           let attempts = 0;
@@ -309,6 +321,40 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           setTimeout(checkAndSyncWysiwyg, 30);
         }
       });
+    }
+
+    // Enhance Find & Replace Form with Regex Toggle
+    const findPlugin = editorInstance.plugins.get('FindAndReplace');
+    if (findPlugin) {
+      const observer = new MutationObserver(() => {
+        const form = document.querySelector('.ck-find-and-replace-form');
+        if (form && !form.querySelector('.regex-toggle-row')) {
+          const row = document.createElement('div');
+          row.className = 'regex-toggle-row';
+          row.innerHTML = `
+            <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+              <input type="checkbox" id="find-regex-chk"> Use RegEx (.*)
+            </label>
+          `;
+          form.insertBefore(row, form.lastElementChild);
+
+          const chk = row.querySelector('#find-regex-chk');
+          if (chk) {
+            chk.onchange = () => {
+              const findInput = form.querySelector('.ck-labeled-field-view input');
+              if (findInput && findInput.value) {
+                try {
+                  const pattern = chk.checked ? new RegExp(findInput.value, 'g') : findInput.value;
+                  findPlugin.find(pattern);
+                } catch (err) {
+                  console.error('Invalid RegEx pattern:', err);
+                }
+              }
+            };
+          }
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
     }
 
     if (isInitialInit) {
@@ -328,7 +374,10 @@ function setupTocGestureAndPanel() {
   const panel = document.querySelector('#toc-panel');
   const overlay = document.querySelector('#toc-overlay');
   const tocContent = document.querySelector('#toc-content');
+  const globalToggleBtn = document.querySelector('#toc-global-toggle');
   if (!panel || !overlay) return;
+
+  let isAllCollapsed = false;
 
   const openToc = () => {
     buildTocTree();
@@ -342,6 +391,24 @@ function setupTocGestureAndPanel() {
   };
 
   overlay.onclick = closeToc;
+
+  if (globalToggleBtn) {
+    globalToggleBtn.onclick = () => {
+      isAllCollapsed = !isAllCollapsed;
+      const itemRows = Array.from(tocContent.querySelectorAll('.toc-item'));
+      itemRows.forEach(row => {
+        const toggle = row.querySelector('.toc-toggle');
+        const level = parseInt(row.dataset.level, 10) || 1;
+        if (isAllCollapsed) {
+          if (level > 1) row.style.display = 'none';
+          if (toggle) toggle.textContent = '+';
+        } else {
+          row.style.display = 'flex';
+          if (toggle) toggle.textContent = '-';
+        }
+      });
+    };
+  }
 
   // Touch Swipe Gesture Handling (Horizontal swipe right-to-left opens TOC)
   let touchStartX = 0;
@@ -362,18 +429,31 @@ function setupTocGestureAndPanel() {
     const deltaX = e.changedTouches[0].clientX - touchStartX;
     const deltaY = e.changedTouches[0].clientY - touchStartY;
 
-    // Check if horizontal swipe dominates vertical scrolling and no active text selection range
     const isSelectionActive = window.getSelection() && window.getSelection().toString().length > 0;
     if (!isSelectionActive && Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
       if (deltaX < 0 && !panel.classList.contains('open')) {
-        // Swipe left -> open TOC
         openToc();
       } else if (deltaX > 0 && panel.classList.contains('open')) {
-        // Swipe right -> close TOC
         closeToc();
       }
     }
   }, { passive: true });
+
+  function findActiveHeadingIndex(headings) {
+    if (!headings || headings.length === 0) return -1;
+    const mainArea = document.querySelector('.ck-editor__main');
+    const scrollPos = mainArea ? mainArea.scrollTop : 0;
+
+    let activeIdx = 0;
+    for (let i = 0; i < headings.length; i++) {
+      if (headings[i].offsetTop <= scrollPos + 100) {
+        activeIdx = i;
+      } else {
+        break;
+      }
+    }
+    return activeIdx;
+  }
 
   function buildTocTree() {
     if (!tocContent || !editorInstance) return;
@@ -387,6 +467,21 @@ function setupTocGestureAndPanel() {
     }
 
     tocContent.innerHTML = '';
+    const activeHeadingIdx = findActiveHeadingIndex(headings);
+
+    // Compute active heading path (indices of ancestor headings leading to active section)
+    const activePathIndices = new Set();
+    if (activeHeadingIdx >= 0) {
+      activePathIndices.add(activeHeadingIdx);
+      let currLevel = parseInt(headings[activeHeadingIdx].tagName.substring(1), 10);
+      for (let i = activeHeadingIdx - 1; i >= 0; i--) {
+        const lvl = parseInt(headings[i].tagName.substring(1), 10);
+        if (lvl < currLevel) {
+          activePathIndices.add(i);
+          currLevel = lvl;
+        }
+      }
+    }
 
     headings.forEach((headingEl, index) => {
       const level = parseInt(headingEl.tagName.substring(1), 10) || 1;
@@ -394,20 +489,29 @@ function setupTocGestureAndPanel() {
 
       const itemRow = document.createElement('div');
       itemRow.className = `toc-item level-${level}`;
+      itemRow.dataset.level = level;
+      itemRow.dataset.index = index;
 
-      // Check if this heading has sub-headings immediately under it
+      // Active section highlight in bold yellow text #ffff00
+      if (index === activeHeadingIdx) {
+        itemRow.classList.add('active-section');
+      }
+
       const hasSubHeadings = index < headings.length - 1 &&
         (parseInt(headings[index + 1].tagName.substring(1), 10) > level);
+
+      // Auto-collapse logic: Keep H1s or headings in active path expanded; collapse others
+      const shouldBeExpanded = level === 1 || activePathIndices.has(index);
 
       let toggleBtn = null;
       if (hasSubHeadings) {
         toggleBtn = document.createElement('span');
         toggleBtn.className = 'toc-toggle';
-        toggleBtn.textContent = '-'; // Default expanded state
+        toggleBtn.textContent = shouldBeExpanded ? '-' : '+';
         itemRow.appendChild(toggleBtn);
       } else {
         const spacer = document.createElement('span');
-        spacer.style.width = '26px';
+        spacer.style.width = '40px';
         spacer.style.display = 'inline-block';
         itemRow.appendChild(spacer);
       }
@@ -417,13 +521,27 @@ function setupTocGestureAndPanel() {
       textSpan.textContent = titleText;
       itemRow.appendChild(textSpan);
 
+      // Set initial row visibility based on active section path
+      if (level > 1 && !activePathIndices.has(index)) {
+        // Check if direct parent is expanded
+        let parentIdx = -1;
+        for (let i = index - 1; i >= 0; i--) {
+          if (parseInt(headings[i].tagName.substring(1), 10) < level) {
+            parentIdx = i;
+            break;
+          }
+        }
+        if (parentIdx !== -1 && !activePathIndices.has(parentIdx) && parseInt(headings[parentIdx].tagName.substring(1), 10) !== 1) {
+          itemRow.style.display = 'none';
+        }
+      }
+
       itemRow.onclick = (e) => {
         if (toggleBtn && (e.target === toggleBtn || toggleBtn.contains(e.target))) {
           e.stopPropagation();
           const isCollapsed = toggleBtn.textContent === '+';
           toggleBtn.textContent = isCollapsed ? '-' : '+';
 
-          // Toggle visibility of all nested subheadings
           let i = index + 1;
           while (i < headings.length) {
             const childLevel = parseInt(headings[i].tagName.substring(1), 10);
@@ -437,7 +555,6 @@ function setupTocGestureAndPanel() {
           return;
         }
 
-        // Tap heading text -> Scroll document to heading
         closeToc();
         setTimeout(() => {
           headingEl.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -531,6 +648,7 @@ function setupKeyboardShortcuts() {
 
       if (parseAndMatchHotkey(e, customHotkeys.bold)) exec('bold');
       else if (parseAndMatchHotkey(e, customHotkeys.italic)) exec('italic');
+      else if (parseAndMatchHotkey(e, customHotkeys.underline)) exec('underline');
       else if (parseAndMatchHotkey(e, customHotkeys.strikethrough)) exec('strikethrough');
       else if (parseAndMatchHotkey(e, customHotkeys.code)) exec('code');
       else if (parseAndMatchHotkey(e, customHotkeys.link)) exec('link');
@@ -750,6 +868,37 @@ window.editorBridge = {
     }
     if (widthPercent) {
       document.documentElement.style.setProperty('--hr-width', widthPercent + '%');
+    }
+  },
+  setTypographySettings: function(justifyParagraph, paragraphLineHeight, letterSpacing) {
+    document.documentElement.style.setProperty('--paragraph-justify', justifyParagraph ? 'justify' : 'left');
+    if (paragraphLineHeight && paragraphLineHeight !== 'default') {
+      document.documentElement.style.setProperty('--paragraph-line-height', paragraphLineHeight);
+    } else {
+      document.documentElement.style.removeProperty('--paragraph-line-height');
+    }
+    if (letterSpacing && letterSpacing !== 'default') {
+      document.documentElement.style.setProperty('--letter-spacing', letterSpacing);
+    } else {
+      document.documentElement.style.removeProperty('--letter-spacing');
+    }
+  },
+  setBlockquoteAndCalloutSettings: function(bqThicknessPx, bqColorHex, calloutThicknessPx, calloutColorHex) {
+    if (bqThicknessPx) {
+      document.documentElement.style.setProperty('--blockquote-border-width', bqThicknessPx + 'px');
+    }
+    if (bqColorHex && bqColorHex !== 'default') {
+      document.documentElement.style.setProperty('--blockquote-border-color', bqColorHex);
+    } else {
+      document.documentElement.style.removeProperty('--blockquote-border-color');
+    }
+    if (calloutThicknessPx) {
+      document.documentElement.style.setProperty('--callout-border-width', calloutThicknessPx + 'px');
+    }
+    if (calloutColorHex && calloutColorHex !== 'default') {
+      document.documentElement.style.setProperty('--callout-border-color', calloutColorHex);
+    } else {
+      document.documentElement.style.removeProperty('--callout-border-color');
     }
   },
   configurePlugins: function(disabledPluginsJson) {

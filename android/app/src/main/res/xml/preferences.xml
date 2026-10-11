@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Font Sizing Settings">
+    <PreferenceCategory app:title="Font &amp; Paragraph Typography Settings">
         <SeekBarPreference
             app:key="pref_body_font_size"
             app:title="Body Text Size (px)"
@@ -49,6 +49,38 @@
             app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Block Quote &amp; Callout Line Settings">
+        <SeekBarPreference
+            app:key="pref_blockquote_line_thickness"
+            app:title="Block Quote Line Thickness (px)"
+            app:summary="Default: 4px (Range: 1px to 20px)"
+            android:defaultValue="4"
+            app:min="1"
+            android:max="20"
+            app:showSeekBarValue="true" />
+
+        <EditTextPreference
+            app:key="pref_blockquote_line_color"
+            app:title="Block Quote Line Color (Hex Code)"
+            app:summary="e.g. #444444 or default"
+            app:defaultValue="default" />
+
+        <SeekBarPreference
+            app:key="pref_callout_line_thickness"
+            app:title="Callout Line Thickness (px)"
+            app:summary="Default: 4px (Range: 1px to 20px)"
+            android:defaultValue="4"
+            app:min="1"
+            android:max="20"
+            app:showSeekBarValue="true" />
+
+        <EditTextPreference
+            app:key="pref_callout_line_color"
+            app:title="Callout Line Color (Hex Code)"
+            app:summary="e.g. #29b6f6 or default"
+            app:defaultValue="default" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Horizontal Rule Settings">
         <SeekBarPreference
             app:key="pref_hr_thickness"
@@ -73,6 +105,24 @@
             app:min="10"
             android:max="100"
             app:showSeekBarValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_justify_paragraph"
+            app:title="Justify Paragraph Text Only"
+            app:summary="Align paragraph text to both left and right margins (does NOT affect headings, lists, or code)"
+            android:defaultValue="false" />
+
+        <EditTextPreference
+            app:key="pref_paragraph_line_height"
+            app:title="Paragraph Line Height"
+            app:summary="Line height multiplier for paragraphs only (e.g. 1.6 or default)"
+            app:defaultValue="1.6" />
+
+        <EditTextPreference
+            app:key="pref_letter_spacing"
+            app:title="Global Letter Spacing (px)"
+            app:summary="Letter spacing for all text EXCEPT code blocks (e.g. 0.5px or 0px)"
+            app:defaultValue="0px" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Text &amp; Element Colors (Hex Codes)">
@@ -194,6 +244,11 @@
             app:key="pref_hotkey_italic"
             app:title="Italic Shortcut"
             app:defaultValue="ctrl+i" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_underline"
+            app:title="Hotkey: Underline"
+            app:defaultValue="ctrl+u" />
 
         <EditTextPreference
             app:key="pref_hotkey_strikethrough"
