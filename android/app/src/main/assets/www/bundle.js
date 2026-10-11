@@ -109807,7 +109807,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       Essentials,
       Paragraph,
       Markdown,
-      Autoformat,
       PasteFromOffice
     ];
     const toolbarItems = [];
@@ -109859,6 +109858,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     addIfEnabled("horizontalLine", HorizontalLine, "horizontalLine");
     addIfEnabled("sourceEditing", SourceEditing, "sourceEditing");
     addIfEnabled("findAndReplace", FindAndReplace, "findAndReplace");
+    addIfEnabled("autoformat", Autoformat);
     try {
       editorInstance = await ClassicEditor.create(editorElement, {
         licenseKey: "GPL",

@@ -478,6 +478,12 @@
             app:key="pref_plugin_findAndReplace"
             app:title="Find and Replace"
             app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_plugin_autoformat"
+            app:title="Autoformat Markdown Syntax"
+            app:summary="Automatically converts typed Markdown syntax (#, **, *, -, >) into formatted text in WYSIWYG mode"
+            app:defaultValue="true" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

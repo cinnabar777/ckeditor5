@@ -103,7 +103,6 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     Essentials,
     Paragraph,
     Markdown,
-    Autoformat,
     PasteFromOffice
   ];
 
@@ -163,6 +162,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
   addIfEnabled('horizontalLine', HorizontalLine, 'horizontalLine');
   addIfEnabled('sourceEditing', SourceEditing, 'sourceEditing');
   addIfEnabled('findAndReplace', FindAndReplace, 'findAndReplace');
+  addIfEnabled('autoformat', Autoformat);
 
   try {
     editorInstance = await ClassicEditor.create(editorElement, {

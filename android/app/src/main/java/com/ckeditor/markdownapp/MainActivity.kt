@@ -486,7 +486,7 @@ class MainActivity : AppCompatActivity() {
         val keys = listOf(
             "heading", "bold", "italic", "strikethrough", "highlight", "code", "link",
             "image", "blockQuote", "codeBlock", "table", "list",
-            "todoList", "horizontalLine", "sourceEditing", "findAndReplace"
+            "todoList", "horizontalLine", "sourceEditing", "findAndReplace", "autoformat"
         )
 
         for (key in keys) {
