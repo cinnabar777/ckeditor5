@@ -432,7 +432,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleNewWindow() {
         val intent = android.content.Intent(this, MainActivity::class.java).apply {
-            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         }
         startActivity(intent)
     }

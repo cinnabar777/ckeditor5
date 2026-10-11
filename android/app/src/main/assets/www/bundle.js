@@ -109558,7 +109558,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             <button class="toolbar-app-btn" title="Save" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">\u{1F4BE}</button>
             <button class="toolbar-app-btn" title="Save As" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">\u{1F4D1}</button>
             <button class="toolbar-app-btn" title="Image" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">\u{1F5BC}</button>
-            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')">\u{1F5D6}</button>
+            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg></button>
             <button class="toolbar-app-btn settings-btn" title="Settings" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
           </div>
         `;
@@ -109729,10 +109729,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     function findActiveHeadingIndex(headings) {
       if (!headings || headings.length === 0) return -1;
       const mainArea = document.querySelector(".ck-editor__main");
-      const scrollPos = mainArea ? mainArea.scrollTop : 0;
+      if (!mainArea) return 0;
+      const viewportRect = mainArea.getBoundingClientRect();
       let activeIdx = 0;
       for (let i = 0; i < headings.length; i++) {
-        if (headings[i].offsetTop <= scrollPos + 15) {
+        const headingRect = headings[i].getBoundingClientRect();
+        const relativeTop = headingRect.top - viewportRect.top;
+        if (relativeTop <= 60) {
           activeIdx = i;
         } else {
           break;
@@ -110003,7 +110006,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       if (!editorInstance) return;
       try {
         if (stateJson) {
-          const state = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;
+          let state = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;
+          if (typeof state === "string") {
+            state = JSON.parse(state);
+          }
           if (state && Array.isArray(state.path) && state.path.length > 0) {
             const doc = editorInstance.model.document;
             const root7 = doc.getRoot();
