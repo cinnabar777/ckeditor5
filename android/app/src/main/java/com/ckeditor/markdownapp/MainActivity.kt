@@ -375,10 +375,10 @@ class MainActivity : AppCompatActivity() {
                 prefs.edit().putString("last_opened_uri", uri.toString()).apply()
 
                 val escaped = JSONObjectWrapper.quote(content)
-                webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);", null)
-
-                // Restore saved cursor selection and scroll position for this document
-                restoreCursorAndScrollState()
+                webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
+                    // Restore saved cursor selection and scroll position for this document after setMarkdown
+                    restoreCursorAndScrollState()
+                }
             }
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to open file: ${e.localizedMessage}", Toast.LENGTH_LONG).show()

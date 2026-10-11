@@ -109558,7 +109558,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             <button class="toolbar-app-btn" title="Save" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">\u{1F4BE}</button>
             <button class="toolbar-app-btn" title="Save As" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">\u{1F4D1}</button>
             <button class="toolbar-app-btn" title="Image" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">\u{1F5BC}</button>
-            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg></button>
+            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="8" x2="21" y2="8"></line><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg></button>
             <button class="toolbar-app-btn settings-btn" title="Settings" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
           </div>
         `;
@@ -109566,6 +109566,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }
       }
       let wysiwygScrollTop = 0;
+      let wysiwygSelectionState = null;
       let sourceScrollTop = 0;
       let sourceSelectionStart = 0;
       const mainAreaForScroll = document.querySelector(".ck-editor__main");
@@ -109581,6 +109582,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       if (sourceEditingPlugin) {
         sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
           if (isSourceEditing) {
+            wysiwygSelectionState = window.editorBridge.getSelectionState();
             if (mainAreaForScroll) {
               wysiwygScrollTop = mainAreaForScroll.scrollTop;
             }
@@ -109613,12 +109615,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             }
             let attempts = 0;
             const checkAndSyncWysiwyg = () => {
-              if (mainAreaForScroll) {
+              if (wysiwygSelectionState) {
+                window.editorBridge.setSelectionState(wysiwygSelectionState, wysiwygScrollTop);
+              } else if (mainAreaForScroll) {
                 mainAreaForScroll.scrollTop = wysiwygScrollTop;
               }
               if (attempts < 10) {
                 attempts++;
-                setTimeout(checkAndSyncWysiwyg, 40);
+                setTimeout(checkAndSyncWysiwyg, 50);
               }
             };
             setTimeout(checkAndSyncWysiwyg, 30);
@@ -110013,7 +110017,26 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           if (state && Array.isArray(state.path) && state.path.length > 0) {
             const doc = editorInstance.model.document;
             const root7 = doc.getRoot();
-            const position3 = editorInstance.model.createPositionFromPath(root7, state.path);
+            let curr = root7;
+            let safePath = [];
+            for (let i = 0; i < state.path.length; i++) {
+              const isLast = i === state.path.length - 1;
+              const requestedIdx = state.path[i];
+              if (isLast) {
+                const maxOff = curr.maxOffset !== void 0 ? curr.maxOffset : curr.childCount || 0;
+                const safeOff = Math.min(Math.max(0, requestedIdx), maxOff);
+                safePath.push(safeOff);
+              } else {
+                if (curr.childCount > 0) {
+                  const safeIdx = Math.min(Math.max(0, requestedIdx), curr.childCount - 1);
+                  safePath.push(safeIdx);
+                  curr = curr.getChild(safeIdx);
+                } else {
+                  safePath.push(0);
+                }
+              }
+            }
+            const position3 = editorInstance.model.createPositionFromPath(root7, safePath);
             if (position3) {
               editorInstance.model.change((writer) => {
                 writer.setSelection(position3);
