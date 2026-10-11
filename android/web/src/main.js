@@ -251,64 +251,38 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
       }
     }
 
-    // Continuous scroll and character position tracking for Source Editing Mode sync
-    let savedModelOffset = 0;
-    let savedSourceOffset = 0;
-    let lastSourceScrollRatio = 0;
+    // Independent scroll position memory for WYSIWYG View and Source Editing View
+    let wysiwygScrollTop = 0;
+    let sourceScrollTop = 0;
 
-    editorInstance.model.document.selection.on('change:range', () => {
-      try {
-        const root = editorInstance.model.document.getRoot();
-        const selection = editorInstance.model.document.selection;
-        const range = selection.getFirstRange();
-        if (range) {
-          let offset = 0;
-          const fullRange = editorInstance.model.createRangeIn(root);
-          for (const value of fullRange.getWalker({ shallow: false })) {
-            if (value.previousPosition && value.previousPosition.isEqual(range.start)) {
-              break;
-            }
-            if (value.item && value.item.is && value.item.is('$text')) {
-              offset += value.item.data ? value.item.data.length : 0;
-            } else if (value.type === 'elementStart' && value.item !== root) {
-              offset += 1;
-            }
-          }
-          savedModelOffset = offset;
+    const mainAreaForScroll = document.querySelector('.ck-editor__main');
+    if (mainAreaForScroll) {
+      mainAreaForScroll.addEventListener('scroll', () => {
+        const sourceEditingPlugin = editorInstance && editorInstance.plugins ? editorInstance.plugins.get('SourceEditing') : null;
+        if (!sourceEditingPlugin || !sourceEditingPlugin.isSourceEditingMode) {
+          wysiwygScrollTop = mainAreaForScroll.scrollTop;
         }
-      } catch (e) {
-        // ignore
-      }
-    });
+      }, { passive: true });
+    }
 
     const sourceEditingPlugin = editorInstance.plugins.get('SourceEditing');
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Entering Source Editing Mode
+          // Save WYSIWYG scroll before entering Source Editing Mode
+          if (mainAreaForScroll) {
+            wysiwygScrollTop = mainAreaForScroll.scrollTop;
+          }
+
           let attempts = 0;
           const checkAndSyncTextarea = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
-              const syncSourceState = () => {
-                savedSourceOffset = textarea.selectionStart || 0;
-                if (textarea.scrollHeight > textarea.clientHeight) {
-                  lastSourceScrollRatio = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight || 1);
-                }
-              };
+              textarea.addEventListener('scroll', () => {
+                sourceScrollTop = textarea.scrollTop;
+              }, { passive: true });
 
-              textarea.addEventListener('keyup', syncSourceState, { passive: true });
-              textarea.addEventListener('mouseup', syncSourceState, { passive: true });
-              textarea.addEventListener('scroll', syncSourceState, { passive: true });
-
-              const targetOffset = Math.min(savedModelOffset, textarea.value.length);
-              textarea.focus();
-              textarea.setSelectionRange(targetOffset, targetOffset);
-
-              const lines = textarea.value.substring(0, targetOffset).split('\n');
-              const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight, 10) || 20;
-              textarea.scrollTop = Math.max(0, (lines.length - 3) * lineHeight);
-              savedSourceOffset = targetOffset;
+              textarea.scrollTop = sourceScrollTop;
             } else if (attempts < 15) {
               attempts++;
               setTimeout(checkAndSyncTextarea, 30);
@@ -316,61 +290,23 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           };
           setTimeout(checkAndSyncTextarea, 20);
         } else {
-          // Exiting Source Editing Mode back to WYSIWYG Mode
+          // Exiting Source Editing Mode back to Normal WYSIWYG View
           const textarea = document.querySelector('.ck-source-editing-area textarea');
           if (textarea) {
-            savedSourceOffset = textarea.selectionStart || 0;
-            if (textarea.scrollHeight > textarea.clientHeight) {
-              lastSourceScrollRatio = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight || 1);
-            }
+            sourceScrollTop = textarea.scrollTop;
           }
 
           let attempts = 0;
           const checkAndSyncWysiwyg = () => {
-            try {
-              const root = editorInstance.model.document.getRoot();
-              let currentOffset = 0;
-              let targetPosition = null;
-
-              const fullRange = editorInstance.model.createRangeIn(root);
-              for (const value of fullRange.getWalker({ shallow: false })) {
-                if (value.item && value.item.is && value.item.is('$text')) {
-                  const len = value.item.data ? value.item.data.length : 0;
-                  if (currentOffset + len >= savedSourceOffset) {
-                    const charInNode = Math.max(0, savedSourceOffset - currentOffset);
-                    targetPosition = editorInstance.model.createPositionAt(value.item, charInNode);
-                    break;
-                  }
-                  currentOffset += len;
-                } else if (value.type === 'elementStart' && value.item !== root) {
-                  currentOffset += 1;
-                }
-              }
-
-              if (!targetPosition) {
-                targetPosition = editorInstance.model.createPositionAt(root, 'end');
-              }
-
-              if (targetPosition) {
-                editorInstance.model.change(writer => {
-                  writer.setSelection(targetPosition);
-                });
-              }
-            } catch (e) {
-              console.error('Error setting WYSIWYG selection:', e);
+            if (mainAreaForScroll) {
+              mainAreaForScroll.scrollTop = wysiwygScrollTop;
             }
-
-            const mainArea = document.querySelector('.ck-editor__main');
-            if (mainArea && mainArea.scrollHeight > mainArea.clientHeight) {
-              mainArea.scrollTop = Math.floor((mainArea.scrollHeight - mainArea.clientHeight) * lastSourceScrollRatio);
-            }
-
             if (attempts < 10) {
               attempts++;
               setTimeout(checkAndSyncWysiwyg, 40);
             }
           };
-          setTimeout(checkAndSyncWysiwyg, 50);
+          setTimeout(checkAndSyncWysiwyg, 30);
         }
       });
     }
@@ -378,12 +314,138 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (isInitialInit) {
       setupFloatingToggle();
       setupKeyboardShortcuts();
+      setupTocGestureAndPanel();
       if (window.AndroidNative && typeof window.AndroidNative.onEditorReady === 'function') {
         window.AndroidNative.onEditorReady();
       }
     }
   } catch (error) {
     console.error('Failed to initialize CKEditor 5:', error);
+  }
+}
+
+function setupTocGestureAndPanel() {
+  const panel = document.querySelector('#toc-panel');
+  const overlay = document.querySelector('#toc-overlay');
+  const tocContent = document.querySelector('#toc-content');
+  if (!panel || !overlay) return;
+
+  const openToc = () => {
+    buildTocTree();
+    panel.classList.add('open');
+    overlay.classList.add('open');
+  };
+
+  const closeToc = () => {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  };
+
+  overlay.onclick = closeToc;
+
+  // Touch Swipe Gesture Handling (Horizontal swipe right-to-left opens TOC)
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isSwiping = false;
+
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isSwiping = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    if (!isSwiping || e.changedTouches.length !== 1) return;
+    isSwiping = false;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+
+    // Check if horizontal swipe dominates vertical scrolling and no active text selection range
+    const isSelectionActive = window.getSelection() && window.getSelection().toString().length > 0;
+    if (!isSelectionActive && Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      if (deltaX < 0 && !panel.classList.contains('open')) {
+        // Swipe left -> open TOC
+        openToc();
+      } else if (deltaX > 0 && panel.classList.contains('open')) {
+        // Swipe right -> close TOC
+        closeToc();
+      }
+    }
+  }, { passive: true });
+
+  function buildTocTree() {
+    if (!tocContent || !editorInstance) return;
+    const editable = document.querySelector('.ck-content');
+    if (!editable) return;
+
+    const headings = Array.from(editable.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+    if (headings.length === 0) {
+      tocContent.innerHTML = '<div style="padding:16px;color:#888;font-size:14px;">No headings in document.</div>';
+      return;
+    }
+
+    tocContent.innerHTML = '';
+
+    headings.forEach((headingEl, index) => {
+      const level = parseInt(headingEl.tagName.substring(1), 10) || 1;
+      const titleText = headingEl.textContent.trim() || `Heading ${index + 1}`;
+
+      const itemRow = document.createElement('div');
+      itemRow.className = `toc-item level-${level}`;
+
+      // Check if this heading has sub-headings immediately under it
+      const hasSubHeadings = index < headings.length - 1 &&
+        (parseInt(headings[index + 1].tagName.substring(1), 10) > level);
+
+      let toggleBtn = null;
+      if (hasSubHeadings) {
+        toggleBtn = document.createElement('span');
+        toggleBtn.className = 'toc-toggle';
+        toggleBtn.textContent = '-'; // Default expanded state
+        itemRow.appendChild(toggleBtn);
+      } else {
+        const spacer = document.createElement('span');
+        spacer.style.width = '26px';
+        spacer.style.display = 'inline-block';
+        itemRow.appendChild(spacer);
+      }
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'toc-text';
+      textSpan.textContent = titleText;
+      itemRow.appendChild(textSpan);
+
+      itemRow.onclick = (e) => {
+        if (toggleBtn && (e.target === toggleBtn || toggleBtn.contains(e.target))) {
+          e.stopPropagation();
+          const isCollapsed = toggleBtn.textContent === '+';
+          toggleBtn.textContent = isCollapsed ? '-' : '+';
+
+          // Toggle visibility of all nested subheadings
+          let i = index + 1;
+          while (i < headings.length) {
+            const childLevel = parseInt(headings[i].tagName.substring(1), 10);
+            if (childLevel <= level) break;
+            const childRow = tocContent.children[i];
+            if (childRow) {
+              childRow.style.display = isCollapsed ? 'flex' : 'none';
+            }
+            i++;
+          }
+          return;
+        }
+
+        // Tap heading text -> Scroll document to heading
+        closeToc();
+        setTimeout(() => {
+          headingEl.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        }, 150);
+      };
+
+      tocContent.appendChild(itemRow);
+    });
   }
 }
 
