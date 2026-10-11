@@ -286,6 +286,23 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
             wysiwygScrollTop = mainAreaForScroll.scrollTop;
           }
 
+          // Calculate character position in Markdown source corresponding to WYSIWYG selection
+          try {
+            const selection = editorInstance.model.document.selection;
+            const range = selection.getFirstRange();
+            if (range) {
+              const root = editorInstance.model.document.getRoot();
+              const rangeFromStart = editorInstance.model.createRange(
+                editorInstance.model.createPositionAt(root, 0),
+                range.start
+              );
+              const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
+              sourceSelectionStart = markdownUpToCursor.length;
+            }
+          } catch (e) {
+            console.error('Error mapping WYSIWYG position to Source View:', e);
+          }
+
           let attempts = 0;
           const checkAndSyncTextarea = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
@@ -300,9 +317,15 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
               textarea.addEventListener('mouseup', saveSourcePos, { passive: true });
 
               textarea.focus();
-              const pos = Math.min(sourceSelectionStart, textarea.value.length);
+              const pos = Math.min(Math.max(0, sourceSelectionStart), textarea.value.length);
               textarea.setSelectionRange(pos, pos);
-              textarea.scrollTop = sourceScrollTop;
+
+              // Estimate scroll offset in source textarea based on cursor line position
+              const textBeforeCursor = textarea.value.substring(0, pos);
+              const linesBeforeCursor = textBeforeCursor.split('\n').length;
+              const totalLines = textarea.value.split('\n').length || 1;
+              const scrollRatio = linesBeforeCursor / totalLines;
+              textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
             } else if (attempts < 15) {
               attempts++;
               setTimeout(checkAndSyncTextarea, 30);
