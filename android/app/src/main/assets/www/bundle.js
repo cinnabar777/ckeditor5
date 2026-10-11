@@ -109571,93 +109571,111 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           topContainer.prepend(headerRow);
         }
       }
-      let wysiwygScrollTop = 0;
-      let wysiwygSelectionState = null;
-      let sourceScrollTop = 0;
-      let sourceSelectionStart = 0;
+      let lastWysiwygScrollTop = 0;
+      let lastWysiwygSelectionState = null;
+      let lastSourceScrollTop = 0;
+      let lastSourceSelectionStart = 0;
+      let hasExplicitSourcePos = false;
       const mainAreaForScroll = document.querySelector(".ck-editor__main");
       if (mainAreaForScroll) {
         mainAreaForScroll.addEventListener("scroll", () => {
           const sourceEditingPlugin2 = editorInstance && editorInstance.plugins ? editorInstance.plugins.get("SourceEditing") : null;
           if (!sourceEditingPlugin2 || !sourceEditingPlugin2.isSourceEditingMode) {
-            wysiwygScrollTop = mainAreaForScroll.scrollTop;
+            lastWysiwygScrollTop = mainAreaForScroll.scrollTop;
           }
         }, { passive: true });
       }
+      editorInstance.model.document.selection.on("change:range", () => {
+        const sourceEditingPlugin2 = editorInstance && editorInstance.plugins ? editorInstance.plugins.get("SourceEditing") : null;
+        if (!sourceEditingPlugin2 || !sourceEditingPlugin2.isSourceEditingMode) {
+          const sel = window.editorBridge.getSelectionState();
+          if (sel && Array.isArray(sel.path) && sel.path.length > 0) {
+            lastWysiwygSelectionState = sel;
+          }
+        }
+      });
       const sourceEditingPlugin = editorInstance.plugins.get("SourceEditing");
       if (sourceEditingPlugin) {
         sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
           if (isSourceEditing) {
-            wysiwygSelectionState = window.editorBridge.getSelectionState();
-            if (mainAreaForScroll) {
-              wysiwygScrollTop = mainAreaForScroll.scrollTop;
-            }
-            try {
-              const selection = editorInstance.model.document.selection;
-              const range = selection.getFirstRange();
-              if (range) {
-                const root7 = editorInstance.model.document.getRoot();
-                const rangeFromStart = editorInstance.model.createRange(
-                  editorInstance.model.createPositionAt(root7, 0),
-                  range.start
-                );
-                const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
-                sourceSelectionStart = markdownUpToCursor.length;
-              }
-            } catch (e) {
-              console.error("Error mapping WYSIWYG position to Source View:", e);
-            }
             let attempts = 0;
-            const checkAndSyncTextarea = () => {
+            const setupAndSyncSource = () => {
               const textarea2 = document.querySelector(".ck-source-editing-area textarea");
               if (textarea2) {
                 const saveSourcePos = () => {
-                  sourceScrollTop = textarea2.scrollTop;
-                  sourceSelectionStart = textarea2.selectionStart || 0;
+                  lastSourceScrollTop = textarea2.scrollTop;
+                  lastSourceSelectionStart = textarea2.selectionStart || 0;
+                  hasExplicitSourcePos = true;
                 };
                 textarea2.addEventListener("scroll", saveSourcePos, { passive: true });
                 textarea2.addEventListener("keyup", saveSourcePos, { passive: true });
                 textarea2.addEventListener("mouseup", saveSourcePos, { passive: true });
                 textarea2.focus();
-                const pos = Math.min(Math.max(0, sourceSelectionStart), textarea2.value.length);
-                textarea2.setSelectionRange(pos, pos);
-                const textBeforeCursor = textarea2.value.substring(0, pos);
-                const linesBeforeCursor = textBeforeCursor.split("\n").length;
-                const totalLines = textarea2.value.split("\n").length || 1;
-                const scrollRatio = linesBeforeCursor / totalLines;
-                textarea2.scrollTop = Math.max(0, scrollRatio * (textarea2.scrollHeight - textarea2.clientHeight));
+                if (hasExplicitSourcePos) {
+                  const pos = Math.min(Math.max(0, lastSourceSelectionStart), textarea2.value.length);
+                  textarea2.setSelectionRange(pos, pos);
+                  textarea2.scrollTop = lastSourceScrollTop;
+                } else {
+                  try {
+                    const selection = editorInstance.model.document.selection;
+                    const range = selection.getFirstRange();
+                    if (range) {
+                      const root7 = editorInstance.model.document.getRoot();
+                      const rangeFromStart = editorInstance.model.createRange(
+                        editorInstance.model.createPositionAt(root7, 0),
+                        range.start
+                      );
+                      const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
+                      const computedPos = Math.min(markdownUpToCursor.length, textarea2.value.length);
+                      textarea2.setSelectionRange(computedPos, computedPos);
+                      const textBeforeCursor = textarea2.value.substring(0, computedPos);
+                      const linesBeforeCursor = textBeforeCursor.split("\n").length;
+                      const totalLines = textarea2.value.split("\n").length || 1;
+                      const scrollRatio = linesBeforeCursor / totalLines;
+                      textarea2.scrollTop = Math.max(0, scrollRatio * (textarea2.scrollHeight - textarea2.clientHeight));
+                    }
+                  } catch (e) {
+                    textarea2.setSelectionRange(0, 0);
+                    textarea2.scrollTop = 0;
+                  }
+                }
               } else if (attempts < 15) {
                 attempts++;
-                setTimeout(checkAndSyncTextarea, 30);
+                setTimeout(setupAndSyncSource, 30);
               }
             };
-            setTimeout(checkAndSyncTextarea, 20);
+            setTimeout(setupAndSyncSource, 20);
           } else {
             isProgrammaticChange = true;
             const textarea2 = document.querySelector(".ck-source-editing-area textarea");
             if (textarea2) {
-              sourceScrollTop = textarea2.scrollTop;
-              sourceSelectionStart = textarea2.selectionStart || 0;
+              lastSourceScrollTop = textarea2.scrollTop;
+              lastSourceSelectionStart = textarea2.selectionStart || 0;
+              hasExplicitSourcePos = true;
             }
             let attempts = 0;
-            const checkAndSyncWysiwyg = () => {
-              if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === "function") {
+            const restoreWysiwygPos = () => {
+              if (lastWysiwygSelectionState) {
+                window.editorBridge.setSelectionState(lastWysiwygSelectionState, lastWysiwygScrollTop);
+              } else if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === "function") {
                 window.AndroidNative.restoreNativeCursorAndScrollState();
-              } else if (wysiwygSelectionState) {
-                window.editorBridge.setSelectionState(wysiwygSelectionState, wysiwygScrollTop);
               } else if (mainAreaForScroll) {
-                mainAreaForScroll.scrollTop = wysiwygScrollTop;
+                mainAreaForScroll.scrollTop = lastWysiwygScrollTop;
+              }
+              try {
+                editorInstance.editing.view.focus();
+              } catch (e) {
               }
               if (attempts < 5) {
                 attempts++;
-                setTimeout(checkAndSyncWysiwyg, 100);
+                setTimeout(restoreWysiwygPos, 60);
               } else {
                 setTimeout(() => {
                   isProgrammaticChange = false;
                 }, 100);
               }
             };
-            setTimeout(checkAndSyncWysiwyg, 50);
+            setTimeout(restoreWysiwygPos, 30);
           }
         });
       }

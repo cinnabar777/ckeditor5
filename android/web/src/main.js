@@ -261,55 +261,46 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     }
 
     // Independent scroll and cursor position memory for WYSIWYG View and Source Editing View
-    let wysiwygScrollTop = 0;
-    let wysiwygSelectionState = null;
-    let sourceScrollTop = 0;
-    let sourceSelectionStart = 0;
+    let lastWysiwygScrollTop = 0;
+    let lastWysiwygSelectionState = null;
+    let lastSourceScrollTop = 0;
+    let lastSourceSelectionStart = 0;
+    let hasExplicitSourcePos = false;
 
+    // Track WYSIWYG scroll and selection continuously
     const mainAreaForScroll = document.querySelector('.ck-editor__main');
     if (mainAreaForScroll) {
       mainAreaForScroll.addEventListener('scroll', () => {
         const sourceEditingPlugin = editorInstance && editorInstance.plugins ? editorInstance.plugins.get('SourceEditing') : null;
         if (!sourceEditingPlugin || !sourceEditingPlugin.isSourceEditingMode) {
-          wysiwygScrollTop = mainAreaForScroll.scrollTop;
+          lastWysiwygScrollTop = mainAreaForScroll.scrollTop;
         }
       }, { passive: true });
     }
+
+    editorInstance.model.document.selection.on('change:range', () => {
+      const sourceEditingPlugin = editorInstance && editorInstance.plugins ? editorInstance.plugins.get('SourceEditing') : null;
+      if (!sourceEditingPlugin || !sourceEditingPlugin.isSourceEditingMode) {
+        const sel = window.editorBridge.getSelectionState();
+        if (sel && Array.isArray(sel.path) && sel.path.length > 0) {
+          lastWysiwygSelectionState = sel;
+        }
+      }
+    });
 
     const sourceEditingPlugin = editorInstance.plugins.get('SourceEditing');
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Save WYSIWYG selection and scroll position before entering Source Editing Mode
-          wysiwygSelectionState = window.editorBridge.getSelectionState();
-          if (mainAreaForScroll) {
-            wysiwygScrollTop = mainAreaForScroll.scrollTop;
-          }
-
-          // Calculate character position in Markdown source corresponding to WYSIWYG selection
-          try {
-            const selection = editorInstance.model.document.selection;
-            const range = selection.getFirstRange();
-            if (range) {
-              const root = editorInstance.model.document.getRoot();
-              const rangeFromStart = editorInstance.model.createRange(
-                editorInstance.model.createPositionAt(root, 0),
-                range.start
-              );
-              const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
-              sourceSelectionStart = markdownUpToCursor.length;
-            }
-          } catch (e) {
-            console.error('Error mapping WYSIWYG position to Source View:', e);
-          }
-
+          // Entering Source Editing Mode
           let attempts = 0;
-          const checkAndSyncTextarea = () => {
+          const setupAndSyncSource = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
               const saveSourcePos = () => {
-                sourceScrollTop = textarea.scrollTop;
-                sourceSelectionStart = textarea.selectionStart || 0;
+                lastSourceScrollTop = textarea.scrollTop;
+                lastSourceSelectionStart = textarea.selectionStart || 0;
+                hasExplicitSourcePos = true;
               };
 
               textarea.addEventListener('scroll', saveSourcePos, { passive: true });
@@ -317,47 +308,73 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
               textarea.addEventListener('mouseup', saveSourcePos, { passive: true });
 
               textarea.focus();
-              const pos = Math.min(Math.max(0, sourceSelectionStart), textarea.value.length);
-              textarea.setSelectionRange(pos, pos);
-
-              // Estimate scroll offset in source textarea based on cursor line position
-              const textBeforeCursor = textarea.value.substring(0, pos);
-              const linesBeforeCursor = textBeforeCursor.split('\n').length;
-              const totalLines = textarea.value.split('\n').length || 1;
-              const scrollRatio = linesBeforeCursor / totalLines;
-              textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
+              if (hasExplicitSourcePos) {
+                const pos = Math.min(Math.max(0, lastSourceSelectionStart), textarea.value.length);
+                textarea.setSelectionRange(pos, pos);
+                textarea.scrollTop = lastSourceScrollTop;
+              } else {
+                // If entering Source Mode for the first time, compute position from WYSIWYG selection
+                try {
+                  const selection = editorInstance.model.document.selection;
+                  const range = selection.getFirstRange();
+                  if (range) {
+                    const root = editorInstance.model.document.getRoot();
+                    const rangeFromStart = editorInstance.model.createRange(
+                      editorInstance.model.createPositionAt(root, 0),
+                      range.start
+                    );
+                    const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
+                    const computedPos = Math.min(markdownUpToCursor.length, textarea.value.length);
+                    textarea.setSelectionRange(computedPos, computedPos);
+                    const textBeforeCursor = textarea.value.substring(0, computedPos);
+                    const linesBeforeCursor = textBeforeCursor.split('\n').length;
+                    const totalLines = textarea.value.split('\n').length || 1;
+                    const scrollRatio = linesBeforeCursor / totalLines;
+                    textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
+                  }
+                } catch (e) {
+                  textarea.setSelectionRange(0, 0);
+                  textarea.scrollTop = 0;
+                }
+              }
             } else if (attempts < 15) {
               attempts++;
-              setTimeout(checkAndSyncTextarea, 30);
+              setTimeout(setupAndSyncSource, 30);
             }
           };
-          setTimeout(checkAndSyncTextarea, 20);
+          setTimeout(setupAndSyncSource, 20);
         } else {
           // Exiting Source Editing Mode back to Normal WYSIWYG View
           isProgrammaticChange = true;
           const textarea = document.querySelector('.ck-source-editing-area textarea');
           if (textarea) {
-            sourceScrollTop = textarea.scrollTop;
-            sourceSelectionStart = textarea.selectionStart || 0;
+            lastSourceScrollTop = textarea.scrollTop;
+            lastSourceSelectionStart = textarea.selectionStart || 0;
+            hasExplicitSourcePos = true;
           }
 
           let attempts = 0;
-          const checkAndSyncWysiwyg = () => {
-            if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
+          const restoreWysiwygPos = () => {
+            if (lastWysiwygSelectionState) {
+              window.editorBridge.setSelectionState(lastWysiwygSelectionState, lastWysiwygScrollTop);
+            } else if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
               window.AndroidNative.restoreNativeCursorAndScrollState();
-            } else if (wysiwygSelectionState) {
-              window.editorBridge.setSelectionState(wysiwygSelectionState, wysiwygScrollTop);
             } else if (mainAreaForScroll) {
-              mainAreaForScroll.scrollTop = wysiwygScrollTop;
+              mainAreaForScroll.scrollTop = lastWysiwygScrollTop;
             }
+
+            try {
+              editorInstance.editing.view.focus();
+            } catch (e) {}
+
             if (attempts < 5) {
               attempts++;
-              setTimeout(checkAndSyncWysiwyg, 100);
+              setTimeout(restoreWysiwygPos, 60);
             } else {
               setTimeout(() => { isProgrammaticChange = false; }, 100);
             }
           };
-          setTimeout(checkAndSyncWysiwyg, 50);
+          setTimeout(restoreWysiwygPos, 30);
         }
       });
     }
