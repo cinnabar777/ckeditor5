@@ -109575,7 +109575,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       let lastWysiwygSelectionState = null;
       let lastSourceScrollTop = 0;
       let lastSourceSelectionStart = 0;
-      let hasExplicitSourcePos = false;
       const mainAreaForScroll = document.querySelector(".ck-editor__main");
       if (mainAreaForScroll) {
         mainAreaForScroll.addEventListener("scroll", () => {
@@ -109586,6 +109585,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }, { passive: true });
       }
       editorInstance.model.document.selection.on("change:range", () => {
+        if (isProgrammaticChange) return;
         const sourceEditingPlugin2 = editorInstance && editorInstance.plugins ? editorInstance.plugins.get("SourceEditing") : null;
         if (!sourceEditingPlugin2 || !sourceEditingPlugin2.isSourceEditingMode) {
           const sel = window.editorBridge.getSelectionState();
@@ -109598,63 +109598,64 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       if (sourceEditingPlugin) {
         sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
           if (isSourceEditing) {
+            const sel = window.editorBridge.getSelectionState();
+            if (sel && Array.isArray(sel.path) && sel.path.length > 0) {
+              lastWysiwygSelectionState = sel;
+            }
+            if (mainAreaForScroll) {
+              lastWysiwygScrollTop = mainAreaForScroll.scrollTop;
+            }
+            let calculatedOffset = 0;
+            try {
+              const selection = editorInstance.model.document.selection;
+              const range = selection.getFirstRange();
+              if (range) {
+                const root7 = editorInstance.model.document.getRoot();
+                const rangeFromStart = editorInstance.model.createRange(
+                  editorInstance.model.createPositionAt(root7, 0),
+                  range.start
+                );
+                calculatedOffset = editorInstance.data.get({ range: rangeFromStart }).length;
+              }
+            } catch (e) {
+              console.error("Error mapping WYSIWYG cursor to Source View offset:", e);
+            }
             let attempts = 0;
-            const setupAndSyncSource = () => {
+            const syncSourceView = () => {
               const textarea2 = document.querySelector(".ck-source-editing-area textarea");
               if (textarea2) {
-                const saveSourcePos = () => {
+                const bindSourceEvents = () => {
                   lastSourceScrollTop = textarea2.scrollTop;
                   lastSourceSelectionStart = textarea2.selectionStart || 0;
-                  hasExplicitSourcePos = true;
                 };
-                textarea2.addEventListener("scroll", saveSourcePos, { passive: true });
-                textarea2.addEventListener("keyup", saveSourcePos, { passive: true });
-                textarea2.addEventListener("mouseup", saveSourcePos, { passive: true });
+                textarea2.addEventListener("scroll", bindSourceEvents, { passive: true });
+                textarea2.addEventListener("keyup", bindSourceEvents, { passive: true });
+                textarea2.addEventListener("mouseup", bindSourceEvents, { passive: true });
                 textarea2.focus();
-                if (hasExplicitSourcePos) {
-                  const pos = Math.min(Math.max(0, lastSourceSelectionStart), textarea2.value.length);
-                  textarea2.setSelectionRange(pos, pos);
-                  textarea2.scrollTop = lastSourceScrollTop;
-                } else {
-                  try {
-                    const selection = editorInstance.model.document.selection;
-                    const range = selection.getFirstRange();
-                    if (range) {
-                      const root7 = editorInstance.model.document.getRoot();
-                      const rangeFromStart = editorInstance.model.createRange(
-                        editorInstance.model.createPositionAt(root7, 0),
-                        range.start
-                      );
-                      const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
-                      const computedPos = Math.min(markdownUpToCursor.length, textarea2.value.length);
-                      textarea2.setSelectionRange(computedPos, computedPos);
-                      const textBeforeCursor = textarea2.value.substring(0, computedPos);
-                      const linesBeforeCursor = textBeforeCursor.split("\n").length;
-                      const totalLines = textarea2.value.split("\n").length || 1;
-                      const scrollRatio = linesBeforeCursor / totalLines;
-                      textarea2.scrollTop = Math.max(0, scrollRatio * (textarea2.scrollHeight - textarea2.clientHeight));
-                    }
-                  } catch (e) {
-                    textarea2.setSelectionRange(0, 0);
-                    textarea2.scrollTop = 0;
-                  }
-                }
-              } else if (attempts < 15) {
+                const safePos = Math.min(Math.max(0, calculatedOffset), textarea2.value.length);
+                textarea2.setSelectionRange(safePos, safePos);
+                const textBefore = textarea2.value.substring(0, safePos);
+                const linesBefore = textBefore.split("\n").length;
+                const totalLines = textarea2.value.split("\n").length || 1;
+                const scrollRatio = linesBefore / totalLines;
+                textarea2.scrollTop = Math.max(0, scrollRatio * (textarea2.scrollHeight - textarea2.clientHeight));
+                lastSourceScrollTop = textarea2.scrollTop;
+                lastSourceSelectionStart = safePos;
+              } else if (attempts < 20) {
                 attempts++;
-                setTimeout(setupAndSyncSource, 30);
+                setTimeout(syncSourceView, 25);
               }
             };
-            setTimeout(setupAndSyncSource, 20);
+            setTimeout(syncSourceView, 15);
           } else {
             isProgrammaticChange = true;
             const textarea2 = document.querySelector(".ck-source-editing-area textarea");
             if (textarea2) {
               lastSourceScrollTop = textarea2.scrollTop;
               lastSourceSelectionStart = textarea2.selectionStart || 0;
-              hasExplicitSourcePos = true;
             }
             let attempts = 0;
-            const restoreWysiwygPos = () => {
+            const restoreWysiwygView = () => {
               if (lastWysiwygSelectionState) {
                 window.editorBridge.setSelectionState(lastWysiwygSelectionState, lastWysiwygScrollTop);
               } else if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === "function") {
@@ -109666,16 +109667,16 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
                 editorInstance.editing.view.focus();
               } catch (e) {
               }
-              if (attempts < 5) {
-                attempts++;
-                setTimeout(restoreWysiwygPos, 60);
+              attempts++;
+              if (attempts < 6) {
+                setTimeout(restoreWysiwygView, 50);
               } else {
                 setTimeout(() => {
                   isProgrammaticChange = false;
-                }, 100);
+                }, 150);
               }
             };
-            setTimeout(restoreWysiwygPos, 30);
+            setTimeout(restoreWysiwygView, 40);
           }
         });
       }

@@ -265,7 +265,6 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     let lastWysiwygSelectionState = null;
     let lastSourceScrollTop = 0;
     let lastSourceSelectionStart = 0;
-    let hasExplicitSourcePos = false;
 
     // Track WYSIWYG scroll and selection continuously
     const mainAreaForScroll = document.querySelector('.ck-editor__main');
@@ -279,6 +278,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     }
 
     editorInstance.model.document.selection.on('change:range', () => {
+      if (isProgrammaticChange) return;
       const sourceEditingPlugin = editorInstance && editorInstance.plugins ? editorInstance.plugins.get('SourceEditing') : null;
       if (!sourceEditingPlugin || !sourceEditingPlugin.isSourceEditingMode) {
         const sel = window.editorBridge.getSelectionState();
@@ -292,57 +292,65 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Entering Source Editing Mode
+          // Capturing current WYSIWYG position before entering Source Mode
+          const sel = window.editorBridge.getSelectionState();
+          if (sel && Array.isArray(sel.path) && sel.path.length > 0) {
+            lastWysiwygSelectionState = sel;
+          }
+          if (mainAreaForScroll) {
+            lastWysiwygScrollTop = mainAreaForScroll.scrollTop;
+          }
+
+          // Calculate Markdown offset corresponding to current WYSIWYG cursor
+          let calculatedOffset = 0;
+          try {
+            const selection = editorInstance.model.document.selection;
+            const range = selection.getFirstRange();
+            if (range) {
+              const root = editorInstance.model.document.getRoot();
+              const rangeFromStart = editorInstance.model.createRange(
+                editorInstance.model.createPositionAt(root, 0),
+                range.start
+              );
+              calculatedOffset = editorInstance.data.get({ range: rangeFromStart }).length;
+            }
+          } catch (e) {
+            console.error('Error mapping WYSIWYG cursor to Source View offset:', e);
+          }
+
+          // Wait until <textarea> is mounted in DOM
           let attempts = 0;
-          const setupAndSyncSource = () => {
+          const syncSourceView = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
-              const saveSourcePos = () => {
+              const bindSourceEvents = () => {
                 lastSourceScrollTop = textarea.scrollTop;
                 lastSourceSelectionStart = textarea.selectionStart || 0;
-                hasExplicitSourcePos = true;
               };
 
-              textarea.addEventListener('scroll', saveSourcePos, { passive: true });
-              textarea.addEventListener('keyup', saveSourcePos, { passive: true });
-              textarea.addEventListener('mouseup', saveSourcePos, { passive: true });
+              textarea.addEventListener('scroll', bindSourceEvents, { passive: true });
+              textarea.addEventListener('keyup', bindSourceEvents, { passive: true });
+              textarea.addEventListener('mouseup', bindSourceEvents, { passive: true });
 
               textarea.focus();
-              if (hasExplicitSourcePos) {
-                const pos = Math.min(Math.max(0, lastSourceSelectionStart), textarea.value.length);
-                textarea.setSelectionRange(pos, pos);
-                textarea.scrollTop = lastSourceScrollTop;
-              } else {
-                // If entering Source Mode for the first time, compute position from WYSIWYG selection
-                try {
-                  const selection = editorInstance.model.document.selection;
-                  const range = selection.getFirstRange();
-                  if (range) {
-                    const root = editorInstance.model.document.getRoot();
-                    const rangeFromStart = editorInstance.model.createRange(
-                      editorInstance.model.createPositionAt(root, 0),
-                      range.start
-                    );
-                    const markdownUpToCursor = editorInstance.data.get({ range: rangeFromStart });
-                    const computedPos = Math.min(markdownUpToCursor.length, textarea.value.length);
-                    textarea.setSelectionRange(computedPos, computedPos);
-                    const textBeforeCursor = textarea.value.substring(0, computedPos);
-                    const linesBeforeCursor = textBeforeCursor.split('\n').length;
-                    const totalLines = textarea.value.split('\n').length || 1;
-                    const scrollRatio = linesBeforeCursor / totalLines;
-                    textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
-                  }
-                } catch (e) {
-                  textarea.setSelectionRange(0, 0);
-                  textarea.scrollTop = 0;
-                }
-              }
-            } else if (attempts < 15) {
+              const safePos = Math.min(Math.max(0, calculatedOffset), textarea.value.length);
+              textarea.setSelectionRange(safePos, safePos);
+
+              // Estimate scroll position in source textarea
+              const textBefore = textarea.value.substring(0, safePos);
+              const linesBefore = textBefore.split('\n').length;
+              const totalLines = textarea.value.split('\n').length || 1;
+              const scrollRatio = linesBefore / totalLines;
+              textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
+
+              lastSourceScrollTop = textarea.scrollTop;
+              lastSourceSelectionStart = safePos;
+            } else if (attempts < 20) {
               attempts++;
-              setTimeout(setupAndSyncSource, 30);
+              setTimeout(syncSourceView, 25);
             }
           };
-          setTimeout(setupAndSyncSource, 20);
+          setTimeout(syncSourceView, 15);
         } else {
           // Exiting Source Editing Mode back to Normal WYSIWYG View
           isProgrammaticChange = true;
@@ -350,11 +358,11 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           if (textarea) {
             lastSourceScrollTop = textarea.scrollTop;
             lastSourceSelectionStart = textarea.selectionStart || 0;
-            hasExplicitSourcePos = true;
           }
 
+          // Await CKEditor internal setData cycle before restoring WYSIWYG position
           let attempts = 0;
-          const restoreWysiwygPos = () => {
+          const restoreWysiwygView = () => {
             if (lastWysiwygSelectionState) {
               window.editorBridge.setSelectionState(lastWysiwygSelectionState, lastWysiwygScrollTop);
             } else if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
@@ -367,14 +375,14 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
               editorInstance.editing.view.focus();
             } catch (e) {}
 
-            if (attempts < 5) {
-              attempts++;
-              setTimeout(restoreWysiwygPos, 60);
+            attempts++;
+            if (attempts < 6) {
+              setTimeout(restoreWysiwygView, 50);
             } else {
-              setTimeout(() => { isProgrammaticChange = false; }, 100);
+              setTimeout(() => { isProgrammaticChange = false; }, 150);
             }
           };
-          setTimeout(restoreWysiwygPos, 30);
+          setTimeout(restoreWysiwygView, 40);
         }
       });
     }
