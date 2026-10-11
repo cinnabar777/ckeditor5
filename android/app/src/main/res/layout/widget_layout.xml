@@ -4,33 +4,15 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <!-- 100% Clean Image View Flipper -->
-    <AdapterViewFlipper
-        android:id="@+id/widget_flipper"
+    <!-- 100% Edge-to-Edge Scrollable ListView for Widget Notes -->
+    <ListView
+        android:id="@+id/widget_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:autoStart="false"
-        android:loopViews="true" />
-
-    <!-- Left 20% Invisible Touch Target for Flipping to Previous Note -->
-    <LinearLayout
-        android:id="@+id/widget_touch_prev"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal" />
-
-    <!-- Right 20% Invisible Touch Target for Flipping to Next Note -->
-    <LinearLayout
-        android:id="@+id/widget_touch_next"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal" />
+        android:divider="@null"
+        android:dividerHeight="16dp"
+        android:padding="0dp"
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/widget_empty_text"

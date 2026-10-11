@@ -13,7 +13,7 @@ import java.io.FileOutputStream
 
 object WidgetSnapshotHelper {
 
-    fun generateTextSnapshot(context: Context, markdownContent: String, fileName: String, isDark: Boolean = true): String? {
+    fun generateTextSnapshot(context: Context, rawMarkdown: String, fileName: String, isDark: Boolean = true): String? {
         return try {
             val width = 720
             val height = 1200
@@ -52,7 +52,13 @@ object WidgetSnapshotHelper {
                 isAntiAlias = true
             }
 
-            val htmlSpannable = Html.fromHtml(markdownContent, Html.FROM_HTML_MODE_LEGACY)
+            // Convert basic Markdown lines into formatted HTML for StaticLayout
+            val htmlString = rawMarkdown
+                .replace("\r\n", "\n")
+                .replace("\n\n", "<br/><br/>")
+                .replace("\n", "<br/>")
+
+            val htmlSpannable = Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
             val startY = padding + titleLayout.height + 24
 
             val contentLayout = StaticLayout.Builder.obtain(htmlSpannable, 0, htmlSpannable.length, textPaint, width - (padding * 2))
@@ -86,18 +92,33 @@ object WidgetSnapshotHelper {
         }
     }
 
-    fun saveSnapshotBitmap(context: Context, bitmap: Bitmap, fileName: String): String? {
+    fun captureWebViewBitmap(context: Context, webView: android.webkit.WebView, fileName: String): String? {
         return try {
+            val width = webView.width.let { if (it <= 0) 1080 else it }
+            val height = (webView.contentHeight * webView.scale).toInt().let { if (it <= 0) 1920 else it }
+
+            val bitmap = Bitmap.createBitmap(width, height.coerceAtMost(3000), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            webView.draw(canvas)
+
+            val targetWidth = 720
+            val targetHeight = ((bitmap.height.toFloat() / bitmap.width.toFloat()) * targetWidth).toInt().coerceAtMost(2500)
+            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true)
+            bitmap.recycle()
+
             val dir = File(context.cacheDir, "widget_snapshots")
             if (!dir.exists()) {
                 dir.mkdirs()
             }
+
             val sanitizedName = fileName.replace("[^a-zA-Z0-9._-]".toRegex(), "_")
             val file = File(dir, "snap_$sanitizedName.png")
             val fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos)
+            scaledBitmap.compress(Bitmap.CompressFormat.PNG, 85, fos)
             fos.flush()
             fos.close()
+            scaledBitmap.recycle()
+
             file.absolutePath
         } catch (e: Exception) {
             e.printStackTrace()

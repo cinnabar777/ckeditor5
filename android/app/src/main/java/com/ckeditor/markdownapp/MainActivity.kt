@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        WebView.enableSlowWholeDocumentDraw()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -337,17 +338,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun captureWidgetSnapshot() {
         val uri = currentFileUri ?: return
-        webView.evaluateJavascript("window.editorBridge.getMarkdown();") { result ->
-            val markdownText = JSONObjectWrapper.unquote(result)
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-            val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
-            val isDark = themeMode != "light"
-
-            val path = WidgetSnapshotHelper.generateTextSnapshot(this, markdownText, currentFileName, isDark)
-            if (path != null) {
-                WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
-                NoteWidgetProvider.updateAllWidgets(this)
-            }
+        val path = WidgetSnapshotHelper.captureWebViewBitmap(this, webView, currentFileName)
+        if (path != null) {
+            WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
+            NoteWidgetProvider.updateAllWidgets(this)
         }
     }
 
