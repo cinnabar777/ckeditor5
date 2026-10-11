@@ -37,6 +37,7 @@ import {
   HtmlEmbed,
   Font,
   Highlight,
+  Autoformat,
   PasteFromOffice
 } from 'ckeditor5';
 
@@ -102,6 +103,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     Essentials,
     Paragraph,
     Markdown,
+    Autoformat,
     PasteFromOffice
   ];
 

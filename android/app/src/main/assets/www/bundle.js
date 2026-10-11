@@ -58309,6 +58309,384 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     });
   }
 
+  // ../packages/ckeditor5-autoformat/src/blockautoformatediting.ts
+  function blockAutoformatEditing(editor, plugin, pattern, callbackOrCommand) {
+    let callback;
+    let command = null;
+    if (typeof callbackOrCommand == "function") {
+      callback = callbackOrCommand;
+    } else {
+      command = editor.commands.get(callbackOrCommand);
+      callback = () => {
+        editor.execute(callbackOrCommand);
+      };
+    }
+    editor.model.document.on("change:data", (evt, batch) => {
+      if (command && !command.isEnabled || !plugin.isEnabled) {
+        return;
+      }
+      const range = first(editor.model.document.selection.getRanges());
+      if (!range.isCollapsed) {
+        return;
+      }
+      if (batch.isUndo || !batch.isLocal) {
+        return;
+      }
+      const changes = Array.from(editor.model.document.differ.getChanges());
+      const entry = changes[0];
+      if (changes.length != 1 || entry.type !== "insert" || entry.name != "$text" || entry.length != 1) {
+        return;
+      }
+      const blockToFormat = entry.position.parent;
+      if (blockToFormat.is("element", "codeBlock")) {
+        return;
+      }
+      if (blockToFormat.is("element", "listItem") && typeof callbackOrCommand !== "function" && !["numberedList", "bulletedList", "todoList"].includes(callbackOrCommand)) {
+        return;
+      }
+      if (command && command.value === true) {
+        return;
+      }
+      const firstNode = blockToFormat.getChild(0);
+      const firstNodeRange = editor.model.createRangeOn(firstNode);
+      if (!firstNodeRange.containsRange(range) && !range.end.isEqual(firstNodeRange.end)) {
+        return;
+      }
+      const match = pattern.exec(firstNode.data.substr(0, range.end.offset));
+      if (!match) {
+        return;
+      }
+      editor.model.enqueueChange((writer) => {
+        const selection = editor.model.document.selection;
+        const start = writer.createPositionAt(blockToFormat, 0);
+        const end = writer.createPositionAt(blockToFormat, match[0].length);
+        const range2 = new ModelLiveRange(start, end);
+        const wasChanged = callback({ match });
+        if (wasChanged !== false) {
+          const selectionAttributes = Array.from(selection.getAttributes());
+          writer.remove(range2);
+          const selectionRange = selection.getFirstRange();
+          const blockRange = writer.createRangeIn(blockToFormat);
+          if (blockToFormat.isEmpty && !blockRange.isEqual(selectionRange) && !blockRange.containsRange(selectionRange, true)) {
+            writer.remove(blockToFormat);
+          }
+          restoreSelectionAttributes(writer, selection, selectionAttributes);
+        }
+        range2.detach();
+        editor.model.enqueueChange(() => {
+          const deletePlugin = editor.plugins.get("Delete");
+          deletePlugin.requestUndoOnBackspace();
+        });
+      });
+    });
+  }
+  function restoreSelectionAttributes(writer, selection, selectionAttributes) {
+    const schema = writer.model.schema;
+    const selectionPosition = selection.getFirstPosition();
+    let selectionSchemaContext = new ModelSchemaContext(selectionPosition);
+    if (schema.checkChild(selectionSchemaContext, "$text")) {
+      selectionSchemaContext = selectionSchemaContext.push("$text");
+    }
+    for (const [attributeName, attributeValue] of selectionAttributes) {
+      if (schema.checkAttribute(selectionSchemaContext, attributeName)) {
+        writer.setSelectionAttribute(attributeName, attributeValue);
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-autoformat/src/inlineautoformatediting.ts
+  function inlineAutoformatEditing(editor, plugin, testRegexpOrCallback, formatCallback) {
+    let regExp;
+    let testCallback;
+    if (testRegexpOrCallback instanceof RegExp) {
+      regExp = testRegexpOrCallback;
+    } else {
+      testCallback = testRegexpOrCallback;
+    }
+    testCallback = testCallback || ((text10) => {
+      let result;
+      const remove3 = [];
+      const format2 = [];
+      while ((result = regExp.exec(text10)) !== null) {
+        if (result && result.length < 4) {
+          break;
+        }
+        let {
+          index: index2,
+          "1": leftDel,
+          "2": content5,
+          "3": rightDel
+        } = result;
+        const found = leftDel + content5 + rightDel;
+        index2 += result[0].length - found.length;
+        const delStart = [
+          index2,
+          index2 + leftDel.length
+        ];
+        const delEnd = [
+          index2 + leftDel.length + content5.length,
+          index2 + leftDel.length + content5.length + rightDel.length
+        ];
+        remove3.push(delStart);
+        remove3.push(delEnd);
+        format2.push([index2 + leftDel.length, index2 + leftDel.length + content5.length]);
+      }
+      return {
+        remove: remove3,
+        format: format2
+      };
+    });
+    editor.model.document.on("change:data", (evt, batch) => {
+      if (batch.isUndo || !batch.isLocal || !plugin.isEnabled) {
+        return;
+      }
+      const model = editor.model;
+      const selection = model.document.selection;
+      if (!selection.isCollapsed) {
+        return;
+      }
+      const changes = Array.from(model.document.differ.getChanges());
+      const entry = changes[0];
+      if (changes.length != 1 || entry.type !== "insert" || entry.name != "$text" || entry.length != 1) {
+        return;
+      }
+      const focus = selection.focus;
+      const block = focus.parent;
+      const { text: text10, range } = getTextAfterCode(model.createRange(model.createPositionAt(block, 0), focus), model);
+      const testOutput = testCallback(text10);
+      const rangesToFormat = testOutputToRanges(range.start, testOutput.format, model);
+      const rangesToRemove = testOutputToRanges(range.start, testOutput.remove, model);
+      if (!(rangesToFormat.length && rangesToRemove.length)) {
+        return;
+      }
+      model.enqueueChange((writer) => {
+        const hasChanged = formatCallback(writer, rangesToFormat);
+        if (hasChanged === false) {
+          return;
+        }
+        for (const range2 of rangesToRemove.reverse()) {
+          writer.remove(range2);
+        }
+        model.enqueueChange(() => {
+          const deletePlugin = editor.plugins.get("Delete");
+          deletePlugin.requestUndoOnBackspace();
+        });
+      });
+    });
+  }
+  function testOutputToRanges(start, arrays, model) {
+    return arrays.filter((array) => array[0] !== void 0 && array[1] !== void 0).map((array) => {
+      return model.createRange(start.getShiftedBy(array[0]), start.getShiftedBy(array[1]));
+    });
+  }
+  function getTextAfterCode(range, model) {
+    let start = range.start;
+    const text10 = Array.from(range.getItems()).reduce((rangeText, node2) => {
+      if (!(node2.is("$text") || node2.is("$textProxy")) || node2.getAttribute("code")) {
+        start = model.createPositionAfter(node2);
+        return "";
+      }
+      return rangeText + node2.data;
+    }, "");
+    return { text: text10, range: model.createRange(start, range.end) };
+  }
+
+  // ../packages/ckeditor5-autoformat/src/autoformat.ts
+  var Autoformat = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get requires() {
+      return [Delete];
+    }
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "Autoformat";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    afterInit() {
+      const editor = this.editor;
+      const t = this.editor.t;
+      this._addListAutoformats();
+      this._addBasicStylesAutoformats();
+      this._addHeadingAutoformats();
+      this._addBlockQuoteAutoformats();
+      this._addCodeBlockAutoformats();
+      this._addHorizontalLineAutoformats();
+      editor.accessibility.addKeystrokeInfos({
+        keystrokes: [
+          {
+            label: t("Revert autoformatting action"),
+            keystroke: "Backspace"
+          }
+        ]
+      });
+    }
+    /**
+     * Adds autoformatting related to the {@link module:list/list~List}.
+     *
+     * When typed:
+     * - `* ` or `- ` &ndash; A paragraph will be changed into a bulleted list.
+     * - `<number>. ` or `<number>) ` &ndash; A paragraph will be changed into a numbered list.
+     * If the paragraph is adjacent to an existing list, the typed number is ignored and the item joins the list
+     * as the next sequential item. Otherwise, a new list is created with the `listStart` attribute set to the typed number
+     * (when the {@link module:list/listproperties~ListProperties start index feature} is enabled).
+     * - `[] ` or `[ ] ` &ndash; A paragraph will be changed into a to-do list.
+     * - `[x] ` or `[ x ] ` &ndash; A paragraph will be changed into a checked to-do list.
+     */
+    _addListAutoformats() {
+      const commands = this.editor.commands;
+      if (commands.get("bulletedList")) {
+        blockAutoformatEditing(this.editor, this, /^[*-]\s$/, "bulletedList");
+      }
+      if (commands.get("numberedList")) {
+        const numberedListCommand = commands.get("numberedList");
+        const hasStartIndexFeature = !!commands.get("listStart");
+        blockAutoformatEditing(this.editor, this, /^(\d+)[.|)]\s$/, ({ match }) => {
+          if (!numberedListCommand.isEnabled || numberedListCommand.value === true) {
+            return false;
+          }
+          this.editor.execute(
+            "numberedList",
+            hasStartIndexFeature ? { additionalAttributes: { listStart: parseInt(match[1]) } } : void 0
+          );
+        });
+      }
+      if (commands.get("todoList")) {
+        blockAutoformatEditing(this.editor, this, /^\[\s?\]\s$/, "todoList");
+      }
+      if (commands.get("checkTodoList")) {
+        blockAutoformatEditing(this.editor, this, /^\[\s?x\s?\]\s$/, () => {
+          this.editor.execute("todoList");
+          this.editor.execute("checkTodoList");
+        });
+      }
+    }
+    /**
+     * Adds autoformatting related to the {@link module:basic-styles/bold~Bold},
+     * {@link module:basic-styles/italic~Italic}, {@link module:basic-styles/code~Code}
+     * and {@link module:basic-styles/strikethrough~Strikethrough}
+     *
+     * When typed:
+     * - `**foobar**` &ndash; `**` characters are removed and `foobar` is set to bold,
+     * - `__foobar__` &ndash; `__` characters are removed and `foobar` is set to bold,
+     * - `*foobar*` &ndash; `*` characters are removed and `foobar` is set to italic,
+     * - `_foobar_` &ndash; `_` characters are removed and `foobar` is set to italic,
+     * - ``` `foobar` &ndash; ``` ` ``` characters are removed and `foobar` is set to code,
+     * - `~~foobar~~` &ndash; `~~` characters are removed and `foobar` is set to strikethrough.
+     */
+    _addBasicStylesAutoformats() {
+      const commands = this.editor.commands;
+      if (commands.get("bold")) {
+        const boldCallback = getCallbackFunctionForInlineAutoformat(this.editor, "bold");
+        inlineAutoformatEditing(this.editor, this, /(?:^|\s)(\*\*)([^*]+)(\*\*)$/g, boldCallback);
+        inlineAutoformatEditing(this.editor, this, /(?:^|\s)(__)([^_]+)(__)$/g, boldCallback);
+      }
+      if (commands.get("italic")) {
+        const italicCallback = getCallbackFunctionForInlineAutoformat(this.editor, "italic");
+        inlineAutoformatEditing(this.editor, this, /(?:^|\s)(\*)([^*_]+)(\*)$/g, italicCallback);
+        inlineAutoformatEditing(this.editor, this, /(?:^|\s)(_)([^_]+)(_)$/g, italicCallback);
+      }
+      if (commands.get("code")) {
+        const codeCallback = getCallbackFunctionForInlineAutoformat(this.editor, "code");
+        inlineAutoformatEditing(this.editor, this, /(`)([^`]+)(`)$/g, codeCallback);
+      }
+      if (commands.get("strikethrough")) {
+        const strikethroughCallback = getCallbackFunctionForInlineAutoformat(this.editor, "strikethrough");
+        inlineAutoformatEditing(this.editor, this, /(~~)([^~]+)(~~)$/g, strikethroughCallback);
+      }
+    }
+    /**
+     * Adds autoformatting related to {@link module:heading/heading~Heading}.
+     *
+     * It is using a number at the end of the command name to associate it with the proper trigger:
+     *
+     * * `heading` with a `heading1` value will be executed when typing `#`,
+     * * `heading` with a `heading2` value will be executed when typing `##`,
+     * * ... up to `heading6` for `######`.
+     */
+    _addHeadingAutoformats() {
+      const command = this.editor.commands.get("heading");
+      if (command) {
+        command.modelElements.filter((name) => name.match(/^heading[1-6]$/)).forEach((modelName) => {
+          const level = modelName[7];
+          const pattern = new RegExp(`^(#{${level}})\\s$`);
+          blockAutoformatEditing(this.editor, this, pattern, () => {
+            if (!command.isEnabled || command.value === modelName) {
+              return false;
+            }
+            this.editor.execute("heading", { value: modelName });
+          });
+        });
+      }
+    }
+    /**
+     * Adds autoformatting related to {@link module:block-quote/blockquote~BlockQuote}.
+     *
+     * When typed:
+     * * `> ` &ndash; A paragraph will be changed to a block quote.
+     */
+    _addBlockQuoteAutoformats() {
+      if (this.editor.commands.get("blockQuote")) {
+        blockAutoformatEditing(this.editor, this, /^>\s$/, "blockQuote");
+      }
+    }
+    /**
+     * Adds autoformatting related to {@link module:code-block/codeblock~CodeBlock}.
+     *
+     * When typed:
+     * - `` ``` `` &ndash; A paragraph will be changed to a code block.
+     */
+    _addCodeBlockAutoformats() {
+      const editor = this.editor;
+      const selection = editor.model.document.selection;
+      if (editor.commands.get("codeBlock")) {
+        blockAutoformatEditing(editor, this, /^```$/, () => {
+          if (selection.getFirstPosition().parent.is("element", "listItem")) {
+            return false;
+          }
+          this.editor.execute("codeBlock", {
+            usePreviousLanguageChoice: true
+          });
+        });
+      }
+    }
+    /**
+     * Adds autoformatting related to {@link module:horizontal-line/horizontalline~HorizontalLine}.
+     *
+     * When typed:
+     * - `` --- `` &ndash; Will be replaced with a horizontal line.
+     */
+    _addHorizontalLineAutoformats() {
+      if (this.editor.commands.get("horizontalLine")) {
+        blockAutoformatEditing(this.editor, this, /^---$/, "horizontalLine");
+      }
+    }
+  };
+  function getCallbackFunctionForInlineAutoformat(editor, attributeKey) {
+    return (writer, rangesToFormat) => {
+      const command = editor.commands.get(attributeKey);
+      if (!command.isEnabled) {
+        return false;
+      }
+      const validRanges = editor.model.schema.getValidRanges(rangesToFormat, attributeKey);
+      for (const range of validRanges) {
+        writer.setAttribute(attributeKey, true, range);
+      }
+      writer.removeSelectionAttribute(attributeKey);
+    };
+  }
+
   // ../packages/ckeditor5-basic-styles/src/attributecommand.ts
   var AttributeCommand = class extends Command {
     /**
@@ -109429,6 +109807,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       Essentials,
       Paragraph,
       Markdown,
+      Autoformat,
       PasteFromOffice
     ];
     const toolbarItems = [];
