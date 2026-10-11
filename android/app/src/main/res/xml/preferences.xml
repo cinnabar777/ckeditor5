@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Font &amp; Text Styling Settings">
+    <PreferenceCategory app:title="Font &amp; Text Sizing Settings">
         <SeekBarPreference
             app:key="pref_body_font_size"
             app:title="Body Text Size (px)"
@@ -20,21 +20,49 @@
             android:max="200"
             app:defaultValue="100"
             app:showSeekBarValue="true" />
+    </PreferenceCategory>
 
-        <ListPreference
+    <PreferenceCategory app:title="Text &amp; Element Colors (Hex Codes)">
+        <EditTextPreference
             app:key="pref_bold_color"
             app:title="Bold Text Color"
-            app:summary="Select custom highlight color for bold text"
-            app:entries="@array/pref_color_entries"
-            app:entryValues="@array/pref_color_values"
+            app:summary="Hex color code (e.g. #FFD700 or default)"
             app:defaultValue="default" />
 
-        <ListPreference
+        <EditTextPreference
             app:key="pref_italic_color"
             app:title="Italic Text Color"
-            app:summary="Select custom highlight color for italic text"
-            app:entries="@array/pref_color_entries"
-            app:entryValues="@array/pref_color_values"
+            app:summary="Hex color code (e.g. #00E676 or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_link_color"
+            app:title="Link Color"
+            app:summary="Hex color code for hyperlink text (e.g. #29B6F6 or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_code_color"
+            app:title="Inline Code Text Color"
+            app:summary="Hex color code for inline code text (e.g. #FF80AB or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_code_bg_color"
+            app:title="Inline Code Background Color"
+            app:summary="Hex color code for inline code background (e.g. #212121 or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_code_block_color"
+            app:title="Code Block Text Color"
+            app:summary="Hex color code for code block text (e.g. #E0E0E0 or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_code_block_bg_color"
+            app:title="Code Block Background Color"
+            app:summary="Hex color code for code block background (e.g. #121212 or default)"
             app:defaultValue="default" />
     </PreferenceCategory>
 
@@ -46,12 +74,6 @@
             app:entries="@array/pref_theme_entries"
             app:entryValues="@array/pref_theme_values"
             app:defaultValue="amoled" />
-
-        <SwitchPreferenceCompat
-            app:key="pref_fullscreen"
-            app:title="Full Screen Mode"
-            app:summary="Hide native app bar for maximum screen real estate"
-            app:defaultValue="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Image Settings">

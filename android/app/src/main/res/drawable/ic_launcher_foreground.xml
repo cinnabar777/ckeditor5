@@ -4,7 +4,8 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Blue pencil icon properly scaled and centered inside 66dp safe zone (21 to 87) -->
     <path
         android:fillColor="#0288D1"
-        android:pathData="M38,70 L42,70 L68,44 L64,40 L38,66 Z M71,37 L67,33 L70,30 C71,29 73,29 74,30 L78,34 C79,35 79,37 78,38 Z M36,72 L36,66 L42,72 Z" />
+        android:pathData="M42,66 L46,66 L72,40 L68,36 L42,62 Z M75,33 L71,29 L74,26 C75,25 77,25 78,26 L82,30 C83,31 83,33 82,34 Z M40,68 L40,62 L46,68 Z" />
 </vector>

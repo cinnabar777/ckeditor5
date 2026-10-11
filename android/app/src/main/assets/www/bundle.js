@@ -107749,6 +107749,20 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           window.AndroidNative.onContentChanged();
         }
       });
+      editorInstance.model.document.selection.on("change:range", () => {
+        if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onSelectionChanged === "function") {
+          const state = window.editorBridge.getSelectionState();
+          window.AndroidNative.onSelectionChanged(JSON.stringify(state));
+        }
+      });
+      const mainEditingArea = document.querySelector(".ck-editor__main");
+      if (mainEditingArea) {
+        mainEditingArea.addEventListener("scroll", () => {
+          if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onScrollChanged === "function") {
+            window.AndroidNative.onScrollChanged(mainEditingArea.scrollTop);
+          }
+        });
+      }
       const topContainer = document.querySelector(".ck-editor__top");
       if (topContainer) {
         if (!document.querySelector(".toolbar-header-row")) {
@@ -107762,7 +107776,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
             <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
             <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
+            <button class="toolbar-app-btn settings-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
           </div>
         `;
           topContainer.prepend(headerRow);
@@ -107806,6 +107820,51 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         isProgrammaticChange = false;
       }, 50);
     },
+    getSelectionState: function() {
+      if (!editorInstance) return { path: [], offset: 0 };
+      try {
+        const selection = editorInstance.model.document.selection;
+        const range = selection.getFirstRange();
+        if (range) {
+          const start = range.start;
+          return {
+            path: start.path || [],
+            offset: start.offset || 0
+          };
+        }
+      } catch (e) {
+        console.error("Error getting selection state:", e);
+      }
+      return { path: [], offset: 0 };
+    },
+    setSelectionState: function(stateJson, scrollTop) {
+      if (!editorInstance) return;
+      try {
+        if (stateJson) {
+          const state = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;
+          if (state && Array.isArray(state.path)) {
+            const doc = editorInstance.model.document;
+            const root7 = doc.getRoot();
+            const position3 = editorInstance.model.createPositionFromPath(root7, state.path);
+            if (position3) {
+              editorInstance.model.change((writer) => {
+                writer.setSelection(position3);
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error restoring selection state:", e);
+      }
+      if (typeof scrollTop === "number" && scrollTop > 0) {
+        setTimeout(() => {
+          const mainEditingArea = document.querySelector(".ck-editor__main");
+          if (mainEditingArea) {
+            mainEditingArea.scrollTop = scrollTop;
+          }
+        }, 100);
+      }
+    },
     insertImage: function(imageUrl, altText = "") {
       if (!editorInstance) return;
       editorInstance.execute("insertImage", { source: imageUrl, alt: altText });
@@ -107823,23 +107882,27 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         titleEl.textContent = title;
       }
     },
-    setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor) {
+    setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor, linkColor, codeColor, codeBgColor, codeBlockColor, codeBlockBgColor) {
+      const setCssVar = (varName, val) => {
+        if (val && val !== "default") {
+          document.documentElement.style.setProperty(varName, val);
+        } else {
+          document.documentElement.style.removeProperty(varName);
+        }
+      };
       if (bodyFontSizePx) {
         document.documentElement.style.setProperty("--body-font-size", bodyFontSizePx + "px");
       }
       if (headingScale) {
         document.documentElement.style.setProperty("--heading-scale", headingScale);
       }
-      if (boldColor && boldColor !== "default") {
-        document.documentElement.style.setProperty("--bold-color", boldColor);
-      } else {
-        document.documentElement.style.setProperty("--bold-color", "inherit");
-      }
-      if (italicColor && italicColor !== "default") {
-        document.documentElement.style.setProperty("--italic-color", italicColor);
-      } else {
-        document.documentElement.style.setProperty("--italic-color", "inherit");
-      }
+      setCssVar("--bold-color", boldColor);
+      setCssVar("--italic-color", italicColor);
+      setCssVar("--link-color", linkColor);
+      setCssVar("--code-color", codeColor);
+      setCssVar("--code-bg-color", codeBgColor);
+      setCssVar("--code-block-color", codeBlockColor);
+      setCssVar("--code-block-bg-color", codeBlockBgColor);
     },
     configurePlugins: function(disabledPluginsJson) {
       let disabledPlugins = [];

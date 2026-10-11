@@ -152,8 +152,16 @@ class MainActivity : AppCompatActivity() {
         val headingScale = headingScalePercent / 100.0
         val boldColor = JSONObjectWrapper.quote(prefs.getString("pref_bold_color", "default"))
         val italicColor = JSONObjectWrapper.quote(prefs.getString("pref_italic_color", "default"))
+        val linkColor = JSONObjectWrapper.quote(prefs.getString("pref_link_color", "default"))
+        val codeColor = JSONObjectWrapper.quote(prefs.getString("pref_code_color", "default"))
+        val codeBgColor = JSONObjectWrapper.quote(prefs.getString("pref_code_bg_color", "default"))
+        val codeBlockColor = JSONObjectWrapper.quote(prefs.getString("pref_code_block_color", "default"))
+        val codeBlockBgColor = JSONObjectWrapper.quote(prefs.getString("pref_code_block_bg_color", "default"))
 
-        webView.evaluateJavascript("window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor);", null)
+        webView.evaluateJavascript(
+            "window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor, $linkColor, $codeColor, $codeBgColor, $codeBlockColor, $codeBlockBgColor);",
+            null
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -231,9 +239,23 @@ class MainActivity : AppCompatActivity() {
 
                 val escaped = JSONObjectWrapper.quote(content)
                 webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);", null)
+
+                // Restore saved cursor selection and scroll position for this file URI
+                restoreCursorAndScrollState(uri)
             }
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to open file: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun restoreCursorAndScrollState(uri: Uri) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val key = uri.toString()
+        val savedSelection = prefs.getString("cursor_sel_$key", null)
+        val savedScroll = prefs.getInt("cursor_scroll_$key", 0)
+        if (savedSelection != null || savedScroll > 0) {
+            val escapedSelection = JSONObjectWrapper.quote(savedSelection ?: "")
+            webView.evaluateJavascript("window.editorBridge.setSelectionState($escapedSelection, $savedScroll);", null)
         }
     }
 
@@ -402,6 +424,20 @@ class MainActivity : AppCompatActivity() {
                     "settings" -> settingsLauncher.launch(android.content.Intent(this@MainActivity, SettingsActivity::class.java))
                 }
             }
+        }
+
+        @JavascriptInterface
+        fun onSelectionChanged(selectionJson: String) {
+            val uri = currentFileUri ?: return
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+            prefs.edit().putString("cursor_sel_${uri}", selectionJson).apply()
+        }
+
+        @JavascriptInterface
+        fun onScrollChanged(scrollTop: Int) {
+            val uri = currentFileUri ?: return
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+            prefs.edit().putInt("cursor_scroll_${uri}", scrollTop).apply()
         }
     }
 
