@@ -109681,7 +109681,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         titleEl.textContent = title;
       }
     },
-    setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor, linkColor, codeColor, codeBgColor, codeBlockColor, codeBlockBgColor, fontBody, fontHeading, fontBold, fontItalic, fontCode) {
+    setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor, linkColor, codeColor, codeBgColor, codeBlockColor, codeBlockBgColor, fontBodyData, fontHeadingData, fontBoldData, fontItalicData, fontCodeData) {
       const setCssVar = (varName, val) => {
         if (val && val !== "default") {
           document.documentElement.style.setProperty(varName, val);
@@ -109702,11 +109702,46 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       setCssVar("--code-bg-color", codeBgColor);
       setCssVar("--code-block-color", codeBlockColor);
       setCssVar("--code-block-bg-color", codeBlockBgColor);
-      setCssVar("--body-font-family", fontBody);
-      setCssVar("--heading-font-family", fontHeading);
-      setCssVar("--bold-font-family", fontBold);
-      setCssVar("--italic-font-family", fontItalic);
-      setCssVar("--code-font-family", fontCode);
+      let styleEl = document.querySelector("#custom-fonts-style");
+      if (!styleEl) {
+        styleEl = document.createElement("style");
+        styleEl.id = "custom-fonts-style";
+        document.head.appendChild(styleEl);
+      }
+      let fontCss = "";
+      const applyFontCategory = (categoryName, fontData, cssVarName) => {
+        if (fontData && fontData.length > 10) {
+          const familyName = `CustomFont_${categoryName}`;
+          fontCss += `
+          @font-face {
+            font-family: '${familyName}';
+            src: url('${fontData}');
+          }
+        `;
+          document.documentElement.style.setProperty(cssVarName, `'${familyName}'`);
+        } else {
+          document.documentElement.style.removeProperty(cssVarName);
+        }
+      };
+      applyFontCategory("Body", fontBodyData, "--body-font-family");
+      applyFontCategory("Heading", fontHeadingData, "--heading-font-family");
+      applyFontCategory("Bold", fontBoldData, "--bold-font-family");
+      applyFontCategory("Italic", fontItalicData, "--italic-font-family");
+      applyFontCategory("Code", fontCodeData, "--code-font-family");
+      styleEl.innerHTML = fontCss;
+    },
+    setHrSettings: function(thicknessPx, colorHex, widthPercent) {
+      if (thicknessPx) {
+        document.documentElement.style.setProperty("--hr-thickness", thicknessPx + "px");
+      }
+      if (colorHex && colorHex !== "default") {
+        document.documentElement.style.setProperty("--hr-color", colorHex);
+      } else {
+        document.documentElement.style.removeProperty("--hr-color");
+      }
+      if (widthPercent) {
+        document.documentElement.style.setProperty("--hr-width", widthPercent + "%");
+      }
     },
     configurePlugins: function(disabledPluginsJson) {
       let disabledPlugins = [];

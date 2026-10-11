@@ -173,14 +173,30 @@ class MainActivity : AppCompatActivity() {
         val codeBlockColor = JSONObjectWrapper.quote(prefs.getString("pref_code_block_color", "default"))
         val codeBlockBgColor = JSONObjectWrapper.quote(prefs.getString("pref_code_block_bg_color", "default"))
 
-        val fontBody = JSONObjectWrapper.quote(prefs.getString("pref_font_body", "default"))
-        val fontHeading = JSONObjectWrapper.quote(prefs.getString("pref_font_heading", "default"))
-        val fontBold = JSONObjectWrapper.quote(prefs.getString("pref_font_bold", "default"))
-        val fontItalic = JSONObjectWrapper.quote(prefs.getString("pref_font_italic", "default"))
-        val fontCode = JSONObjectWrapper.quote(prefs.getString("pref_font_code", "default"))
+        val fontBodyData = loadFontDataUri(prefs.getString("pref_font_file_body_path", null))
+        val fontHeadingData = loadFontDataUri(prefs.getString("pref_font_file_heading_path", null))
+        val fontBoldData = loadFontDataUri(prefs.getString("pref_font_file_bold_path", null))
+        val fontItalicData = loadFontDataUri(prefs.getString("pref_font_file_italic_path", null))
+        val fontCodeData = loadFontDataUri(prefs.getString("pref_font_file_code_path", null))
+
+        val escapedBodyFont = JSONObjectWrapper.quote(fontBodyData)
+        val escapedHeadingFont = JSONObjectWrapper.quote(fontHeadingData)
+        val escapedBoldFont = JSONObjectWrapper.quote(fontBoldData)
+        val escapedItalicFont = JSONObjectWrapper.quote(fontItalicData)
+        val escapedCodeFont = JSONObjectWrapper.quote(fontCodeData)
 
         webView.evaluateJavascript(
-            "window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor, $linkColor, $codeColor, $codeBgColor, $codeBlockColor, $codeBlockBgColor, $fontBody, $fontHeading, $fontBold, $fontItalic, $fontCode);",
+            "window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor, $linkColor, $codeColor, $codeBgColor, $codeBlockColor, $codeBlockBgColor, $escapedBodyFont, $escapedHeadingFont, $escapedBoldFont, $escapedItalicFont, $escapedCodeFont);",
+            null
+        )
+
+        // Pass Horizontal Rule preferences
+        val hrThickness = prefs.getInt("pref_hr_thickness", 2)
+        val hrColor = JSONObjectWrapper.quote(prefs.getString("pref_hr_color", "default"))
+        val hrWidthPercent = prefs.getInt("pref_hr_width_percent", 100)
+
+        webView.evaluateJavascript(
+            "window.editorBridge.setHrSettings($hrThickness, $hrColor, $hrWidthPercent);",
             null
         )
 
@@ -459,6 +475,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return result ?: "Document.md"
+    }
+
+    private fun loadFontDataUri(path: String?): String {
+        if (path.isNullOrEmpty()) return ""
+        return try {
+            val file = java.io.File(path)
+            if (!file.exists()) return ""
+            val bytes = file.readBytes()
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            val mimeType = when {
+                path.endsWith(".otf", ignoreCase = true) -> "font/otf"
+                path.endsWith(".woff2", ignoreCase = true) -> "font/woff2"
+                path.endsWith(".woff", ignoreCase = true) -> "font/woff"
+                else -> "font/ttf"
+            }
+            "data:$mimeType;base64,$base64"
+        } catch (e: Exception) {
+            ""
+        }
     }
 
     inner class WebAppInterface {
