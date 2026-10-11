@@ -110795,7 +110795,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       });
       editorInstance.model.document.on("change:data", () => {
         if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
-          window.AndroidNative.onContentChanged();
+          const text10 = editorInstance.getData();
+          window.AndroidNative.onContentChanged(text10);
         }
       });
       editorInstance.model.document.selection.on("change:range", () => {
@@ -111460,6 +111461,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           @font-face {
             font-family: '${familyName}';
             src: url('${fontData}');
+          }
+          .ck-content {
+            --custom-${categoryName.toLowerCase()}-font: '${familyName}';
           }
         `;
           document.documentElement.style.setProperty(cssVarName, `'${familyName}'`);

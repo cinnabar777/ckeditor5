@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var currentFileName: String = "Untitled.md"
     private var isDirty: Boolean = false
     private var isEditorReady: Boolean = false
+    private var latestMarkdownContent: String? = null
     private var pendingOpenUri: Uri? = null
 
     private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -143,7 +144,25 @@ class MainActivity : AppCompatActivity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val autoSaveEnabled = prefs.getBoolean("pref_auto_save_on_leave", true)
         if (autoSaveEnabled) {
-            currentFileUri?.let { saveFileToUri(it) }
+            val contentToSave = latestMarkdownContent
+            if (contentToSave != null) {
+                try {
+                    currentFileUri?.let { uri ->
+                        contentResolver.openOutputStream(uri, "rwt")?.use { outputStream ->
+                            val writer = OutputStreamWriter(outputStream)
+                            writer.write(contentToSave)
+                            writer.flush()
+                        }
+                        isDirty = false
+                        updateTitle()
+                    }
+                } catch (e: Exception) {
+                    // Fallback to async evaluation if stream write fails
+                    currentFileUri?.let { saveFileToUri(it) }
+                }
+            } else {
+                currentFileUri?.let { saveFileToUri(it) }
+            }
         }
     }
 
@@ -582,7 +601,8 @@ class MainActivity : AppCompatActivity() {
 
     inner class WebAppInterface {
         @JavascriptInterface
-        fun onContentChanged() {
+        fun onContentChanged(markdownText: String) {
+            latestMarkdownContent = markdownText
             runOnUiThread {
                 if (!isDirty) {
                     isDirty = true

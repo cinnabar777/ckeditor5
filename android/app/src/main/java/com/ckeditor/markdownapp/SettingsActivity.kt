@@ -109,11 +109,6 @@ class SettingsActivity : AppCompatActivity() {
                                 pickFontLauncher.launch("*/*")
                                 true
                             }
-                        } else {
-                            pref.setOnPreferenceClickListener {
-                                showResetSinglePreferenceDialog(pref)
-                                true
-                            }
                         }
                     }
                 }

@@ -221,7 +221,8 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
     editorInstance.model.document.on('change:data', () => {
       if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
-        window.AndroidNative.onContentChanged();
+        const text = editorInstance.getData();
+        window.AndroidNative.onContentChanged(text);
       }
     });
 
@@ -972,6 +973,9 @@ window.editorBridge = {
           @font-face {
             font-family: '${familyName}';
             src: url('${fontData}');
+          }
+          .ck-content {
+            --custom-${categoryName.toLowerCase()}-font: '${familyName}';
           }
         `;
         document.documentElement.style.setProperty(cssVarName, `'${familyName}'`);
