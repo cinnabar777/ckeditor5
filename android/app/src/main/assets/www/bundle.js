@@ -109455,63 +109455,111 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           topContainer.prepend(headerRow);
         }
       }
+      let savedModelOffset = 0;
+      let savedSourceOffset = 0;
+      let lastSourceScrollRatio = 0;
+      editorInstance.model.document.selection.on("change:range", () => {
+        try {
+          const root7 = editorInstance.model.document.getRoot();
+          const selection = editorInstance.model.document.selection;
+          const range = selection.getFirstRange();
+          if (range) {
+            let offset = 0;
+            const fullRange = editorInstance.model.createRangeIn(root7);
+            for (const value of fullRange.getWalker({ shallow: false })) {
+              if (value.previousPosition && value.previousPosition.isEqual(range.start)) {
+                break;
+              }
+              if (value.item && value.item.is && value.item.is("$text")) {
+                offset += value.item.data ? value.item.data.length : 0;
+              } else if (value.type === "elementStart" && value.item !== root7) {
+                offset += 1;
+              }
+            }
+            savedModelOffset = offset;
+          }
+        } catch (e) {
+        }
+      });
       const sourceEditingPlugin = editorInstance.plugins.get("SourceEditing");
       if (sourceEditingPlugin) {
         sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
           if (isSourceEditing) {
-            try {
-              const selection = editorInstance.model.document.selection;
-              const range = selection.getFirstRange();
-              let charOffset = 0;
-              if (range) {
+            let attempts = 0;
+            const checkAndSyncTextarea = () => {
+              const textarea2 = document.querySelector(".ck-source-editing-area textarea");
+              if (textarea2) {
+                const syncSourceState = () => {
+                  savedSourceOffset = textarea2.selectionStart || 0;
+                  if (textarea2.scrollHeight > textarea2.clientHeight) {
+                    lastSourceScrollRatio = textarea2.scrollTop / (textarea2.scrollHeight - textarea2.clientHeight || 1);
+                  }
+                };
+                textarea2.addEventListener("keyup", syncSourceState, { passive: true });
+                textarea2.addEventListener("mouseup", syncSourceState, { passive: true });
+                textarea2.addEventListener("scroll", syncSourceState, { passive: true });
+                const targetOffset = Math.min(savedModelOffset, textarea2.value.length);
+                textarea2.focus();
+                textarea2.setSelectionRange(targetOffset, targetOffset);
+                const lines = textarea2.value.substring(0, targetOffset).split("\n");
+                const lineHeight = parseInt(window.getComputedStyle(textarea2).lineHeight, 10) || 20;
+                textarea2.scrollTop = Math.max(0, (lines.length - 3) * lineHeight);
+                savedSourceOffset = targetOffset;
+              } else if (attempts < 15) {
+                attempts++;
+                setTimeout(checkAndSyncTextarea, 30);
+              }
+            };
+            setTimeout(checkAndSyncTextarea, 20);
+          } else {
+            const textarea2 = document.querySelector(".ck-source-editing-area textarea");
+            if (textarea2) {
+              savedSourceOffset = textarea2.selectionStart || 0;
+              if (textarea2.scrollHeight > textarea2.clientHeight) {
+                lastSourceScrollRatio = textarea2.scrollTop / (textarea2.scrollHeight - textarea2.clientHeight || 1);
+              }
+            }
+            let attempts = 0;
+            const checkAndSyncWysiwyg = () => {
+              try {
                 const root7 = editorInstance.model.document.getRoot();
+                let currentOffset = 0;
+                let targetPosition = null;
                 const fullRange = editorInstance.model.createRangeIn(root7);
                 for (const value of fullRange.getWalker({ shallow: false })) {
-                  if (value.previousPosition && value.previousPosition.isEqual(range.start)) {
-                    break;
-                  }
                   if (value.item && value.item.is && value.item.is("$text")) {
-                    charOffset += value.item.data ? value.item.data.length : 0;
-                  } else if (value.type === "elementEnd") {
-                    charOffset += 1;
-                  }
-                }
-              }
-              setTimeout(() => {
-                const textarea2 = document.querySelector(".ck-source-editing-area textarea");
-                if (textarea2) {
-                  const targetOffset = Math.min(charOffset, textarea2.value.length);
-                  textarea2.focus();
-                  textarea2.setSelectionRange(targetOffset, targetOffset);
-                  const lineHeight = parseInt(window.getComputedStyle(textarea2).lineHeight, 10) || 20;
-                  const linesBeforeCursor = textarea2.value.substring(0, targetOffset).split("\n").length;
-                  textarea2.scrollTop = Math.max(0, (linesBeforeCursor - 3) * lineHeight);
-                }
-              }, 50);
-            } catch (e) {
-              console.error("Error syncing cursor to Source View:", e);
-            }
-          } else {
-            setTimeout(() => {
-              const mainEditingArea2 = document.querySelector(".ck-editor__main");
-              if (mainEditingArea2) {
-                const selection = editorInstance.model.document.selection;
-                const range = selection.getFirstRange();
-                if (range) {
-                  const domConverter = editorInstance.editing.view.domConverter;
-                  const viewRange = editorInstance.editing.mapper.toViewRange(range);
-                  if (viewRange) {
-                    const domRange = domConverter.viewRangeToDom(viewRange);
-                    if (domRange && domRange.startContainer) {
-                      const el = domRange.startContainer.nodeType === Node.ELEMENT_NODE ? domRange.startContainer : domRange.startContainer.parentElement;
-                      if (el && el.scrollIntoView) {
-                        el.scrollIntoView({ block: "center", behavior: "smooth" });
-                      }
+                    const len = value.item.data ? value.item.data.length : 0;
+                    if (currentOffset + len >= savedSourceOffset) {
+                      const charInNode = Math.max(0, savedSourceOffset - currentOffset);
+                      targetPosition = editorInstance.model.createPositionAt(value.item, charInNode);
+                      break;
                     }
+                    currentOffset += len;
+                  } else if (value.type === "elementStart" && value.item !== root7) {
+                    currentOffset += 1;
                   }
                 }
+                if (!targetPosition) {
+                  targetPosition = editorInstance.model.createPositionAt(root7, "end");
+                }
+                if (targetPosition) {
+                  editorInstance.model.change((writer) => {
+                    writer.setSelection(targetPosition);
+                  });
+                }
+              } catch (e) {
+                console.error("Error setting WYSIWYG selection:", e);
               }
-            }, 50);
+              const mainArea = document.querySelector(".ck-editor__main");
+              if (mainArea && mainArea.scrollHeight > mainArea.clientHeight) {
+                mainArea.scrollTop = Math.floor((mainArea.scrollHeight - mainArea.clientHeight) * lastSourceScrollRatio);
+              }
+              if (attempts < 10) {
+                attempts++;
+                setTimeout(checkAndSyncWysiwyg, 40);
+              }
+            };
+            setTimeout(checkAndSyncWysiwyg, 50);
           }
         });
       }
