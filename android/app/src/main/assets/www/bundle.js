@@ -8214,6 +8214,55 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     evt.stop();
   }
 
+  // ../packages/ckeditor5-core/src/multicommand.ts
+  var MultiCommand = class extends Command {
+    constructor() {
+      super(...arguments);
+      /**
+       * Registered child commands definitions.
+       */
+      __publicField(this, "_childCommandsDefinitions", []);
+    }
+    /**
+     * @inheritDoc
+     */
+    refresh() {
+    }
+    /**
+     * Executes the first enabled command which has the highest priority of all registered child commands.
+     *
+     * @returns The value returned by the {@link module:core/command~Command#execute `command.execute()`}.
+     */
+    execute(...args) {
+      const command = this._getFirstEnabledCommand();
+      return !!command && command.execute(args);
+    }
+    /**
+     * Registers a child command.
+     *
+     * @param options An object with configuration options.
+     * @param options.priority Priority of a command to register.
+     */
+    registerChildCommand(command, options = {}) {
+      insertToPriorityArray(this._childCommandsDefinitions, { command, priority: options.priority || "normal" });
+      command.on("change:isEnabled", () => this._checkEnabled());
+      this._checkEnabled();
+    }
+    /**
+     * Checks if any of child commands is enabled.
+     */
+    _checkEnabled() {
+      this.isEnabled = !!this._getFirstEnabledCommand();
+    }
+    /**
+     * Returns a first enabled command with the highest priority or `undefined` if none of them is enabled.
+     */
+    _getFirstEnabledCommand() {
+      const commandDefinition = this._childCommandsDefinitions.find(({ command }) => command.isEnabled);
+      return commandDefinition && commandDefinition.command;
+    }
+  };
+
   // ../packages/ckeditor5-core/src/commandcollection.ts
   var CommandCollection = class {
     /**
@@ -42715,6 +42764,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   // ../packages/ckeditor5-icons/theme/icons/import-export.svg
   var import_export_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M19 4.5 14 0H3v12.673l.868-1.041c.185-.222.4-.402.632-.54V1.5h8v5h5v7.626a2.24 2.24 0 0 1 1.5.822zM14 5V2l3.3 3zm-3.692 12.5q.093.157.213.303L11.52 19H8v-.876a2.24 2.24 0 0 0 1.82-.624zm7.518-.657a.75.75 0 0 0-1.152-.96L15.5 17.29V12H14v5.29l-1.174-1.408a.75.75 0 0 0-1.152.96l2.346 2.816a.95.95 0 0 0 1.46 0zm-15.056-.38a.75.75 0 0 1-.096-1.056l2.346-2.815a.95.95 0 0 1 1.46 0l2.346 2.815a.75.75 0 1 1-1.152.96L6.5 14.96V20H5v-5.04l-1.174 1.408a.75.75 0 0 1-1.056.096Z"/></svg>';
 
+  // ../packages/ckeditor5-icons/theme/icons/indent.svg
+  var indent_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3.75c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m5 6c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75M2.75 16.5h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 1 0 0 1.5M1.632 6.95 5.02 9.358a.4.4 0 0 1-.013.661l-3.39 2.207A.4.4 0 0 1 1 11.892V7.275a.4.4 0 0 1 .632-.326z"/></svg>';
+
   // ../packages/ckeditor5-icons/theme/icons/italic.svg
   var italic_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="m9.586 14.633.021.004q-.054.502.393.962.123.125.274.201h1.474a.6.6 0 1 1 0 1.2H5.304a.6.6 0 0 1 0-1.2h1.15q.711-.106 1.005-.334.235-.182.404-.597l2.416-9.55a1.05 1.05 0 0 0-.281-.823 1.1 1.1 0 0 0-.442-.296H8.15a.6.6 0 0 1 0-1.2h6.443a.6.6 0 1 1 0 1.2h-1.195q-.564.084-.823.296-.323.263-.623.79z"/></svg>';
 
@@ -42795,6 +42847,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
 
   // ../packages/ckeditor5-icons/theme/icons/object-size-small.svg
   var object_size_small_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.5 16.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zM1 15v1H0v-1zm19 0v1h-1v-1zM1 13v1H0v-1zm19 0v1h-1v-1zM1 11v1H0v-1zm19 0v1h-1v-1zM1 9v1H0V9zm19 0v1h-1V9zM1 7v1H0V7zm19 0v1h-1V7zM1 5v1H0V5zm19 0v1h-1V5zm0-2v1h-1V3zM1 3v1H0V3zm13.5-1.5v1h-1v-1zm2 0v1h-1v-1zm2 0v1h-1v-1zm-8 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm-2 0v1h-1v-1zm8 0v1h-1v-1zm-10 0v1h-1v-1z"/><path d="M7 9.5H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M7 11a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-4A.5.5 0 0 1 2 11z"/></svg>';
+
+  // ../packages/ckeditor5-icons/theme/icons/outdent.svg
+  var outdent_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2 3.75c0 .414.336.75.75.75h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 0 0-.75.75m5 6c0 .414.336.75.75.75h9.5a.75.75 0 1 0 0-1.5h-9.5a.75.75 0 0 0-.75.75M2.75 16.5h14.5a.75.75 0 1 0 0-1.5H2.75a.75.75 0 1 0 0 1.5m1.618-9.55L.98 9.358a.4.4 0 0 0 .013.661l3.39 2.207A.4.4 0 0 0 5 11.892V7.275a.4.4 0 0 0-.632-.326z"/></svg>';
 
   // ../packages/ckeditor5-icons/theme/icons/paragraph.svg
   var paragraph_default = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10.5 5.5H7v5h3.5a2.5 2.5 0 1 0 0-5M5 3h6.5v.025a5 5 0 0 1 0 9.95V13H7v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"/></svg>';
@@ -77392,6 +77447,283 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
+  // ../packages/ckeditor5-indent/src/indentediting.ts
+  var IndentEditing = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "IndentEditing";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      editor.commands.add("indent", new MultiCommand(editor));
+      editor.commands.add("outdent", new MultiCommand(editor));
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indentui.ts
+  var IndentUI = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "IndentUI";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      const locale = editor.locale;
+      const t = editor.t;
+      const localizedIndentIcon = locale.uiLanguageDirection == "ltr" ? indent_default : outdent_default;
+      const localizedOutdentIcon = locale.uiLanguageDirection == "ltr" ? outdent_default : indent_default;
+      this._defineButton("indent", t("Increase indent"), localizedIndentIcon);
+      this._defineButton("outdent", t("Decrease indent"), localizedOutdentIcon);
+    }
+    /**
+     * Defines UI buttons for both toolbar and menu bar.
+     */
+    _defineButton(commandName, label, icon) {
+      const editor = this.editor;
+      editor.ui.componentFactory.add(commandName, () => {
+        const buttonView = this._createButton(ButtonView, commandName, label, icon);
+        buttonView.set({
+          tooltip: true
+        });
+        return buttonView;
+      });
+      editor.ui.componentFactory.add("menuBar:" + commandName, () => {
+        return this._createButton(MenuBarMenuListItemButtonView, commandName, label, icon);
+      });
+    }
+    /**
+     * Creates a button to use either in toolbar or in menu bar.
+     */
+    _createButton(ButtonClass, commandName, label, icon) {
+      const editor = this.editor;
+      const command = editor.commands.get(commandName);
+      const view = new ButtonClass(editor.locale);
+      view.set({
+        label,
+        icon
+      });
+      view.bind("isEnabled").to(command, "isEnabled");
+      this.listenTo(view, "execute", () => {
+        editor.execute(commandName);
+        editor.editing.view.focus();
+      });
+      return view;
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indent.ts
+  var Indent = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "Indent";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    static get requires() {
+      return [IndentEditing, IndentUI];
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indentblockcommand.ts
+  var IndentBlockCommand = class extends Command {
+    /**
+     * Creates an instance of the command.
+     */
+    constructor(editor, indentBehavior) {
+      super(editor);
+      /**
+       * The command's indentation behavior.
+       */
+      __publicField(this, "_indentBehavior");
+      this._indentBehavior = indentBehavior;
+    }
+    /**
+     * @inheritDoc
+     */
+    refresh() {
+      const editor = this.editor;
+      const model = editor.model;
+      const block = first(model.document.selection.getSelectedBlocks());
+      if (!block || !this._isIndentationChangeAllowed(block)) {
+        this.isEnabled = false;
+        return;
+      }
+      this.isEnabled = this._indentBehavior.checkEnabled(block.getAttribute("blockIndent"));
+    }
+    /**
+     * @inheritDoc
+     */
+    execute() {
+      const model = this.editor.model;
+      const blocksToChange = this._getBlocksToChange();
+      model.change((writer) => {
+        for (const block of blocksToChange) {
+          const currentIndent = block.getAttribute("blockIndent");
+          const nextIndent = this._indentBehavior.getNextIndent(currentIndent);
+          if (nextIndent) {
+            writer.setAttribute("blockIndent", nextIndent, block);
+          } else {
+            writer.removeAttribute("blockIndent", block);
+          }
+        }
+      });
+    }
+    /**
+     * Returns blocks from selection that should have blockIndent selection set.
+     */
+    _getBlocksToChange() {
+      const model = this.editor.model;
+      const selection = model.document.selection;
+      const blocksInSelection = Array.from(selection.getSelectedBlocks());
+      return blocksInSelection.filter((block) => this._isIndentationChangeAllowed(block));
+    }
+    /**
+     * Returns false if indentation cannot be applied, i.e.:
+     * - for blocks disallowed by schema declaration
+     * - for blocks in Document Lists (disallowed forward indentation only). See https://github.com/ckeditor/ckeditor5/issues/14155.
+     * Otherwise returns true.
+     */
+    _isIndentationChangeAllowed(element6) {
+      const editor = this.editor;
+      if (!editor.model.schema.checkAttribute(element6, "blockIndent")) {
+        return false;
+      }
+      if (!editor.plugins.has("ListUtils")) {
+        return true;
+      }
+      if (!this._indentBehavior.isForward) {
+        return true;
+      }
+      const listUtils = editor.plugins.get("ListUtils");
+      return !listUtils.isListItemBlock(element6);
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indentcommandbehavior/indentusingoffset.ts
+  var IndentUsingOffset = class {
+    /**
+     * Creates an instance of the indentation behavior.
+     *
+     * @param config.direction The direction of indentation.
+     * @param config.offset The offset of the next indentation step.
+     * @param config.unit Indentation unit.
+     */
+    constructor(config) {
+      /**
+       * The direction of indentation.
+       */
+      __publicField(this, "isForward");
+      /**
+       * The offset of the next indentation step.
+       */
+      __publicField(this, "offset");
+      /**
+       * Indentation unit.
+       */
+      __publicField(this, "unit");
+      this.isForward = config.direction === "forward";
+      this.offset = config.offset;
+      this.unit = config.unit;
+    }
+    /**
+     * @inheritDoc
+     */
+    checkEnabled(indentAttributeValue) {
+      const currentOffset = parseFloat(indentAttributeValue || "0");
+      return this.isForward || currentOffset > 0;
+    }
+    /**
+     * @inheritDoc
+     */
+    getNextIndent(indentAttributeValue) {
+      const currentOffset = parseFloat(indentAttributeValue || "0");
+      const isSameUnit = !indentAttributeValue || indentAttributeValue.endsWith(this.unit);
+      if (currentOffset < 0) {
+        return;
+      }
+      if (!isSameUnit) {
+        return this.isForward ? this.offset + this.unit : void 0;
+      }
+      const nextOffset = this.isForward ? this.offset : -this.offset;
+      const offsetToSet = currentOffset + nextOffset;
+      return offsetToSet > 0 ? offsetToSet + this.unit : void 0;
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indentcommandbehavior/indentusingclasses.ts
+  var IndentUsingClasses = class {
+    /**
+     * Creates an instance of the indentation behavior.
+     *
+     * @param config.direction The direction of indentation.
+     * @param config.classes A list of classes used for indentation.
+     */
+    constructor(config) {
+      /**
+       * The direction of indentation.
+       */
+      __publicField(this, "isForward");
+      /**
+       * A list of classes used for indentation.
+       */
+      __publicField(this, "classes");
+      this.isForward = config.direction === "forward";
+      this.classes = config.classes;
+    }
+    /**
+     * @inheritDoc
+     */
+    checkEnabled(indentAttributeValue) {
+      const currentIndex = this.classes.indexOf(indentAttributeValue);
+      if (this.isForward) {
+        return currentIndex < this.classes.length - 1;
+      } else {
+        return currentIndex >= 0;
+      }
+    }
+    /**
+     * @inheritDoc
+     */
+    getNextIndent(indentAttributeValue) {
+      const currentIndex = this.classes.indexOf(indentAttributeValue);
+      const indexStep = this.isForward ? 1 : -1;
+      const nextIndex = currentIndex + indexStep;
+      const nextIndexClamped = Math.min(nextIndex, this.classes.length - 1);
+      return this.classes[nextIndexClamped];
+    }
+  };
+
   // ../packages/ckeditor5-list/src/list/utils/listwalker.ts
   var ListWalker = class {
     /**
@@ -82004,6 +82336,556 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
      */
     static get isOfficialPlugin() {
       return true;
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/integrations/indentblocklistcommand.ts
+  var IndentBlockListCommand = class extends Command {
+    /**
+     * Creates an instance of the command.
+     */
+    constructor(editor, indentBehavior) {
+      super(editor);
+      /**
+       * The command's indentation behavior.
+       */
+      __publicField(this, "_indentBehavior");
+      this._indentBehavior = indentBehavior;
+    }
+    /**
+     * @inheritDoc
+     */
+    refresh() {
+      const listItem3 = this._getFirstListItemIfSelectionIsAtListStart(this.editor.model.document.selection);
+      this.isEnabled = !!listItem3 && this._indentBehavior.checkEnabled(listItem3.getAttribute("blockIndentList"));
+    }
+    /**
+     * Executes the command.
+     *
+     * @fires execute
+     * @param options Command options.
+     * @param options.firstListOnly When `true`, indentation is applied only to the first list at the beginning of the selection.
+     * When `false` or omitted, indentation is applied to all lists of the selection.
+     */
+    execute(options = {}) {
+      const editor = this.editor;
+      const model = editor.model;
+      const selection = model.document.selection;
+      const listUtils = editor.plugins.get("ListUtils");
+      model.change((writer) => {
+        const listItem3 = this._getFirstListItemIfSelectionIsAtListStart(selection);
+        const listItems = [];
+        if (!options.firstListOnly) {
+          const blocks2 = Array.from(selection.getSelectedBlocks());
+          for (const block of blocks2) {
+            if (isListItemBlock(block) && block.getAttribute("listIndent") === 0 && model.schema.checkAttribute(block, "blockIndentList")) {
+              listItems.push(block);
+            }
+          }
+        } else {
+          listItems.push(listItem3);
+        }
+        const expandedListItems = listUtils.expandListBlocksToCompleteList(listItems);
+        for (const item of expandedListItems) {
+          const currentIndent = item.getAttribute("blockIndentList");
+          const nextIndent = this._indentBehavior.getNextIndent(currentIndent);
+          if (nextIndent) {
+            writer.setAttribute("blockIndentList", nextIndent, item);
+          } else {
+            writer.removeAttribute("blockIndentList", item);
+          }
+        }
+      });
+    }
+    /**
+     * Returns the list item at the beginning of the current selection if it is the first top–level list item in the list.
+     * Otherwise, returns `null`.
+     */
+    _getFirstListItemIfSelectionIsAtListStart(selection) {
+      const position3 = selection.getFirstPosition();
+      const listUtils = this.editor.plugins.get("ListUtils");
+      const parent = position3.parent;
+      const schema = this.editor.model.schema;
+      if (position3.isAtStart && isListItemBlock(parent) && parent.getAttribute("listIndent") == 0 && schema.checkAttribute(parent, "blockIndentList") && listUtils.isFirstListItemInList(parent)) {
+        return parent;
+      }
+      return null;
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/integrations/indentblocklistitemcommand.ts
+  var IndentBlockListItemCommand = class extends Command {
+    /**
+     * Creates an instance of the command.
+     */
+    constructor(editor, indentBehavior) {
+      super(editor);
+      /**
+       * The command's indentation behavior.
+       */
+      __publicField(this, "_indentBehavior");
+      this._indentBehavior = indentBehavior;
+    }
+    /**
+     * @inheritDoc
+     */
+    refresh() {
+      this.isEnabled = this._getAffectedListItems().length > 0;
+    }
+    /**
+     * @inheritDoc
+     */
+    execute() {
+      const editor = this.editor;
+      const model = editor.model;
+      model.change((writer) => {
+        for (const block of this._getAffectedListItems()) {
+          writer.removeAttribute("blockIndentListItem", block);
+        }
+      });
+    }
+    /**
+     * Returns an array of list items which block indentation should be changed.
+     */
+    _getAffectedListItems() {
+      const model = this.editor.model;
+      const selection = model.document.selection;
+      const listUtils = this.editor.plugins.get("ListUtils");
+      const blocksInSelection = Array.from(selection.getSelectedBlocks());
+      const expandedBlocks = listUtils.expandListBlocksToCompleteItems(blocksInSelection);
+      return expandedBlocks.filter((block) => this._isIndentationChangeAllowed(block));
+    }
+    /**
+     * Returns `true` if changing the block indentation is allowed for the given list item.
+     */
+    _isIndentationChangeAllowed(element6) {
+      if (!element6.hasAttribute("blockIndentListItem")) {
+        return false;
+      }
+      return this._indentBehavior.checkEnabled(element6.getAttribute("blockIndentListItem"));
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indentcommandbehavior/resetindentusingoffset.ts
+  var ResetIndentUsingOffset = class extends IndentUsingOffset {
+    /**
+     * @inheritDoc
+     */
+    checkEnabled(indentAttributeValue) {
+      const currentOffset = parseFloat(indentAttributeValue);
+      return this.isForward && currentOffset < 0 || !this.isForward && currentOffset > 0;
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/indentcommandbehavior/resetindentusingclasses.ts
+  var ResetIndentUsingClasses = class extends IndentUsingClasses {
+    /**
+     * @inheritDoc
+     */
+    checkEnabled(indentAttributeValue) {
+      return !this.isForward && !!indentAttributeValue;
+    }
+  };
+
+  // ../packages/ckeditor5-indent/src/integrations/indentblocklistintegration.ts
+  var IndentBlockListIntegration = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "IndentBlockListIntegration";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      if (!this.editor.plugins.has("ListEditing")) {
+        return;
+      }
+      const config = editor.config.get("indentBlock");
+      if (config.classes && config.classes.length) {
+        this._setupConversionUsingClasses(config.classes, "ol", "blockIndentList", "list");
+        this._setupConversionUsingClasses(config.classes, "ul", "blockIndentList", "list");
+        this._setupConversionUsingClasses(config.classes, "li", "blockIndentListItem", "item");
+        editor.commands.add("indentBlockList", new IndentBlockListCommand(editor, new IndentUsingClasses({
+          direction: "forward",
+          classes: config.classes
+        })));
+        editor.commands.add("outdentBlockList", new IndentBlockListCommand(editor, new IndentUsingClasses({
+          direction: "backward",
+          classes: config.classes
+        })));
+        editor.commands.add("indentBlockListItem", new IndentBlockListItemCommand(editor, new ResetIndentUsingClasses({
+          direction: "forward",
+          classes: config.classes
+        })));
+        editor.commands.add("outdentBlockListItem", new IndentBlockListItemCommand(editor, new ResetIndentUsingClasses({
+          direction: "backward",
+          classes: config.classes
+        })));
+      } else {
+        editor.data.addStyleProcessorRules(addMarginStylesRules);
+        this._setupConversionUsingOffset("ol", "blockIndentList", "list");
+        this._setupConversionUsingOffset("ul", "blockIndentList", "list");
+        this._setupConversionUsingOffset("li", "blockIndentListItem", "item");
+        editor.commands.add("indentBlockList", new IndentBlockListCommand(editor, new IndentUsingOffset({
+          direction: "forward",
+          offset: config.offset,
+          unit: config.unit
+        })));
+        editor.commands.add("outdentBlockList", new IndentBlockListCommand(editor, new IndentUsingOffset({
+          direction: "backward",
+          offset: config.offset,
+          unit: config.unit
+        })));
+        editor.commands.add("indentBlockListItem", new IndentBlockListItemCommand(editor, new ResetIndentUsingOffset({
+          direction: "forward",
+          offset: config.offset,
+          unit: config.unit
+        })));
+        editor.commands.add("outdentBlockListItem", new IndentBlockListItemCommand(editor, new ResetIndentUsingOffset({
+          direction: "backward",
+          offset: config.offset,
+          unit: config.unit
+        })));
+      }
+      const listEditing = editor.plugins.get("ListEditing");
+      listEditing.on("postFixer", (evt, { listNodes, writer }) => {
+        for (const { node: node2, previousNodeInList } of listNodes) {
+          if (!previousNodeInList) {
+            continue;
+          }
+          if (previousNodeInList.getAttribute("listType") != node2.getAttribute("listType")) {
+            continue;
+          }
+          if (ensureIndentValuesConsistency("blockIndentList", node2, previousNodeInList, writer)) {
+            evt.return = true;
+          }
+          if (previousNodeInList.getAttribute("listItemId") != node2.getAttribute("listItemId")) {
+            continue;
+          }
+          if (ensureIndentValuesConsistency("blockIndentListItem", node2, previousNodeInList, writer)) {
+            evt.return = true;
+          }
+        }
+      });
+      this.listenTo(editor.editing.view.document, "tab", (evt, data) => {
+        const commandName = data.shiftKey ? "outdentBlockList" : "indentBlockList";
+        const command = this.editor.commands.get(commandName);
+        if (command.isEnabled) {
+          editor.execute(commandName, { firstListOnly: true });
+          data.stopPropagation();
+          data.preventDefault();
+          evt.stop();
+        }
+      }, { context: "li", priority: "high" });
+    }
+    /**
+     * @inheritDoc
+     */
+    afterInit() {
+      const editor = this.editor;
+      const model = editor.model;
+      const schema = model.schema;
+      if (!editor.plugins.has("ListEditing")) {
+        return;
+      }
+      schema.extend("$listItem", { allowAttributes: ["blockIndentList", "blockIndentListItem"] });
+      schema.setAttributeProperties("blockIndentList", { isFormatting: true });
+      schema.setAttributeProperties("blockIndentListItem", { isFormatting: true });
+      model.schema.addAttributeCheck((context) => {
+        const item = context.last;
+        if (!item.getAttribute("listItemId")) {
+          return false;
+        }
+      }, "blockIndentList");
+      model.schema.addAttributeCheck((context) => {
+        const item = context.last;
+        if (!item.getAttribute("listItemId")) {
+          return false;
+        }
+      }, "blockIndentListItem");
+      const clearBlockIndentAttributesOnListIndentChange = (_evt, changedBlocks) => {
+        editor.model.change((writer) => {
+          for (const node2 of changedBlocks) {
+            if (node2.hasAttribute("listItemId")) {
+              if (node2.hasAttribute("blockIndentList")) {
+                writer.removeAttribute("blockIndentList", node2);
+              }
+              if (node2.hasAttribute("blockIndentListItem")) {
+                writer.removeAttribute("blockIndentListItem", node2);
+              }
+            }
+          }
+        });
+      };
+      const indentListCommand = editor.commands.get("indentList");
+      const outdentListCommand = editor.commands.get("outdentList");
+      if (indentListCommand) {
+        this.listenTo(
+          indentListCommand,
+          "afterExecute",
+          clearBlockIndentAttributesOnListIndentChange
+        );
+      }
+      if (outdentListCommand) {
+        this.listenTo(
+          outdentListCommand,
+          "afterExecute",
+          clearBlockIndentAttributesOnListIndentChange
+        );
+      }
+      const indentCommand = editor.commands.get("indent");
+      const outdentCommand = editor.commands.get("outdent");
+      indentCommand.registerChildCommand(editor.commands.get("indentBlockList"), { priority: "highest" });
+      outdentCommand.registerChildCommand(editor.commands.get("outdentBlockList"));
+      indentCommand.registerChildCommand(editor.commands.get("indentBlockListItem"));
+      outdentCommand.registerChildCommand(editor.commands.get("outdentBlockListItem"));
+    }
+    /**
+     * Setups conversion for list block indent using offset.
+     */
+    _setupConversionUsingOffset(element6, attributeName, scope) {
+      const editor = this.editor;
+      const locale = editor.locale;
+      const conversion = editor.conversion;
+      const marginProperty = locale.contentLanguageDirection === "rtl" ? "margin-right" : "margin-left";
+      const listEditing = editor.plugins.get("ListEditing");
+      conversion.for("upcast").add((dispatcher) => {
+        dispatcher.on(
+          `element:${element6}`,
+          listBlockIndentUpcastConverter(
+            attributeName,
+            (item) => item.getStyle(marginProperty),
+            (consumable, item) => consumable.consume(item, { styles: marginProperty })
+          ),
+          { priority: "low" }
+        );
+      });
+      listEditing.registerDowncastStrategy({
+        scope,
+        attributeName,
+        setAttributeOnDowncast(writer, value, element7) {
+          if (value) {
+            writer.setStyle(marginProperty, value, element7);
+          }
+        }
+      });
+    }
+    /**
+     * Setups conversion for list block indent using classes.
+     */
+    _setupConversionUsingClasses(classes, element6, attributeName, scope) {
+      const editor = this.editor;
+      const conversion = editor.conversion;
+      const listEditing = editor.plugins.get("ListEditing");
+      conversion.for("upcast").add((dispatcher) => {
+        dispatcher.on(
+          `element:${element6}`,
+          listBlockIndentUpcastConverter(
+            attributeName,
+            (item) => classes.find((cls) => item.hasClass(cls)),
+            (consumable, item, value) => consumable.consume(item, { classes: value })
+          ),
+          { priority: "low" }
+        );
+      });
+      listEditing.registerDowncastStrategy({
+        scope,
+        attributeName,
+        setAttributeOnDowncast(writer, value, element7) {
+          if (value) {
+            writer.addClass(value, element7);
+          }
+        }
+      });
+    }
+  };
+  function listBlockIndentUpcastConverter(attributeName, getValue, consume) {
+    return (evt, data, conversionApi) => {
+      const { writer, consumable } = conversionApi;
+      if (!data.modelRange) {
+        Object.assign(data, conversionApi.convertChildren(data.viewItem, data.modelCursor));
+      }
+      const value = getValue(data.viewItem);
+      if (value === void 0) {
+        return;
+      }
+      let applied = false;
+      let indentLevel;
+      for (const item of data.modelRange.getItems({ shallow: true })) {
+        if (indentLevel === void 0) {
+          indentLevel = item.getAttribute("listIndent");
+        }
+        if (item.hasAttribute(attributeName)) {
+          continue;
+        }
+        if (item.getAttribute("listIndent") !== indentLevel) {
+          continue;
+        }
+        writer.setAttribute(attributeName, value, item);
+        applied = true;
+      }
+      if (applied) {
+        consume(consumable, data.viewItem, value);
+      }
+    };
+  }
+  function ensureIndentValuesConsistency(attributeName, node2, previousNodeInList, writer) {
+    const prevNodeIndentListValue = previousNodeInList.getAttribute(attributeName);
+    if (node2.getAttribute(attributeName) === prevNodeIndentListValue) {
+      return false;
+    }
+    if (prevNodeIndentListValue) {
+      writer.setAttribute(attributeName, prevNodeIndentListValue, node2);
+    } else {
+      writer.removeAttribute(attributeName, node2);
+    }
+    return true;
+  }
+
+  // ../packages/ckeditor5-indent/src/indentblock.ts
+  var DEFAULT_ELEMENTS = ["paragraph", "heading1", "heading2", "heading3", "heading4", "heading5", "heading6"];
+  var IndentBlock = class extends Plugin {
+    /**
+     * @inheritDoc
+     */
+    constructor(editor) {
+      super(editor);
+      editor.config.define("indentBlock", {
+        offset: 40,
+        unit: "px"
+      });
+    }
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "IndentBlock";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    static get requires() {
+      return [IndentBlockListIntegration];
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      const configuration = editor.config.get("indentBlock");
+      if (configuration.classes && configuration.classes.length) {
+        this._setupConversionUsingClasses(configuration.classes);
+        editor.commands.add("indentBlock", new IndentBlockCommand(editor, new IndentUsingClasses({
+          direction: "forward",
+          classes: configuration.classes
+        })));
+        editor.commands.add("outdentBlock", new IndentBlockCommand(editor, new IndentUsingClasses({
+          direction: "backward",
+          classes: configuration.classes
+        })));
+      } else {
+        editor.data.addStyleProcessorRules(addMarginStylesRules);
+        this._setupConversionUsingOffset();
+        editor.commands.add("indentBlock", new IndentBlockCommand(editor, new IndentUsingOffset({
+          direction: "forward",
+          offset: configuration.offset,
+          unit: configuration.unit
+        })));
+        editor.commands.add("outdentBlock", new IndentBlockCommand(editor, new IndentUsingOffset({
+          direction: "backward",
+          offset: configuration.offset,
+          unit: configuration.unit
+        })));
+      }
+    }
+    /**
+     * @inheritDoc
+     */
+    afterInit() {
+      const editor = this.editor;
+      const schema = editor.model.schema;
+      const indentCommand = editor.commands.get("indent");
+      const outdentCommand = editor.commands.get("outdent");
+      const options = editor.config.get("heading.options");
+      const configuredElements = options && options.map((option2) => option2.model);
+      const knownElements = configuredElements || DEFAULT_ELEMENTS;
+      knownElements.forEach((elementName) => {
+        if (schema.isRegistered(elementName)) {
+          schema.extend(elementName, { allowAttributes: "blockIndent" });
+        }
+      });
+      schema.setAttributeProperties("blockIndent", { isFormatting: true });
+      indentCommand.registerChildCommand(editor.commands.get("indentBlock"));
+      outdentCommand.registerChildCommand(editor.commands.get("outdentBlock"));
+    }
+    /**
+     * Setups conversion for using offset indents.
+     */
+    _setupConversionUsingOffset() {
+      const conversion = this.editor.conversion;
+      const locale = this.editor.locale;
+      const marginProperty = locale.contentLanguageDirection === "rtl" ? "margin-right" : "margin-left";
+      conversion.for("upcast").attributeToAttribute({
+        view: {
+          styles: {
+            [marginProperty]: /[\s\S]+/
+          }
+        },
+        model: {
+          key: "blockIndent",
+          value: (viewElement) => {
+            if (!viewElement.is("element", "li")) {
+              return viewElement.getStyle(marginProperty);
+            }
+          }
+        }
+      });
+      conversion.for("downcast").attributeToAttribute({
+        model: "blockIndent",
+        view: (modelAttributeValue) => {
+          return {
+            key: "style",
+            value: {
+              [marginProperty]: modelAttributeValue
+            }
+          };
+        }
+      });
+    }
+    /**
+     * Setups conversion for using classes.
+     */
+    _setupConversionUsingClasses(classes) {
+      const definition3 = {
+        model: {
+          key: "blockIndent",
+          values: []
+        },
+        view: {}
+      };
+      for (const className of classes) {
+        definition3.model.values.push(className);
+        definition3.view[className] = {
+          key: "class",
+          value: [className]
+        };
+      }
+      this.editor.conversion.attributeToAttribute(definition3);
     }
   };
 
@@ -109775,6 +110657,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     bulletedList: "ctrl+shift+8",
     numberedList: "ctrl+shift+7",
     todoList: "ctrl+shift+l",
+    indent: "tab",
+    outdent: "shift+tab",
     horizontalLine: "ctrl+shift+h",
     findAndReplace: "ctrl+f",
     sourceEditing: "ctrl+shift+u",
@@ -109852,6 +110736,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       toolbarItems.push("bulletedList", "numberedList");
     }
     addIfEnabled("todoList", TodoList, "todoList");
+    if (addIfEnabled("indent", Indent)) {
+      pluginsToLoad.push(IndentBlock);
+      toolbarItems.push("outdent", "indent");
+    }
     if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== "|") {
       toolbarItems.push("|");
     }
@@ -110346,6 +111234,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         else if (parseAndMatchHotkey(e, customHotkeys.bulletedList)) exec("bulletedList");
         else if (parseAndMatchHotkey(e, customHotkeys.numberedList)) exec("numberedList");
         else if (parseAndMatchHotkey(e, customHotkeys.todoList)) exec("todoList");
+        else if (parseAndMatchHotkey(e, customHotkeys.indent)) exec("indent");
+        else if (parseAndMatchHotkey(e, customHotkeys.outdent)) exec("outdent");
         else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) exec("horizontalLine");
         else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) exec("findAndReplace");
         else if (parseAndMatchHotkey(e, customHotkeys.sourceEditing)) exec("sourceEditing");

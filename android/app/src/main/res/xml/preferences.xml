@@ -318,6 +318,16 @@
             app:defaultValue="ctrl+shift+l" />
 
         <EditTextPreference
+            app:key="pref_hotkey_indent"
+            app:title="Increase Indent Shortcut"
+            app:defaultValue="tab" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_outdent"
+            app:title="Decrease Indent Shortcut"
+            app:defaultValue="shift+tab" />
+
+        <EditTextPreference
             app:key="pref_hotkey_horizontalLine"
             app:title="Horizontal Line Shortcut"
             app:defaultValue="ctrl+shift+h" />
@@ -462,6 +472,12 @@
         <SwitchPreferenceCompat
             app:key="pref_plugin_todoList"
             app:title="Task / To-Do Lists"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_plugin_indent"
+            app:title="Increase &amp; Decrease Indent"
+            app:summary="Indent or outdent text blocks and list items"
             app:defaultValue="true" />
 
         <SwitchPreferenceCompat

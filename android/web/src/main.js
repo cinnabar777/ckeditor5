@@ -38,6 +38,8 @@ import {
   Font,
   Highlight,
   Autoformat,
+  Indent,
+  IndentBlock,
   PasteFromOffice
 } from 'ckeditor5';
 
@@ -68,6 +70,8 @@ let customHotkeys = {
   bulletedList: 'ctrl+shift+8',
   numberedList: 'ctrl+shift+7',
   todoList: 'ctrl+shift+l',
+  indent: 'tab',
+  outdent: 'shift+tab',
   horizontalLine: 'ctrl+shift+h',
   findAndReplace: 'ctrl+f',
   sourceEditing: 'ctrl+shift+u',
@@ -155,6 +159,10 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     toolbarItems.push('bulletedList', 'numberedList');
   }
   addIfEnabled('todoList', TodoList, 'todoList');
+  if (addIfEnabled('indent', Indent)) {
+    pluginsToLoad.push(IndentBlock);
+    toolbarItems.push('outdent', 'indent');
+  }
   if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== '|') {
     toolbarItems.push('|');
   }
@@ -724,6 +732,8 @@ function setupKeyboardShortcuts() {
       else if (parseAndMatchHotkey(e, customHotkeys.bulletedList)) exec('bulletedList');
       else if (parseAndMatchHotkey(e, customHotkeys.numberedList)) exec('numberedList');
       else if (parseAndMatchHotkey(e, customHotkeys.todoList)) exec('todoList');
+      else if (parseAndMatchHotkey(e, customHotkeys.indent)) exec('indent');
+      else if (parseAndMatchHotkey(e, customHotkeys.outdent)) exec('outdent');
       else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) exec('horizontalLine');
       else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) exec('findAndReplace');
       else if (parseAndMatchHotkey(e, customHotkeys.sourceEditing)) exec('sourceEditing');

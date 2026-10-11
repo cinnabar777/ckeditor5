@@ -266,6 +266,8 @@ class MainActivity : AppCompatActivity() {
             "bulletedList" to prefs.getString("pref_hotkey_bulletedList", "ctrl+shift+8"),
             "numberedList" to prefs.getString("pref_hotkey_numberedList", "ctrl+shift+7"),
             "todoList" to prefs.getString("pref_hotkey_todoList", "ctrl+shift+l"),
+            "indent" to prefs.getString("pref_hotkey_indent", "tab"),
+            "outdent" to prefs.getString("pref_hotkey_outdent", "shift+tab"),
             "horizontalLine" to prefs.getString("pref_hotkey_horizontalLine", "ctrl+shift+h"),
             "findAndReplace" to prefs.getString("pref_hotkey_findAndReplace", "ctrl+f"),
             "sourceEditing" to prefs.getString("pref_hotkey_sourceEditing", "ctrl+shift+u"),
@@ -486,7 +488,7 @@ class MainActivity : AppCompatActivity() {
         val keys = listOf(
             "heading", "bold", "italic", "strikethrough", "highlight", "code", "link",
             "image", "blockQuote", "codeBlock", "table", "list",
-            "todoList", "horizontalLine", "sourceEditing", "findAndReplace", "autoformat"
+            "todoList", "indent", "horizontalLine", "sourceEditing", "findAndReplace", "autoformat"
         )
 
         for (key in keys) {
