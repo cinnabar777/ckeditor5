@@ -97939,6 +97939,1227 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
+  // ../packages/ckeditor5-paste-from-office/src/filters/bookmark.ts
+  function transformBookmarks(documentFragment, writer) {
+    const elementsToChange = [];
+    for (const value of writer.createRangeIn(documentFragment)) {
+      const element6 = value.item;
+      if (element6.is("element", "a") && !element6.hasAttribute("href") && (element6.hasAttribute("id") || element6.hasAttribute("name"))) {
+        elementsToChange.push(element6);
+      }
+    }
+    for (const element6 of elementsToChange) {
+      const index2 = element6.parent.getChildIndex(element6) + 1;
+      const children = element6.getChildren();
+      writer.insertChild(index2, children, element6.parent);
+      if (isHiddenBookmarkAnchor(element6)) {
+        writer.remove(element6);
+      }
+    }
+  }
+  function isHiddenBookmarkAnchor(element6) {
+    const name = element6.getAttribute("name");
+    return !!name && name.startsWith("_");
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/utils.ts
+  function convertCssLengthToPx(value) {
+    const numericValue = parseFloat(value);
+    if (value.endsWith("pt")) {
+      return toPx6(numericValue * 96 / 72);
+    } else if (value.endsWith("pc")) {
+      return toPx6(numericValue * 12 * 96 / 72);
+    } else if (value.endsWith("in")) {
+      return toPx6(numericValue * 96);
+    } else if (value.endsWith("cm")) {
+      return toPx6(numericValue * 96 / 2.54);
+    } else if (value.endsWith("mm")) {
+      return toPx6(numericValue / 10 * 96 / 2.54);
+    }
+    return value;
+  }
+  function toPx6(value) {
+    return Math.round(value) + "px";
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/list.ts
+  function transformListItemLikeElementsIntoLists(documentFragment, stylesString, hasMultiLevelListPlugin, enableSkipLevelLists = false) {
+    if (!documentFragment.childCount) {
+      return;
+    }
+    const writer = new ViewUpcastWriter(documentFragment.document);
+    const itemLikeElements = findAllItemLikeElements(documentFragment, writer);
+    if (!itemLikeElements.length) {
+      return;
+    }
+    const encounteredLists = [];
+    const stack = [];
+    let topLevelListInfo = createTopLevelListInfo();
+    for (const itemLikeElement of itemLikeElements) {
+      if (itemLikeElement.indent !== void 0) {
+        if (!isListContinuation(itemLikeElement)) {
+          applyIndentationToTopLevelList(writer, stack, topLevelListInfo);
+          topLevelListInfo = createTopLevelListInfo();
+          encounteredLists.length = 1;
+          stack.length = 0;
+        }
+        const originalListId = `${itemLikeElement.id}:${itemLikeElement.indent}`;
+        const indent2 = enableSkipLevelLists ? itemLikeElement.indent - 1 : Math.min(itemLikeElement.indent - 1, stack.length);
+        if (indent2 < stack.length && stack[indent2].id !== itemLikeElement.id) {
+          if (indent2 == 0 && topLevelListInfo.canApplyMarginOnList && topLevelListInfo.topLevelListItemElements.length > 0) {
+            applyIndentationToTopLevelList(writer, stack, topLevelListInfo);
+            topLevelListInfo = createTopLevelListInfo();
+          }
+          encounteredLists.length = indent2;
+          stack.length = indent2;
+        }
+        if (indent2 < stack.length - 1) {
+          encounteredLists.length = indent2 + 1;
+          stack.length = indent2 + 1;
+        }
+        const listStyle = detectListStyle(itemLikeElement, stylesString);
+        while (stack.length < indent2) {
+          const intermediateList = writer.createElement(listStyle.type);
+          const intermediateListItem = writer.createElement("li");
+          writer.setStyle("list-style-type", "none", intermediateListItem);
+          if (stack.length == 0) {
+            const parent = itemLikeElement.element.parent;
+            const index2 = parent.getChildIndex(itemLikeElement.element) + 1;
+            writer.insertChild(index2, intermediateList, parent);
+          } else {
+            const parentListItems = stack[stack.length - 1].listItemElements;
+            writer.appendChild(intermediateList, parentListItems[parentListItems.length - 1]);
+          }
+          writer.appendChild(intermediateListItem, intermediateList);
+          stack.push({
+            ...itemLikeElement,
+            listElement: intermediateList,
+            listItemElements: [intermediateListItem],
+            isIntermediate: true,
+            // Intermediate wrappers hold no real list item, so they must not pretend to "own" the
+            // deep item's `margin-left` — otherwise `stack.find` (matching non-list multi-block
+            // continuations by margin) returns the shallower intermediate before the real item.
+            marginLeft: void 0
+          });
+        }
+        if (indent2 > stack.length - 1 || stack[indent2].listElement.name != listStyle.type) {
+          if (listStyle.type == "ol" && itemLikeElement.id !== void 0 && encounteredLists[indent2] && encounteredLists[indent2][originalListId]) {
+            listStyle.startIndex = encounteredLists[indent2][originalListId];
+          }
+          const listElement = createNewEmptyList(listStyle, writer, hasMultiLevelListPlugin);
+          if (stack.length == 0) {
+            const parent = itemLikeElement.element.parent;
+            const index2 = parent.getChildIndex(itemLikeElement.element) + 1;
+            writer.insertChild(index2, listElement, parent);
+          } else if (indent2 == 0) {
+            const existingList = stack[0].listElement;
+            const listParent = existingList.parent;
+            const insertIndex = listParent.getChildIndex(existingList) + 1;
+            writer.insertChild(insertIndex, listElement, listParent);
+          } else {
+            const parentListItems = stack[indent2 - 1].listItemElements;
+            writer.appendChild(listElement, parentListItems[parentListItems.length - 1]);
+          }
+          stack[indent2] = {
+            ...itemLikeElement,
+            listElement,
+            listItemElements: []
+          };
+          if (itemLikeElement.id !== void 0) {
+            if (!encounteredLists[indent2]) {
+              encounteredLists[indent2] = {};
+            }
+            encounteredLists[indent2][originalListId] = listStyle.startIndex || 1;
+          }
+        } else if (stack[indent2].isIntermediate) {
+          applyListStyleToElement(stack[indent2].listElement, listStyle, writer, hasMultiLevelListPlugin);
+          stack[indent2] = {
+            ...itemLikeElement,
+            listElement: stack[indent2].listElement,
+            listItemElements: stack[indent2].listItemElements
+          };
+          if (itemLikeElement.id !== void 0) {
+            if (!encounteredLists[indent2]) {
+              encounteredLists[indent2] = {};
+            }
+            encounteredLists[indent2][originalListId] = listStyle.startIndex || 1;
+          }
+        }
+        const listItem3 = itemLikeElement.element.name == "li" ? itemLikeElement.element : writer.createElement("li");
+        applyListItemMarginLeftAndUpdateTopLevelInfo(writer, stack, topLevelListInfo, itemLikeElement, listItem3, indent2);
+        writer.appendChild(listItem3, stack[indent2].listElement);
+        stack[indent2].listItemElements.push(listItem3);
+        if (itemLikeElement.id !== void 0 && encounteredLists[indent2]) {
+          encounteredLists[indent2][originalListId]++;
+        }
+        if (itemLikeElement.element != listItem3) {
+          writer.appendChild(itemLikeElement.element, listItem3);
+        }
+        removeBulletElement(itemLikeElement.element, writer);
+        writer.removeStyle("text-indent", itemLikeElement.element);
+        writer.removeStyle("margin-left", itemLikeElement.element);
+      } else {
+        const stackItem = stack.find((stackItem2) => stackItem2.marginLeft == itemLikeElement.marginLeft);
+        if (stackItem) {
+          const listItems = stackItem.listItemElements;
+          writer.appendChild(itemLikeElement.element, listItems[listItems.length - 1]);
+          writer.removeStyle("margin-left", itemLikeElement.element);
+          stack.length = stack.indexOf(stackItem) + 1;
+          encounteredLists.length = stack.length + 1;
+        } else {
+          applyIndentationToTopLevelList(writer, stack, topLevelListInfo);
+          topLevelListInfo = createTopLevelListInfo();
+          stack.length = 0;
+        }
+      }
+    }
+    applyIndentationToTopLevelList(writer, stack, topLevelListInfo);
+  }
+  function applyListItemMarginLeftAndUpdateTopLevelInfo(writer, stack, topLevelListInfo, itemLikeElement, listItem3, indent2) {
+    if (itemLikeElement.marginLeft === void 0) {
+      if (indent2 == 0) {
+        topLevelListInfo.canApplyMarginOnList = false;
+      }
+      return;
+    }
+    const listItemBlockMarginLeft = parseFloat(itemLikeElement.marginLeft);
+    let currentListBlockIndent = 0;
+    for (let ancestorIndex = 0; ancestorIndex < stack.length - 1; ancestorIndex++) {
+      const ancestorListItems = stack[ancestorIndex].listItemElements;
+      const ancestorMargin = ancestorListItems[ancestorListItems.length - 1].getStyle("margin-left");
+      if (ancestorMargin !== void 0) {
+        currentListBlockIndent += parseFloat(ancestorMargin);
+      }
+    }
+    currentListBlockIndent += stack.length * 40;
+    const adjustedListItemIndent = listItemBlockMarginLeft - currentListBlockIndent;
+    const listItemBlockMarginLeftPx = adjustedListItemIndent !== 0 ? toPx6(adjustedListItemIndent) : void 0;
+    if (listItemBlockMarginLeftPx) {
+      writer.setStyle("margin-left", listItemBlockMarginLeftPx, listItem3);
+      if (indent2 == 0 && topLevelListInfo.canApplyMarginOnList) {
+        if (topLevelListInfo.marginLeft === void 0) {
+          topLevelListInfo.marginLeft = listItemBlockMarginLeftPx;
+        }
+        if (listItemBlockMarginLeftPx !== topLevelListInfo.marginLeft) {
+          topLevelListInfo.canApplyMarginOnList = false;
+        }
+        topLevelListInfo.topLevelListItemElements.push(listItem3);
+      }
+    }
+  }
+  function createTopLevelListInfo() {
+    return {
+      marginLeft: void 0,
+      canApplyMarginOnList: true,
+      topLevelListItemElements: []
+    };
+  }
+  function applyIndentationToTopLevelList(writer, stack, topLevelListInfo) {
+    if (topLevelListInfo.canApplyMarginOnList && topLevelListInfo.marginLeft && topLevelListInfo.topLevelListItemElements.length > 0) {
+      writer.setStyle("margin-left", topLevelListInfo.marginLeft, stack[0].listElement);
+      for (const topLevelListItem of topLevelListInfo.topLevelListItemElements) {
+        writer.removeStyle("margin-left", topLevelListItem);
+      }
+    }
+  }
+  function unwrapParagraphInListItem(documentFragment, writer) {
+    for (const value of writer.createRangeIn(documentFragment)) {
+      const element6 = value.item;
+      if (element6.is("element", "li")) {
+        const firstChild = element6.getChild(0);
+        if (firstChild && firstChild.is("element", "p")) {
+          writer.unwrapElement(firstChild);
+        }
+      }
+    }
+  }
+  function findAllItemLikeElements(documentFragment, writer) {
+    const range = writer.createRangeIn(documentFragment);
+    const itemLikeElements = [];
+    const foundMargins = /* @__PURE__ */ new Set();
+    for (const item of range.getItems()) {
+      if (!item.is("element") || !item.name.match(/^(p|h\d+|li|div)$/)) {
+        continue;
+      }
+      let marginLeft = getMarginLeftNormalized(item);
+      if (marginLeft !== void 0 && parseFloat(marginLeft) == 0 && !Array.from(item.getClassNames()).find((className) => className.startsWith("MsoList"))) {
+        marginLeft = void 0;
+      }
+      if (item.hasStyle("mso-list") && item.getStyle("mso-list") !== "none" || marginLeft !== void 0 && foundMargins.has(marginLeft)) {
+        const itemData = getListItemData(item);
+        itemLikeElements.push({
+          element: item,
+          id: itemData.id,
+          order: itemData.order,
+          indent: itemData.indent,
+          marginLeft
+        });
+        if (marginLeft !== void 0) {
+          foundMargins.add(marginLeft);
+        }
+      } else {
+        foundMargins.clear();
+      }
+    }
+    return itemLikeElements;
+  }
+  function isListContinuation(currentItem) {
+    let previousSibling = currentItem.element.previousSibling;
+    while (previousSibling && isStrayInlineMarker(previousSibling)) {
+      previousSibling = previousSibling.previousSibling;
+    }
+    if (!previousSibling) {
+      const parent = currentItem.element.parent;
+      return isList(parent) && (!parent.previousSibling || isList(parent.previousSibling));
+    }
+    return isList(previousSibling);
+  }
+  function isStrayInlineMarker(node2) {
+    return node2.is("element") && node2.childCount === 0 && /^(?:span|a|o:p)$/.test(node2.name);
+  }
+  function isList(element6) {
+    return element6.is("element", "ol") || element6.is("element", "ul");
+  }
+  function detectListStyle(listLikeItem, stylesString) {
+    const listStyleRegexp = new RegExp(`@list l${listLikeItem.id}:level${listLikeItem.indent}\\s*({[^}]*)`, "gi");
+    const listStyleTypeRegex = /mso-level-number-format:([^;]{0,100});/gi;
+    const listStartIndexRegex = /mso-level-start-at:\s{0,100}([0-9]{0,10})\s{0,100};/gi;
+    const legalStyleListRegex = new RegExp(`@list\\s+l${listLikeItem.id}:level\\d\\s*{[^{]*mso-level-text:"%\\d\\\\.`, "gi");
+    const multiLevelNumberFormatTypeRegex = new RegExp(`@list l${listLikeItem.id}:level\\d\\s*{[^{]*mso-level-number-format:`, "gi");
+    const legalStyleListMatch = legalStyleListRegex.exec(stylesString);
+    const multiLevelNumberFormatMatch = multiLevelNumberFormatTypeRegex.exec(stylesString);
+    const islegalStyleList = legalStyleListMatch && !multiLevelNumberFormatMatch;
+    const listStyleMatch = listStyleRegexp.exec(stylesString);
+    let listStyleType = "decimal";
+    let type = "ol";
+    let startIndex = null;
+    if (listStyleMatch && listStyleMatch[1]) {
+      const listStyleTypeMatch = listStyleTypeRegex.exec(listStyleMatch[1]);
+      if (listStyleTypeMatch && listStyleTypeMatch[1]) {
+        listStyleType = listStyleTypeMatch[1].trim();
+        type = listStyleType !== "bullet" && listStyleType !== "image" ? "ol" : "ul";
+      }
+      if (listStyleType === "bullet") {
+        const bulletedStyle = findBulletedListStyle(listLikeItem.element);
+        if (bulletedStyle) {
+          listStyleType = bulletedStyle;
+        }
+      } else {
+        const listStartIndexMatch = listStartIndexRegex.exec(listStyleMatch[1]);
+        if (listStartIndexMatch && listStartIndexMatch[1]) {
+          startIndex = parseInt(listStartIndexMatch[1]);
+        }
+      }
+      if (islegalStyleList) {
+        type = "ol";
+      }
+    }
+    return {
+      type,
+      startIndex,
+      style: mapListStyleDefinition(listStyleType),
+      isLegalStyleList: islegalStyleList
+    };
+  }
+  function findBulletedListStyle(element6) {
+    if (element6.name == "li" && element6.parent.name == "ul" && element6.parent.hasAttribute("type")) {
+      return element6.parent.getAttribute("type");
+    }
+    const listMarkerElement = findListMarkerNode(element6);
+    if (!listMarkerElement) {
+      return null;
+    }
+    const listMarker = listMarkerElement._data;
+    if (listMarker === "o") {
+      return "circle";
+    } else if (listMarker === "\xB7") {
+      return "disc";
+    } else if (listMarker === "\xA7") {
+      return "square";
+    }
+    return null;
+  }
+  function findListMarkerNode(element6) {
+    if (element6.getChild(0).is("$text")) {
+      return null;
+    }
+    for (const childNode of element6.getChildren()) {
+      if (!childNode.is("element", "span")) {
+        continue;
+      }
+      const textNodeOrElement = childNode.getChild(0);
+      if (!textNodeOrElement) {
+        continue;
+      }
+      if (textNodeOrElement.is("$text")) {
+        return textNodeOrElement;
+      }
+      return textNodeOrElement.getChild(0);
+    }
+    return null;
+  }
+  function mapListStyleDefinition(value) {
+    if (value.startsWith("arabic-leading-zero")) {
+      return "decimal-leading-zero";
+    }
+    switch (value) {
+      case "alpha-upper":
+        return "upper-alpha";
+      case "alpha-lower":
+        return "lower-alpha";
+      case "roman-upper":
+        return "upper-roman";
+      case "roman-lower":
+        return "lower-roman";
+      case "circle":
+      case "disc":
+      case "square":
+        return value;
+      default:
+        return null;
+    }
+  }
+  function createNewEmptyList(listStyle, writer, hasMultiLevelListPlugin) {
+    const list7 = writer.createElement(listStyle.type);
+    applyListStyleToElement(list7, listStyle, writer, hasMultiLevelListPlugin);
+    return list7;
+  }
+  function applyListStyleToElement(list7, listStyle, writer, hasMultiLevelListPlugin) {
+    if (listStyle.style) {
+      writer.setStyle("list-style-type", listStyle.style, list7);
+    }
+    if (listStyle.startIndex && listStyle.startIndex > 1) {
+      writer.setAttribute("start", listStyle.startIndex, list7);
+    }
+    if (listStyle.isLegalStyleList && hasMultiLevelListPlugin) {
+      writer.addClass("legal-list", list7);
+    }
+  }
+  function getListItemData(element6) {
+    const listStyle = element6.getStyle("mso-list");
+    if (listStyle === void 0) {
+      return {};
+    }
+    const idMatch = listStyle.match(/(^|\s{1,100})l(\d+)/i);
+    const orderMatch = listStyle.match(/\s{0,100}lfo(\d+)/i);
+    const indentMatch = listStyle.match(/\s{0,100}level(\d+)/i);
+    if (idMatch && orderMatch && indentMatch) {
+      return {
+        id: idMatch[2],
+        order: orderMatch[1],
+        indent: parseInt(indentMatch[1])
+      };
+    }
+    return {
+      indent: 1
+      // Handle empty mso-list style as a marked for default list item.
+    };
+  }
+  function removeBulletElement(element6, writer) {
+    const bulletMatcher = new Matcher({
+      name: "span",
+      styles: {
+        "mso-list": "Ignore"
+      }
+    });
+    const range = writer.createRangeIn(element6);
+    for (const value of range) {
+      if (value.type === "elementStart" && bulletMatcher.match(value.item)) {
+        writer.remove(value.item);
+      }
+    }
+  }
+  function getMarginLeftNormalized(element6) {
+    const value = element6.getStyle("margin-left");
+    if (value === void 0 || value.endsWith("px")) {
+      return value;
+    }
+    return convertCssLengthToPx(value);
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/image.ts
+  function replaceImagesSourceWithBase64(documentFragment, rtfData) {
+    if (!documentFragment.childCount) {
+      return;
+    }
+    const upcastWriter = new ViewUpcastWriter(documentFragment.document);
+    const shapesIds = findAllShapesIds(documentFragment, upcastWriter);
+    removeAllImgElementsRepresentingShapes(shapesIds, documentFragment, upcastWriter);
+    insertMissingImgs(shapesIds, documentFragment, upcastWriter);
+    removeAllShapeElements(documentFragment, upcastWriter);
+    const images = findAllImageElementsWithLocalSource(documentFragment, upcastWriter);
+    if (images.length) {
+      replaceImagesFileSourceWithInlineRepresentation(images, extractImageDataFromRtf(rtfData), upcastWriter);
+    }
+  }
+  function _convertHexToBase64(hexString) {
+    return btoa(hexString.match(/\w{2}/g).map((char) => {
+      return String.fromCharCode(parseInt(char, 16));
+    }).join(""));
+  }
+  function findAllShapesIds(documentFragment, writer) {
+    const range = writer.createRangeIn(documentFragment);
+    const shapeElementsMatcher = new Matcher({
+      name: /v:(.+)/
+    });
+    const shapesIds = [];
+    for (const value of range) {
+      if (value.type != "elementStart") {
+        continue;
+      }
+      const el = value.item;
+      const previousSibling = el.previousSibling;
+      const prevSiblingName = previousSibling && previousSibling.is("element") ? previousSibling.name : null;
+      const exceptionIds = ["Chart"];
+      const isElementAShape = shapeElementsMatcher.match(el);
+      const hasElementGfxdataAttribute = el.getAttribute("o:gfxdata");
+      const isPreviousSiblingAShapeType = prevSiblingName === "v:shapetype";
+      const isElementIdInExceptionsArray = hasElementGfxdataAttribute && exceptionIds.some((item) => el.getAttribute("id").includes(item));
+      if (isElementAShape && hasElementGfxdataAttribute && !isPreviousSiblingAShapeType && !isElementIdInExceptionsArray) {
+        shapesIds.push(value.item.getAttribute("id"));
+      }
+    }
+    return shapesIds;
+  }
+  function removeAllImgElementsRepresentingShapes(shapesIds, documentFragment, writer) {
+    const range = writer.createRangeIn(documentFragment);
+    const imageElementsMatcher = new Matcher({
+      name: "img"
+    });
+    const imgs = [];
+    for (const value of range) {
+      if (value.item.is("element") && imageElementsMatcher.match(value.item)) {
+        const el = value.item;
+        const shapes = el.getAttribute("v:shapes") ? el.getAttribute("v:shapes").split(" ") : [];
+        if (shapes.length && shapes.every((shape) => shapesIds.indexOf(shape) > -1)) {
+          imgs.push(el);
+        } else if (!el.getAttribute("src")) {
+          imgs.push(el);
+        }
+      }
+    }
+    for (const img2 of imgs) {
+      writer.remove(img2);
+    }
+  }
+  function removeAllShapeElements(documentFragment, writer) {
+    const range = writer.createRangeIn(documentFragment);
+    const shapeElementsMatcher = new Matcher({
+      name: /v:(.+)/
+    });
+    const shapes = [];
+    for (const value of range) {
+      if (value.type == "elementStart" && shapeElementsMatcher.match(value.item)) {
+        shapes.push(value.item);
+      }
+    }
+    for (const shape of shapes) {
+      writer.remove(shape);
+    }
+  }
+  function insertMissingImgs(shapeIds, documentFragment, writer) {
+    const range = writer.createRangeIn(documentFragment);
+    const shapes = [];
+    for (const value of range) {
+      if (value.type == "elementStart" && value.item.is("element", "v:shape")) {
+        const id = value.item.getAttribute("id");
+        if (shapeIds.includes(id)) {
+          continue;
+        }
+        if (!containsMatchingImg(value.item.parent.getChildren(), id)) {
+          shapes.push(value.item);
+        }
+      }
+    }
+    for (const shape of shapes) {
+      const attrs = {
+        src: findSrc(shape)
+      };
+      if (shape.hasAttribute("alt")) {
+        attrs.alt = shape.getAttribute("alt");
+      }
+      const img2 = writer.createElement("img", attrs);
+      writer.insertChild(shape.index + 1, img2, shape.parent);
+    }
+    function containsMatchingImg(nodes, id) {
+      for (const node2 of nodes) {
+        if (node2.is("element")) {
+          if (node2.name == "img" && node2.getAttribute("v:shapes") == id) {
+            return true;
+          }
+          if (containsMatchingImg(node2.getChildren(), id)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    function findSrc(shape) {
+      for (const child of shape.getChildren()) {
+        if (child.is("element") && child.getAttribute("src")) {
+          return child.getAttribute("src");
+        }
+      }
+    }
+  }
+  function findAllImageElementsWithLocalSource(documentFragment, writer) {
+    const range = writer.createRangeIn(documentFragment);
+    const imageElementsMatcher = new Matcher({
+      name: "img"
+    });
+    const imgs = [];
+    let currentImageIndex = 0;
+    for (const value of range) {
+      if (value.item.is("element") && imageElementsMatcher.match(value.item)) {
+        if (value.item.getAttribute("src").startsWith("file://")) {
+          imgs.push({
+            element: value.item,
+            imageIndex: currentImageIndex
+          });
+        }
+        currentImageIndex++;
+      }
+    }
+    return imgs;
+  }
+  function extractImageDataFromRtf(rtfData) {
+    if (!rtfData) {
+      return [];
+    }
+    const regexPictureHeader = /{\\pict[\s\S]+?\\bliptag-?\d+(\\blipupi-?\d+)?({\\\*\\blipuid\s?[\da-fA-F]+)?[\s}]*?/;
+    const regexPicture = new RegExp("(?:(" + regexPictureHeader.source + "))([\\da-fA-F\\s]+)\\}", "g");
+    const images = rtfData.match(regexPicture);
+    const result = [];
+    if (images) {
+      for (const image3 of images) {
+        let imageType = false;
+        if (image3.includes("\\pngblip")) {
+          imageType = "image/png";
+        } else if (image3.includes("\\jpegblip")) {
+          imageType = "image/jpeg";
+        }
+        if (imageType) {
+          result.push({
+            hex: image3.replace(regexPictureHeader, "").replace(/[^\da-fA-F]/g, ""),
+            type: imageType
+          });
+        }
+      }
+    }
+    return result;
+  }
+  function replaceImagesFileSourceWithInlineRepresentation(imageElements, imagesHexSources, writer) {
+    for (let i = 0; i < imageElements.length; i++) {
+      const { element: element6, imageIndex } = imageElements[i];
+      const rtfHexSource = imagesHexSources[imageIndex];
+      if (rtfHexSource) {
+        const newSrc = `data:${rtfHexSource.type};base64,${_convertHexToBase64(rtfHexSource.hex)}`;
+        writer.setAttribute("src", newSrc, element6);
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/removemsattributes.ts
+  function removeMSAttributes(documentFragment) {
+    const elementsToUnwrap = [];
+    const writer = new ViewUpcastWriter(documentFragment.document);
+    for (const { item } of writer.createRangeIn(documentFragment)) {
+      if (!item.is("element")) {
+        continue;
+      }
+      for (const className of item.getClassNames()) {
+        if (/\bmso/gi.exec(className)) {
+          writer.removeClass(className, item);
+        }
+      }
+      for (const styleName of item.getStyleNames()) {
+        if (/\bmso/gi.exec(styleName)) {
+          writer.removeStyle(styleName, item);
+        }
+      }
+      if (item.is("element", "w:sdt") || item.is("element", "w:sdtpr") && item.isEmpty || item.is("element", "o:p") && item.isEmpty) {
+        elementsToUnwrap.push(item);
+      }
+    }
+    for (const item of elementsToUnwrap) {
+      const itemParent = item.parent;
+      const childIndex = itemParent.getChildIndex(item);
+      writer.insertChild(childIndex, item.getChildren(), itemParent);
+      writer.remove(item);
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/table.ts
+  function transformTables(documentFragment, writer, hasTablePropertiesPlugin = false) {
+    var _a, _b, _c;
+    for (const item of writer.createRangeIn(documentFragment).getItems()) {
+      if (!item.is("element", "table") && !item.is("element", "td") && !item.is("element", "th")) {
+        continue;
+      }
+      if (hasTablePropertiesPlugin && item.is("element", "table")) {
+        const directParent = ((_a = item.parent) == null ? void 0 : _a.is("element", "div")) ? item.parent : null;
+        const grandParent = ((_c = (_b = item.parent) == null ? void 0 : _b.parent) == null ? void 0 : _c.is("element", "div")) ? item.parent.parent : null;
+        const divParent = directParent ?? grandParent;
+        if (divParent && divParent.getAttribute("align") === "center" && !item.getAttribute("align")) {
+          writer.setStyle("margin-left", "auto", item);
+          writer.setStyle("margin-right", "auto", item);
+        } else if (divParent && divParent.getAttribute("align") === "right" && !item.getAttribute("align")) {
+          writer.setStyle("margin-left", "auto", item);
+          writer.setStyle("margin-right", "0", item);
+        } else {
+          if (!divParent && !item.getAttribute("align")) {
+            writer.setStyle("margin-left", "0", item);
+            writer.setStyle("margin-right", "auto", item);
+          }
+        }
+      }
+      const sides = ["left", "top", "right", "bottom"];
+      if (sides.every((side) => !item.hasStyle(`border-${side}-style`))) {
+        writer.setStyle("border-style", "none", item);
+      } else {
+        for (const side of sides) {
+          if (!item.hasStyle(`border-${side}-style`)) {
+            writer.setStyle(`border-${side}-style`, "none", item);
+          }
+        }
+      }
+      const props = [
+        "width",
+        "height",
+        ...sides.map((side) => `border-${side}-width`),
+        ...sides.map((side) => `padding-${side}`)
+      ];
+      for (const prop of props) {
+        if (item.hasStyle(prop)) {
+          writer.setStyle(prop, convertCssLengthToPx(item.getStyle(prop)), item);
+        }
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/removeinvalidtablewidth.ts
+  function removeInvalidTableWidth(documentFragment, writer) {
+    for (const child of writer.createRangeIn(documentFragment).getItems()) {
+      if (child.is("element", "table")) {
+        if (child.getStyle("width") === "0px") {
+          writer.removeStyle("width", child);
+        }
+        if (child.getAttribute("width") === "0") {
+          writer.removeAttribute("width", child);
+        }
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/replacemsfootnotes.ts
+  function replaceMSFootnotes(documentFragment, writer) {
+    const msFootnotesRefs = /* @__PURE__ */ new Map();
+    const msFootnotesDefs = /* @__PURE__ */ new Map();
+    let msFootnotesDefinitionsList = null;
+    for (const { item } of writer.createRangeIn(documentFragment)) {
+      if (!item.is("element")) {
+        continue;
+      }
+      if (item.getStyle("mso-element") === "footnote-list") {
+        msFootnotesDefinitionsList = item;
+        continue;
+      }
+      if (item.hasStyle("mso-footnote-id")) {
+        const msFootnoteDef = item.findAncestor("element", (el) => el.getStyle("mso-element") === "footnote");
+        if (msFootnoteDef) {
+          const msFootnoteDefId = msFootnoteDef.getAttribute("id");
+          msFootnotesDefs.set(msFootnoteDefId, msFootnoteDef);
+        } else {
+          const msFootnoteRefId = item.getStyle("mso-footnote-id");
+          msFootnotesRefs.set(msFootnoteRefId, item);
+        }
+        continue;
+      }
+    }
+    if (!msFootnotesRefs.size || !msFootnotesDefinitionsList) {
+      return;
+    }
+    const footnotesList = createFootnotesListContainerElement(writer);
+    writer.replace(msFootnotesDefinitionsList, footnotesList.wrapper);
+    for (const [footnoteId, msFootnoteRef] of msFootnotesRefs) {
+      const msFootnoteDef = msFootnotesDefs.get(footnoteId);
+      if (!msFootnoteDef) {
+        continue;
+      }
+      writer.replace(msFootnoteRef, createFootnoteRefViewElement(writer, footnoteId));
+      const defElements = createFootnoteDefViewElement(writer, footnoteId);
+      removeMSReferences(writer, msFootnoteDef);
+      for (const child of msFootnoteDef.getChildren()) {
+        let clonedChild = child;
+        if (child.is("element")) {
+          clonedChild = writer.clone(child, true);
+        }
+        writer.appendChild(clonedChild, defElements.content);
+      }
+      writer.appendChild(defElements.listItem, footnotesList.list);
+    }
+  }
+  function removeMSReferences(writer, element6) {
+    const elementsToRemove = [];
+    const textNodesToTrim = [];
+    for (const { item } of writer.createRangeIn(element6)) {
+      if (item.is("element") && item.getStyle("mso-footnote-id")) {
+        elementsToRemove.unshift(item);
+        const { nextSibling } = item;
+        if ((nextSibling == null ? void 0 : nextSibling.is("$text")) && nextSibling.data.startsWith(" ")) {
+          textNodesToTrim.unshift(nextSibling);
+        }
+      }
+    }
+    for (const element7 of elementsToRemove) {
+      writer.remove(element7);
+    }
+    for (const textNode of textNodesToTrim) {
+      const trimmedData = textNode.data.substring(1);
+      if (trimmedData.length > 0) {
+        const parent = textNode.parent;
+        const index2 = parent.getChildIndex(textNode);
+        const newTextNode = writer.createText(trimmedData);
+        writer.remove(textNode);
+        writer.insertChild(index2, newTextNode, parent);
+      } else {
+        writer.remove(textNode);
+      }
+    }
+    return element6;
+  }
+  function createFootnotesListContainerElement(writer) {
+    const divider = writer.createElement("hr", { class: "footnotes-divider" });
+    const list7 = writer.createElement("ol", { class: "footnotes-list" });
+    const wrapper = writer.createElement("div", { class: "footnotes" }, [
+      divider,
+      list7
+    ]);
+    return {
+      list: list7,
+      wrapper
+    };
+  }
+  function createFootnoteRefViewElement(writer, footnoteId) {
+    const sup = writer.createElement("sup", { class: "footnote" });
+    const link4 = writer.createElement("a", {
+      id: `ref-${footnoteId}`,
+      href: `#${footnoteId}`
+    });
+    writer.appendChild(link4, sup);
+    return sup;
+  }
+  function createFootnoteDefViewElement(writer, footnoteId) {
+    const listItem3 = writer.createElement("li", {
+      id: footnoteId,
+      class: "footnote-definition"
+    });
+    const backLink = writer.createElement("a", {
+      href: `#ref-${footnoteId}`,
+      class: "footnote-backlink"
+    });
+    const content5 = writer.createElement("div", {
+      class: "footnote-content"
+    });
+    writer.appendChild(writer.createText("^"), backLink);
+    writer.appendChild(backLink, listItem3);
+    writer.appendChild(content5, listItem3);
+    return {
+      listItem: listItem3,
+      content: content5
+    };
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/normalizers/mswordnormalizer.ts
+  var msWordMatch1 = /<meta\s*name="?generator"?\s*content="?microsoft\s*word\s*\d+"?\/?>/i;
+  var msWordMatch2 = /xmlns:o="urn:schemas-microsoft-com/i;
+  var msExcelMatch = /<meta\s*name="?generator"?\s*content="?microsoft\s*excel\s*\d+"?\/?>/i;
+  var PasteFromOfficeMSWordNormalizer = class {
+    /**
+     * Creates a new `PasteFromOfficeMSWordNormalizer` instance.
+     *
+     * @param document View document.
+     */
+    constructor(document4, hasMultiLevelListPlugin = false, hasTablePropertiesPlugin = false, enableSkipLevelLists = false) {
+      __publicField(this, "document");
+      __publicField(this, "hasMultiLevelListPlugin");
+      __publicField(this, "hasTablePropertiesPlugin");
+      __publicField(this, "enableSkipLevelLists");
+      this.document = document4;
+      this.hasMultiLevelListPlugin = hasMultiLevelListPlugin;
+      this.hasTablePropertiesPlugin = hasTablePropertiesPlugin;
+      this.enableSkipLevelLists = enableSkipLevelLists;
+    }
+    /**
+     * @inheritDoc
+     */
+    isActive(htmlString) {
+      return msWordMatch1.test(htmlString) || msWordMatch2.test(htmlString) || msExcelMatch.test(htmlString);
+    }
+    /**
+     * @inheritDoc
+     */
+    execute(data) {
+      const writer = new ViewUpcastWriter(this.document);
+      const stylesString = data.extraContent.stylesString;
+      transformBookmarks(data.content, writer);
+      transformListItemLikeElementsIntoLists(data.content, stylesString, this.hasMultiLevelListPlugin, this.enableSkipLevelLists);
+      replaceImagesSourceWithBase64(data.content, data.dataTransfer.getData("text/rtf"));
+      transformTables(data.content, writer, this.hasTablePropertiesPlugin);
+      removeInvalidTableWidth(data.content, writer);
+      replaceMSFootnotes(data.content, writer);
+      removeMSAttributes(data.content);
+    }
+  };
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/removeboldwrapper.ts
+  function removeBoldWrapper(documentFragment, writer) {
+    for (const child of documentFragment.getChildren()) {
+      if (child.is("element", "b") && child.getStyle("font-weight") === "normal") {
+        const childIndex = documentFragment.getChildIndex(child);
+        writer.remove(child);
+        writer.insertChild(childIndex, child.getChildren(), documentFragment);
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/br.ts
+  function transformBlockBrsToParagraphs(documentFragment, writer) {
+    const viewDocument = new ViewDocument(writer.document.stylesProcessor);
+    const domConverter = new ViewDomConverter(viewDocument, { renderingMode: "data" });
+    const blockElements = domConverter.blockElements;
+    const inlineObjectElements = domConverter.inlineObjectElements;
+    const elementsToReplace = [];
+    for (const value of writer.createRangeIn(documentFragment)) {
+      const element6 = value.item;
+      if (element6.is("element", "br")) {
+        const nextSibling = findSibling(element6, "forward", writer, { blockElements, inlineObjectElements });
+        const previousSibling = findSibling(element6, "backward", writer, { blockElements, inlineObjectElements });
+        const nextSiblingIsBlock = isBlockViewElement(nextSibling, blockElements);
+        const previousSiblingIsBlock = isBlockViewElement(previousSibling, blockElements);
+        if (previousSiblingIsBlock || nextSiblingIsBlock) {
+          elementsToReplace.push(element6);
+        }
+      }
+    }
+    for (const element6 of elementsToReplace) {
+      if (element6.hasClass("Apple-interchange-newline")) {
+        writer.remove(element6);
+      } else {
+        writer.replace(element6, writer.createElement("p"));
+      }
+    }
+  }
+  function findSibling(viewElement, direction, writer, { blockElements, inlineObjectElements }) {
+    let position3 = writer.createPositionAt(viewElement, direction == "forward" ? "after" : "before");
+    position3 = position3.getLastMatchingPosition(({ item }) => item.is("element") && !blockElements.includes(item.name) && !inlineObjectElements.includes(item.name), { direction });
+    return direction == "forward" ? position3.nodeAfter : position3.nodeBefore;
+  }
+  function isBlockViewElement(node2, blockElements) {
+    return !!node2 && node2.is("element") && blockElements.includes(node2.name);
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/replacetabswithinprewithspaces.ts
+  function replaceTabsWithinPreWithSpaces(documentFragment, writer, tabWidth) {
+    const textNodesToReplace = /* @__PURE__ */ new Set();
+    for (const child of writer.createRangeIn(documentFragment).getItems()) {
+      if (!child.is("view:$textProxy") || !child.data.includes("	")) {
+        continue;
+      }
+      if (hasPreWrapParent(child.parent)) {
+        textNodesToReplace.add(child.textNode);
+      }
+    }
+    for (const textNode of textNodesToReplace) {
+      replaceTabsInTextNode(textNode, writer, tabWidth);
+    }
+  }
+  function hasPreWrapParent(element6) {
+    var _a;
+    let parent = element6;
+    while (parent) {
+      if (parent.is("element")) {
+        const whiteSpace = (_a = parent.getStyle) == null ? void 0 : _a.call(parent, "white-space");
+        if (whiteSpace === "pre-wrap") {
+          return true;
+        }
+      }
+      parent = parent.parent;
+    }
+    return false;
+  }
+  function replaceTabsInTextNode(textNode, writer, tabWidth) {
+    const { parent, data } = textNode;
+    const replacedData = data.replaceAll("	", " ".repeat(tabWidth));
+    const index2 = parent.getChildIndex(textNode);
+    writer.remove(textNode);
+    writer.insertChild(index2, writer.createText(replacedData), parent);
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/normalizers/googledocsnormalizer.ts
+  var googleDocsMatch = /id=("|')docs-internal-guid-[-0-9a-f]+("|')/i;
+  var GoogleDocsNormalizer = class {
+    /**
+     * Creates a new `GoogleDocsNormalizer` instance.
+     *
+     * @param document View document.
+     */
+    constructor(document4) {
+      __publicField(this, "document");
+      this.document = document4;
+    }
+    /**
+     * @inheritDoc
+     */
+    isActive(htmlString) {
+      return googleDocsMatch.test(htmlString);
+    }
+    /**
+     * @inheritDoc
+     */
+    execute(data) {
+      const writer = new ViewUpcastWriter(this.document);
+      removeBoldWrapper(data.content, writer);
+      unwrapParagraphInListItem(data.content, writer);
+      transformBlockBrsToParagraphs(data.content, writer);
+      replaceTabsWithinPreWithSpaces(data.content, writer, 8);
+    }
+  };
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/removexmlns.ts
+  function removeXmlns(documentFragment, writer) {
+    for (const child of documentFragment.getChildren()) {
+      if (child.is("element", "table") && child.hasAttribute("xmlns")) {
+        writer.removeAttribute("xmlns", child);
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/removegooglesheetstag.ts
+  function removeGoogleSheetsTag(documentFragment, writer) {
+    for (const child of documentFragment.getChildren()) {
+      if (child.is("element", "google-sheets-html-origin")) {
+        const childIndex = documentFragment.getChildIndex(child);
+        writer.remove(child);
+        writer.insertChild(childIndex, child.getChildren(), documentFragment);
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/removestyleblock.ts
+  function removeStyleBlock(documentFragment, writer) {
+    for (const child of Array.from(documentFragment.getChildren())) {
+      if (child.is("element", "style")) {
+        writer.remove(child);
+      }
+    }
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/normalizers/googlesheetsnormalizer.ts
+  var googleSheetsMatch = /<google-sheets-html-origin/i;
+  var GoogleSheetsNormalizer = class {
+    /**
+     * Creates a new `GoogleSheetsNormalizer` instance.
+     *
+     * @param document View document.
+     */
+    constructor(document4) {
+      __publicField(this, "document");
+      this.document = document4;
+    }
+    /**
+     * @inheritDoc
+     */
+    isActive(htmlString) {
+      return googleSheetsMatch.test(htmlString);
+    }
+    /**
+     * @inheritDoc
+     */
+    execute(data) {
+      const writer = new ViewUpcastWriter(this.document);
+      removeGoogleSheetsTag(data.content, writer);
+      removeXmlns(data.content, writer);
+      removeInvalidTableWidth(data.content, writer);
+      removeStyleBlock(data.content, writer);
+    }
+  };
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/space.ts
+  function normalizeSpacing(htmlString) {
+    return normalizeSafariSpaceSpans(normalizeSafariSpaceSpans(htmlString)).replace(/(<span\s+style=['"]mso-spacerun:yes['"]>[^\S\r\n]*?)[\r\n]+([^\S\r\n]*<\/span>)/g, "$1$2").replace(/<span\s+style=['"]mso-spacerun:yes['"]><\/span>/g, "").replace(/(<span\s+style=['"]letter-spacing:[^'"]+?['"]>)[\r\n]+(<\/span>)/g, "$1 $2").replace(/ <\//g, "\xA0</").replace(/ <o:p><\/o:p>/g, "\xA0<o:p></o:p>").replace(/<o:p>(&nbsp;|\u00A0)<\/o:p>/g, "").replace(/>([^\S\r\n]*[\r\n]\s*)</g, "><");
+  }
+  function normalizeSpacerunSpans(htmlDocument) {
+    htmlDocument.querySelectorAll("span[style*=spacerun]").forEach((el) => {
+      const htmlElement = el;
+      const innerTextLength = htmlElement.innerText.length || 0;
+      htmlElement.innerText = Array(innerTextLength + 1).join("\xA0 ").substr(0, innerTextLength);
+    });
+  }
+  function normalizeSafariSpaceSpans(htmlString) {
+    return htmlString.replace(/<span(?: class="Apple-converted-space"|)>(\s+)<\/span>/g, (fullMatch, spaces) => {
+      return spaces.length === 1 ? " " : Array(spaces.length + 1).join("\xA0 ").substr(0, spaces.length);
+    });
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/filters/parse.ts
+  function parsePasteOfficeHtml(htmlString, stylesProcessor) {
+    const domParser = new DOMParser();
+    htmlString = htmlString.replace(/<!--\[if gte vml 1]>/g, "");
+    htmlString = htmlString.replace(/<o:SmartTagType(?:\s+[^\s>=]+(?:="[^"]*")?)*\s*\/?>/gi, "");
+    const normalizedHtml = normalizeSpacing(cleanContentAfterBody(htmlString));
+    const htmlDocument = domParser.parseFromString(trustedHtml(normalizedHtml), "text/html");
+    normalizeSpacerunSpans(htmlDocument);
+    removeInBodyStyleBlocks(htmlDocument);
+    const bodyString = htmlDocument.body.innerHTML;
+    const bodyView = documentToView(htmlDocument, stylesProcessor);
+    const stylesObject = extractStyles(htmlDocument);
+    return {
+      body: bodyView,
+      bodyString,
+      styles: stylesObject.styles,
+      stylesString: stylesObject.stylesString
+    };
+  }
+  function documentToView(htmlDocument, stylesProcessor) {
+    const viewDocument = new ViewDocument(stylesProcessor);
+    const domConverter = new ViewDomConverter(viewDocument, { renderingMode: "data" });
+    const fragment = htmlDocument.createDocumentFragment();
+    const nodes = htmlDocument.body.childNodes;
+    while (nodes.length > 0) {
+      fragment.appendChild(nodes[0]);
+    }
+    return domConverter.domToView(fragment, { skipComments: true });
+  }
+  function removeInBodyStyleBlocks(htmlDocument) {
+    for (const style2 of Array.from(htmlDocument.body.querySelectorAll("style"))) {
+      style2.remove();
+    }
+  }
+  function extractStyles(htmlDocument) {
+    const styles = [];
+    const stylesString = [];
+    const styleTags = Array.from(htmlDocument.getElementsByTagName("style"));
+    for (const style2 of styleTags) {
+      if (style2.sheet && style2.sheet.cssRules && style2.sheet.cssRules.length) {
+        styles.push(style2.sheet);
+        stylesString.push(style2.innerHTML);
+      }
+    }
+    return {
+      styles,
+      stylesString: stylesString.join(" ")
+    };
+  }
+  function cleanContentAfterBody(htmlString) {
+    const bodyCloseTag = "</body>";
+    const htmlCloseTag = "</html>";
+    const bodyCloseIndex = htmlString.indexOf(bodyCloseTag);
+    if (bodyCloseIndex < 0) {
+      return htmlString;
+    }
+    const htmlCloseIndex = htmlString.indexOf(htmlCloseTag, bodyCloseIndex + bodyCloseTag.length);
+    return htmlString.substring(0, bodyCloseIndex + bodyCloseTag.length) + (htmlCloseIndex >= 0 ? htmlString.substring(htmlCloseIndex) : "");
+  }
+
+  // ../packages/ckeditor5-paste-from-office/src/pastefromoffice.ts
+  var PasteFromOffice = class extends Plugin {
+    constructor() {
+      super(...arguments);
+      /**
+       * The priority array of registered normalizers.
+       */
+      __publicField(this, "_normalizers", []);
+    }
+    /**
+     * @inheritDoc
+     */
+    static get pluginName() {
+      return "PasteFromOffice";
+    }
+    /**
+     * @inheritDoc
+     * @internal
+     */
+    static get licenseFeatureCode() {
+      return "PFO";
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isOfficialPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    static get isPremiumPlugin() {
+      return true;
+    }
+    /**
+     * @inheritDoc
+     */
+    static get requires() {
+      return [ClipboardPipeline];
+    }
+    /**
+     * @inheritDoc
+     */
+    init() {
+      const editor = this.editor;
+      const clipboardPipeline = editor.plugins.get("ClipboardPipeline");
+      const viewDocument = editor.editing.view.document;
+      const hasMultiLevelListPlugin = this.editor.plugins.has("MultiLevelListEditing");
+      const hasTablePropertiesPlugin = this.editor.plugins.has("TablePropertiesEditing");
+      const enableSkipLevelLists = !!this.editor.config.get("list.enableSkipLevelLists");
+      this.registerNormalizer(
+        new PasteFromOfficeMSWordNormalizer(
+          viewDocument,
+          hasMultiLevelListPlugin,
+          hasTablePropertiesPlugin,
+          enableSkipLevelLists
+        )
+      );
+      this.registerNormalizer(new GoogleDocsNormalizer(viewDocument));
+      this.registerNormalizer(new GoogleSheetsNormalizer(viewDocument));
+      viewDocument.on("clipboardInput", (evt, data) => {
+        if (typeof data.content != "string") {
+          return;
+        }
+        const htmlString = data.dataTransfer.getData("text/html");
+        const activeNormalizer = this._normalizers.find(({ normalizer }) => normalizer.isActive(htmlString));
+        if (activeNormalizer) {
+          const parsedData = parsePasteOfficeHtml(data.content, viewDocument.stylesProcessor);
+          data.content = parsedData.body;
+          data.extraContent = { ...parsedData, isTransformedWithPasteFromOffice: true };
+        }
+      }, { priority: priorities.low + 10 });
+      clipboardPipeline.on(
+        "inputTransformation",
+        (evt, data) => {
+          if (!data.extraContent || !data.extraContent.isTransformedWithPasteFromOffice) {
+            return;
+          }
+          const htmlString = data.dataTransfer.getData("text/html");
+          const normalizers = this._normalizers.filter(({ normalizer }) => normalizer.isActive(htmlString));
+          for (const { normalizer } of normalizers) {
+            normalizer.execute(data);
+          }
+        },
+        { priority: "high" }
+      );
+    }
+    /**
+     * Registers a normalizer with the given priority.
+     */
+    registerNormalizer(normalizer, priority) {
+      insertToPriorityArray(this._normalizers, {
+        normalizer,
+        priority: priorities.get(priority)
+      });
+    }
+  };
+
   // ../packages/ckeditor5-source-editing/src/sourceediting.ts
   var COMMAND_FORCE_DISABLE_ID = "SourceEditingMode";
   var SourceEditing = class extends Plugin {
@@ -108065,7 +109286,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     const pluginsToLoad = [
       Essentials,
       Paragraph,
-      Markdown
+      Markdown,
+      PasteFromOffice
     ];
     const toolbarItems = [];
     const addIfEnabled = (pluginKey, pluginClass, toolbarKey) => {
@@ -108201,6 +109423,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
       if (isInitialInit) {
         setupFloatingToggle();
+        setupKeyboardShortcuts();
         if (window.AndroidNative && typeof window.AndroidNative.onEditorReady === "function") {
           window.AndroidNative.onEditorReady();
         }
@@ -108223,6 +109446,30 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }
       };
     }
+  }
+  function setupKeyboardShortcuts() {
+    window.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        const key2 = e.key.toLowerCase();
+        if (key2 === "n") {
+          e.preventDefault();
+          window.AndroidNative && window.AndroidNative.onNativeAction("new");
+        } else if (key2 === "o") {
+          e.preventDefault();
+          window.AndroidNative && window.AndroidNative.onNativeAction("open");
+        } else if (key2 === "s") {
+          e.preventDefault();
+          if (e.shiftKey) {
+            window.AndroidNative && window.AndroidNative.onNativeAction("save_as");
+          } else {
+            window.AndroidNative && window.AndroidNative.onNativeAction("save");
+          }
+        } else if (key2 === "i" && e.shiftKey) {
+          e.preventDefault();
+          window.AndroidNative && window.AndroidNative.onNativeAction("image");
+        }
+      }
+    });
   }
   window.editorBridge = {
     getMarkdown: function() {

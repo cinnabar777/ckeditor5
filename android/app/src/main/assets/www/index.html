@@ -246,14 +246,22 @@
       box-sizing: border-box !important;
     }
 
-    /* Dark Mode CKEditor Forms & Find/Replace Panel Adjustments */
+    /* Dark Mode CKEditor Forms & Find/Replace Panel Comprehensive Overrides */
     body:not(.light-theme) .ck-find-and-replace-form,
+    body:not(.light-theme) .ck-find-and-replace-form-header,
+    body:not(.light-theme) .ck-form__header,
     body:not(.light-theme) .ck-form,
     body:not(.light-theme) .ck-balloon-panel,
     body:not(.light-theme) .ck-dropdown__panel {
       background-color: #1e1e1e !important;
       color: #ffffff !important;
       border-color: #333333 !important;
+    }
+
+    body:not(.light-theme) .ck-find-and-replace-form-header *,
+    body:not(.light-theme) .ck-form__header * {
+      background-color: #1e1e1e !important;
+      color: #ffffff !important;
     }
 
     body:not(.light-theme) .ck-labeled-field-view,

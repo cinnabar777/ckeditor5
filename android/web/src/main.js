@@ -36,7 +36,8 @@ import {
   SourceEditing,
   HtmlEmbed,
   Font,
-  Highlight
+  Highlight,
+  PasteFromOffice
 } from 'ckeditor5';
 
 import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
@@ -65,7 +66,8 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
   const pluginsToLoad = [
     Essentials,
     Paragraph,
-    Markdown
+    Markdown,
+    PasteFromOffice
   ];
 
   const toolbarItems = [];
@@ -217,6 +219,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
     if (isInitialInit) {
       setupFloatingToggle();
+      setupKeyboardShortcuts();
       if (window.AndroidNative && typeof window.AndroidNative.onEditorReady === 'function') {
         window.AndroidNative.onEditorReady();
       }
@@ -240,6 +243,31 @@ function setupFloatingToggle() {
       }
     };
   }
+}
+
+function setupKeyboardShortcuts() {
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      const key = e.key.toLowerCase();
+      if (key === 'n') {
+        e.preventDefault();
+        window.AndroidNative && window.AndroidNative.onNativeAction('new');
+      } else if (key === 'o') {
+        e.preventDefault();
+        window.AndroidNative && window.AndroidNative.onNativeAction('open');
+      } else if (key === 's') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          window.AndroidNative && window.AndroidNative.onNativeAction('save_as');
+        } else {
+          window.AndroidNative && window.AndroidNative.onNativeAction('save');
+        }
+      } else if (key === 'i' && e.shiftKey) {
+        e.preventDefault();
+        window.AndroidNative && window.AndroidNative.onNativeAction('image');
+      }
+    }
+  });
 }
 
 // Global JS Bridge exposure

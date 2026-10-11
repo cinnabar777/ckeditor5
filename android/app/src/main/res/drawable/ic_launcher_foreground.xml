@@ -5,21 +5,21 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Stylized "CKE" Text Vector Logo inside 66dp Safe Zone -->
+    <!-- Large, bold "CKE" Text Vector Logo fill (x=16..92, y=32..76) -->
 
     <!-- Letter 'C' -->
     <path
         android:fillColor="#0288D1"
-        android:pathData="M 38,42 L 28,42 C 24,42 22,45 22,54 C 22,63 24,66 28,66 L 38,66 L 38,60 L 30,60 C 28,60 28,58 28,54 C 28,50 28,48 30,48 L 38,48 Z" />
+        android:pathData="M 38,34 L 26,34 C 20,34 16,38 16,54 C 16,70 20,74 26,74 L 38,74 L 38,64 L 28,64 C 25,64 25,61 25,54 C 25,47 25,44 28,44 L 38,44 Z" />
 
     <!-- Letter 'K' -->
     <path
         android:fillColor="#0288D1"
-        android:pathData="M 44,42 L 50,42 L 50,51 L 58,42 L 65,42 L 57,51 L 66,66 L 59,66 L 52,54 L 50,56 L 50,66 L 44,66 Z" />
+        android:pathData="M 44,34 L 52,34 L 52,48 L 62,34 L 71,34 L 60,50 L 72,74 L 63,74 L 54,55 L 52,58 L 52,74 L 44,74 Z" />
 
     <!-- Letter 'E' -->
     <path
         android:fillColor="#0288D1"
-        android:pathData="M 70,42 L 86,42 L 86,47 L 76,47 L 76,51 L 84,51 L 84,56 L 76,56 L 76,61 L 86,61 L 86,66 L 70,66 Z" />
+        android:pathData="M 76,34 L 92,34 L 92,42 L 84,42 L 84,50 L 91,50 L 91,58 L 84,58 L 84,66 L 92,66 L 92,74 L 76,74 Z" />
 
 </vector>

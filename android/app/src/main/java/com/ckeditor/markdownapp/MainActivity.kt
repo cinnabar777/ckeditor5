@@ -89,14 +89,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: android.content.Intent?) {
-        if (intent == null) return
-        val action = intent.action
-        val data: Uri? = intent.data
+        val action = intent?.action
+        val data: Uri? = intent?.data
         if (action == android.content.Intent.ACTION_VIEW && data != null) {
             if (isEditorReady) {
                 openFile(data)
             } else {
                 pendingOpenUri = data
+            }
+        } else {
+            // Auto-open last opened document if no explicit ACTION_VIEW intent
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val lastUriString = prefs.getString("last_opened_uri", null)
+            if (lastUriString != null) {
+                val lastUri = Uri.parse(lastUriString)
+                if (isEditorReady) {
+                    openFile(lastUri)
+                } else {
+                    pendingOpenUri = lastUri
+                }
             }
         }
     }
@@ -229,6 +240,15 @@ class MainActivity : AppCompatActivity() {
             return
         }
         try {
+            try {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            } catch (e: Exception) {
+                // Ignore if not a persistable document grant
+            }
+
             contentResolver.openInputStream(uri)?.use { inputStream ->
                 val reader = BufferedReader(InputStreamReader(inputStream))
                 val content = reader.readText()
@@ -237,20 +257,26 @@ class MainActivity : AppCompatActivity() {
                 isDirty = false
                 updateTitle()
 
+                // Save as last opened URI for auto-restore on next launch
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                prefs.edit().putString("last_opened_uri", uri.toString()).apply()
+
                 val escaped = JSONObjectWrapper.quote(content)
                 webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);", null)
 
-                // Restore saved cursor selection and scroll position for this file URI
-                restoreCursorAndScrollState(uri)
+                // Restore saved cursor selection and scroll position for this document
+                restoreCursorAndScrollState()
             }
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to open file: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun restoreCursorAndScrollState(uri: Uri) {
+    private fun restoreCursorAndScrollState() {
+        val fileName = currentFileName
+        if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val key = uri.toString()
+        val key = "doc_$fileName"
         val savedSelection = prefs.getString("cursor_sel_$key", null)
         val savedScroll = prefs.getInt("cursor_scroll_$key", 0)
         if (savedSelection != null || savedScroll > 0) {
@@ -428,16 +454,20 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun onSelectionChanged(selectionJson: String) {
-            val uri = currentFileUri ?: return
+            val fileName = currentFileName
+            if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
+            val key = "doc_$fileName"
             val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-            prefs.edit().putString("cursor_sel_${uri}", selectionJson).apply()
+            prefs.edit().putString("cursor_sel_$key", selectionJson).apply()
         }
 
         @JavascriptInterface
         fun onScrollChanged(scrollTop: Int) {
-            val uri = currentFileUri ?: return
+            val fileName = currentFileName
+            if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
+            val key = "doc_$fileName"
             val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-            prefs.edit().putInt("cursor_scroll_${uri}", scrollTop).apply()
+            prefs.edit().putInt("cursor_scroll_$key", scrollTop).apply()
         }
     }
 
