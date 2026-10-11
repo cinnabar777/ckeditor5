@@ -17,7 +17,30 @@ class NoteWidgetProvider : AppWidgetProvider() {
         }
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+
+        if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+            val views = RemoteViews(context.packageName, R.layout.widget_layout)
+            when (intent.action) {
+                ACTION_NEXT -> {
+                    views.showNext(R.id.widget_flipper)
+                    appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views)
+                }
+                ACTION_PREV -> {
+                    views.showPrevious(R.id.widget_flipper)
+                    appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views)
+                }
+            }
+        }
+    }
+
     companion object {
+        const val ACTION_NEXT = "com.ckeditor.markdownapp.WIDGET_NEXT"
+        const val ACTION_PREV = "com.ckeditor.markdownapp.WIDGET_PREV"
+
         fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
 
@@ -25,9 +48,35 @@ class NoteWidgetProvider : AppWidgetProvider() {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
             }
-            views.setRemoteAdapter(R.id.widget_list, serviceIntent)
+            views.setRemoteAdapter(R.id.widget_flipper, serviceIntent)
 
-            // Center Area Click Template to open specific document in MainActivity
+            // Setup Next Button PendingIntent
+            val nextIntent = Intent(context, NoteWidgetProvider::class.java).apply {
+                action = ACTION_NEXT
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+            val nextPendingIntent = PendingIntent.getBroadcast(
+                context,
+                appWidgetId * 10 + 1,
+                nextIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widget_next_btn, nextPendingIntent)
+
+            // Setup Prev Button PendingIntent
+            val prevIntent = Intent(context, NoteWidgetProvider::class.java).apply {
+                action = ACTION_PREV
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+            val prevPendingIntent = PendingIntent.getBroadcast(
+                context,
+                appWidgetId * 10 + 2,
+                prevIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widget_prev_btn, prevPendingIntent)
+
+            // Open Document Click Template for widget items
             val clickIntent = Intent(context, MainActivity::class.java).apply {
                 action = Intent.ACTION_VIEW
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -38,7 +87,14 @@ class NoteWidgetProvider : AppWidgetProvider() {
                 clickIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
-            views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntent)
+            views.setPendingIntentTemplate(R.id.widget_flipper, clickPendingIntent)
+
+            val items = WidgetNoteManager.getItems(context)
+            if (items.isEmpty()) {
+                views.setTextViewText(R.id.widget_file_title, "No Notes Configured")
+            } else {
+                views.setTextViewText(R.id.widget_file_title, items[0].title)
+            }
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
@@ -46,7 +102,7 @@ class NoteWidgetProvider : AppWidgetProvider() {
         fun updateAllWidgets(context: Context) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NoteWidgetProvider::class.java))
-            appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_list)
+            appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_flipper)
             for (id in ids) {
                 updateWidget(context, appWidgetManager, id)
             }

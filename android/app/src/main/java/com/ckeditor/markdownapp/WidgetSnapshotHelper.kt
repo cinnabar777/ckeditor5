@@ -17,34 +17,15 @@ object WidgetSnapshotHelper {
         return try {
             val width = 720
             val height = 1200
-            val padding = 32
+            val padding = 24
 
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
             val bgColor = if (isDark) Color.parseColor("#000000") else Color.parseColor("#FFFFFF")
             val textColor = if (isDark) Color.parseColor("#FFFFFF") else Color.parseColor("#111111")
-            val titleColor = if (isDark) Color.parseColor("#0288D1") else Color.parseColor("#0277BD")
 
             canvas.drawColor(bgColor)
-
-            val titlePaint = TextPaint().apply {
-                color = titleColor
-                textSize = 36f
-                isAntiAlias = true
-                isFakeBoldText = true
-            }
-
-            val titleLayout = StaticLayout.Builder.obtain(fileName, 0, fileName.length, titlePaint, width - (padding * 2))
-                .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-                .setLineSpacing(0f, 1f)
-                .setIncludePad(false)
-                .build()
-
-            canvas.save()
-            canvas.translate(padding.toFloat(), padding.toFloat())
-            titleLayout.draw(canvas)
-            canvas.restore()
 
             val textPaint = TextPaint().apply {
                 color = textColor
@@ -52,14 +33,54 @@ object WidgetSnapshotHelper {
                 isAntiAlias = true
             }
 
-            // Convert basic Markdown lines into formatted HTML for StaticLayout
-            val htmlString = rawMarkdown
-                .replace("\r\n", "\n")
-                .replace("\n\n", "<br/><br/>")
-                .replace("\n", "<br/>")
+            // Convert Markdown syntax to styled HTML for StaticLayout canvas rendering
+            val lines = rawMarkdown.replace("\r\n", "\n").split("\n")
+            val htmlBuilder = StringBuilder()
 
-            val htmlSpannable = Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
-            val startY = padding + titleLayout.height + 24
+            for (line in lines) {
+                var processedLine = line
+
+                // Checkboxes & Bullet lists
+                if (processedLine.trim().startsWith("* [x]") || processedLine.trim().startsWith("- [x]")) {
+                    processedLine = "  ☑ " + processedLine.trim().substring(5).trim()
+                } else if (processedLine.trim().startsWith("* [ ]") || processedLine.trim().startsWith("- [ ]")) {
+                    processedLine = "  ☐ " + processedLine.trim().substring(5).trim()
+                } else if (processedLine.trim().startsWith("* ") || processedLine.trim().startsWith("- ")) {
+                    processedLine = "  • " + processedLine.trim().substring(2).trim()
+                }
+
+                // Headings (H1 to H6)
+                if (processedLine.startsWith("###### ")) {
+                    processedLine = "<h6><b>" + processedLine.substring(7) + "</b></h6>"
+                } else if (processedLine.startsWith("##### ")) {
+                    processedLine = "<h5><b>" + processedLine.substring(6) + "</b></h5>"
+                } else if (processedLine.startsWith("#### ")) {
+                    processedLine = "<h4><b>" + processedLine.substring(5) + "</b></h4>"
+                } else if (processedLine.startsWith("### ")) {
+                    processedLine = "<h3><b>" + processedLine.substring(4) + "</b></h3>"
+                } else if (processedLine.startsWith("## ")) {
+                    processedLine = "<h2><b>" + processedLine.substring(3) + "</b></h2>"
+                } else if (processedLine.startsWith("# ")) {
+                    processedLine = "<h1><b>" + processedLine.substring(2) + "</b></h1>"
+                }
+
+                // Horizontal rules
+                if (processedLine.trim() == "---" || processedLine.trim() == "***" || processedLine.trim() == "___") {
+                    processedLine = "<hr/>"
+                }
+
+                // Inline markdown: **bold**, *italic*, `code`
+                processedLine = processedLine
+                    .replace(Regex("\\*\\*(.*?)\\*\\*"), "<b>$1</b>")
+                    .replace(Regex("__(.*?)__"), "<b>$1</b>")
+                    .replace(Regex("\\*(.*?)\\*"), "<i>$1</i>")
+                    .replace(Regex("_(.*?)_"), "<i>$1</i>")
+                    .replace(Regex("`(.*?)`"), "<tt>$1</tt>")
+
+                htmlBuilder.append(processedLine).append("<br/>")
+            }
+
+            val htmlSpannable = Html.fromHtml(htmlBuilder.toString(), Html.FROM_HTML_MODE_LEGACY)
 
             val contentLayout = StaticLayout.Builder.obtain(htmlSpannable, 0, htmlSpannable.length, textPaint, width - (padding * 2))
                 .setAlignment(Layout.Alignment.ALIGN_NORMAL)
@@ -68,7 +89,7 @@ object WidgetSnapshotHelper {
                 .build()
 
             canvas.save()
-            canvas.translate(padding.toFloat(), startY.toFloat())
+            canvas.translate(padding.toFloat(), padding.toFloat())
             contentLayout.draw(canvas)
             canvas.restore()
 
