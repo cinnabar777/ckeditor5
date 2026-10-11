@@ -109532,9 +109532,15 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }
       });
       editorInstance.model.document.selection.on("change:range", () => {
+        const sourceEditingPlugin2 = editorInstance.plugins ? editorInstance.plugins.get("SourceEditing") : null;
+        if (sourceEditingPlugin2 && sourceEditingPlugin2.isSourceEditingMode) {
+          return;
+        }
         if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onSelectionChanged === "function") {
           const state = window.editorBridge.getSelectionState();
-          window.AndroidNative.onSelectionChanged(JSON.stringify(state));
+          if (state && Array.isArray(state.path) && state.path.length > 0) {
+            window.AndroidNative.onSelectionChanged(JSON.stringify(state));
+          }
         }
       });
       const mainEditingArea = document.querySelector(".ck-editor__main");
@@ -109608,6 +109614,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             };
             setTimeout(checkAndSyncTextarea, 20);
           } else {
+            isProgrammaticChange = true;
             const textarea2 = document.querySelector(".ck-source-editing-area textarea");
             if (textarea2) {
               sourceScrollTop = textarea2.scrollTop;
@@ -109615,17 +109622,23 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             }
             let attempts = 0;
             const checkAndSyncWysiwyg = () => {
-              if (wysiwygSelectionState) {
+              if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === "function") {
+                window.AndroidNative.restoreNativeCursorAndScrollState();
+              } else if (wysiwygSelectionState) {
                 window.editorBridge.setSelectionState(wysiwygSelectionState, wysiwygScrollTop);
               } else if (mainAreaForScroll) {
                 mainAreaForScroll.scrollTop = wysiwygScrollTop;
               }
-              if (attempts < 10) {
+              if (attempts < 5) {
                 attempts++;
-                setTimeout(checkAndSyncWysiwyg, 50);
+                setTimeout(checkAndSyncWysiwyg, 100);
+              } else {
+                setTimeout(() => {
+                  isProgrammaticChange = false;
+                }, 100);
               }
             };
-            setTimeout(checkAndSyncWysiwyg, 30);
+            setTimeout(checkAndSyncWysiwyg, 50);
           }
         });
       }
@@ -110008,6 +110021,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     },
     setSelectionState: function(stateJson, scrollTop) {
       if (!editorInstance) return;
+      isProgrammaticChange = true;
       try {
         if (stateJson) {
           let state = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;

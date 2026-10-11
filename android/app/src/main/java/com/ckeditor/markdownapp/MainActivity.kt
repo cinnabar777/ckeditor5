@@ -596,9 +596,17 @@ class MainActivity : AppCompatActivity() {
         fun onSelectionChanged(selectionJson: String) {
             val fileName = currentFileName
             if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
+            if (selectionJson.isEmpty() || selectionJson == "{\"path\":[],\"offset\":0}" || selectionJson == "{}") return
             val key = "doc_$fileName"
             val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
             prefs.edit().putString("cursor_sel_$key", selectionJson).apply()
+        }
+
+        @JavascriptInterface
+        fun restoreNativeCursorAndScrollState() {
+            runOnUiThread {
+                restoreCursorAndScrollState()
+            }
         }
 
         @JavascriptInterface

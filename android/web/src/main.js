@@ -217,9 +217,15 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
     // Save Selection / Scroll State Changes
     editorInstance.model.document.selection.on('change:range', () => {
+      const sourceEditingPlugin = editorInstance.plugins ? editorInstance.plugins.get('SourceEditing') : null;
+      if (sourceEditingPlugin && sourceEditingPlugin.isSourceEditingMode) {
+        return;
+      }
       if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onSelectionChanged === 'function') {
         const state = window.editorBridge.getSelectionState();
-        window.AndroidNative.onSelectionChanged(JSON.stringify(state));
+        if (state && Array.isArray(state.path) && state.path.length > 0) {
+          window.AndroidNative.onSelectionChanged(JSON.stringify(state));
+        }
       }
     });
 
@@ -305,6 +311,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           setTimeout(checkAndSyncTextarea, 20);
         } else {
           // Exiting Source Editing Mode back to Normal WYSIWYG View
+          isProgrammaticChange = true;
           const textarea = document.querySelector('.ck-source-editing-area textarea');
           if (textarea) {
             sourceScrollTop = textarea.scrollTop;
@@ -313,17 +320,21 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
           let attempts = 0;
           const checkAndSyncWysiwyg = () => {
-            if (wysiwygSelectionState) {
+            if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
+              window.AndroidNative.restoreNativeCursorAndScrollState();
+            } else if (wysiwygSelectionState) {
               window.editorBridge.setSelectionState(wysiwygSelectionState, wysiwygScrollTop);
             } else if (mainAreaForScroll) {
               mainAreaForScroll.scrollTop = wysiwygScrollTop;
             }
-            if (attempts < 10) {
+            if (attempts < 5) {
               attempts++;
-              setTimeout(checkAndSyncWysiwyg, 50);
+              setTimeout(checkAndSyncWysiwyg, 100);
+            } else {
+              setTimeout(() => { isProgrammaticChange = false; }, 100);
             }
           };
-          setTimeout(checkAndSyncWysiwyg, 30);
+          setTimeout(checkAndSyncWysiwyg, 50);
         }
       });
     }
@@ -768,6 +779,7 @@ window.editorBridge = {
   },
   setSelectionState: function(stateJson, scrollTop) {
     if (!editorInstance) return;
+    isProgrammaticChange = true;
     try {
       if (stateJson) {
         let state = typeof stateJson === 'string' ? JSON.parse(stateJson) : stateJson;
