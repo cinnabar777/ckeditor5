@@ -292,21 +292,19 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Entering Source Mode: Calculate Markdown position from WYSIWYG selection
-          let targetOffset = 0;
+          // Entering Source Mode: Calculate target block index from WYSIWYG selection path
+          let targetBlockIndex = 0;
+          let innerOffset = 0;
           try {
-            const selection = editorInstance.model.document.selection;
-            const range = selection.getFirstRange();
-            if (range) {
-              const root = editorInstance.model.document.getRoot();
-              const rangeFromStart = editorInstance.model.createRange(
-                editorInstance.model.createPositionAt(root, 0),
-                range.start
-              );
-              targetOffset = editorInstance.data.get({ range: rangeFromStart }).length;
+            const selState = window.editorBridge.getSelectionState();
+            if (selState && Array.isArray(selState.path) && selState.path.length > 0) {
+              targetBlockIndex = selState.path[0] || 0;
+              if (selState.path.length > 1) {
+                innerOffset = selState.path[selState.path.length - 1] || 0;
+              }
             }
           } catch (e) {
-            console.error('Error calculating source position:', e);
+            console.error('Error reading WYSIWYG block index:', e);
           }
 
           let attempts = 0;
@@ -314,14 +312,32 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
               textarea.focus();
-              const safePos = Math.min(Math.max(0, targetOffset), textarea.value.length);
+              const fullText = textarea.value || '';
+              // Split text into line blocks separated by blank lines or line breaks
+              const lines = fullText.split('\n');
+              let currentBlock = 0;
+              let charIndex = 0;
+
+              for (let i = 0; i < lines.length; i++) {
+                if (currentBlock >= targetBlockIndex) {
+                  charIndex += Math.min(innerOffset, lines[i].length);
+                  break;
+                }
+                charIndex += lines[i].length + 1; // +1 for newline
+                // Treat non-empty lines or blank line transitions as block boundaries
+                if (lines[i].trim().length > 0 || (i < lines.length - 1 && lines[i + 1].trim().length > 0)) {
+                  currentBlock++;
+                }
+              }
+
+              const safePos = Math.min(Math.max(0, charIndex), fullText.length);
               textarea.setSelectionRange(safePos, safePos);
 
-              // Scroll textarea to bring cursor line into view
-              const textBefore = textarea.value.substring(0, safePos);
-              const linesBefore = textBefore.split('\n').length;
-              const totalLines = textarea.value.split('\n').length || 1;
-              const scrollRatio = Math.max(0, (linesBefore - 1) / totalLines);
+              // Scroll textarea to the calculated line position
+              const textBefore = fullText.substring(0, safePos);
+              const targetLineNum = textBefore.split('\n').length;
+              const totalLines = lines.length || 1;
+              const scrollRatio = Math.max(0, (targetLineNum - 1) / totalLines);
               textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
             } else if (attempts < 15) {
               attempts++;
