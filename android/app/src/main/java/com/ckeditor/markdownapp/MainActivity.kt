@@ -173,6 +173,20 @@ class MainActivity : AppCompatActivity() {
             "window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor, $linkColor, $codeColor, $codeBgColor, $codeBlockColor, $codeBlockBgColor);",
             null
         )
+
+        // Read and pass custom hotkey preferences
+        val hotkeys = mapOf(
+            "new" to prefs.getString("pref_hotkey_new", "ctrl+n"),
+            "open" to prefs.getString("pref_hotkey_open", "ctrl+o"),
+            "save" to prefs.getString("pref_hotkey_save", "ctrl+s"),
+            "save_as" to prefs.getString("pref_hotkey_save_as", "ctrl+shift+s"),
+            "image" to prefs.getString("pref_hotkey_image", "ctrl+shift+i"),
+            "settings" to prefs.getString("pref_hotkey_settings", "ctrl+,"),
+            "toggle_toolbar" to prefs.getString("pref_hotkey_toggle_toolbar", "ctrl+t")
+        )
+        val hotkeysJson = org.json.JSONObject(hotkeys).toString()
+        val escapedHotkeys = JSONObjectWrapper.quote(hotkeysJson)
+        webView.evaluateJavascript("window.editorBridge.setHotkeys($escapedHotkeys);", null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -86,6 +86,50 @@
             app:defaultValue="picker" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Custom Keyboard Hotkeys">
+        <EditTextPreference
+            app:key="pref_hotkey_new"
+            app:title="New Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+n)"
+            app:defaultValue="ctrl+n" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_open"
+            app:title="Open Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+o)"
+            app:defaultValue="ctrl+o" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_save"
+            app:title="Save Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+s)"
+            app:defaultValue="ctrl+s" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_save_as"
+            app:title="Save As Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+s)"
+            app:defaultValue="ctrl+shift+s" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_image"
+            app:title="Insert Image Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+i)"
+            app:defaultValue="ctrl+shift+i" />
+
+        <EditTextPreference
+            app:key="pref_hotkey_settings"
+            app:title="Open Settings Shortcut"
+            app:summary="Key combination (e.g. ctrl+,)"
+            app:defaultValue="ctrl+," />
+
+        <EditTextPreference
+            app:key="pref_hotkey_toggle_toolbar"
+            app:title="Toggle Bottom Toolbar Shortcut"
+            app:summary="Key combination (e.g. ctrl+t)"
+            app:defaultValue="ctrl+t" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Editor Plugins &amp; Toolbar Tools">
         <SwitchPreferenceCompat
             app:key="pref_plugin_heading"

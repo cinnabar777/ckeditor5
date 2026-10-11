@@ -48,6 +48,15 @@ import '../../../packages/ckeditor5-highlight/theme/index-content.css';
 let editorInstance = null;
 let isProgrammaticChange = false;
 let isToolbarVisible = false;
+let customHotkeys = {
+  new: 'ctrl+n',
+  open: 'ctrl+o',
+  save: 'ctrl+s',
+  save_as: 'ctrl+shift+s',
+  image: 'ctrl+shift+i',
+  settings: 'ctrl+,',
+  toggle_toolbar: 'ctrl+t'
+};
 
 async function initEditor(disabledPlugins = [], isInitialInit = false) {
   if (editorInstance) {
@@ -229,43 +238,72 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
   }
 }
 
+function toggleBottomToolbar() {
+  const toggleBtn = document.querySelector('#floating-toggle-btn');
+  isToolbarVisible = !isToolbarVisible;
+  if (isToolbarVisible) {
+    document.body.classList.remove('toolbar-hidden');
+    if (toggleBtn) toggleBtn.innerHTML = '⟩';
+  } else {
+    document.body.classList.add('toolbar-hidden');
+    if (toggleBtn) toggleBtn.innerHTML = '⟨';
+  }
+}
+
 function setupFloatingToggle() {
   const toggleBtn = document.querySelector('#floating-toggle-btn');
   if (toggleBtn) {
     toggleBtn.onclick = () => {
-      isToolbarVisible = !isToolbarVisible;
-      if (isToolbarVisible) {
-        document.body.classList.remove('toolbar-hidden');
-        toggleBtn.innerHTML = '⟩';
-      } else {
-        document.body.classList.add('toolbar-hidden');
-        toggleBtn.innerHTML = '⟨';
-      }
+      toggleBottomToolbar();
     };
   }
 }
 
+function parseAndMatchHotkey(event, shortcutString) {
+  if (!shortcutString || typeof shortcutString !== 'string') return false;
+  const parts = shortcutString.toLowerCase().trim().split('+');
+  const hasCtrl = parts.includes('ctrl') || parts.includes('control');
+  const hasAlt = parts.includes('alt');
+  const hasShift = parts.includes('shift');
+  const keyPart = parts.find(p => p !== 'ctrl' && p !== 'control' && p !== 'alt' && p !== 'shift');
+
+  const ctrlPressed = event.ctrlKey || event.metaKey;
+  const altPressed = event.altKey;
+  const shiftPressed = event.shiftKey;
+
+  if (hasCtrl !== ctrlPressed) return false;
+  if (hasAlt !== altPressed) return false;
+  if (hasShift !== shiftPressed) return false;
+
+  if (keyPart) {
+    return event.key.toLowerCase() === keyPart;
+  }
+  return true;
+}
+
 function setupKeyboardShortcuts() {
   window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey || e.metaKey) {
-      const key = e.key.toLowerCase();
-      if (key === 'n') {
-        e.preventDefault();
-        window.AndroidNative && window.AndroidNative.onNativeAction('new');
-      } else if (key === 'o') {
-        e.preventDefault();
-        window.AndroidNative && window.AndroidNative.onNativeAction('open');
-      } else if (key === 's') {
-        e.preventDefault();
-        if (e.shiftKey) {
-          window.AndroidNative && window.AndroidNative.onNativeAction('save_as');
-        } else {
-          window.AndroidNative && window.AndroidNative.onNativeAction('save');
-        }
-      } else if (key === 'i' && e.shiftKey) {
-        e.preventDefault();
-        window.AndroidNative && window.AndroidNative.onNativeAction('image');
-      }
+    if (parseAndMatchHotkey(e, customHotkeys.new)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('new');
+    } else if (parseAndMatchHotkey(e, customHotkeys.open)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('open');
+    } else if (parseAndMatchHotkey(e, customHotkeys.save_as)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('save_as');
+    } else if (parseAndMatchHotkey(e, customHotkeys.save)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('save');
+    } else if (parseAndMatchHotkey(e, customHotkeys.image)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('image');
+    } else if (parseAndMatchHotkey(e, customHotkeys.settings)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('settings');
+    } else if (parseAndMatchHotkey(e, customHotkeys.toggle_toolbar)) {
+      e.preventDefault();
+      toggleBottomToolbar();
     }
   });
 }
@@ -281,6 +319,15 @@ window.editorBridge = {
     isProgrammaticChange = true;
     editorInstance.setData(markdownText || '');
     setTimeout(() => { isProgrammaticChange = false; }, 50);
+  },
+  setHotkeys: function(hotkeysJson) {
+    if (!hotkeysJson) return;
+    try {
+      const parsed = typeof hotkeysJson === 'string' ? JSON.parse(hotkeysJson) : hotkeysJson;
+      Object.assign(customHotkeys, parsed);
+    } catch (e) {
+      console.error('Failed to set hotkeys:', e);
+    }
   },
   getSelectionState: function() {
     if (!editorInstance) return { path: [], offset: 0 };
