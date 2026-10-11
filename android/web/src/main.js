@@ -292,97 +292,30 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Capturing current WYSIWYG position before entering Source Mode
-          const sel = window.editorBridge.getSelectionState();
-          if (sel && Array.isArray(sel.path) && sel.path.length > 0) {
-            lastWysiwygSelectionState = sel;
-          }
-          if (mainAreaForScroll) {
-            lastWysiwygScrollTop = mainAreaForScroll.scrollTop;
-          }
-
-          // Calculate Markdown offset corresponding to current WYSIWYG cursor
-          let calculatedOffset = 0;
-          try {
-            const selection = editorInstance.model.document.selection;
-            const range = selection.getFirstRange();
-            if (range) {
-              const root = editorInstance.model.document.getRoot();
-              const rangeFromStart = editorInstance.model.createRange(
-                editorInstance.model.createPositionAt(root, 0),
-                range.start
-              );
-              calculatedOffset = editorInstance.data.get({ range: rangeFromStart }).length;
-            }
-          } catch (e) {
-            console.error('Error mapping WYSIWYG cursor to Source View offset:', e);
-          }
-
-          // Wait until <textarea> is mounted in DOM
+          // Entering Source Mode: Focus textarea once mounted
           let attempts = 0;
-          const syncSourceView = () => {
+          const focusSourceTextarea = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
-              const bindSourceEvents = () => {
-                lastSourceScrollTop = textarea.scrollTop;
-                lastSourceSelectionStart = textarea.selectionStart || 0;
-              };
-
-              textarea.addEventListener('scroll', bindSourceEvents, { passive: true });
-              textarea.addEventListener('keyup', bindSourceEvents, { passive: true });
-              textarea.addEventListener('mouseup', bindSourceEvents, { passive: true });
-
               textarea.focus();
-              const safePos = Math.min(Math.max(0, calculatedOffset), textarea.value.length);
-              textarea.setSelectionRange(safePos, safePos);
-
-              // Estimate scroll position in source textarea
-              const textBefore = textarea.value.substring(0, safePos);
-              const linesBefore = textBefore.split('\n').length;
-              const totalLines = textarea.value.split('\n').length || 1;
-              const scrollRatio = linesBefore / totalLines;
-              textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
-
-              lastSourceScrollTop = textarea.scrollTop;
-              lastSourceSelectionStart = safePos;
-            } else if (attempts < 20) {
+            } else if (attempts < 10) {
               attempts++;
-              setTimeout(syncSourceView, 25);
+              setTimeout(focusSourceTextarea, 30);
             }
           };
-          setTimeout(syncSourceView, 15);
+          setTimeout(focusSourceTextarea, 20);
         } else {
-          // Exiting Source Editing Mode back to Normal WYSIWYG View
+          // Exiting Source Mode back to WYSIWYG: Block listener spikes during setData
           isProgrammaticChange = true;
-          const textarea = document.querySelector('.ck-source-editing-area textarea');
-          if (textarea) {
-            lastSourceScrollTop = textarea.scrollTop;
-            lastSourceSelectionStart = textarea.selectionStart || 0;
-          }
-
-          // Await CKEditor internal setData cycle before restoring WYSIWYG position
-          let attempts = 0;
-          const restoreWysiwygView = () => {
-            if (lastWysiwygSelectionState) {
-              window.editorBridge.setSelectionState(lastWysiwygSelectionState, lastWysiwygScrollTop);
-            } else if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
+          setTimeout(() => {
+            if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === 'function') {
               window.AndroidNative.restoreNativeCursorAndScrollState();
-            } else if (mainAreaForScroll) {
-              mainAreaForScroll.scrollTop = lastWysiwygScrollTop;
             }
-
             try {
               editorInstance.editing.view.focus();
             } catch (e) {}
-
-            attempts++;
-            if (attempts < 6) {
-              setTimeout(restoreWysiwygView, 50);
-            } else {
-              setTimeout(() => { isProgrammaticChange = false; }, 150);
-            }
-          };
-          setTimeout(restoreWysiwygView, 40);
+            setTimeout(() => { isProgrammaticChange = false; }, 150);
+          }, 100);
         }
       });
     }

@@ -109598,85 +109598,31 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       if (sourceEditingPlugin) {
         sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
           if (isSourceEditing) {
-            const sel = window.editorBridge.getSelectionState();
-            if (sel && Array.isArray(sel.path) && sel.path.length > 0) {
-              lastWysiwygSelectionState = sel;
-            }
-            if (mainAreaForScroll) {
-              lastWysiwygScrollTop = mainAreaForScroll.scrollTop;
-            }
-            let calculatedOffset = 0;
-            try {
-              const selection = editorInstance.model.document.selection;
-              const range = selection.getFirstRange();
-              if (range) {
-                const root7 = editorInstance.model.document.getRoot();
-                const rangeFromStart = editorInstance.model.createRange(
-                  editorInstance.model.createPositionAt(root7, 0),
-                  range.start
-                );
-                calculatedOffset = editorInstance.data.get({ range: rangeFromStart }).length;
-              }
-            } catch (e) {
-              console.error("Error mapping WYSIWYG cursor to Source View offset:", e);
-            }
             let attempts = 0;
-            const syncSourceView = () => {
+            const focusSourceTextarea = () => {
               const textarea2 = document.querySelector(".ck-source-editing-area textarea");
               if (textarea2) {
-                const bindSourceEvents = () => {
-                  lastSourceScrollTop = textarea2.scrollTop;
-                  lastSourceSelectionStart = textarea2.selectionStart || 0;
-                };
-                textarea2.addEventListener("scroll", bindSourceEvents, { passive: true });
-                textarea2.addEventListener("keyup", bindSourceEvents, { passive: true });
-                textarea2.addEventListener("mouseup", bindSourceEvents, { passive: true });
                 textarea2.focus();
-                const safePos = Math.min(Math.max(0, calculatedOffset), textarea2.value.length);
-                textarea2.setSelectionRange(safePos, safePos);
-                const textBefore = textarea2.value.substring(0, safePos);
-                const linesBefore = textBefore.split("\n").length;
-                const totalLines = textarea2.value.split("\n").length || 1;
-                const scrollRatio = linesBefore / totalLines;
-                textarea2.scrollTop = Math.max(0, scrollRatio * (textarea2.scrollHeight - textarea2.clientHeight));
-                lastSourceScrollTop = textarea2.scrollTop;
-                lastSourceSelectionStart = safePos;
-              } else if (attempts < 20) {
+              } else if (attempts < 10) {
                 attempts++;
-                setTimeout(syncSourceView, 25);
+                setTimeout(focusSourceTextarea, 30);
               }
             };
-            setTimeout(syncSourceView, 15);
+            setTimeout(focusSourceTextarea, 20);
           } else {
             isProgrammaticChange = true;
-            const textarea2 = document.querySelector(".ck-source-editing-area textarea");
-            if (textarea2) {
-              lastSourceScrollTop = textarea2.scrollTop;
-              lastSourceSelectionStart = textarea2.selectionStart || 0;
-            }
-            let attempts = 0;
-            const restoreWysiwygView = () => {
-              if (lastWysiwygSelectionState) {
-                window.editorBridge.setSelectionState(lastWysiwygSelectionState, lastWysiwygScrollTop);
-              } else if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === "function") {
+            setTimeout(() => {
+              if (window.AndroidNative && typeof window.AndroidNative.restoreNativeCursorAndScrollState === "function") {
                 window.AndroidNative.restoreNativeCursorAndScrollState();
-              } else if (mainAreaForScroll) {
-                mainAreaForScroll.scrollTop = lastWysiwygScrollTop;
               }
               try {
                 editorInstance.editing.view.focus();
               } catch (e) {
               }
-              attempts++;
-              if (attempts < 6) {
-                setTimeout(restoreWysiwygView, 50);
-              } else {
-                setTimeout(() => {
-                  isProgrammaticChange = false;
-                }, 150);
-              }
-            };
-            setTimeout(restoreWysiwygView, 40);
+              setTimeout(() => {
+                isProgrammaticChange = false;
+              }, 150);
+            }, 100);
           }
         });
       }
