@@ -60,6 +60,119 @@ class SettingsActivity : AppCompatActivity() {
                     true
                 }
             }
+
+            findPreference<Preference>("pref_export_backup")?.setOnPreferenceClickListener {
+                exportBackupLauncher.launch("CKE5_Backup_${System.currentTimeMillis()}.zip")
+                true
+            }
+
+            findPreference<Preference>("pref_import_backup")?.setOnPreferenceClickListener {
+                importBackupLauncher.launch(arrayOf("application/zip", "application/x-zip-compressed", "*/*"))
+                true
+            }
+        }
+
+        private val exportBackupLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
+            uri?.let { performBackupExport(it) }
+        }
+
+        private val importBackupLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let { performBackupImport(it) }
+        }
+
+        private fun performBackupExport(uri: Uri) {
+            val context = context ?: return
+            try {
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                val allEntries = prefs.all
+                val jsonObject = org.json.JSONObject()
+                for ((key, value) in allEntries) {
+                    jsonObject.put(key, value)
+                }
+
+                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    java.util.zip.ZipOutputStream(outputStream).use { zipOut ->
+                        // Entry 1: preferences.json
+                        val prefBytes = jsonObject.toString(2).toByteArray(Charsets.UTF_8)
+                        val prefEntry = java.util.zip.ZipEntry("preferences.json")
+                        zipOut.putNextEntry(prefEntry)
+                        zipOut.write(prefBytes)
+                        zipOut.closeEntry()
+
+                        // Entry 2+: fonts/
+                        val fontDir = File(context.filesDir, "fonts")
+                        if (fontDir.exists() && fontDir.isDirectory) {
+                            fontDir.listFiles()?.forEach { fontFile ->
+                                if (fontFile.isFile) {
+                                    val fontEntry = java.util.zip.ZipEntry("fonts/${fontFile.name}")
+                                    zipOut.putNextEntry(fontEntry)
+                                    fontFile.inputStream().use { fontIn ->
+                                        fontIn.copyTo(zipOut)
+                                    }
+                                    zipOut.closeEntry()
+                                }
+                            }
+                        }
+                    }
+                }
+                Toast.makeText(context, "Settings & fonts exported to ZIP!", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Export failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        private fun performBackupImport(uri: Uri) {
+            val context = context ?: return
+            try {
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                val fontDir = File(context.filesDir, "fonts").apply { if (!exists()) mkdirs() }
+
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    java.util.zip.ZipInputStream(inputStream).use { zipIn ->
+                        var entry = zipIn.nextEntry
+                        while (entry != null) {
+                            if (entry.name == "preferences.json") {
+                                val jsonStr = zipIn.bufferedReader().readText()
+                                val jsonObject = org.json.JSONObject(jsonStr)
+                                val editor = prefs.edit()
+                                val keys = jsonObject.keys()
+                                while (keys.hasNext()) {
+                                    val key = keys.next()
+                                    val valObj = jsonObject.get(key)
+                                    when (valObj) {
+                                        is Boolean -> editor.putBoolean(key, valObj)
+                                        is Int -> editor.putInt(key, valObj)
+                                        is Long -> editor.putLong(key, valObj)
+                                        is Float -> editor.putFloat(key, valObj)
+                                        is String -> editor.putString(key, valObj)
+                                    }
+                                }
+                                editor.apply()
+                            } else if (entry.name.startsWith("fonts/") && !entry.isDirectory) {
+                                val fileName = entry.name.substring("fonts/".length)
+                                if (fileName.isNotEmpty()) {
+                                    val targetFile = File(fontDir, fileName)
+                                    FileOutputStream(targetFile).use { out ->
+                                        zipIn.copyTo(out)
+                                    }
+                                }
+                            }
+                            zipIn.closeEntry()
+                            entry = zipIn.nextEntry
+                        }
+                    }
+                }
+
+                // Refresh font summaries
+                val fontKeys = listOf("pref_font_file_body", "pref_font_file_heading", "pref_font_file_bold", "pref_font_file_italic", "pref_font_file_code")
+                for (key in fontKeys) {
+                    updateFontPrefSummary(findPreference(key), key)
+                }
+
+                Toast.makeText(context, "Settings & fonts restored from ZIP!", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Import failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
         }
 
         private fun updateFontPrefSummary(pref: Preference?, key: String) {

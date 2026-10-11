@@ -418,6 +418,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleNewWindow() {
+        val intent = android.content.Intent(this, MainActivity::class.java).apply {
+            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        }
+        startActivity(intent)
+    }
+
     private fun handleInsertImage() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val imageMode = prefs.getString("pref_image_mode", "picker")
@@ -567,6 +574,7 @@ class MainActivity : AppCompatActivity() {
                     "save" -> handleSaveFile()
                     "save_as" -> handleSaveAsFile()
                     "image" -> handleInsertImage()
+                    "new_window" -> handleNewWindow()
                     "settings" -> settingsLauncher.launch(android.content.Intent(this@MainActivity, SettingsActivity::class.java))
                 }
             }

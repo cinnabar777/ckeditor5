@@ -190,6 +190,18 @@
     </PreferenceCategory>
 
 
+    <PreferenceCategory app:title="Backup &amp; Restore Settings (ZIP File)">
+        <Preference
+            app:key="pref_export_backup"
+            app:title="Export Settings &amp; Custom Fonts (.zip)"
+            app:summary="Save all preferences and loaded font files to a ZIP backup file" />
+
+        <Preference
+            app:key="pref_import_backup"
+            app:title="Import Settings &amp; Custom Fonts (.zip)"
+            app:summary="Restore preferences and font files from a ZIP backup file" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
         <EditTextPreference
             app:key="pref_hotkey_new"

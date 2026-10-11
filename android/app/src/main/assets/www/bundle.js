@@ -109553,12 +109553,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           headerRow.innerHTML = `
           <div id="file-title" class="toolbar-title-container">Untitled.md</div>
           <div class="toolbar-app-actions">
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
-            <button class="toolbar-app-btn settings-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
+            <button class="toolbar-app-btn" title="New" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">\u{1F4C4}</button>
+            <button class="toolbar-app-btn" title="Open" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">\u{1F4C2}</button>
+            <button class="toolbar-app-btn" title="Save" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">\u{1F4BE}</button>
+            <button class="toolbar-app-btn" title="Save As" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">\u{1F4D1}</button>
+            <button class="toolbar-app-btn" title="Image" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">\u{1F5BC}</button>
+            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')">\u{1F5D4}</button>
+            <button class="toolbar-app-btn settings-btn" title="Settings" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
           </div>
         `;
           topContainer.prepend(headerRow);
@@ -109731,7 +109732,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       const scrollPos = mainArea ? mainArea.scrollTop : 0;
       let activeIdx = 0;
       for (let i = 0; i < headings.length; i++) {
-        if (headings[i].offsetTop <= scrollPos + 100) {
+        if (headings[i].offsetTop <= scrollPos + 15) {
           activeIdx = i;
         } else {
           break;

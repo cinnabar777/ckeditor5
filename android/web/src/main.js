@@ -241,12 +241,13 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
         headerRow.innerHTML = `
           <div id="file-title" class="toolbar-title-container">Untitled.md</div>
           <div class="toolbar-app-actions">
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">New</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">Open</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">Save</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">Save As</button>
-            <button class="toolbar-app-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">Image</button>
-            <button class="toolbar-app-btn settings-btn" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
+            <button class="toolbar-app-btn" title="New" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">📄</button>
+            <button class="toolbar-app-btn" title="Open" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">📂</button>
+            <button class="toolbar-app-btn" title="Save" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">💾</button>
+            <button class="toolbar-app-btn" title="Save As" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">📑</button>
+            <button class="toolbar-app-btn" title="Image" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">🖼</button>
+            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')">🗔</button>
+            <button class="toolbar-app-btn settings-btn" title="Settings" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
           </div>
         `;
         topContainer.prepend(headerRow);
@@ -446,7 +447,8 @@ function setupTocGestureAndPanel() {
 
     let activeIdx = 0;
     for (let i = 0; i < headings.length; i++) {
-      if (headings[i].offsetTop <= scrollPos + 100) {
+      // Check directly against viewport top threshold so passing a heading instantly activates it
+      if (headings[i].offsetTop <= scrollPos + 15) {
         activeIdx = i;
       } else {
         break;
