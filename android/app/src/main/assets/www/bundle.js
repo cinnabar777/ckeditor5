@@ -110838,6 +110838,37 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           topContainer.prepend(headerRow);
         }
       }
+      const attachCodeBlockCopyButtons = () => {
+        const codeBlocks = document.querySelectorAll(".ck-content pre");
+        codeBlocks.forEach((pre) => {
+          if (!pre.querySelector(".code-block-copy-btn")) {
+            const btn = document.createElement("button");
+            btn.className = "code-block-copy-btn";
+            btn.title = "Copy Code";
+            btn.innerHTML = "\u{1F4CB} Copy";
+            btn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const codeEl = pre.querySelector("code") || pre;
+              const textToCopy = codeEl.innerText || codeEl.textContent;
+              navigator.clipboard.writeText(textToCopy).then(() => {
+                btn.innerHTML = "\u2713 Copied";
+                setTimeout(() => {
+                  btn.innerHTML = "\u{1F4CB} Copy";
+                }, 2e3);
+              }).catch((err) => {
+                console.error("Copy failed:", err);
+              });
+            });
+            pre.appendChild(btn);
+          }
+        });
+      };
+      const codeBlockObserver = new MutationObserver(attachCodeBlockCopyButtons);
+      const editorContentEl = document.querySelector(".ck-content");
+      if (editorContentEl) {
+        codeBlockObserver.observe(editorContentEl, { childList: true, subtree: true });
+      }
+      attachCodeBlockCopyButtons();
       let lastWysiwygScrollTop = 0;
       let lastWysiwygSelectionState = null;
       let lastSourceScrollTop = 0;

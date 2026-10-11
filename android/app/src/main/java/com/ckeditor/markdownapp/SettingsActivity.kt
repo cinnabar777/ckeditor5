@@ -103,13 +103,17 @@ class SettingsActivity : AppCompatActivity() {
                             pref.title = "$titleStr ↺"
                         }
 
-                        pref.setOnPreferenceClickListener {
-                            // Single tap for font pickers launches file picker; long tap or double tap action resets
-                            if (key.startsWith("pref_font_file_")) {
+                        if (key.startsWith("pref_font_file_")) {
+                            pref.setOnPreferenceClickListener {
                                 activeFontTargetKey = key
                                 pickFontLauncher.launch("*/*")
+                                true
                             }
-                            false
+                        } else {
+                            pref.setOnPreferenceClickListener {
+                                showResetSinglePreferenceDialog(pref)
+                                true
+                            }
                         }
                     }
                 }
@@ -118,20 +122,26 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
             val key = preference.key ?: return super.onPreferenceTreeClick(preference)
-            if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults") {
-                return super.onPreferenceTreeClick(preference)
+            if (key.startsWith("pref_font_file_")) {
+                activeFontTargetKey = key
+                pickFontLauncher.launch("*/*")
+                return true
             }
+            return super.onPreferenceTreeClick(preference)
+        }
 
-            // Show reset dialog for this specific preference
+        private fun showResetSinglePreferenceDialog(pref: Preference) {
+            val key = pref.key ?: return
+            if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults") return
+
             AlertDialog.Builder(requireContext())
                 .setTitle("Reset Preference")
-                .setMessage("Reset '${preference.title?.toString()?.replace(" ↺", "")}' to its default value?")
+                .setMessage("Reset '${pref.title?.toString()?.replace(" ↺", "")}' to its default value?")
                 .setPositiveButton("Reset ↺") { _, _ ->
-                    resetSinglePreference(preference)
+                    resetSinglePreference(pref)
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
-            return true
         }
 
         private fun resetSinglePreference(pref: Preference) {

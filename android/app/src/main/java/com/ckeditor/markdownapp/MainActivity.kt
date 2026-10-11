@@ -128,6 +128,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        performAutoSaveOnLeave()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        performAutoSaveOnLeave()
+    }
+
+    private fun performAutoSaveOnLeave() {
+        if (!isDirty || currentFileUri == null) return
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val autoSaveEnabled = prefs.getBoolean("pref_auto_save_on_leave", true)
+        if (autoSaveEnabled) {
+            currentFileUri?.let { saveFileToUri(it) }
+        }
+    }
+
 
     private fun setupWebView() {
         val assetLoader = WebViewAssetLoader.Builder()
@@ -433,6 +452,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleNewWindow() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
+
+        if (!isMultiWindowEnabled) {
+            Toast.makeText(this, "Multi-window mode is disabled in Settings", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val intent = android.content.Intent(this, MainActivity::class.java).apply {
             addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         }

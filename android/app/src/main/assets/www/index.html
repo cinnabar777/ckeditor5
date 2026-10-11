@@ -240,7 +240,13 @@
     }
 
     /* Relative Heading Scalings & Font Families */
-    .ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4, .ck-content h5, .ck-content h6 {
+    .ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4, .ck-content h5, .ck-content h6,
+    .ck-content h1 *, .ck-content h2 *, .ck-content h3 *, .ck-content h4 *, .ck-content h5 *, .ck-content h6 *,
+    .ck-content .ck-heading_heading1, .ck-content .ck-heading_heading2, .ck-content .ck-heading_heading3,
+    .ck-content .ck-heading_heading4, .ck-content .ck-heading_heading5, .ck-content .ck-heading_heading6,
+    .ck-content .ck-heading_heading1 *, .ck-content .ck-heading_heading2 *, .ck-content .ck-heading_heading3 *,
+    .ck-content .ck-heading_heading4 *, .ck-content .ck-heading_heading5 *, .ck-content .ck-heading_heading6 *,
+    .ck-heading-dropdown .ck-button__label {
       font-family: var(--heading-font-family), inherit !important;
     }
     .ck-content h1 { font-size: calc(2.0em * var(--heading-scale)) !important; }
@@ -273,12 +279,35 @@
     }
 
     /* Custom Code Block Styling & Font */
-    .ck-content pre, .ck-content pre code {
+    .ck-content pre {
+      position: relative !important;
       color: var(--code-block-color) !important;
       background-color: var(--code-block-bg-color) !important;
       font-family: var(--code-font-family), monospace !important;
       letter-spacing: normal !important; /* Excluded from letter spacing as requested */
       border-radius: 6px !important;
+      padding-top: 32px !important;
+    }
+
+    .ck-content pre code {
+      color: var(--code-block-color) !important;
+      background-color: var(--code-block-bg-color) !important;
+      font-family: var(--code-font-family), monospace !important;
+    }
+
+    .code-block-copy-btn {
+      position: absolute !important;
+      top: 6px !important;
+      right: 6px !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: 4px !important;
+      padding: 3px 8px !important;
+      font-size: 12px !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      z-index: 10 !important;
     }
 
     /* Block Quote & Callout Line Styling Overrides */

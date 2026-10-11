@@ -270,6 +270,38 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
       }
     }
 
+    // Automatically attach Copy button to code blocks
+    const attachCodeBlockCopyButtons = () => {
+      const codeBlocks = document.querySelectorAll('.ck-content pre');
+      codeBlocks.forEach(pre => {
+        if (!pre.querySelector('.code-block-copy-btn')) {
+          const btn = document.createElement('button');
+          btn.className = 'code-block-copy-btn';
+          btn.title = 'Copy Code';
+          btn.innerHTML = '📋 Copy';
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const codeEl = pre.querySelector('code') || pre;
+            const textToCopy = codeEl.innerText || codeEl.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+              btn.innerHTML = '✓ Copied';
+              setTimeout(() => { btn.innerHTML = '📋 Copy'; }, 2000);
+            }).catch(err => {
+              console.error('Copy failed:', err);
+            });
+          });
+          pre.appendChild(btn);
+        }
+      });
+    };
+
+    const codeBlockObserver = new MutationObserver(attachCodeBlockCopyButtons);
+    const editorContentEl = document.querySelector('.ck-content');
+    if (editorContentEl) {
+      codeBlockObserver.observe(editorContentEl, { childList: true, subtree: true });
+    }
+    attachCodeBlockCopyButtons();
+
     // Independent scroll and cursor position memory for WYSIWYG View and Source Editing View
     let lastWysiwygScrollTop = 0;
     let lastWysiwygSelectionState = null;

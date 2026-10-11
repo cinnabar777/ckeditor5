@@ -197,7 +197,13 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory app:title="Window &amp; Multi-Tasking Settings">
+    <PreferenceCategory app:title="Window &amp; Document Management Settings">
+        <SwitchPreferenceCompat
+            app:key="pref_auto_save_on_leave"
+            app:title="Auto-Save File on App Switch / Leave"
+            app:summary="Automatically saves unsaved document changes when switching apps, returning home, or navigating away"
+            android:defaultValue="true" />
+
         <SwitchPreferenceCompat
             app:key="pref_multi_window"
             app:title="Enable Multi-Window / Multi-Tasking Mode"
