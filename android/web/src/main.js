@@ -251,6 +251,75 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
       }
     }
 
+    // Synchronize cursor & scroll between WYSIWYG View and Source Editing View
+    const sourceEditingPlugin = editorInstance.plugins.get('SourceEditing');
+    if (sourceEditingPlugin) {
+      sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
+        if (isSourceEditing) {
+          // Entering Source Editing Mode
+          try {
+            const selection = editorInstance.model.document.selection;
+            const range = selection.getFirstRange();
+            let charOffset = 0;
+            if (range) {
+              const root = editorInstance.model.document.getRoot();
+              const fullRange = editorInstance.model.createRangeIn(root);
+              for (const value of fullRange.getWalker({ shallow: false })) {
+                if (value.previousPosition && value.previousPosition.isEqual(range.start)) {
+                  break;
+                }
+                if (value.item && value.item.is && value.item.is('$text')) {
+                  charOffset += value.item.data ? value.item.data.length : 0;
+                } else if (value.type === 'elementEnd') {
+                  charOffset += 1; // newline or element boundary
+                }
+              }
+            }
+
+            setTimeout(() => {
+              const textarea = document.querySelector('.ck-source-editing-area textarea');
+              if (textarea) {
+                const targetOffset = Math.min(charOffset, textarea.value.length);
+                textarea.focus();
+                textarea.setSelectionRange(targetOffset, targetOffset);
+
+                // Scroll textarea so cursor is visible
+                const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight, 10) || 20;
+                const linesBeforeCursor = textarea.value.substring(0, targetOffset).split('\n').length;
+                textarea.scrollTop = Math.max(0, (linesBeforeCursor - 3) * lineHeight);
+              }
+            }, 50);
+          } catch (e) {
+            console.error('Error syncing cursor to Source View:', e);
+          }
+        } else {
+          // Exiting Source Editing Mode back to WYSIWYG Mode
+          setTimeout(() => {
+            const mainEditingArea = document.querySelector('.ck-editor__main');
+            if (mainEditingArea) {
+              const selection = editorInstance.model.document.selection;
+              const range = selection.getFirstRange();
+              if (range) {
+                const domConverter = editorInstance.editing.view.domConverter;
+                const viewRange = editorInstance.editing.mapper.toViewRange(range);
+                if (viewRange) {
+                  const domRange = domConverter.viewRangeToDom(viewRange);
+                  if (domRange && domRange.startContainer) {
+                    const el = domRange.startContainer.nodeType === Node.ELEMENT_NODE
+                      ? domRange.startContainer
+                      : domRange.startContainer.parentElement;
+                    if (el && el.scrollIntoView) {
+                      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }
+                  }
+                }
+              }
+            }
+          }, 50);
+        }
+      });
+    }
+
     if (isInitialInit) {
       setupFloatingToggle();
       setupKeyboardShortcuts();
@@ -577,11 +646,26 @@ window.editorBridge = {
     } catch (e) {
       console.error('Invalid disabledPlugins JSON:', e);
     }
+
+    // Check if plugin list actually changed to avoid re-initializing editor when returning from settings
+    const currentDisabledStr = JSON.stringify(disabledPlugins.sort());
+    if (window._lastDisabledPluginsStr === currentDisabledStr && editorInstance) {
+      return;
+    }
+    window._lastDisabledPluginsStr = currentDisabledStr;
+
     const currentText = window.editorBridge.getMarkdown();
+    const currentState = window.editorBridge.getSelectionState();
+    const mainEditingArea = document.querySelector('.ck-editor__main');
+    const scrollTop = mainEditingArea ? mainEditingArea.scrollTop : 0;
+
     isProgrammaticChange = true;
     initEditor(disabledPlugins).then(() => {
       if (currentText) {
         editorInstance.setData(currentText);
+      }
+      if (currentState) {
+        window.editorBridge.setSelectionState(currentState, scrollTop);
       }
       setTimeout(() => { isProgrammaticChange = false; }, 50);
     });

@@ -155,6 +155,19 @@ class MainActivity : AppCompatActivity() {
         webView.evaluateJavascript("window.editorBridge.setDocumentTitle($escapedTitle);", null)
     }
 
+    private fun saveCurrentStateBeforeSettings() {
+        if (!isEditorReady) return
+        webView.evaluateJavascript("window.editorBridge.getSelectionState();") { selectionJson ->
+            val mainEditingAreaScrollTop = 0 // JS bridge handles scroll offset capture
+            val fileName = currentFileName
+            if (fileName.isNotEmpty() && fileName != getString(R.string.untitled_document)) {
+                val key = "doc_$fileName"
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                prefs.edit().putString("cursor_sel_$key", selectionJson).apply()
+            }
+        }
+    }
+
     private fun applyThemeAndFullscreenPreferences() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
@@ -268,6 +281,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_settings -> {
+                saveCurrentStateBeforeSettings()
                 settingsLauncher.launch(android.content.Intent(this, SettingsActivity::class.java))
                 true
             }

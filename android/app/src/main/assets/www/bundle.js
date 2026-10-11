@@ -109455,6 +109455,66 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           topContainer.prepend(headerRow);
         }
       }
+      const sourceEditingPlugin = editorInstance.plugins.get("SourceEditing");
+      if (sourceEditingPlugin) {
+        sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
+          if (isSourceEditing) {
+            try {
+              const selection = editorInstance.model.document.selection;
+              const range = selection.getFirstRange();
+              let charOffset = 0;
+              if (range) {
+                const root7 = editorInstance.model.document.getRoot();
+                const fullRange = editorInstance.model.createRangeIn(root7);
+                for (const value of fullRange.getWalker({ shallow: false })) {
+                  if (value.previousPosition && value.previousPosition.isEqual(range.start)) {
+                    break;
+                  }
+                  if (value.item && value.item.is && value.item.is("$text")) {
+                    charOffset += value.item.data ? value.item.data.length : 0;
+                  } else if (value.type === "elementEnd") {
+                    charOffset += 1;
+                  }
+                }
+              }
+              setTimeout(() => {
+                const textarea2 = document.querySelector(".ck-source-editing-area textarea");
+                if (textarea2) {
+                  const targetOffset = Math.min(charOffset, textarea2.value.length);
+                  textarea2.focus();
+                  textarea2.setSelectionRange(targetOffset, targetOffset);
+                  const lineHeight = parseInt(window.getComputedStyle(textarea2).lineHeight, 10) || 20;
+                  const linesBeforeCursor = textarea2.value.substring(0, targetOffset).split("\n").length;
+                  textarea2.scrollTop = Math.max(0, (linesBeforeCursor - 3) * lineHeight);
+                }
+              }, 50);
+            } catch (e) {
+              console.error("Error syncing cursor to Source View:", e);
+            }
+          } else {
+            setTimeout(() => {
+              const mainEditingArea2 = document.querySelector(".ck-editor__main");
+              if (mainEditingArea2) {
+                const selection = editorInstance.model.document.selection;
+                const range = selection.getFirstRange();
+                if (range) {
+                  const domConverter = editorInstance.editing.view.domConverter;
+                  const viewRange = editorInstance.editing.mapper.toViewRange(range);
+                  if (viewRange) {
+                    const domRange = domConverter.viewRangeToDom(viewRange);
+                    if (domRange && domRange.startContainer) {
+                      const el = domRange.startContainer.nodeType === Node.ELEMENT_NODE ? domRange.startContainer : domRange.startContainer.parentElement;
+                      if (el && el.scrollIntoView) {
+                        el.scrollIntoView({ block: "center", behavior: "smooth" });
+                      }
+                    }
+                  }
+                }
+              }
+            }, 50);
+          }
+        });
+      }
       if (isInitialInit) {
         setupFloatingToggle();
         setupKeyboardShortcuts();
@@ -109754,11 +109814,22 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       } catch (e) {
         console.error("Invalid disabledPlugins JSON:", e);
       }
+      const currentDisabledStr = JSON.stringify(disabledPlugins.sort());
+      if (window._lastDisabledPluginsStr === currentDisabledStr && editorInstance) {
+        return;
+      }
+      window._lastDisabledPluginsStr = currentDisabledStr;
       const currentText = window.editorBridge.getMarkdown();
+      const currentState = window.editorBridge.getSelectionState();
+      const mainEditingArea = document.querySelector(".ck-editor__main");
+      const scrollTop = mainEditingArea ? mainEditingArea.scrollTop : 0;
       isProgrammaticChange = true;
       initEditor(disabledPlugins).then(() => {
         if (currentText) {
           editorInstance.setData(currentText);
+        }
+        if (currentState) {
+          window.editorBridge.setSelectionState(currentState, scrollTop);
         }
         setTimeout(() => {
           isProgrammaticChange = false;

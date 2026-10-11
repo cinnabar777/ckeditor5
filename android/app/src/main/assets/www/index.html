@@ -267,16 +267,24 @@
     }
 
     /* Horizontal Rule Custom Styling */
-    .ck-content hr,
     .ck-content .ck-horizontal-line {
+      background: transparent !important;
+      border: none !important;
+      margin-top: 1em !important;
+      margin-bottom: 1em !important;
+      padding: 0 !important;
+    }
+
+    .ck-content hr,
+    .ck-content .ck-horizontal-line hr {
       border: none !important;
       height: var(--hr-thickness) !important;
       background-color: var(--hr-color) !important;
       width: var(--hr-width) !important;
       margin-left: auto !important;
       margin-right: auto !important;
-      margin-top: 1em !important;
-      margin-bottom: 1em !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
     }
 
     /* Dark Mode Source Editing View Fix */
