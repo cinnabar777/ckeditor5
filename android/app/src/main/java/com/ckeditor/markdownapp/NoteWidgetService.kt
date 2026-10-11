@@ -54,6 +54,7 @@ class NoteRemoteViewsFactory(private val context: Context) : RemoteViewsService.
             val fillInIntent = Intent().apply {
                 action = Intent.ACTION_VIEW
                 data = Uri.parse(item.uriString)
+                putExtra("open_target_uri", item.uriString)
             }
             rv.setOnClickFillInIntent(R.id.widget_item_container, fillInIntent)
         }

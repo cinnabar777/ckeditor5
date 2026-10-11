@@ -90,24 +90,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleIntent(intent: android.content.Intent?) {
         val action = intent?.action
-        val data: Uri? = intent?.data
-        if (action == android.content.Intent.ACTION_VIEW && data != null) {
+        val targetUriExtra = intent?.getStringExtra("open_target_uri")
+        val data: Uri? = if (targetUriExtra != null) Uri.parse(targetUriExtra) else intent?.data
+
+        if (data != null) {
             if (isEditorReady) {
                 openFile(data)
             } else {
                 pendingOpenUri = data
             }
-        } else {
-            // Auto-open last opened document if no explicit ACTION_VIEW intent
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-            val lastUriString = prefs.getString("last_opened_uri", null)
-            if (lastUriString != null) {
-                val lastUri = Uri.parse(lastUriString)
-                if (isEditorReady) {
-                    openFile(lastUri)
-                } else {
-                    pendingOpenUri = lastUri
-                }
+            return
+        }
+
+        // Auto-open last opened document if no explicit intent or extra
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val lastUriString = prefs.getString("last_opened_uri", null)
+        if (lastUriString != null) {
+            val lastUri = Uri.parse(lastUriString)
+            if (isEditorReady) {
+                openFile(lastUri)
+            } else {
+                pendingOpenUri = lastUri
             }
         }
     }
@@ -334,25 +337,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun captureWidgetSnapshot() {
         val uri = currentFileUri ?: return
-        webView.evaluateJavascript("window.editorBridge.getSnapshotDataUrl();") { result ->
-            val dataUrl = JSONObjectWrapper.unquote(result)
-            if (dataUrl.startsWith("data:image/png;base64,")) {
-                val base64Data = dataUrl.substringAfter("base64,")
-                val bytes = android.util.Base64.decode(base64Data, android.util.Base64.NO_WRAP)
-                val bitmap = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                if (bitmap != null) {
-                    val path = WidgetSnapshotHelper.saveSnapshotBitmap(this, bitmap, currentFileName)
-                    if (path != null) {
-                        WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
-                        NoteWidgetProvider.updateAllWidgets(this)
-                    }
-                }
-            } else {
-                val path = WidgetSnapshotHelper.captureAndSaveSnapshot(this, webView, currentFileName)
-                if (path != null) {
-                    WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
-                    NoteWidgetProvider.updateAllWidgets(this)
-                }
+        webView.evaluateJavascript("window.editorBridge.getMarkdown();") { result ->
+            val markdownText = JSONObjectWrapper.unquote(result)
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
+            val isDark = themeMode != "light"
+
+            val path = WidgetSnapshotHelper.generateTextSnapshot(this, markdownText, currentFileName, isDark)
+            if (path != null) {
+                WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
+                NoteWidgetProvider.updateAllWidgets(this)
             }
         }
     }

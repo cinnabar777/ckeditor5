@@ -71,7 +71,24 @@ class WidgetSettingsActivity : AppCompatActivity() {
         }
 
         val fileName = getFileNameFromUri(uri)
-        WidgetNoteManager.addItem(this, fileName, uri, "")
+        var snapshotPath = ""
+
+        try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                val reader = java.io.BufferedReader(java.io.InputStreamReader(inputStream))
+                val content = reader.readText()
+                val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+                val isDark = prefs.getString("pref_app_theme", "amoled") != "light"
+                val generated = WidgetSnapshotHelper.generateTextSnapshot(this, content, fileName, isDark)
+                if (generated != null) {
+                    snapshotPath = generated
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        WidgetNoteManager.addItem(this, fileName, uri, snapshotPath)
         loadItems()
         NoteWidgetProvider.updateAllWidgets(this)
     }

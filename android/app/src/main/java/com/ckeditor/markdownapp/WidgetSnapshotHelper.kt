@@ -3,28 +3,68 @@ package com.ckeditor.markdownapp
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.webkit.WebView
+import android.graphics.Color
+import android.text.Html
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import java.io.File
 import java.io.FileOutputStream
 
 object WidgetSnapshotHelper {
 
-    fun captureAndSaveSnapshot(context: Context, webView: WebView, fileName: String): String? {
+    fun generateTextSnapshot(context: Context, markdownContent: String, fileName: String, isDark: Boolean = true): String? {
         return try {
-            val width = webView.width.let { if (it <= 0) 1080 else it }
-            val viewHeight = webView.height.let { if (it <= 0) 1920 else it }
+            val width = 720
+            val height = 1200
+            val padding = 32
 
-            // Capture reasonable height bitmap
-            val originalBitmap = Bitmap.createBitmap(width, viewHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(originalBitmap)
-            webView.draw(canvas)
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
 
-            // Scale down to safe RemoteViews IPC size (max width 600px)
-            val targetWidth = 600
-            val targetHeight = ((viewHeight.toFloat() / width.toFloat()) * targetWidth).toInt().coerceAtMost(1000)
+            val bgColor = if (isDark) Color.parseColor("#000000") else Color.parseColor("#FFFFFF")
+            val textColor = if (isDark) Color.parseColor("#FFFFFF") else Color.parseColor("#111111")
+            val titleColor = if (isDark) Color.parseColor("#0288D1") else Color.parseColor("#0277BD")
 
-            val scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, targetWidth, targetHeight, true)
-            originalBitmap.recycle()
+            canvas.drawColor(bgColor)
+
+            val titlePaint = TextPaint().apply {
+                color = titleColor
+                textSize = 36f
+                isAntiAlias = true
+                isFakeBoldText = true
+            }
+
+            val titleLayout = StaticLayout.Builder.obtain(fileName, 0, fileName.length, titlePaint, width - (padding * 2))
+                .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                .setLineSpacing(0f, 1f)
+                .setIncludePad(false)
+                .build()
+
+            canvas.save()
+            canvas.translate(padding.toFloat(), padding.toFloat())
+            titleLayout.draw(canvas)
+            canvas.restore()
+
+            val textPaint = TextPaint().apply {
+                color = textColor
+                textSize = 28f
+                isAntiAlias = true
+            }
+
+            val htmlSpannable = Html.fromHtml(markdownContent, Html.FROM_HTML_MODE_LEGACY)
+            val startY = padding + titleLayout.height + 24
+
+            val contentLayout = StaticLayout.Builder.obtain(htmlSpannable, 0, htmlSpannable.length, textPaint, width - (padding * 2))
+                .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                .setLineSpacing(0f, 1.2f)
+                .setIncludePad(false)
+                .build()
+
+            canvas.save()
+            canvas.translate(padding.toFloat(), startY.toFloat())
+            contentLayout.draw(canvas)
+            canvas.restore()
 
             val dir = File(context.cacheDir, "widget_snapshots")
             if (!dir.exists()) {
@@ -34,10 +74,10 @@ object WidgetSnapshotHelper {
             val sanitizedName = fileName.replace("[^a-zA-Z0-9._-]".toRegex(), "_")
             val file = File(dir, "snap_$sanitizedName.png")
             val fos = FileOutputStream(file)
-            scaledBitmap.compress(Bitmap.CompressFormat.PNG, 85, fos)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos)
             fos.flush()
             fos.close()
-            scaledBitmap.recycle()
+            bitmap.recycle()
 
             file.absolutePath
         } catch (e: Exception) {
@@ -55,7 +95,7 @@ object WidgetSnapshotHelper {
             val sanitizedName = fileName.replace("[^a-zA-Z0-9._-]".toRegex(), "_")
             val file = File(dir, "snap_$sanitizedName.png")
             val fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 85, fos)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos)
             fos.flush()
             fos.close()
             file.absolutePath
