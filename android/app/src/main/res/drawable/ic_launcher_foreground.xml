@@ -4,8 +4,24 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Blue pencil icon properly scaled and centered inside 66dp safe zone (21 to 87) -->
+
+    <!-- Clean Pencil Shaft -->
     <path
         android:fillColor="#0288D1"
-        android:pathData="M42,66 L46,66 L72,40 L68,36 L42,62 Z M75,33 L71,29 L74,26 C75,25 77,25 78,26 L82,30 C83,31 83,33 82,34 Z M40,68 L40,62 L46,68 Z" />
+        android:pathData="M 32,76 L 32,64 L 64,32 L 76,44 L 44,76 Z" />
+
+    <!-- Eraser / Cap -->
+    <path
+        android:fillColor="#0277BD"
+        android:pathData="M 64,32 L 70,26 C 72,24 76,24 78,26 L 82,30 C 84,32 84,36 82,38 L 76,44 Z" />
+
+    <!-- Pencil Tip -->
+    <path
+        android:fillColor="#81D4FA"
+        android:pathData="M 32,76 L 24,84 L 32,64 Z" />
+
+    <!-- Lead Point -->
+    <path
+        android:fillColor="#01579B"
+        android:pathData="M 24,84 L 28,84 L 24,80 Z" />
 </vector>
