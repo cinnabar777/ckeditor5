@@ -190,6 +190,14 @@
     </PreferenceCategory>
 
 
+    <PreferenceCategory app:title="Window &amp; Multi-Tasking Settings">
+        <SwitchPreferenceCompat
+            app:key="pref_multi_window"
+            app:title="Enable Multi-Window / Multi-Tasking Mode"
+            app:summary="When enabled, opening files or tapping New Window launches documents in separate app windows side-by-side"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Backup &amp; Restore Settings (ZIP File)">
         <Preference
             app:key="pref_export_backup"

@@ -90,11 +90,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: android.content.Intent?) {
-        val action = intent?.action
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
+
         val targetUriExtra = intent?.getStringExtra("open_target_uri")
         val data: Uri? = if (targetUriExtra != null) Uri.parse(targetUriExtra) else intent?.data
 
         if (data != null) {
+            // Check if this document is already open in this window or if multi-window mode demands a new window
+            if (isMultiWindowEnabled && currentFileUri != null && currentFileUri != data && intent?.flags?.and(android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
+                val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
+                    action = android.content.Intent.ACTION_VIEW
+                    setDataAndType(data, "text/markdown")
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                }
+                startActivity(newIntent)
+                return
+            }
+
             if (isEditorReady) {
                 openFile(data)
             } else {
@@ -104,7 +117,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Auto-open last opened document if no explicit intent or extra
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val lastUriString = prefs.getString("last_opened_uri", null)
         if (lastUriString != null) {
             val lastUri = Uri.parse(lastUriString)

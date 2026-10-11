@@ -246,7 +246,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
             <button class="toolbar-app-btn" title="Save" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">💾</button>
             <button class="toolbar-app-btn" title="Save As" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">📑</button>
             <button class="toolbar-app-btn" title="Image" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">🖼</button>
-            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')">🗔</button>
+            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')">🗖</button>
             <button class="toolbar-app-btn settings-btn" title="Settings" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">⚙</button>
           </div>
         `;
@@ -748,11 +748,10 @@ window.editorBridge = {
     try {
       const selection = editorInstance.model.document.selection;
       const range = selection.getFirstRange();
-      if (range) {
-        const start = range.start;
+      if (range && range.start) {
         return {
-          path: start.path || [],
-          offset: start.offset || 0
+          path: range.start.path ? Array.from(range.start.path) : [],
+          offset: range.start.offset || 0
         };
       }
     } catch (e) {
@@ -765,7 +764,7 @@ window.editorBridge = {
     try {
       if (stateJson) {
         const state = typeof stateJson === 'string' ? JSON.parse(stateJson) : stateJson;
-        if (state && Array.isArray(state.path)) {
+        if (state && Array.isArray(state.path) && state.path.length > 0) {
           const doc = editorInstance.model.document;
           const root = doc.getRoot();
           const position = editorInstance.model.createPositionFromPath(root, state.path);
@@ -779,13 +778,13 @@ window.editorBridge = {
     } catch (e) {
       console.error('Error restoring selection state:', e);
     }
-    if (typeof scrollTop === 'number' && scrollTop > 0) {
+    if (typeof scrollTop === 'number' && scrollTop >= 0) {
       setTimeout(() => {
         const mainEditingArea = document.querySelector('.ck-editor__main');
         if (mainEditingArea) {
           mainEditingArea.scrollTop = scrollTop;
         }
-      }, 100);
+      }, 50);
     }
   },
   insertImage: function(imageUrl, altText = '') {
