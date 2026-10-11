@@ -334,10 +334,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun captureWidgetSnapshot() {
         val uri = currentFileUri ?: return
-        val path = WidgetSnapshotHelper.captureAndSaveSnapshot(this, webView, currentFileName)
-        if (path != null) {
-            WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
-            NoteWidgetProvider.updateAllWidgets(this)
+        webView.evaluateJavascript("window.editorBridge.getSnapshotDataUrl();") { result ->
+            val dataUrl = JSONObjectWrapper.unquote(result)
+            if (dataUrl.startsWith("data:image/png;base64,")) {
+                val base64Data = dataUrl.substringAfter("base64,")
+                val bytes = android.util.Base64.decode(base64Data, android.util.Base64.NO_WRAP)
+                val bitmap = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                if (bitmap != null) {
+                    val path = WidgetSnapshotHelper.saveSnapshotBitmap(this, bitmap, currentFileName)
+                    if (path != null) {
+                        WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
+                        NoteWidgetProvider.updateAllWidgets(this)
+                    }
+                }
+            } else {
+                val path = WidgetSnapshotHelper.captureAndSaveSnapshot(this, webView, currentFileName)
+                if (path != null) {
+                    WidgetNoteManager.updateSnapshotPath(this, uri.toString(), path)
+                    NoteWidgetProvider.updateAllWidgets(this)
+                }
+            }
         }
     }
 

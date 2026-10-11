@@ -45,4 +45,23 @@ object WidgetSnapshotHelper {
             null
         }
     }
+
+    fun saveSnapshotBitmap(context: Context, bitmap: Bitmap, fileName: String): String? {
+        return try {
+            val dir = File(context.cacheDir, "widget_snapshots")
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+            val sanitizedName = fileName.replace("[^a-zA-Z0-9._-]".toRegex(), "_")
+            val file = File(dir, "snap_$sanitizedName.png")
+            val fos = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 85, fos)
+            fos.flush()
+            fos.close()
+            file.absolutePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 }

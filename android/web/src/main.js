@@ -388,6 +388,46 @@ window.editorBridge = {
     editorInstance.setData(markdownText || '');
     setTimeout(() => { isProgrammaticChange = false; }, 50);
   },
+  getSnapshotDataUrl: function() {
+    return new Promise((resolve) => {
+      try {
+        const contentEl = document.querySelector('.ck-content');
+        if (!contentEl) return resolve('');
+
+        const rect = contentEl.getBoundingClientRect();
+        const width = Math.max(rect.width || 600, 400);
+        const height = Math.max(rect.height || 800, 300);
+
+        const isDark = !document.body.classList.contains('light-theme');
+        const bgColor = isDark ? '#000000' : '#ffffff';
+        const textColor = isDark ? '#ffffff' : '#111111';
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, width, height);
+
+        const htmlString = `<div xmlns="http://www.w3.org/1999/xhtml" style="background-color:${bgColor};color:${textColor};font-family:sans-serif;font-size:16px;line-height:1.6;padding:12px;">${contentEl.innerHTML}</div>`;
+        const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><foreignObject width="100%" height="100%">${htmlString}</foreignObject></svg>`;
+
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => {
+          resolve('');
+        };
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+      } catch (e) {
+        console.error('Snapshot error:', e);
+        resolve('');
+      }
+    });
+  },
   setHotkeys: function(hotkeysJson) {
     if (!hotkeysJson) return;
     try {
