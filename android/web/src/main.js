@@ -499,7 +499,7 @@ window.editorBridge = {
       titleEl.textContent = title;
     }
   },
-  setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor, linkColor, codeColor, codeBgColor, codeBlockColor, codeBlockBgColor) {
+  setFontSettings: function(bodyFontSizePx, headingScale, boldColor, italicColor, linkColor, codeColor, codeBgColor, codeBlockColor, codeBlockBgColor, fontBody, fontHeading, fontBold, fontItalic, fontCode) {
     const setCssVar = (varName, val) => {
       if (val && val !== 'default') {
         document.documentElement.style.setProperty(varName, val);
@@ -521,6 +521,12 @@ window.editorBridge = {
     setCssVar('--code-bg-color', codeBgColor);
     setCssVar('--code-block-color', codeBlockColor);
     setCssVar('--code-block-bg-color', codeBlockBgColor);
+
+    setCssVar('--body-font-family', fontBody);
+    setCssVar('--heading-font-family', fontHeading);
+    setCssVar('--bold-font-family', fontBold);
+    setCssVar('--italic-font-family', fontItalic);
+    setCssVar('--code-font-family', fontCode);
   },
   configurePlugins: function(disabledPluginsJson) {
     let disabledPlugins = [];

@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Font &amp; Text Sizing Settings">
+    <PreferenceCategory app:title="Font Sizing Settings">
         <SeekBarPreference
             app:key="pref_body_font_size"
             app:title="Body Text Size (px)"
@@ -20,6 +20,38 @@
             android:max="200"
             app:defaultValue="100"
             app:showSeekBarValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Font Families">
+        <EditTextPreference
+            app:key="pref_font_body"
+            app:title="Body / Paragraph Font Family"
+            app:summary="Font family name (e.g. sans-serif, serif, monospace, 'Roboto', or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_font_heading"
+            app:title="Headings Font Family"
+            app:summary="Font family name for H1-H6 (e.g. 'Trebuchet MS', serif, or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_font_bold"
+            app:title="Bold Text Font Family"
+            app:summary="Font family name for bold text (e.g. sans-serif, 'Arial Black', or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_font_italic"
+            app:title="Italic Text Font Family"
+            app:summary="Font family name for italic text (e.g. 'Georgia', cursive, or default)"
+            app:defaultValue="default" />
+
+        <EditTextPreference
+            app:key="pref_font_code"
+            app:title="Inline Code &amp; Code Block Font Family"
+            app:summary="Font family name for code (e.g. monospace, 'Courier New', 'Consolas', or default)"
+            app:defaultValue="default" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Text &amp; Element Colors (Hex Codes)">
@@ -86,16 +118,6 @@
             app:defaultValue="picker" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Home Screen Widget Settings">
-        <Preference
-            app:key="pref_widget_manage"
-            app:title="Manage Widget Notes"
-            app:summary="Add, reorder, or remove Markdown notes for the Home Screen Widget">
-            <intent
-                android:targetPackage="com.ckeditor.markdownapp"
-                android:targetClass="com.ckeditor.markdownapp.WidgetSettingsActivity" />
-        </Preference>
-    </PreferenceCategory>
 
     <PreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
         <EditTextPreference

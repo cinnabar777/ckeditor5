@@ -32,29 +32,6 @@
             android:exported="false"
             android:label="@string/settings_title" />
 
-        <activity
-            android:name=".WidgetSettingsActivity"
-            android:exported="false"
-            android:label="Widget Note Settings" />
-
-        <receiver
-            android:name=".NoteWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.ckeditor.markdownapp.ACTION_PREV_NOTE" />
-                <action android:name="com.ckeditor.markdownapp.ACTION_NEXT_NOTE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/note_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".NoteWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false" />
-
     </application>
 
 </manifest>

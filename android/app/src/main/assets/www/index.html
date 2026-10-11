@@ -20,6 +20,11 @@
       --code-bg-color: #212121;
       --code-block-color: #e0e0e0;
       --code-block-bg-color: #121212;
+      --body-font-family: inherit;
+      --heading-font-family: inherit;
+      --bold-font-family: inherit;
+      --italic-font-family: inherit;
+      --code-font-family: inherit;
       --toggle-bg: rgba(255, 255, 255, 0.15);
       --toggle-color: #ffffff;
     }
@@ -192,6 +197,7 @@
       margin: 0 !important;
       box-sizing: border-box;
       font-size: var(--body-font-size) !important;
+      font-family: var(--body-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
       line-height: 1.6;
       background-color: var(--bg-color) !important;
       color: var(--text-color) !important;
@@ -200,7 +206,22 @@
       box-shadow: none !important;
     }
 
-    /* Relative Heading Scalings */
+    /* Text Selection Highlight Styling Overrides for High Contrast */
+    ::selection {
+      background-color: #0078d4 !important;
+      color: #ffffff !important;
+    }
+
+    .ck-content ::selection,
+    .ck-content *::selection {
+      background-color: #0078d4 !important;
+      color: #ffffff !important;
+    }
+
+    /* Relative Heading Scalings & Font Families */
+    .ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4, .ck-content h5, .ck-content h6 {
+      font-family: var(--heading-font-family), inherit !important;
+    }
     .ck-content h1 { font-size: calc(2.0em * var(--heading-scale)) !important; }
     .ck-content h2 { font-size: calc(1.6em * var(--heading-scale)) !important; }
     .ck-content h3 { font-size: calc(1.3em * var(--heading-scale)) !important; }
@@ -208,29 +229,33 @@
     .ck-content h5 { font-size: calc(1.0em * var(--heading-scale)) !important; }
     .ck-content h6 { font-size: calc(0.9em * var(--heading-scale)) !important; }
 
-    /* Custom Bold / Italic / Link Colors */
+    /* Custom Bold / Italic / Link Colors & Fonts */
     .ck-content strong, .ck-content b {
       color: var(--bold-color) !important;
+      font-family: var(--bold-font-family), inherit !important;
     }
     .ck-content em, .ck-content i {
       color: var(--italic-color) !important;
+      font-family: var(--italic-font-family), inherit !important;
     }
     .ck-content a {
       color: var(--link-color) !important;
     }
 
-    /* Custom Inline Code Styling */
+    /* Custom Inline Code Styling & Font */
     .ck-content code {
       color: var(--code-color) !important;
       background-color: var(--code-bg-color) !important;
+      font-family: var(--code-font-family), monospace !important;
       padding: 2px 5px !important;
       border-radius: 4px !important;
     }
 
-    /* Custom Code Block Styling */
+    /* Custom Code Block Styling & Font */
     .ck-content pre, .ck-content pre code {
       color: var(--code-block-color) !important;
       background-color: var(--code-block-bg-color) !important;
+      font-family: var(--code-font-family), monospace !important;
       border-radius: 6px !important;
     }
 
