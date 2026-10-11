@@ -292,18 +292,43 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (sourceEditingPlugin) {
       sourceEditingPlugin.on('change:isSourceEditingMode', (evt, propertyName, isSourceEditing) => {
         if (isSourceEditing) {
-          // Entering Source Mode: Focus textarea once mounted
+          // Entering Source Mode: Calculate Markdown position from WYSIWYG selection
+          let targetOffset = 0;
+          try {
+            const selection = editorInstance.model.document.selection;
+            const range = selection.getFirstRange();
+            if (range) {
+              const root = editorInstance.model.document.getRoot();
+              const rangeFromStart = editorInstance.model.createRange(
+                editorInstance.model.createPositionAt(root, 0),
+                range.start
+              );
+              targetOffset = editorInstance.data.get({ range: rangeFromStart }).length;
+            }
+          } catch (e) {
+            console.error('Error calculating source position:', e);
+          }
+
           let attempts = 0;
-          const focusSourceTextarea = () => {
+          const setupSourceTextarea = () => {
             const textarea = document.querySelector('.ck-source-editing-area textarea');
             if (textarea) {
               textarea.focus();
-            } else if (attempts < 10) {
+              const safePos = Math.min(Math.max(0, targetOffset), textarea.value.length);
+              textarea.setSelectionRange(safePos, safePos);
+
+              // Scroll textarea to bring cursor line into view
+              const textBefore = textarea.value.substring(0, safePos);
+              const linesBefore = textBefore.split('\n').length;
+              const totalLines = textarea.value.split('\n').length || 1;
+              const scrollRatio = Math.max(0, (linesBefore - 1) / totalLines);
+              textarea.scrollTop = Math.max(0, scrollRatio * (textarea.scrollHeight - textarea.clientHeight));
+            } else if (attempts < 15) {
               attempts++;
-              setTimeout(focusSourceTextarea, 30);
+              setTimeout(setupSourceTextarea, 30);
             }
           };
-          setTimeout(focusSourceTextarea, 20);
+          setTimeout(setupSourceTextarea, 20);
         } else {
           // Exiting Source Mode back to WYSIWYG: Block listener spikes during setData
           isProgrammaticChange = true;

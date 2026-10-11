@@ -109598,17 +109598,39 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       if (sourceEditingPlugin) {
         sourceEditingPlugin.on("change:isSourceEditingMode", (evt, propertyName, isSourceEditing) => {
           if (isSourceEditing) {
+            let targetOffset = 0;
+            try {
+              const selection = editorInstance.model.document.selection;
+              const range = selection.getFirstRange();
+              if (range) {
+                const root7 = editorInstance.model.document.getRoot();
+                const rangeFromStart = editorInstance.model.createRange(
+                  editorInstance.model.createPositionAt(root7, 0),
+                  range.start
+                );
+                targetOffset = editorInstance.data.get({ range: rangeFromStart }).length;
+              }
+            } catch (e) {
+              console.error("Error calculating source position:", e);
+            }
             let attempts = 0;
-            const focusSourceTextarea = () => {
+            const setupSourceTextarea = () => {
               const textarea2 = document.querySelector(".ck-source-editing-area textarea");
               if (textarea2) {
                 textarea2.focus();
-              } else if (attempts < 10) {
+                const safePos = Math.min(Math.max(0, targetOffset), textarea2.value.length);
+                textarea2.setSelectionRange(safePos, safePos);
+                const textBefore = textarea2.value.substring(0, safePos);
+                const linesBefore = textBefore.split("\n").length;
+                const totalLines = textarea2.value.split("\n").length || 1;
+                const scrollRatio = Math.max(0, (linesBefore - 1) / totalLines);
+                textarea2.scrollTop = Math.max(0, scrollRatio * (textarea2.scrollHeight - textarea2.clientHeight));
+              } else if (attempts < 15) {
                 attempts++;
-                setTimeout(focusSourceTextarea, 30);
+                setTimeout(setupSourceTextarea, 30);
               }
             };
-            setTimeout(focusSourceTextarea, 20);
+            setTimeout(setupSourceTextarea, 20);
           } else {
             isProgrammaticChange = true;
             setTimeout(() => {
