@@ -1,11 +1,11 @@
-name: Build Android Release APK
+name: Build Android Debug APK
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Signed Release APK
+    name: Build Debug APK
     runs-on: ubuntu-latest
 
     steps:
@@ -34,13 +34,13 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Build Signed Release APK
+      - name: Build Debug APK
         run: |
           cd android
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
 
-      - name: Upload Signed Release APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: android/app/build/outputs/apk/release/app-release.apk
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
