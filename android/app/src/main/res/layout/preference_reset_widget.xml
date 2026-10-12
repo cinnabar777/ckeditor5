@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/btn_reset_preference"
+    android:layout_width="36dp"
+    android:layout_height="36dp"
+    android:layout_gravity="center_vertical"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:contentDescription="Reset Setting to Default"
+    android:padding="6dp"
+    android:src="@drawable/ic_reset_arrow"
+    android:visibility="gone" />

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="General &amp; App Display">
+        <com.ckeditor.markdownapp.ResetListPreference
+            app:key="pref_app_theme"
+            app:title="App Theme"
+            app:summary="Select dark amoled or light mode"
+            app:entries="@array/pref_theme_entries"
+            app:entryValues="@array/pref_theme_values"
+            app:defaultValue="amoled" />
+
+        <com.ckeditor.markdownapp.ResetListPreference
+            app:key="pref_image_mode"
+            app:title="Image Insertion Mode"
+            app:summary="Select how images are added to document"
+            app:entries="@array/pref_image_mode_entries"
+            app:entryValues="@array/pref_image_mode_values"
+            app:defaultValue="picker" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_auto_save_on_leave"
+            app:title="Auto-Save File on App Switch / Leave"
+            app:summary="Automatically saves unsaved document changes when switching apps, returning home, or navigating away"
+            android:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_multi_window"
+            app:title="Enable Multi-Window / Multi-Tasking Mode"
+            app:summary="When enabled, opening files or tapping New Window launches documents in separate app windows side-by-side"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Settings Sub-Pages">
+        <Preference
+            app:key="pref_page_styling"
+            app:title="Styling, Fonts &amp; Colors"
+            app:summary="Typography, font sizes, custom font files, font weights, colors, and line styles"
+            app:fragment="com.ckeditor.markdownapp.SettingsActivity$StylingSettingsFragment" />
+
+        <Preference
+            app:key="pref_page_hotkeys"
+            app:title="Custom Hotkey Shortcuts"
+            app:summary="Keyboard shortcuts for editor actions, formatting, headings, and markers"
+            app:fragment="com.ckeditor.markdownapp.SettingsActivity$HotkeysSettingsFragment" />
+
+        <Preference
+            app:key="pref_page_plugins"
+            app:title="Editor Plugins &amp; Toolbar Tools"
+            app:summary="Enable or disable individual toolbar tools and editor plugins"
+            app:fragment="com.ckeditor.markdownapp.SettingsActivity$PluginsSettingsFragment" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Backup &amp; Restore (ZIP File)">
+        <Preference
+            app:key="pref_export_backup"
+            app:title="Export Settings &amp; Custom Fonts (.zip)"
+            app:summary="Save all preferences and loaded font files to a ZIP backup file" />
+
+        <Preference
+            app:key="pref_import_backup"
+            app:title="Import Settings &amp; Custom Fonts (.zip)"
+            app:summary="Restore preferences and font files from a ZIP backup file" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Reset Settings">
+        <Preference
+            app:key="pref_reset_all_defaults"
+            app:title="Reset All Settings to Defaults ↺"
+            app:summary="Tap to restore all typography, element colors, shortcuts, custom fonts, and plugin settings back to default values" />
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

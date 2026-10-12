@@ -39,9 +39,7 @@ After {@link getting-started/integrations-cdn/quick-start installing the editor}
 
 <code-switcher>
 ```js
-import {
-	ClassicEditor, Bold, Italic, Essentials, PasteFromMarkdownExperimental
-} from 'ckeditor5';
+import { ClassicEditor, Bold, Italic, Essentials, PasteFromMarkdownExperimental } from 'ckeditor5';
 
 ClassicEditor
 	.create( {
@@ -53,7 +51,7 @@ ClassicEditor
 			Italic,
 			// More plugins.
 			// ...
-		]
+		],
 	} )
 	.then( /* ... */ )
 	.catch( /* ... */ );
