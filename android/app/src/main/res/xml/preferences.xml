@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Reset Settings">
+        <Preference
+            app:key="pref_reset_all_defaults"
+            app:title="Reset All Settings to Defaults ↺"
+            app:summary="Tap to restore all typography, element colors, shortcuts, custom fonts, and plugin settings back to default values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Font &amp; Paragraph Typography Settings">
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_body_font_size"
+            app:title="Body Text Size (px)"
+            app:summary="Adjust font size for regular editor text"
+            app:min="12"
+            android:max="32"
+            app:defaultValue="16"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_heading_scale_percent"
+            app:title="Heading Size Scale (%)"
+            app:summary="Scales all heading levels relative to text"
+            app:min="50"
+            android:max="200"
+            app:defaultValue="100"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_font_weight_bold"
+            app:title="Bold Font Weight"
+            app:summary="Adjust font weight for bold text (100-900)"
+            app:min="100"
+            android:max="900"
+            app:defaultValue="700"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_font_weight_italic"
+            app:title="Italic Font Weight"
+            app:summary="Adjust font weight for italic text (100-900)"
+            app:min="100"
+            android:max="900"
+            app:defaultValue="400"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_font_weight_heading"
+            app:title="Headings Font Weight"
+            app:summary="Adjust font weight for all heading levels (100-900)"
+            app:min="100"
+            android:max="900"
+            app:defaultValue="700"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_line_wrap"
+            app:title="Enable Line Wrap"
+            app:summary="When disabled, lines will not wrap and horizontally scroll"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Fonts (File Pickers)">
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_font_file_body"
+            app:title="Body / Paragraph Font File"
+            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_font_file_heading"
+            app:title="Headings Font File"
+            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_font_file_bold"
+            app:title="Bold Text Font File"
+            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_font_file_italic"
+            app:title="Italic Text Font File"
+            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_font_file_code"
+            app:title="Code Font File"
+            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Block Quote &amp; Callout Line Settings">
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_blockquote_line_thickness"
+            app:title="Block Quote Line Thickness (px)"
+            app:summary="Default: 4px (Range: 1px to 20px)"
+            android:defaultValue="4"
+            app:min="1"
+            android:max="20"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_blockquote_line_color"
+            app:title="Block Quote Line Color (Hex Code)"
+            app:summary="e.g. #444444 or default"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_callout_line_thickness"
+            app:title="Callout Line Thickness (px)"
+            app:summary="Default: 4px (Range: 1px to 20px)"
+            android:defaultValue="4"
+            app:min="1"
+            android:max="20"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_callout_line_color"
+            app:title="Callout Line Color (Hex Code)"
+            app:summary="e.g. #29b6f6 or default"
+            app:defaultValue="default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Horizontal Rule &amp; Paragraph Settings">
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_hr_thickness"
+            app:title="Line Thickness (px)"
+            app:summary="Default: 2px (Range: 1px to 20px)"
+            android:defaultValue="2"
+            app:min="1"
+            android:max="20"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hr_color"
+            app:title="Line Color (Hex Code)"
+            app:summary="e.g. #0078d4 or default"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetSeekBarPreference
+            app:key="pref_hr_width_percent"
+            app:title="Line Width (%)"
+            app:summary="Default: 100% (Range: 10% to 100%)"
+            android:defaultValue="100"
+            app:min="10"
+            android:max="100"
+            app:showSeekBarValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_justify_paragraph"
+            app:title="Justify Paragraph Text Only"
+            app:summary="Align paragraph text to both left and right margins (does NOT affect headings, lists, or code)"
+            android:defaultValue="false" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_paragraph_line_height"
+            app:title="Paragraph Line Height"
+            app:summary="Line height multiplier for paragraphs only (e.g. 1.6 or default)"
+            app:defaultValue="1.6" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_letter_spacing"
+            app:title="Global Letter Spacing (px)"
+            app:summary="Letter spacing for all text EXCEPT code blocks (e.g. 0.5px or 0px)"
+            app:defaultValue="0px" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Heading Colors 1–6 (Hex Codes)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_heading_1_color"
+            app:title="Heading 1 Color"
+            app:summary="Hex color code (e.g. #FF5722 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_heading_2_color"
+            app:title="Heading 2 Color"
+            app:summary="Hex color code (e.g. #FF9800 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_heading_3_color"
+            app:title="Heading 3 Color"
+            app:summary="Hex color code (e.g. #FFEB3B or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_heading_4_color"
+            app:title="Heading 4 Color"
+            app:summary="Hex color code (e.g. #4CAF50 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_heading_5_color"
+            app:title="Heading 5 Color"
+            app:summary="Hex color code (e.g. #2196F3 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_heading_6_color"
+            app:title="Heading 6 Color"
+            app:summary="Hex color code (e.g. #9C27B0 or default)"
+            app:defaultValue="default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Text &amp; Element Colors (Hex Codes)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_bold_color"
+            app:title="Bold Text Color"
+            app:summary="Hex color code (e.g. #FFD700 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_italic_color"
+            app:title="Italic Text Color"
+            app:summary="Hex color code (e.g. #00E676 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_link_color"
+            app:title="Link Color"
+            app:summary="Hex color code for hyperlink text (e.g. #29B6F6 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_code_color"
+            app:title="Inline Code Text Color"
+            app:summary="Hex color code for inline code text (e.g. #FF80AB or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_code_bg_color"
+            app:title="Inline Code Background Color"
+            app:summary="Hex color code for inline code background (e.g. #212121 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_code_block_color"
+            app:title="Code Block Text Color"
+            app:summary="Hex color code for code block text (e.g. #E0E0E0 or default)"
+            app:defaultValue="default" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_code_block_bg_color"
+            app:title="Code Block Background Color"
+            app:summary="Hex color code for code block background (e.g. #121212 or default)"
+            app:defaultValue="default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="App Display &amp; Theme Settings">
+        <com.ckeditor.markdownapp.ResetListPreference
+            app:key="pref_app_theme"
+            app:title="App Theme"
+            app:summary="Select dark amoled or light mode"
+            app:entries="@array/pref_theme_entries"
+            app:entryValues="@array/pref_theme_values"
+            app:defaultValue="amoled" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Image Settings">
+        <com.ckeditor.markdownapp.ResetListPreference
+            app:key="pref_image_mode"
+            app:title="Image Insertion Mode"
+            app:summary="Select how images are added to document"
+            app:entries="@array/pref_image_mode_entries"
+            app:entryValues="@array/pref_image_mode_values"
+            app:defaultValue="picker" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Window &amp; Document Management Settings">
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_auto_save_on_leave"
+            app:title="Auto-Save File on App Switch / Leave"
+            app:summary="Automatically saves unsaved document changes when switching apps, returning home, or navigating away"
+            android:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_multi_window"
+            app:title="Enable Multi-Window / Multi-Tasking Mode"
+            app:summary="When enabled, opening files or tapping New Window launches documents in separate app windows side-by-side"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Backup &amp; Restore Settings (ZIP File)">
+        <Preference
+            app:key="pref_export_backup"
+            app:title="Export Settings &amp; Custom Fonts (.zip)"
+            app:summary="Save all preferences and loaded font files to a ZIP backup file" />
+
+        <Preference
+            app:key="pref_import_backup"
+            app:title="Import Settings &amp; Custom Fonts (.zip)"
+            app:summary="Restore preferences and font files from a ZIP backup file" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_new"
+            app:title="New Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+n)"
+            app:defaultValue="ctrl+n" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_open"
+            app:title="Open Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+o)"
+            app:defaultValue="ctrl+o" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_save"
+            app:title="Save Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+s)"
+            app:defaultValue="ctrl+s" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_save_as"
+            app:title="Save As Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+s)"
+            app:defaultValue="ctrl+shift+s" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_image"
+            app:title="Insert Image Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+i)"
+            app:defaultValue="ctrl+shift+i" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_settings"
+            app:title="Open Settings Shortcut"
+            app:summary="Key combination (e.g. ctrl+,)"
+            app:defaultValue="ctrl+," />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_toggle_toolbar"
+            app:title="Toggle Bottom Toolbar Shortcut"
+            app:summary="Key combination (e.g. ctrl+t)"
+            app:defaultValue="ctrl+t" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_line_wrap"
+            app:title="Toggle Line Wrap Shortcut"
+            app:summary="Key combination (e.g. ctrl+alt+w)"
+            app:defaultValue="ctrl+alt+w" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Formatting &amp; Tools)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_bold"
+            app:title="Bold Shortcut"
+            app:defaultValue="ctrl+b" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_italic"
+            app:title="Italic Shortcut"
+            app:defaultValue="ctrl+i" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_underline"
+            app:title="Hotkey: Underline"
+            app:defaultValue="ctrl+u" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_strikethrough"
+            app:title="Strikethrough Shortcut"
+            app:defaultValue="ctrl+shift+x" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_code"
+            app:title="Inline Code Shortcut"
+            app:defaultValue="ctrl+e" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_link"
+            app:title="Link Shortcut"
+            app:defaultValue="ctrl+k" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_blockQuote"
+            app:title="Block Quote Shortcut"
+            app:defaultValue="ctrl+shift+q" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_codeBlock"
+            app:title="Code Block Shortcut"
+            app:defaultValue="ctrl+shift+c" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_bulletedList"
+            app:title="Bulleted List Shortcut"
+            app:defaultValue="ctrl+shift+8" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_numberedList"
+            app:title="Numbered List Shortcut"
+            app:defaultValue="ctrl+shift+7" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_todoList"
+            app:title="To-Do List Shortcut"
+            app:defaultValue="ctrl+shift+l" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_indent"
+            app:title="Increase Indent Shortcut"
+            app:defaultValue="tab" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_outdent"
+            app:title="Decrease Indent Shortcut"
+            app:defaultValue="shift+tab" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_horizontalLine"
+            app:title="Horizontal Line Shortcut"
+            app:defaultValue="ctrl+shift+h" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_findAndReplace"
+            app:title="Find &amp; Replace Shortcut"
+            app:defaultValue="ctrl+f" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_sourceEditing"
+            app:title="Source Code View Shortcut"
+            app:defaultValue="ctrl+shift+u" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Headings)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_p"
+            app:title="Paragraph / Normal Text Shortcut"
+            app:defaultValue="ctrl+alt+0" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_1"
+            app:title="Heading 1 Shortcut"
+            app:defaultValue="ctrl+alt+1" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_2"
+            app:title="Heading 2 Shortcut"
+            app:defaultValue="ctrl+alt+2" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_3"
+            app:title="Heading 3 Shortcut"
+            app:defaultValue="ctrl+alt+3" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_4"
+            app:title="Heading 4 Shortcut"
+            app:defaultValue="ctrl+alt+4" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_5"
+            app:title="Heading 5 Shortcut"
+            app:defaultValue="ctrl+alt+5" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_6"
+            app:title="Heading 6 Shortcut"
+            app:defaultValue="ctrl+alt+6" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_yellow"
+            app:title="Yellow Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+y" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_green"
+            app:title="Green Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+g" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_pink"
+            app:title="Pink Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+p" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_blue"
+            app:title="Blue Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+b" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_red"
+            app:title="Red Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+r" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_remove"
+            app:title="Remove Highlight Shortcut"
+            app:defaultValue="ctrl+alt+x" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Editor Plugins &amp; Toolbar Tools">
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_heading"
+            app:title="Headings"
+            app:summary="Heading 1 to Heading 6 support"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_bold"
+            app:title="Bold"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_italic"
+            app:title="Italic"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_strikethrough"
+            app:title="Strikethrough"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_highlight"
+            app:title="Highlight / Markers"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_code"
+            app:title="Inline Code"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_link"
+            app:title="Links"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_image"
+            app:title="Images"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_blockQuote"
+            app:title="Block Quotes"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_codeBlock"
+            app:title="Code Blocks"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_table"
+            app:title="Tables"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_list"
+            app:title="Lists (Bulleted &amp; Numbered)"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_todoList"
+            app:title="Task / To-Do Lists"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_indent"
+            app:title="Increase &amp; Decrease Indent"
+            app:summary="Indent or outdent text blocks and list items"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_horizontalLine"
+            app:title="Horizontal Line"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_sourceEditing"
+            app:title="Source Editing Mode"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_findAndReplace"
+            app:title="Find and Replace"
+            app:defaultValue="true" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_plugin_autoformat"
+            app:title="Autoformat Markdown Syntax"
+            app:summary="Automatically converts typed Markdown syntax (#, **, *, -, >) into formatted text in WYSIWYG mode"
+            app:defaultValue="true" />
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
