@@ -193,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(data, "text/markdown")
                     putExtra("open_target_uri", data.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 }
                 startActivity(newIntent)
                 return
@@ -598,7 +598,7 @@ class MainActivity : AppCompatActivity() {
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(uri, "text/markdown")
                     putExtra("open_target_uri", uri.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 }
                 startActivity(newIntent)
                 return

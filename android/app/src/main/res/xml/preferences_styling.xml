@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="Bottom Control Bar Customization">
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_toolbar_bg_color"
             app:title="Toolbar Background Color"
-            app:summary="Hex color code (e.g. #1e1e1e, #000000 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_toolbar_icon_color"
             app:title="Toolbar Icon Color"
-            app:summary="Hex color code for toolbar SVG icons (e.g. #ffffff, #29b6f6 or default)"
+            app:summary="Tap to select color for toolbar SVG icons or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetSeekBarPreference
@@ -105,41 +105,41 @@
             app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Heading Colors 1–6 (Hex Codes)">
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+    <PreferenceCategory app:title="Heading Colors 1–6 (Color Pickers)">
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_1_color"
             app:title="Heading 1 Color"
-            app:summary="Hex color code (e.g. #FF5722 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_2_color"
             app:title="Heading 2 Color"
-            app:summary="Hex color code (e.g. #FF9800 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_3_color"
             app:title="Heading 3 Color"
-            app:summary="Hex color code (e.g. #FFEB3B or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_4_color"
             app:title="Heading 4 Color"
-            app:summary="Hex color code (e.g. #4CAF50 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_5_color"
             app:title="Heading 5 Color"
-            app:summary="Hex color code (e.g. #2196F3 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_6_color"
             app:title="Heading 6 Color"
-            app:summary="Hex color code (e.g. #9C27B0 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
     </PreferenceCategory>
 
@@ -153,10 +153,10 @@
             android:max="20"
             app:showSeekBarValue="true" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_blockquote_line_color"
-            app:title="Block Quote Line Color (Hex Code)"
-            app:summary="e.g. #444444 or default"
+            app:title="Block Quote Line Color"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetSeekBarPreference
@@ -168,10 +168,10 @@
             android:max="20"
             app:showSeekBarValue="true" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_callout_line_color"
-            app:title="Callout Line Color (Hex Code)"
-            app:summary="e.g. #29b6f6 or default"
+            app:title="Callout Line Color"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
     </PreferenceCategory>
 
@@ -185,10 +185,10 @@
             android:max="20"
             app:showSeekBarValue="true" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_hr_color"
-            app:title="Line Color (Hex Code)"
-            app:summary="e.g. #0078d4 or default"
+            app:title="Line Color"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetSeekBarPreference
@@ -219,47 +219,47 @@
             app:defaultValue="0px" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Text &amp; Element Colors (Hex Codes)">
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+    <PreferenceCategory app:title="Text &amp; Element Colors (Color Pickers)">
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_bold_color"
             app:title="Bold Text Color"
-            app:summary="Hex color code (e.g. #FFD700 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_italic_color"
             app:title="Italic Text Color"
-            app:summary="Hex color code (e.g. #00E676 or default)"
+            app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_link_color"
             app:title="Link Color"
-            app:summary="Hex color code for hyperlink text (e.g. #29B6F6 or default)"
+            app:summary="Tap to select color for hyperlink text or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_code_color"
             app:title="Inline Code Text Color"
-            app:summary="Hex color code for inline code text (e.g. #FF80AB or default)"
+            app:summary="Tap to select color for inline code text or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_code_bg_color"
             app:title="Inline Code Background Color"
-            app:summary="Hex color code for inline code background (e.g. #212121 or default)"
+            app:summary="Tap to select color for inline code background or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_code_block_color"
             app:title="Code Block Text Color"
-            app:summary="Hex color code for code block text (e.g. #E0E0E0 or default)"
+            app:summary="Tap to select color for code block text or default"
             app:defaultValue="default" />
 
-        <com.ckeditor.markdownapp.ResetEditTextPreference
+        <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_code_block_bg_color"
             app:title="Code Block Background Color"
-            app:summary="Hex color code for code block background (e.g. #121212 or default)"
+            app:summary="Tap to select color for code block background or default"
             app:defaultValue="default" />
     </PreferenceCategory>
 

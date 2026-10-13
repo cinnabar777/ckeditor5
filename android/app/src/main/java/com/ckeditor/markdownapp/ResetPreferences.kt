@@ -277,6 +277,70 @@ open class ResetPreference @JvmOverloads constructor(
     }
 }
 
+open class ResetColorPickerPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.preferenceStyle
+) : Preference(context, attrs, defStyleAttr), ResettablePreference {
+
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+        PreferenceResetHelper.bindResetButton(holder, this)
+
+        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
+        if (widgetFrame != null) {
+            val previewTag = "color_picker_preview_circle"
+            var previewCircle = widgetFrame.findViewWithTag<View>(previewTag)
+            if (previewCircle == null) {
+                val density = context.resources.displayMetrics.density
+                val sizePx = (24 * density).toInt()
+                previewCircle = View(context).apply {
+                    tag = previewTag
+                    layoutParams = LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                        marginEnd = (8 * density).toInt()
+                    }
+                }
+                widgetFrame.addView(previewCircle, 0)
+            }
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val colorHex = prefs.getString(key, "default") ?: "default"
+            val colorInt = ColorPickerDialog.parseHexColor(colorHex, android.graphics.Color.parseColor("#00E5FF"))
+
+            if (colorHex != "default") {
+                summary = "Selected: $colorHex"
+            }
+
+            previewCircle.background = android.graphics.drawable.GradientDrawable().apply {
+                shape = android.graphics.drawable.GradientDrawable.OVAL
+                if (colorHex == "default") {
+                    setColor(android.graphics.Color.parseColor("#333333"))
+                    setStroke((2 * context.resources.displayMetrics.density).toInt(), android.graphics.Color.parseColor("#888888"))
+                } else {
+                    setColor(colorInt)
+                    setStroke((1 * context.resources.displayMetrics.density).toInt(), android.graphics.Color.WHITE)
+                }
+            }
+        }
+    }
+
+    override fun onClick() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val currentColor = prefs.getString(key, "default") ?: "default"
+
+        ColorPickerDialog(context, currentColor) { selectedHex ->
+            prefs.edit().putString(key, selectedHex).apply()
+            summary = "Selected: $selectedHex"
+            notifyChanged()
+            Toast.makeText(context, "Color set to $selectedHex", Toast.LENGTH_SHORT).show()
+        }.show()
+    }
+
+    override fun callNotifyChanged() {
+        notifyChanged()
+    }
+}
+
 open class ResetSeekBarPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
