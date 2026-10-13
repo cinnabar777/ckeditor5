@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -134,7 +133,7 @@ object PreferenceResetHelper {
         }
 
         val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup ?: return
-        var btnReset = widgetFrame.findViewById<ImageView>(R.id.btn_reset_widget)
+        var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
 
         if (btnReset == null) {
             btnReset = ImageView(context).apply {
@@ -151,12 +150,40 @@ object PreferenceResetHelper {
             }
 
             val sizePx = (36 * context.resources.displayMetrics.density).toInt()
+            val marginPx = (4 * context.resources.displayMetrics.density).toInt()
             val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
                 gravity = Gravity.CENTER_VERTICAL
+                marginStart = marginPx
+                marginEnd = marginPx
             }
 
             widgetFrame.visibility = View.VISIBLE
-            widgetFrame.addView(btnReset, params)
+
+            if (widgetFrame is LinearLayout) {
+                widgetFrame.orientation = LinearLayout.HORIZONTAL
+                widgetFrame.gravity = Gravity.CENTER_VERTICAL
+                widgetFrame.addView(btnReset, 0, params)
+            } else {
+                val containerTag = "widget_reset_row_container"
+                var container = widgetFrame.findViewWithTag<LinearLayout>(containerTag)
+                if (container == null) {
+                    container = LinearLayout(context).apply {
+                        tag = containerTag
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
+                    }
+                    val existingViews = ArrayList<View>()
+                    for (i in 0 until widgetFrame.childCount) {
+                        existingViews.add(widgetFrame.getChildAt(i))
+                    }
+                    widgetFrame.removeAllViews()
+                    container.addView(btnReset, params)
+                    for (child in existingViews) {
+                        container.addView(child)
+                    }
+                    widgetFrame.addView(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                }
+            }
         }
 
         val isModified = isModifiedFromDefault(context, key)
@@ -220,11 +247,9 @@ object PreferenceResetHelper {
 
 open class ResetPreference @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : Preference(context, attrs), ResettablePreference {
-    init {
-        widgetLayoutResource = R.layout.preference_reset_widget
-    }
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.preferenceStyle
+) : Preference(context, attrs, defStyleAttr), ResettablePreference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -236,11 +261,9 @@ open class ResetPreference @JvmOverloads constructor(
 
 open class ResetSeekBarPreference @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : SeekBarPreference(context, attrs), ResettablePreference {
-    init {
-        widgetLayoutResource = R.layout.preference_reset_widget
-    }
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.seekBarPreferenceStyle
+) : SeekBarPreference(context, attrs, defStyleAttr), ResettablePreference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -252,11 +275,9 @@ open class ResetSeekBarPreference @JvmOverloads constructor(
 
 open class ResetEditTextPreference @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : EditTextPreference(context, attrs), ResettablePreference {
-    init {
-        widgetLayoutResource = R.layout.preference_reset_widget
-    }
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.editTextPreferenceStyle
+) : EditTextPreference(context, attrs, defStyleAttr), ResettablePreference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -268,11 +289,9 @@ open class ResetEditTextPreference @JvmOverloads constructor(
 
 open class ResetListPreference @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : ListPreference(context, attrs), ResettablePreference {
-    init {
-        widgetLayoutResource = R.layout.preference_reset_widget
-    }
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.dialogPreferenceStyle
+) : ListPreference(context, attrs, defStyleAttr), ResettablePreference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -284,11 +303,9 @@ open class ResetListPreference @JvmOverloads constructor(
 
 open class ResetSwitchPreference @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : SwitchPreferenceCompat(context, attrs), ResettablePreference {
-    init {
-        widgetLayoutResource = R.layout.preference_reset_widget
-    }
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.switchPreferenceCompatStyle
+) : SwitchPreferenceCompat(context, attrs, defStyleAttr), ResettablePreference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
