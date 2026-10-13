@@ -110679,6 +110679,36 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     highlight_red: "ctrl+alt+r",
     highlight_remove: "ctrl+alt+x"
   };
+  var svgIcons = {
+    undo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>`,
+    redo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>`,
+    paragraph: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13"/></svg>`,
+    lists: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+    format: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
+    table: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/></svg>`,
+    insert: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>`,
+    wrap: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 21 6"/><path d="M3 12h15a3 3 0 0 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/></svg>`,
+    bold: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>`,
+    italic: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>`,
+    underline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>`,
+    strikethrough: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
+    code: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+    link: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+    image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+    blockQuote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+    horizontalLine: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/></svg>`,
+    bulletedList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+    numberedList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>`,
+    todoList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+    indent: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 10 7 14 3 18"/><line x1="21" y1="6" x2="11" y2="6"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="18" x2="11" y2="18"/></svg>`,
+    outdent: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 10 3 14 7 18"/><line x1="21" y1="6" x2="11" y2="6"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="18" x2="11" y2="18"/></svg>`,
+    newFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`,
+    openFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,
+    saveFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+    settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+    newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`
+  };
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (editorInstance) {
       await editorInstance.destroy();
@@ -110980,14 +111010,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       topContainer.appendChild(bar);
     }
     bar.innerHTML = `
-    <button class="grouped-key-btn" id="grp-btn-undo" title="Undo (Hold: Redo)">\u21B6</button>
-    <button class="grouped-key-btn" id="grp-btn-heading" title="Paragraph & Headings">\xB6</button>
-    <button class="grouped-key-btn" id="grp-btn-lists" title="Lists">\u2261</button>
-    <button class="grouped-key-btn" id="grp-btn-format" title="Format">T</button>
-    <button class="grouped-key-btn" id="grp-btn-table" title="Table">\u229E</button>
-    <button class="grouped-key-btn" id="grp-btn-insert" title="Insert">+</button>
-    <button class="grouped-key-btn" id="grp-btn-menu" title="Menu">\u22EE</button>
-    <button class="grouped-key-btn" id="grp-btn-wrap" title="Line Wrap Toggle">\u21A9</button>
+    <button class="grouped-key-btn" id="grp-btn-undo" title="Undo (Hold: Redo)">${svgIcons.undo}</button>
+    <button class="grouped-key-btn" id="grp-btn-heading" title="Paragraph & Headings">${svgIcons.paragraph}</button>
+    <button class="grouped-key-btn" id="grp-btn-lists" title="Lists">${svgIcons.lists}</button>
+    <button class="grouped-key-btn" id="grp-btn-format" title="Format">${svgIcons.format}</button>
+    <button class="grouped-key-btn" id="grp-btn-table" title="Table">${svgIcons.table}</button>
+    <button class="grouped-key-btn" id="grp-btn-insert" title="Insert">${svgIcons.insert}</button>
+    <button class="grouped-key-btn" id="grp-btn-menu" title="Menu">${svgIcons.menu}</button>
   `;
     const undoBtn = bar.querySelector("#grp-btn-undo");
     if (undoBtn) {
@@ -111025,13 +111054,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       headingBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("heading", headingBtn, [
-          { label: "P", action: () => execCmd("heading", { value: "paragraph" }) },
+          { label: `${svgIcons.paragraph} P`, action: () => execCmd("heading", { value: "paragraph" }) },
           { label: "H1", action: () => execCmd("heading", { value: "heading1" }) },
           { label: "H2", action: () => execCmd("heading", { value: "heading2" }) },
           { label: "H3", action: () => execCmd("heading", { value: "heading3" }) },
           { label: "H4", action: () => execCmd("heading", { value: "heading4" }) },
           { label: "H5", action: () => execCmd("heading", { value: "heading5" }) },
-          { label: "H6", action: () => execCmd("heading", { value: "heading6" }) }
+          { label: "H6", action: () => execCmd("heading", { value: "heading6" }) },
+          { label: `${svgIcons.wrap} Wrap`, action: () => window.editorBridge.toggleLineWrap() }
         ]);
       };
     }
@@ -111040,11 +111070,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       listsBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("lists", listsBtn, [
-          { label: "\u2022 Bullet", action: () => execCmd("bulletedList") },
-          { label: "1. Number", action: () => execCmd("numberedList") },
-          { label: "\u2611 Todo", action: () => execCmd("todoList") },
-          { label: "\u2794 Indent", action: () => execCmd("indent") },
-          { label: "\u2B05 Outdent", action: () => execCmd("outdent") }
+          { label: `${svgIcons.bulletedList} Bullet`, action: () => execCmd("bulletedList") },
+          { label: `${svgIcons.numberedList} Number`, action: () => execCmd("numberedList") },
+          { label: `${svgIcons.todoList} Todo`, action: () => execCmd("todoList") },
+          { label: `${svgIcons.indent} Indent`, action: () => execCmd("indent") },
+          { label: `${svgIcons.outdent} Outdent`, action: () => execCmd("outdent") }
         ]);
       };
     }
@@ -111053,10 +111083,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       formatBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("format", formatBtn, [
-          { label: "B Bold", action: () => execCmd("bold") },
-          { label: "I Italic", action: () => execCmd("italic") },
-          { label: "S Strike", action: () => execCmd("strikethrough") },
-          { label: "U Underline", action: () => execCmd("underline") },
+          { label: `${svgIcons.bold} Bold`, action: () => execCmd("bold") },
+          { label: `${svgIcons.italic} Italic`, action: () => execCmd("italic") },
+          { label: `${svgIcons.strikethrough} Strike`, action: () => execCmd("strikethrough") },
+          { label: `${svgIcons.underline} Underline`, action: () => execCmd("underline") },
+          { label: `${svgIcons.code} Code`, action: () => execCmd("code") },
           { label: "\u{1F7E8} Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
           { label: "\u{1F7E2} Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
           { label: "\u{1F534} Marker", action: () => execCmd("highlight", { value: "redMarker" }) },
@@ -111069,7 +111100,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       tableBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("table", tableBtn, [
-          { label: "\u229E Insert", action: () => execCmd("insertTable") },
+          { label: `${svgIcons.table} Insert`, action: () => execCmd("insertTable") },
           { label: "+Col Column", action: () => execCmd("tableColumn") },
           { label: "+Row Row", action: () => execCmd("tableRow") },
           { label: "\u2715 Merge", action: () => execCmd("mergeTableCells") }
@@ -111081,12 +111112,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       insertBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("insert", insertBtn, [
-          { label: "\u{1F5BC}\uFE0F Image", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
-          { label: "\u{1F517} Link", action: () => execCmd("link") },
-          { label: "\u201D Quote", action: () => execCmd("blockQuote") },
-          { label: "</> Code", action: () => execCmd("code") },
-          { label: "``` Code Block", action: () => execCmd("codeBlock") },
-          { label: "\u2015 Line", action: () => execCmd("horizontalLine") }
+          { label: `${svgIcons.image} Image`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
+          { label: `${svgIcons.link} Link`, action: () => execCmd("link") },
+          { label: `${svgIcons.blockQuote} Quote`, action: () => execCmd("blockQuote") },
+          { label: `${svgIcons.code} Code Block`, action: () => execCmd("codeBlock") },
+          { label: `${svgIcons.horizontalLine} Line`, action: () => execCmd("horizontalLine") }
         ]);
       };
     }
@@ -111095,21 +111125,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       menuBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("menu", menuBtn, [
-          { label: "\u{1F4C4} New", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
-          { label: "\u{1F4C2} Open", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
-          { label: "\u{1F4BE} Save", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
-          { label: "\u{1F4D1} Save As", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save_as") },
-          { label: "\u{1FA9F} New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
-          { label: "\u2699\uFE0F Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
+          { label: `${svgIcons.newFile} New`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
+          { label: `${svgIcons.openFile} Open`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
+          { label: `${svgIcons.saveFile} Save`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
+          { label: `${svgIcons.saveFile} Save As`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save_as") },
+          { label: `${svgIcons.newWindow} New Window`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
+          { label: `${svgIcons.settings} Settings`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
-      };
-    }
-    const wrapBtn = bar.querySelector("#grp-btn-wrap");
-    if (wrapBtn) {
-      wrapBtn.onclick = (e) => {
-        e.stopPropagation();
-        hidePopupStrip();
-        window.editorBridge.toggleLineWrap();
       };
     }
   }
@@ -111144,7 +111166,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     items.forEach((item) => {
       const btn = document.createElement("button");
       btn.className = "popup-strip-btn";
-      btn.textContent = item.label;
+      btn.innerHTML = item.label;
       btn.onclick = (e) => {
         e.stopPropagation();
         hidePopupStrip();
@@ -111184,7 +111206,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       const velocity = dt2 > 0 ? dy / dt2 : 0;
       lastScrollTop = mainArea.scrollTop;
       lastScrollTime = now;
-      if (velocity > 2.5 || dy > 120) {
+      if (velocity > 4.5 || dy > 250) {
         updateThumbPosition();
         track2.classList.add("visible");
         clearTimeout(hideTimer);
@@ -111565,6 +111587,21 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           document.documentElement.style.removeProperty(varName);
         }
       });
+    },
+    setToolbarSettings: function(bgColorHex, iconColorHex, heightDp) {
+      if (bgColorHex && bgColorHex !== "default") {
+        document.documentElement.style.setProperty("--toolbar-bg", bgColorHex);
+      } else {
+        document.documentElement.style.removeProperty("--toolbar-bg");
+      }
+      if (iconColorHex && iconColorHex !== "default") {
+        document.documentElement.style.setProperty("--toolbar-icon-color", iconColorHex);
+      } else {
+        document.documentElement.style.removeProperty("--toolbar-icon-color");
+      }
+      if (heightDp && typeof heightDp === "number") {
+        document.documentElement.style.setProperty("--toolbar-height", heightDp + "px");
+      }
     },
     getSnapshotDataUrl: function() {
       return new Promise((resolve2) => {

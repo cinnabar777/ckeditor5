@@ -9,6 +9,8 @@
       --bg-color: #000000;
       --text-color: #ffffff;
       --toolbar-bg: #121212;
+      --toolbar-icon-color: #ffffff;
+      --toolbar-height: 48px;
       --border-color: #222222;
       --button-hover: #1f1f1f;
       --body-font-size: 16px;
@@ -47,6 +49,7 @@
       --bg-color: #ffffff;
       --text-color: #111111;
       --toolbar-bg: #f8f9fa;
+      --toolbar-icon-color: #111111;
       --border-color: #e0e0e0;
       --button-hover: #e9ecef;
       --link-color: #0288d1;
@@ -117,7 +120,7 @@
     /* Floating Rounded Sub-Toolbar Strip */
     .popup-toolbar-strip {
       position: fixed;
-      bottom: 58px;
+      bottom: calc(var(--toolbar-height) + 10px);
       left: 50%;
       transform: translateX(-50%);
       background-color: #282a2e !important;
@@ -144,7 +147,7 @@
 
     .popup-strip-btn {
       background: transparent !important;
-      color: #ffffff !important;
+      color: var(--toolbar-icon-color) !important;
       border: none !important;
       font-size: 15px !important;
       font-weight: 500 !important;
@@ -156,6 +159,11 @@
       justify-content: center !important;
       white-space: nowrap !important;
       user-select: none !important;
+      gap: 4px !important;
+    }
+
+    .popup-strip-btn svg {
+      stroke: var(--toolbar-icon-color) !important;
     }
 
     .popup-strip-btn:active,
@@ -163,12 +171,14 @@
       background-color: rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* Bottom 8-Key Grouped Control Bar */
+    /* Bottom 7-Key Grouped Control Bar */
     .grouped-control-bar {
       display: flex !important;
       align-items: center !important;
       justify-content: space-around !important;
-      padding: 6px 4px !important;
+      height: var(--toolbar-height) !important;
+      padding: 4px !important;
+      box-sizing: border-box !important;
       background-color: var(--toolbar-bg) !important;
       border-top: 1px solid var(--border-color) !important;
       padding-right: 44px !important; /* Space for corner toggle button */
@@ -176,18 +186,22 @@
 
     .grouped-key-btn {
       background: transparent !important;
-      color: var(--text-color) !important;
+      color: var(--toolbar-icon-color) !important;
       border: 1px solid var(--border-color) !important;
       border-radius: 8px !important;
-      padding: 6px 8px !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
+      height: calc(var(--toolbar-height) - 12px) !important;
+      padding: 0 10px !important;
       cursor: pointer !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      min-width: 34px;
+      flex: 1 !important;
+      max-width: 60px !important;
       user-select: none !important;
+    }
+
+    .grouped-key-btn svg {
+      stroke: var(--toolbar-icon-color) !important;
     }
 
     .grouped-key-btn:active,
@@ -397,7 +411,7 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 14px;
+      width: 18px;
       height: 100vh;
       z-index: 10005;
       pointer-events: none;
@@ -414,10 +428,10 @@
       position: absolute;
       top: 0;
       right: 2px;
-      width: 8px;
+      width: 12px;
       height: 60px;
-      background-color: rgba(255, 255, 255, 0.25) !important;
-      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.12) !important;
+      border-radius: 6px;
       cursor: grab;
       user-select: none;
       touch-action: none;
@@ -426,7 +440,7 @@
 
     #fast-scrollbar-thumb:active {
       cursor: grabbing;
-      background-color: rgba(255, 255, 255, 0.45) !important;
+      background-color: rgba(255, 255, 255, 0.3) !important;
     }
 
     /* Dark Mode Source Editing View Fix */

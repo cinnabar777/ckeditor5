@@ -297,6 +297,13 @@ class MainActivity : AppCompatActivity() {
 
         webView.evaluateJavascript("window.editorBridge.setHeadingColors($h1Color, $h2Color, $h3Color, $h4Color, $h5Color, $h6Color);", null)
 
+        // Pass Toolbar preferences
+        val toolbarBgColor = JSONObjectWrapper.quote(prefs.getString("pref_toolbar_bg_color", "default"))
+        val toolbarIconColor = JSONObjectWrapper.quote(prefs.getString("pref_toolbar_icon_color", "default"))
+        val toolbarHeight = prefs.getInt("pref_toolbar_height", 48)
+
+        webView.evaluateJavascript("window.editorBridge.setToolbarSettings($toolbarBgColor, $toolbarIconColor, $toolbarHeight);", null)
+
         // Pass Horizontal Rule preferences
         val hrThickness = prefs.getInt("pref_hr_thickness", 2)
         val hrColor = JSONObjectWrapper.quote(prefs.getString("pref_hr_color", "default"))

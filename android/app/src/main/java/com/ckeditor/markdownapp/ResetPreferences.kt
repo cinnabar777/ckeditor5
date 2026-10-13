@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.EditTextPreference
@@ -51,6 +53,9 @@ object PreferenceResetHelper {
             key == "pref_code_block_color" -> "default"
             key == "pref_code_block_bg_color" -> "default"
             key.startsWith("pref_heading_") && key.endsWith("_color") -> "default"
+            key == "pref_toolbar_bg_color" -> "default"
+            key == "pref_toolbar_icon_color" -> "default"
+            key == "pref_toolbar_height" -> 48
             key == "pref_app_theme" -> "amoled"
             key == "pref_image_mode" -> "picker"
             key == "pref_auto_save_on_leave" -> true
@@ -129,14 +134,17 @@ object PreferenceResetHelper {
             return
         }
 
+        val titleTv = holder.findViewById(android.R.id.title) as? TextView ?: return
+        val titleParent = titleTv.parent as? ViewGroup ?: return
+
         var btnReset = holder.itemView.findViewById<TextView>(btnResetId)
         if (btnReset == null) {
             btnReset = TextView(context).apply {
                 id = btnResetId
-                text = "↺"
+                text = " ↺"
                 textSize = 18f
                 setTextColor(Color.parseColor("#FF9800"))
-                setPadding(16, 4, 16, 4)
+                setPadding(12, 0, 12, 0)
                 isFocusable = true
                 isClickable = true
                 val typedValue = TypedValue()
@@ -144,11 +152,25 @@ object PreferenceResetHelper {
                 setBackgroundResource(typedValue.resourceId)
             }
 
-            val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
-            if (widgetFrame != null) {
-                widgetFrame.addView(btnReset)
-            } else if (holder.itemView is ViewGroup) {
-                (holder.itemView as ViewGroup).addView(btnReset)
+            if (titleParent is LinearLayout && titleParent.orientation == LinearLayout.HORIZONTAL) {
+                val titleIndex = titleParent.indexOfChild(titleTv)
+                titleParent.addView(btnReset, titleIndex + 1)
+            } else {
+                val titleIndex = titleParent.indexOfChild(titleTv)
+                val containerTag = "title_reset_container_$btnResetId"
+                var container = titleParent.findViewWithTag<LinearLayout>(containerTag)
+                if (container == null) {
+                    container = LinearLayout(context).apply {
+                        tag = containerTag
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
+                        layoutParams = titleTv.layoutParams
+                    }
+                    titleParent.removeView(titleTv)
+                    container.addView(titleTv, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    container.addView(btnReset, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    titleParent.addView(container, titleIndex)
+                }
             }
         }
 
