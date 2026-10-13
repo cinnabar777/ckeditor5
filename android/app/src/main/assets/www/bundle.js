@@ -110785,8 +110785,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     addLongPressToast(btnPrev, "Previous Match");
     addLongPressToast(btnNext, "Next Match");
     addLongPressToast(btnClose, "Close Search");
-    addLongPressToast(btnReplaceOne, "Replace One (1\u2794)");
-    addLongPressToast(btnReplaceAll, "Replace All (\u2200\u2794)");
+    addLongPressToast(btnReplaceOne, "Replace One");
+    addLongPressToast(btnReplaceAll, "Replace All");
     const executeSearch = () => {
       if (!editorInstance) return;
       const query = searchInput.value || "";

@@ -134,7 +134,7 @@ object PreferenceResetHelper {
             return
         }
 
-        val titleView = holder.findViewById(android.R.id.title) as? View ?: return
+        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup ?: return
         var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
 
         if (btnReset == null) {
@@ -152,27 +152,39 @@ object PreferenceResetHelper {
             }
 
             val sizePx = (32 * context.resources.displayMetrics.density).toInt()
-            val marginPx = (4 * context.resources.displayMetrics.density).toInt()
+            val marginPx = (2 * context.resources.displayMetrics.density).toInt()
             val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
                 gravity = Gravity.CENTER_VERTICAL
                 marginStart = marginPx
                 marginEnd = marginPx
             }
 
-            val titleParent = titleView.parent as? ViewGroup
-            if (titleParent is LinearLayout) {
-                val index = titleParent.indexOfChild(titleView)
-                titleParent.addView(btnReset, index + 1, params)
-            } else if (titleParent != null) {
-                val row = LinearLayout(context).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = Gravity.CENTER_VERTICAL
+            widgetFrame.visibility = View.VISIBLE
+
+            if (widgetFrame is LinearLayout) {
+                widgetFrame.orientation = LinearLayout.HORIZONTAL
+                widgetFrame.gravity = Gravity.CENTER_VERTICAL
+                widgetFrame.addView(btnReset, 0, params)
+            } else {
+                val containerTag = "widget_reset_row_container"
+                var container = widgetFrame.findViewWithTag<LinearLayout>(containerTag)
+                if (container == null) {
+                    container = LinearLayout(context).apply {
+                        tag = containerTag
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
+                    }
+                    val existingViews = ArrayList<View>()
+                    for (i in 0 until widgetFrame.childCount) {
+                        existingViews.add(widgetFrame.getChildAt(i))
+                    }
+                    widgetFrame.removeAllViews()
+                    container.addView(btnReset, params)
+                    for (child in existingViews) {
+                        container.addView(child)
+                    }
+                    widgetFrame.addView(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 }
-                val index = titleParent.indexOfChild(titleView)
-                titleParent.removeView(titleView)
-                row.addView(titleView, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                row.addView(btnReset, params)
-                titleParent.addView(row, index)
             }
         }
 

@@ -212,8 +212,8 @@ function initCustomSearchBar() {
   addLongPressToast(btnPrev, 'Previous Match');
   addLongPressToast(btnNext, 'Next Match');
   addLongPressToast(btnClose, 'Close Search');
-  addLongPressToast(btnReplaceOne, 'Replace One (1➔)');
-  addLongPressToast(btnReplaceAll, 'Replace All (∀➔)');
+  addLongPressToast(btnReplaceOne, 'Replace One');
+  addLongPressToast(btnReplaceAll, 'Replace All');
 
   const executeSearch = () => {
     if (!editorInstance) return;
