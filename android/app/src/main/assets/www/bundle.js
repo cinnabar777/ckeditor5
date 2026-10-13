@@ -110686,6 +110686,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     lists: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
     format: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
     table: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/></svg>`,
+    insertTable: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/><path d="M16 16h4m-2-2v4"/></svg>`,
+    addColumn: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/><path d="M16 12h4m-2-2v4"/></svg>`,
+    addRow: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 16v4m-2-2h4"/></svg>`,
+    mergeCells: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8m-3-3l3 3-3 3"/></svg>`,
     insert: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
     menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>`,
     wrap: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 21 6"/><path d="M3 12h15a3 3 0 0 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/></svg>`,
@@ -111014,7 +111018,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     <button class="grouped-key-btn" id="grp-btn-heading" title="Paragraph & Headings">${svgIcons.paragraph}</button>
     <button class="grouped-key-btn" id="grp-btn-lists" title="Lists">${svgIcons.lists}</button>
     <button class="grouped-key-btn" id="grp-btn-format" title="Format">${svgIcons.format}</button>
-    <button class="grouped-key-btn" id="grp-btn-table" title="Table">${svgIcons.table}</button>
+    <button class="grouped-key-btn" id="grp-btn-table" title="Table">${svgIcons.insertTable}</button>
     <button class="grouped-key-btn" id="grp-btn-insert" title="Insert">${svgIcons.insert}</button>
     <button class="grouped-key-btn" id="grp-btn-menu" title="Menu">${svgIcons.menu}</button>
   `;
@@ -111054,14 +111058,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       headingBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("heading", headingBtn, [
-          { label: `${svgIcons.paragraph} P`, action: () => execCmd("heading", { value: "paragraph" }) },
-          { label: "H1", action: () => execCmd("heading", { value: "heading1" }) },
-          { label: "H2", action: () => execCmd("heading", { value: "heading2" }) },
-          { label: "H3", action: () => execCmd("heading", { value: "heading3" }) },
-          { label: "H4", action: () => execCmd("heading", { value: "heading4" }) },
-          { label: "H5", action: () => execCmd("heading", { value: "heading5" }) },
-          { label: "H6", action: () => execCmd("heading", { value: "heading6" }) },
-          { label: `${svgIcons.wrap} Wrap`, action: () => window.editorBridge.toggleLineWrap() }
+          { icon: "P", title: "Paragraph", action: () => execCmd("heading", { value: "paragraph" }) },
+          { icon: "H1", title: "Heading 1", action: () => execCmd("heading", { value: "heading1" }) },
+          { icon: "H2", title: "Heading 2", action: () => execCmd("heading", { value: "heading2" }) },
+          { icon: "H3", title: "Heading 3", action: () => execCmd("heading", { value: "heading3" }) },
+          { icon: "H4", title: "Heading 4", action: () => execCmd("heading", { value: "heading4" }) },
+          { icon: "H5", title: "Heading 5", action: () => execCmd("heading", { value: "heading5" }) },
+          { icon: "H6", title: "Heading 6", action: () => execCmd("heading", { value: "heading6" }) },
+          { icon: svgIcons.wrap, title: "Toggle Line Wrap", action: () => window.editorBridge.toggleLineWrap() }
         ]);
       };
     }
@@ -111070,11 +111074,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       listsBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("lists", listsBtn, [
-          { label: `${svgIcons.bulletedList} Bullet`, action: () => execCmd("bulletedList") },
-          { label: `${svgIcons.numberedList} Number`, action: () => execCmd("numberedList") },
-          { label: `${svgIcons.todoList} Todo`, action: () => execCmd("todoList") },
-          { label: `${svgIcons.indent} Indent`, action: () => execCmd("indent") },
-          { label: `${svgIcons.outdent} Outdent`, action: () => execCmd("outdent") }
+          { icon: svgIcons.bulletedList, title: "Bulleted List", action: () => execCmd("bulletedList") },
+          { icon: svgIcons.numberedList, title: "Numbered List", action: () => execCmd("numberedList") },
+          { icon: svgIcons.todoList, title: "Todo List", action: () => execCmd("todoList") },
+          { icon: svgIcons.indent, title: "Indent", action: () => execCmd("indent") },
+          { icon: svgIcons.outdent, title: "Outdent", action: () => execCmd("outdent") }
         ]);
       };
     }
@@ -111083,15 +111087,15 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       formatBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("format", formatBtn, [
-          { label: `${svgIcons.bold} Bold`, action: () => execCmd("bold") },
-          { label: `${svgIcons.italic} Italic`, action: () => execCmd("italic") },
-          { label: `${svgIcons.strikethrough} Strike`, action: () => execCmd("strikethrough") },
-          { label: `${svgIcons.underline} Underline`, action: () => execCmd("underline") },
-          { label: `${svgIcons.code} Code`, action: () => execCmd("code") },
-          { label: "\u{1F7E8} Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
-          { label: "\u{1F7E2} Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
-          { label: "\u{1F534} Marker", action: () => execCmd("highlight", { value: "redMarker" }) },
-          { label: "\u2715 Clear", action: () => execCmd("highlight", { value: null }) }
+          { icon: svgIcons.bold, title: "Bold", action: () => execCmd("bold") },
+          { icon: svgIcons.italic, title: "Italic", action: () => execCmd("italic") },
+          { icon: svgIcons.strikethrough, title: "Strikethrough", action: () => execCmd("strikethrough") },
+          { icon: svgIcons.underline, title: "Underline", action: () => execCmd("underline") },
+          { icon: svgIcons.code, title: "Inline Code", action: () => execCmd("code") },
+          { icon: "\u{1F7E8}", title: "Yellow Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
+          { icon: "\u{1F7E2}", title: "Green Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
+          { icon: "\u{1F534}", title: "Red Marker", action: () => execCmd("highlight", { value: "redMarker" }) },
+          { icon: "\u2715", title: "Clear Marker", action: () => execCmd("highlight", { value: null }) }
         ]);
       };
     }
@@ -111100,10 +111104,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       tableBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("table", tableBtn, [
-          { label: `${svgIcons.table} Insert`, action: () => execCmd("insertTable") },
-          { label: "+Col Column", action: () => execCmd("tableColumn") },
-          { label: "+Row Row", action: () => execCmd("tableRow") },
-          { label: "\u2715 Merge", action: () => execCmd("mergeTableCells") }
+          { icon: svgIcons.insertTable, title: "Insert Table", action: () => execCmd("insertTable") },
+          { icon: svgIcons.addColumn, title: "Add Column", action: () => execCmd("tableColumn") },
+          { icon: svgIcons.addRow, title: "Add Row", action: () => execCmd("tableRow") },
+          { icon: svgIcons.mergeCells, title: "Merge Cells", action: () => execCmd("mergeTableCells") }
         ]);
       };
     }
@@ -111112,11 +111116,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       insertBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("insert", insertBtn, [
-          { label: `${svgIcons.image} Image`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
-          { label: `${svgIcons.link} Link`, action: () => execCmd("link") },
-          { label: `${svgIcons.blockQuote} Quote`, action: () => execCmd("blockQuote") },
-          { label: `${svgIcons.code} Code Block`, action: () => execCmd("codeBlock") },
-          { label: `${svgIcons.horizontalLine} Line`, action: () => execCmd("horizontalLine") }
+          { icon: svgIcons.image, title: "Insert Image", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
+          { icon: svgIcons.link, title: "Insert Link", action: () => execCmd("link") },
+          { icon: svgIcons.blockQuote, title: "Insert Quote", action: () => execCmd("blockQuote") },
+          { icon: svgIcons.code, title: "Insert Code Block", action: () => execCmd("codeBlock") },
+          { icon: svgIcons.horizontalLine, title: "Insert Line", action: () => execCmd("horizontalLine") }
         ]);
       };
     }
@@ -111125,12 +111129,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       menuBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("menu", menuBtn, [
-          { label: `${svgIcons.newFile} New`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
-          { label: `${svgIcons.openFile} Open`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
-          { label: `${svgIcons.saveFile} Save`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
-          { label: `${svgIcons.saveFile} Save As`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save_as") },
-          { label: `${svgIcons.newWindow} New Window`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
-          { label: `${svgIcons.settings} Settings`, action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
+          { icon: svgIcons.newFile, title: "New File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
+          { icon: svgIcons.openFile, title: "Open File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
+          { icon: svgIcons.saveFile, title: "Save File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
+          { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
+          { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
       };
     }
@@ -111166,7 +111169,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     items.forEach((item) => {
       const btn = document.createElement("button");
       btn.className = "popup-strip-btn";
-      btn.innerHTML = item.label;
+      if (item.title) btn.title = item.title;
+      btn.innerHTML = item.icon;
       btn.onclick = (e) => {
         e.stopPropagation();
         hidePopupStrip();

@@ -1,14 +1,13 @@
 package com.ckeditor.markdownapp
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -24,8 +23,6 @@ interface ResettablePreference {
 }
 
 object PreferenceResetHelper {
-
-    val btnResetId: Int = View.generateViewId()
 
     fun getDefaultValue(key: String): Any? {
         return when {
@@ -134,51 +131,38 @@ object PreferenceResetHelper {
             return
         }
 
-        val titleTv = holder.findViewById(android.R.id.title) as? TextView ?: return
-        val titleParent = titleTv.parent as? ViewGroup ?: return
+        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup ?: return
+        var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
 
-        var btnReset = holder.itemView.findViewById<TextView>(btnResetId)
         if (btnReset == null) {
-            btnReset = TextView(context).apply {
-                id = btnResetId
-                text = " ↺"
-                textSize = 18f
-                setTextColor(Color.parseColor("#FF9800"))
-                setPadding(12, 0, 12, 0)
-                isFocusable = true
+            btnReset = ImageView(context).apply {
+                id = R.id.btn_reset_widget
+                setImageResource(R.drawable.ic_reset)
+                val paddingPx = (6 * context.resources.displayMetrics.density).toInt()
+                setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
                 isClickable = true
+                isFocusable = true
+                contentDescription = "Reset"
                 val typedValue = TypedValue()
                 context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)
                 setBackgroundResource(typedValue.resourceId)
             }
-
-            if (titleParent is LinearLayout && titleParent.orientation == LinearLayout.HORIZONTAL) {
-                val titleIndex = titleParent.indexOfChild(titleTv)
-                titleParent.addView(btnReset, titleIndex + 1)
-            } else {
-                val titleIndex = titleParent.indexOfChild(titleTv)
-                val containerTag = "title_reset_container_$btnResetId"
-                var container = titleParent.findViewWithTag<LinearLayout>(containerTag)
-                if (container == null) {
-                    container = LinearLayout(context).apply {
-                        tag = containerTag
-                        orientation = LinearLayout.HORIZONTAL
-                        gravity = Gravity.CENTER_VERTICAL
-                        layoutParams = titleTv.layoutParams
-                    }
-                    titleParent.removeView(titleTv)
-                    container.addView(titleTv, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                    container.addView(btnReset, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-                    titleParent.addView(container, titleIndex)
-                }
+            val sizePx = (36 * context.resources.displayMetrics.density).toInt()
+            val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                marginEnd = (4 * context.resources.displayMetrics.density).toInt()
             }
+            widgetFrame.addView(btnReset, 0, params)
         }
 
         val isModified = isModifiedFromDefault(context, key)
-        btnReset.visibility = if (isModified) View.VISIBLE else View.GONE
-
-        btnReset.setOnClickListener {
-            resetSinglePreference(context, preference)
+        if (isModified) {
+            btnReset.visibility = View.VISIBLE
+            widgetFrame.visibility = View.VISIBLE
+            btnReset.setOnClickListener {
+                resetSinglePreference(context, preference)
+            }
+        } else {
             btnReset.visibility = View.GONE
         }
     }

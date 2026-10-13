@@ -104,7 +104,6 @@
     .ck-editor__top {
       background: var(--toolbar-bg) !important;
       border: none !important;
-      border-top: 1px solid var(--border-color) !important;
       z-index: 100;
       margin: 0 !important;
       padding: 0 !important;
@@ -150,7 +149,7 @@
       color: var(--toolbar-icon-color) !important;
       border: none !important;
       font-size: 15px !important;
-      font-weight: 500 !important;
+      font-weight: 600 !important;
       padding: 6px 10px !important;
       border-radius: 8px !important;
       cursor: pointer !important;
@@ -180,14 +179,14 @@
       padding: 4px !important;
       box-sizing: border-box !important;
       background-color: var(--toolbar-bg) !important;
-      border-top: 1px solid var(--border-color) !important;
+      border: none !important;
       padding-right: 44px !important; /* Space for corner toggle button */
     }
 
     .grouped-key-btn {
       background: transparent !important;
       color: var(--toolbar-icon-color) !important;
-      border: 1px solid var(--border-color) !important;
+      border: none !important;
       border-radius: 8px !important;
       height: calc(var(--toolbar-height) - 12px) !important;
       padding: 0 10px !important;
@@ -207,7 +206,6 @@
     .grouped-key-btn:active,
     .grouped-key-btn.active {
       background-color: var(--button-hover) !important;
-      border-color: #0078d4 !important;
     }
 
     /* Hide standard CKEditor toolbar since grouped control bar handles actions */
