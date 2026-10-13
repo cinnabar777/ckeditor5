@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private var latestMarkdownContent: String? = null
     private var pendingOpenUri: Uri? = null
     private var currentToast: Toast? = null
+    private val documentHistoryStack = java.util.ArrayDeque<Uri>()
 
     private fun showCustomToast(message: String) {
         runOnUiThread {
@@ -118,11 +119,22 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (isDirty) {
-                    showUnsavedChangesDialog { finish() }
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+                val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
+
+                if (!isMultiWindowEnabled && documentHistoryStack.isNotEmpty()) {
+                    if (isDirty) {
+                        showUnsavedChangesDialog { navigateBackOrFinish() }
+                    } else {
+                        navigateBackOrFinish()
+                    }
                 } else {
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
+                    if (isDirty) {
+                        showUnsavedChangesDialog { finish() }
+                    } else {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             }
         })
@@ -507,11 +519,55 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNewDocument() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
+        if (!isMultiWindowEnabled && currentFileUri != null) {
+            documentHistoryStack.push(currentFileUri)
+        }
         currentFileUri = null
         currentFileName = getString(R.string.untitled_document)
         isDirty = false
         updateTitle()
         webView.evaluateJavascript("window.editorBridge.setMarkdown('');", null)
+    }
+
+    private fun navigateBackOrFinish() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
+
+        if (!isMultiWindowEnabled && documentHistoryStack.isNotEmpty()) {
+            val previousUri = documentHistoryStack.pop()
+            openFileFromHistory(previousUri)
+        } else {
+            finish()
+        }
+    }
+
+    private fun openFileFromHistory(uri: Uri) {
+        if (!isEditorReady) return
+        try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val content = reader.readText()
+                currentFileUri = uri
+                currentFileName = getFileNameFromUri(uri)
+                isDirty = false
+                updateTitle()
+
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                prefs.edit().putString("last_opened_uri", uri.toString()).apply()
+
+                val escaped = JSONObjectWrapper.quote(content)
+                webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
+                    restoreCursorAndScrollState()
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to open file from history: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+            if (documentHistoryStack.isNotEmpty()) {
+                navigateBackOrFinish()
+            }
+        }
     }
 
     private fun handleOpenFile() {
@@ -557,6 +613,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 startActivity(newIntent)
                 return
+            }
+        } else {
+            if (currentFileUri != null && currentFileUri != uri) {
+                documentHistoryStack.push(currentFileUri)
             }
         }
 
