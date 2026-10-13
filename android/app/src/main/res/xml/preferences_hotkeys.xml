@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_new"
             app:title="New Document Shortcut"
@@ -50,9 +50,9 @@
             app:title="Toggle Line Wrap Shortcut"
             app:summary="Key combination (e.g. ctrl+alt+w)"
             app:defaultValue="ctrl+alt+w" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Formatting &amp; Tools)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Formatting &amp; Tools)">
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_bold"
             app:title="Bold Shortcut"
@@ -132,9 +132,9 @@
             app:key="pref_hotkey_sourceEditing"
             app:title="Source Code View Shortcut"
             app:defaultValue="ctrl+shift+u" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Headings)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Headings)">
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_heading_p"
             app:title="Paragraph / Normal Text Shortcut"
@@ -169,9 +169,9 @@
             app:key="pref_hotkey_heading_6"
             app:title="Heading 6 Shortcut"
             app:defaultValue="ctrl+alt+6" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers &amp; Pens)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers &amp; Pens)">
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_highlight_yellow"
             app:title="Yellow Marker Highlight Shortcut"
@@ -206,6 +206,6 @@
             app:key="pref_hotkey_highlight_remove"
             app:title="Remove Highlight / Pen Shortcut"
             app:defaultValue="ctrl+alt+x" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

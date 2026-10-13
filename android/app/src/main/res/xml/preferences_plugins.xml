@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Editor Plugins &amp; Toolbar Tools">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Editor Plugins &amp; Toolbar Tools">
         <com.ckeditor.markdownapp.ResetSwitchPreference
             app:key="pref_plugin_heading"
             app:title="Headings"
@@ -95,6 +95,6 @@
             app:title="Autoformat Markdown Syntax"
             app:summary="Automatically converts typed Markdown syntax (#, **, *, -, >) into formatted text in WYSIWYG mode"
             app:defaultValue="true" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Bottom Control Bar Customization">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Bottom Control Bar Customization">
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_toolbar_bg_color"
             app:title="Toolbar Background Color"
@@ -23,9 +23,9 @@
             app:min="36"
             android:max="72"
             app:showSeekBarValue="true" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Font &amp; Paragraph Typography Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Font &amp; Paragraph Typography Settings">
         <com.ckeditor.markdownapp.ResetSeekBarPreference
             app:key="pref_body_font_size"
             app:title="Body Text Size (px)"
@@ -76,9 +76,9 @@
             app:title="Enable Line Wrap"
             app:summary="When disabled, lines will not wrap and horizontally scroll"
             android:defaultValue="true" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Custom Fonts (File Pickers)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Fonts (File Pickers)">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_font_file_body"
             app:title="Body / Paragraph Font File"
@@ -103,9 +103,9 @@
             app:key="pref_font_file_code"
             app:title="Code Font File"
             app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Heading Colors 1–6 (Color Pickers)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Heading Colors 1–6 (Color Pickers)">
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_1_color"
             app:title="Heading 1 Color"
@@ -141,9 +141,9 @@
             app:title="Heading 6 Color"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Block Quote &amp; Callout Line Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Block Quote &amp; Callout Line Settings">
         <com.ckeditor.markdownapp.ResetSeekBarPreference
             app:key="pref_blockquote_line_thickness"
             app:title="Block Quote Line Thickness (px)"
@@ -173,9 +173,9 @@
             app:title="Callout Line Color"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Horizontal Rule &amp; Paragraph Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Horizontal Rule &amp; Paragraph Settings">
         <com.ckeditor.markdownapp.ResetSeekBarPreference
             app:key="pref_hr_thickness"
             app:title="Line Thickness (px)"
@@ -217,9 +217,9 @@
             app:title="Global Letter Spacing (px)"
             app:summary="Letter spacing for all text EXCEPT code blocks (e.g. 0.5px or 0px)"
             app:defaultValue="0px" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Text &amp; Element Colors (Color Pickers)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Text &amp; Element Colors (Color Pickers)">
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_bold_color"
             app:title="Bold Text Color"
@@ -261,6 +261,6 @@
             app:title="Code Block Background Color"
             app:summary="Tap to select color for code block background or default"
             app:defaultValue="default" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

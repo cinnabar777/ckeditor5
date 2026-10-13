@@ -140,74 +140,79 @@ object PreferenceResetHelper {
 
     fun bindResetButton(holder: PreferenceViewHolder, preference: Preference) {
         val context = preference.context
-        val key = preference.key ?: return
+        val key = preference.key
 
-        if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults" || key.startsWith("pref_page_") || key.endsWith("_page")) {
-            return
-        }
+        val isExcluded = key == null || key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults" || key.startsWith("pref_page_") || key.endsWith("_page")
 
-        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup ?: return
-        var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
+        if (!isExcluded) {
+            val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
+            if (widgetFrame != null) {
+                var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
 
-        if (btnReset == null) {
-            btnReset = ImageView(context).apply {
-                id = R.id.btn_reset_widget
-                setImageResource(R.drawable.ic_reset)
-                val paddingPx = (6 * context.resources.displayMetrics.density).toInt()
-                setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
-                isClickable = true
-                isFocusable = true
-                contentDescription = "Reset"
-                val typedValue = TypedValue()
-                context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)
-                setBackgroundResource(typedValue.resourceId)
-            }
+                if (btnReset == null) {
+                    btnReset = ImageView(context).apply {
+                        id = R.id.btn_reset_widget
+                        setImageResource(R.drawable.ic_reset)
+                        val paddingPx = (6 * context.resources.displayMetrics.density).toInt()
+                        setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                        isClickable = true
+                        isFocusable = true
+                        contentDescription = "Reset"
+                        val typedValue = TypedValue()
+                        context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)
+                        setBackgroundResource(typedValue.resourceId)
+                    }
 
-            val sizePx = (32 * context.resources.displayMetrics.density).toInt()
-            val marginPx = (2 * context.resources.displayMetrics.density).toInt()
-            val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
-                gravity = Gravity.CENTER_VERTICAL
-                marginStart = marginPx
-                marginEnd = marginPx
-            }
-
-            widgetFrame.visibility = View.VISIBLE
-
-            if (widgetFrame is LinearLayout) {
-                widgetFrame.orientation = LinearLayout.HORIZONTAL
-                widgetFrame.gravity = Gravity.CENTER_VERTICAL
-                widgetFrame.addView(btnReset, 0, params)
-            } else {
-                val containerTag = "widget_reset_row_container"
-                var container = widgetFrame.findViewWithTag<LinearLayout>(containerTag)
-                if (container == null) {
-                    container = LinearLayout(context).apply {
-                        tag = containerTag
-                        orientation = LinearLayout.HORIZONTAL
+                    val sizePx = (32 * context.resources.displayMetrics.density).toInt()
+                    val marginPx = (2 * context.resources.displayMetrics.density).toInt()
+                    val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
                         gravity = Gravity.CENTER_VERTICAL
+                        marginStart = marginPx
+                        marginEnd = marginPx
                     }
-                    val existingViews = ArrayList<View>()
-                    for (i in 0 until widgetFrame.childCount) {
-                        existingViews.add(widgetFrame.getChildAt(i))
+
+                    widgetFrame.visibility = View.VISIBLE
+
+                    if (widgetFrame is LinearLayout) {
+                        widgetFrame.orientation = LinearLayout.HORIZONTAL
+                        widgetFrame.gravity = Gravity.CENTER_VERTICAL
+                        widgetFrame.addView(btnReset, 0, params)
+                    } else {
+                        val containerTag = "widget_reset_row_container"
+                        var container = widgetFrame.findViewWithTag<LinearLayout>(containerTag)
+                        if (container == null) {
+                            container = LinearLayout(context).apply {
+                                tag = containerTag
+                                orientation = LinearLayout.HORIZONTAL
+                                gravity = Gravity.CENTER_VERTICAL
+                            }
+                            val existingViews = ArrayList<View>()
+                            for (i in 0 until widgetFrame.childCount) {
+                                existingViews.add(widgetFrame.getChildAt(i))
+                            }
+                            widgetFrame.removeAllViews()
+                            container.addView(btnReset, params)
+                            for (child in existingViews) {
+                                container.addView(child)
+                            }
+                            widgetFrame.addView(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        }
                     }
-                    widgetFrame.removeAllViews()
-                    container.addView(btnReset, params)
-                    for (child in existingViews) {
-                        container.addView(child)
+                }
+
+                val isModified = isModifiedFromDefault(context, key)
+                if (isModified) {
+                    btnReset.visibility = View.VISIBLE
+                    btnReset.setOnClickListener {
+                        resetSinglePreference(context, preference)
                     }
-                    widgetFrame.addView(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                } else {
+                    btnReset.visibility = View.GONE
                 }
             }
-        }
-
-        val isModified = isModifiedFromDefault(context, key)
-        if (isModified) {
-            btnReset.visibility = View.VISIBLE
-            btnReset.setOnClickListener {
-                resetSinglePreference(context, preference)
-            }
         } else {
-            btnReset.visibility = View.GONE
+            val btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
+            btnReset?.visibility = View.GONE
         }
 
         applySettingsTheme(holder, preference)
@@ -330,6 +335,17 @@ object PreferenceResetHelper {
             pref.callNotifyChanged()
         }
         Toast.makeText(context, "Setting reset to default ↺", Toast.LENGTH_SHORT).show()
+    }
+}
+
+open class ResetPreferenceCategory @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.preference.R.attr.preferenceCategoryStyle
+) : androidx.preference.PreferenceCategory(context, attrs, defStyleAttr) {
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+        PreferenceResetHelper.applySettingsTheme(holder, this)
     }
 }
 

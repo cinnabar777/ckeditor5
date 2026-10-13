@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Settings UI Text Colors">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Settings UI Text Colors">
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_settings_category_title_color"
             app:title="Category Header Text Color"
@@ -20,9 +20,9 @@
             app:title="Preference Subtext / Summary Color"
             app:summary="Color for preference descriptions and subtext (default: #AAAAAA)"
             app:defaultValue="#AAAAAA" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <PreferenceCategory app:title="Settings UI Controls &amp; Icons">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Settings UI Controls &amp; Icons">
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_settings_switch_color"
             app:title="Switch Toggle Active Color"
@@ -40,6 +40,6 @@
             app:title="Settings Screen Background Color"
             app:summary="Background color for all settings screens (default: #000000)"
             app:defaultValue="#000000" />
-    </PreferenceCategory>
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
