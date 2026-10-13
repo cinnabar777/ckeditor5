@@ -110677,6 +110677,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     highlight_pink: "ctrl+alt+p",
     highlight_blue: "ctrl+alt+b",
     highlight_red: "ctrl+alt+r",
+    highlight_red_pen: "ctrl+alt+r",
+    highlight_green_pen: "ctrl+alt+shift+g",
     highlight_remove: "ctrl+alt+x"
   };
   var svgIcons = {
@@ -110698,6 +110700,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     underline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>`,
     strikethrough: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
     code: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+    codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="8 10 6 12 8 14"/><polyline points="16 10 18 12 16 14"/><line x1="12" y1="8" x2="12" y2="16"/></svg>`,
     link: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
     image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
     blockQuote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
@@ -110710,8 +110713,12 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     newFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`,
     openFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,
     saveFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+    search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+    sourceEditing: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="20" x2="12" y2="4"/></svg>`,
     settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
-    newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`
+    newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`,
+    squareMarker: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color2}"/></svg>`,
+    circlePen: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color2}"/></svg>`
   };
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (editorInstance) {
@@ -110802,6 +110809,16 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             { model: "heading4", view: "h4", title: "Heading 4", class: "ck-heading_heading4" },
             { model: "heading5", view: "h5", title: "Heading 5", class: "ck-heading_heading5" },
             { model: "heading6", view: "h6", title: "Heading 6", class: "ck-heading_heading6" }
+          ]
+        },
+        highlight: {
+          options: [
+            { model: "yellowMarker", class: "marker-yellow", title: "Yellow marker", color: "var(--ck-highlight-marker-yellow)", type: "marker" },
+            { model: "greenMarker", class: "marker-green", title: "Green marker", color: "var(--ck-highlight-marker-green)", type: "marker" },
+            { model: "pinkMarker", class: "marker-pink", title: "Pink marker", color: "var(--ck-highlight-marker-pink)", type: "marker" },
+            { model: "blueMarker", class: "marker-blue", title: "Blue marker", color: "var(--ck-highlight-marker-blue)", type: "marker" },
+            { model: "redPen", class: "pen-red", title: "Red pen", color: "var(--ck-highlight-pen-red)", type: "pen" },
+            { model: "greenPen", class: "pen-green", title: "Green pen", color: "var(--ck-highlight-pen-green)", type: "pen" }
           ]
         },
         codeBlock: {
@@ -111092,10 +111109,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.strikethrough, title: "Strikethrough", action: () => execCmd("strikethrough") },
           { icon: svgIcons.underline, title: "Underline", action: () => execCmd("underline") },
           { icon: svgIcons.code, title: "Inline Code", action: () => execCmd("code") },
-          { icon: "\u{1F7E8}", title: "Yellow Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
-          { icon: "\u{1F7E2}", title: "Green Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
-          { icon: "\u{1F534}", title: "Red Marker", action: () => execCmd("highlight", { value: "redMarker" }) },
-          { icon: "\u2715", title: "Clear Marker", action: () => execCmd("highlight", { value: null }) }
+          { icon: svgIcons.squareMarker("#ffe066"), title: "Yellow Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
+          { icon: svgIcons.squareMarker("#a8f087"), title: "Green Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
+          { icon: svgIcons.squareMarker("#ff99c8"), title: "Pink Marker", action: () => execCmd("highlight", { value: "pinkMarker" }) },
+          { icon: svgIcons.squareMarker("#9bf6ff"), title: "Blue Marker", action: () => execCmd("highlight", { value: "blueMarker" }) },
+          { icon: svgIcons.circlePen("#ff595e"), title: "Red Pen", action: () => execCmd("highlight", { value: "redPen" }) },
+          { icon: svgIcons.circlePen("#2ec4b6"), title: "Green Pen", action: () => execCmd("highlight", { value: "greenPen" }) },
+          { icon: "\u2715", title: "Clear Marker / Pen", action: () => execCmd("highlight", { value: null }) }
         ]);
       };
     }
@@ -111118,8 +111138,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         togglePopupStrip("insert", insertBtn, [
           { icon: svgIcons.image, title: "Insert Image", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
           { icon: svgIcons.link, title: "Insert Link", action: () => execCmd("link") },
+          { icon: svgIcons.code, title: "Inline Code", action: () => execCmd("code") },
           { icon: svgIcons.blockQuote, title: "Insert Quote", action: () => execCmd("blockQuote") },
-          { icon: svgIcons.code, title: "Insert Code Block", action: () => execCmd("codeBlock") },
+          { icon: svgIcons.codeBlock, title: "Insert Code Block", action: () => execCmd("codeBlock") },
           { icon: svgIcons.horizontalLine, title: "Insert Line", action: () => execCmd("horizontalLine") }
         ]);
       };
@@ -111132,6 +111153,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.newFile, title: "New File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
           { icon: svgIcons.openFile, title: "Open File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
           { icon: svgIcons.saveFile, title: "Save File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
+          { icon: svgIcons.search, title: "Find & Replace", action: () => execCmd("findAndReplace") },
+          { icon: svgIcons.sourceEditing, title: "Toggle Source View", action: () => execCmd("sourceEditing") },
           { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
@@ -111173,7 +111196,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       btn.innerHTML = item.icon;
       btn.onclick = (e) => {
         e.stopPropagation();
-        hidePopupStrip();
         item.action();
       };
       strip.appendChild(btn);
@@ -111446,38 +111468,36 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     const hasAlt = parts.includes("alt");
     const hasShift = parts.includes("shift");
     const keyPart = parts.find((p4) => p4 !== "ctrl" && p4 !== "control" && p4 !== "alt" && p4 !== "shift");
+    if (!keyPart || keyPart.length === 0) return false;
     const ctrlPressed = event.ctrlKey || event.metaKey;
     const altPressed = event.altKey;
     const shiftPressed = event.shiftKey;
     if (hasCtrl !== ctrlPressed) return false;
     if (hasAlt !== altPressed) return false;
     if (hasShift !== shiftPressed) return false;
-    if (keyPart) {
-      const keyLower = (event.key || "").toLowerCase();
-      const codeLower = (event.code || "").toLowerCase();
-      if (keyLower === keyPart) return true;
-      if (codeLower === `key${keyPart}` || codeLower === keyPart) return true;
-      if (keyPart === "," && (keyLower === "," || codeLower === "comma")) return true;
-      if (keyPart === "." && (keyLower === "." || codeLower === "period")) return true;
-      if (keyPart === "tab" && (keyLower === "tab" || codeLower === "tab")) return true;
-      if (hasShift) {
-        if (keyPart === "8" && (keyLower === "*" || keyLower === "8")) return true;
-        if (keyPart === "7" && (keyLower === "&" || keyLower === "7")) return true;
-        if (keyPart === "x" && (keyLower === "x" || keyLower === "X")) return true;
-        if (keyPart === "c" && (keyLower === "c" || keyLower === "C")) return true;
-        if (keyPart === "u" && (keyLower === "u" || keyLower === "U")) return true;
-        if (keyPart === "h" && (keyLower === "h" || keyLower === "H")) return true;
-        if (keyPart === "q" && (keyLower === "q" || keyLower === "Q")) return true;
-        if (keyPart === "i" && (keyLower === "i" || keyLower === "I")) return true;
-        if (keyPart === "s" && (keyLower === "s" || keyLower === "S")) return true;
-        if (keyPart === "l" && (keyLower === "l" || keyLower === "L")) return true;
-        if (keyPart === "w" && (keyLower === "w" || keyLower === "W")) return true;
-        if (keyPart === "r" && (keyLower === "r" || keyLower === "R")) return true;
-        if (keyPart === "g" && (keyLower === "g" || keyLower === "G")) return true;
-      }
-      return false;
+    const keyLower = (event.key || "").toLowerCase();
+    const codeLower = (event.code || "").toLowerCase();
+    if (keyLower === keyPart) return true;
+    if (codeLower === `key${keyPart}` || codeLower === keyPart) return true;
+    if (keyPart === "," && (keyLower === "," || codeLower === "comma")) return true;
+    if (keyPart === "." && (keyLower === "." || codeLower === "period")) return true;
+    if (keyPart === "tab" && (keyLower === "tab" || codeLower === "tab")) return true;
+    if (hasShift) {
+      if (keyPart === "8" && (keyLower === "*" || keyLower === "8")) return true;
+      if (keyPart === "7" && (keyLower === "&" || keyLower === "7")) return true;
+      if (keyPart === "x" && (keyLower === "x" || keyLower === "X")) return true;
+      if (keyPart === "c" && (keyLower === "c" || keyLower === "C")) return true;
+      if (keyPart === "u" && (keyLower === "u" || keyLower === "U")) return true;
+      if (keyPart === "h" && (keyLower === "h" || keyLower === "H")) return true;
+      if (keyPart === "q" && (keyLower === "q" || keyLower === "Q")) return true;
+      if (keyPart === "i" && (keyLower === "i" || keyLower === "I")) return true;
+      if (keyPart === "s" && (keyLower === "s" || keyLower === "S")) return true;
+      if (keyPart === "l" && (keyLower === "l" || keyLower === "L")) return true;
+      if (keyPart === "w" && (keyLower === "w" || keyLower === "W")) return true;
+      if (keyPart === "r" && (keyLower === "r" || keyLower === "R")) return true;
+      if (keyPart === "g" && (keyLower === "g" || keyLower === "G")) return true;
     }
-    return true;
+    return false;
   }
   function parseAndMatchHotkey(event, shortcutString) {
     if (!shortcutString || typeof shortcutString !== "string") return false;
@@ -111486,6 +111506,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   }
   function setupKeyboardShortcuts() {
     window.addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      const c = (e.code || "").toLowerCase();
+      if (k === "undo" || k === "redo" || c === "undo" || c === "redo" || e.ctrlKey && (k === "z" || k === "y")) {
+        return;
+      }
       if (parseAndMatchHotkey(e, customHotkeys.new)) {
         e.preventDefault();
         window.AndroidNative && window.AndroidNative.onNativeAction("new");
@@ -111546,7 +111571,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         else if (parseAndMatchHotkey(e, customHotkeys.highlight_green)) exec("highlight", { value: "greenMarker" });
         else if (parseAndMatchHotkey(e, customHotkeys.highlight_pink)) exec("highlight", { value: "pinkMarker" });
         else if (parseAndMatchHotkey(e, customHotkeys.highlight_blue)) exec("highlight", { value: "blueMarker" });
-        else if (parseAndMatchHotkey(e, customHotkeys.highlight_red)) exec("highlight", { value: "redMarker" });
+        else if (parseAndMatchHotkey(e, customHotkeys.highlight_red_pen) || parseAndMatchHotkey(e, customHotkeys.highlight_red)) exec("highlight", { value: "redPen" });
+        else if (parseAndMatchHotkey(e, customHotkeys.highlight_green_pen)) exec("highlight", { value: "greenPen" });
         else if (parseAndMatchHotkey(e, customHotkeys.highlight_remove)) exec("highlight", { value: null });
       }
     }, true);

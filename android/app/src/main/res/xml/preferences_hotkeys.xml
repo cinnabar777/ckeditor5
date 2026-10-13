@@ -171,7 +171,7 @@
             app:defaultValue="ctrl+alt+6" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers)">
+    <PreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers &amp; Pens)">
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_highlight_yellow"
             app:title="Yellow Marker Highlight Shortcut"
@@ -193,13 +193,18 @@
             app:defaultValue="ctrl+alt+b" />
 
         <com.ckeditor.markdownapp.ResetEditTextPreference
-            app:key="pref_hotkey_highlight_red"
-            app:title="Red Marker Highlight Shortcut"
+            app:key="pref_hotkey_highlight_red_pen"
+            app:title="Red Pen Text Color Shortcut"
             app:defaultValue="ctrl+alt+r" />
 
         <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_green_pen"
+            app:title="Green Pen Text Color Shortcut"
+            app:defaultValue="ctrl+alt+shift+g" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_highlight_remove"
-            app:title="Remove Highlight Shortcut"
+            app:title="Remove Highlight / Pen Shortcut"
             app:defaultValue="ctrl+alt+x" />
     </PreferenceCategory>
 

@@ -94,6 +94,8 @@ object PreferenceResetHelper {
             key == "pref_hotkey_highlight_pink" -> "ctrl+alt+p"
             key == "pref_hotkey_highlight_blue" -> "ctrl+alt+b"
             key == "pref_hotkey_highlight_red" -> "ctrl+alt+r"
+            key == "pref_hotkey_highlight_red_pen" -> "ctrl+alt+r"
+            key == "pref_hotkey_highlight_green_pen" -> "ctrl+alt+shift+g"
             key == "pref_hotkey_highlight_remove" -> "ctrl+alt+x"
             key.startsWith("pref_plugin_") -> true
             else -> null
