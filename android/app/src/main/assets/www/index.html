@@ -42,6 +42,12 @@
       --callout-border-color: #29b6f6;
       --toggle-bg: transparent;
       --toggle-color: #ffffff;
+      --ck-border-surface: none !important;
+      --ck-border-width-surface: 0px !important;
+      --ck-color-base-border: transparent !important;
+      --ck-color-border-container: transparent !important;
+      --ck-color-toolbar-border: transparent !important;
+      --ck-color-base-border-light: transparent !important;
     }
 
     body.light-theme {
@@ -100,14 +106,16 @@
       padding: 0 !important;
     }
 
-    .ck.ck-editor__top,
-    .ck.ck-toolbar,
-    .ck-editor__top,
-    .ck-editor__main,
-    .grouped-control-bar {
-      border: none !important;
+    .ck, .ck *,
+    .ck-editor, .ck-editor *,
+    .ck-editor__top, .ck-editor__top *,
+    .ck-editor__main, .ck-editor__main *,
+    .grouped-control-bar, .grouped-control-bar * {
       border-top: none !important;
       border-bottom: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      border: none !important;
       outline: none !important;
       box-shadow: none !important;
     }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -132,10 +133,10 @@ object PreferenceResetHelper {
             return
         }
 
-        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
-        val itemViewGroup = holder.itemView as? ViewGroup ?: return
+        val titleTv = holder.findViewById(android.R.id.title) as? TextView ?: return
+        val titleParent = titleTv.parent as? ViewGroup ?: return
 
-        var btnReset = itemViewGroup.findViewById<ImageView>(R.id.btn_reset_widget)
+        var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
 
         if (btnReset == null) {
             btnReset = ImageView(context).apply {
@@ -152,29 +153,47 @@ object PreferenceResetHelper {
             }
 
             val sizePx = (36 * context.resources.displayMetrics.density).toInt()
-            if (widgetFrame != null) {
+
+            if (titleParent is LinearLayout && titleParent.orientation == LinearLayout.HORIZONTAL) {
+                val titleIndex = titleParent.indexOfChild(titleTv)
                 val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
                     gravity = Gravity.CENTER_VERTICAL
-                    marginEnd = (4 * context.resources.displayMetrics.density).toInt()
+                    marginStart = (8 * context.resources.displayMetrics.density).toInt()
                 }
-                widgetFrame.addView(btnReset, 0, params)
+                titleParent.addView(btnReset, titleIndex + 1, params)
             } else {
-                val params = if (itemViewGroup is LinearLayout) {
-                    LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                val containerTag = "title_reset_row_container"
+                var container = titleParent.findViewWithTag<LinearLayout>(containerTag)
+                if (container == null) {
+                    val titleIndex = titleParent.indexOfChild(titleTv)
+                    val titleParams = titleTv.layoutParams
+
+                    container = LinearLayout(context).apply {
+                        tag = containerTag
+                        orientation = LinearLayout.HORIZONTAL
                         gravity = Gravity.CENTER_VERTICAL
-                        marginEnd = (8 * context.resources.displayMetrics.density).toInt()
+                        layoutParams = titleParams
                     }
-                } else {
-                    ViewGroup.LayoutParams(sizePx, sizePx)
+
+                    titleParent.removeView(titleTv)
+
+                    val tvParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                    container.addView(titleTv, tvParams)
+
+                    val iconParams = LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginStart = (8 * context.resources.displayMetrics.density).toInt()
+                    }
+                    container.addView(btnReset, iconParams)
+
+                    titleParent.addView(container, titleIndex)
                 }
-                itemViewGroup.addView(btnReset, params)
             }
         }
 
         val isModified = isModifiedFromDefault(context, key)
         if (isModified) {
             btnReset.visibility = View.VISIBLE
-            widgetFrame?.visibility = View.VISIBLE
             btnReset.setOnClickListener {
                 resetSinglePreference(context, preference)
             }
