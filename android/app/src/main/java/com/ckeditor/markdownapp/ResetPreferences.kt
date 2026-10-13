@@ -353,6 +353,15 @@ open class ResetColorPickerPreference @JvmOverloads constructor(
     defStyleAttr: Int = androidx.preference.R.attr.preferenceStyle
 ) : Preference(context, attrs, defStyleAttr), ResettablePreference {
 
+    override fun getSummary(): CharSequence? {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val colorHex = prefs.getString(key, "default") ?: "default"
+        if (colorHex != "default") {
+            return "Selected: $colorHex"
+        }
+        return super.getSummary()
+    }
+
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -377,10 +386,6 @@ open class ResetColorPickerPreference @JvmOverloads constructor(
             val colorHex = prefs.getString(key, "default") ?: "default"
             val colorInt = ColorPickerDialog.parseHexColor(colorHex, android.graphics.Color.parseColor("#00E5FF"))
 
-            if (colorHex != "default") {
-                summary = "Selected: $colorHex"
-            }
-
             previewCircle.background = android.graphics.drawable.GradientDrawable().apply {
                 shape = android.graphics.drawable.GradientDrawable.OVAL
                 if (colorHex == "default") {
@@ -400,7 +405,6 @@ open class ResetColorPickerPreference @JvmOverloads constructor(
 
         ColorPickerDialog(context, currentColor) { selectedHex ->
             prefs.edit().putString(key, selectedHex).apply()
-            summary = "Selected: $selectedHex"
             notifyChanged()
             Toast.makeText(context, "Color set to $selectedHex", Toast.LENGTH_SHORT).show()
         }.show()
