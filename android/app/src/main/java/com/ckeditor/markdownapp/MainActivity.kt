@@ -229,18 +229,36 @@ class MainActivity : AppCompatActivity() {
         }
 
         val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
-        if (startupMode == "last_opened") {
-            val lastUriString = prefs.getString("last_opened_uri", null)
-            if (lastUriString != null) {
-                val lastUri = Uri.parse(lastUriString)
-                if (isEditorReady) {
-                    openFile(lastUri)
+        when (startupMode) {
+            "last_opened" -> {
+                val lastUriString = prefs.getString("last_opened_uri", null)
+                if (lastUriString != null) {
+                    val lastUri = Uri.parse(lastUriString)
+                    if (isEditorReady) {
+                        openFile(lastUri)
+                    } else {
+                        pendingOpenUri = lastUri
+                    }
                 } else {
-                    pendingOpenUri = lastUri
+                    createNewDocument()
                 }
             }
-        } else {
-            createNewDocument()
+            "custom" -> {
+                val customUriString = prefs.getString("pref_startup_custom_document_uri", null)
+                if (customUriString != null) {
+                    val customUri = Uri.parse(customUriString)
+                    if (isEditorReady) {
+                        openFile(customUri)
+                    } else {
+                        pendingOpenUri = customUri
+                    }
+                } else {
+                    createNewDocument()
+                }
+            }
+            else -> {
+                createNewDocument()
+            }
         }
     }
 

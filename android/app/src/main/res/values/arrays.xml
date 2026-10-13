@@ -37,9 +37,11 @@
     <string-array name="pref_startup_doc_entries">
         <item>Open Last Opened Document</item>
         <item>Open New Blank Document</item>
+        <item>Open Custom Document</item>
     </string-array>
     <string-array name="pref_startup_doc_values">
         <item>last_opened</item>
         <item>new_document</item>
+        <item>custom</item>
     </string-array>
 </resources>

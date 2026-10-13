@@ -82,11 +82,19 @@ open class BaseSettingsFragment : PreferenceFragmentCompat(), SharedPreferences.
             if (pref is ResettablePreference) {
                 pref.callNotifyChanged()
             }
+            if (key == "pref_startup_document") {
+                (this as? SettingsFragment)?.updateCustomStartupDocSummary()
+            }
         }
     }
 }
 
 class SettingsFragment : BaseSettingsFragment() {
+
+    private val pickCustomStartupDocLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri?.let { handleCustomStartupDocPicked(it) }
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
@@ -104,6 +112,81 @@ class SettingsFragment : BaseSettingsFragment() {
             confirmAndResetAllDefaults()
             true
         }
+
+        findPreference<Preference>("pref_startup_document")?.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue == "custom") {
+                val ctx = context
+                if (ctx != null) {
+                    val prefs = PreferenceManager.getDefaultSharedPreferences(ctx)
+                    if (prefs.getString("pref_startup_custom_document_uri", null).isNullOrEmpty()) {
+                        pickCustomStartupDocLauncher.launch(arrayOf("text/markdown", "text/plain", "*/*"))
+                    }
+                }
+            }
+            true
+        }
+
+        findPreference<Preference>("pref_startup_custom_document_pick")?.setOnPreferenceClickListener {
+            pickCustomStartupDocLauncher.launch(arrayOf("text/markdown", "text/plain", "*/*"))
+            true
+        }
+
+        updateCustomStartupDocSummary()
+    }
+
+    fun updateCustomStartupDocSummary() {
+        val context = context ?: return
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
+        val customPickPref = findPreference<Preference>("pref_startup_custom_document_pick") ?: return
+
+        if (startupMode == "custom") {
+            customPickPref.isVisible = true
+            val savedName = prefs.getString("pref_startup_custom_document_name", null)
+            if (!savedName.isNullOrEmpty()) {
+                customPickPref.summary = "Custom document: $savedName (Tap to change)"
+            } else {
+                customPickPref.summary = "Tap to choose custom file to open on startup"
+            }
+        } else {
+            customPickPref.isVisible = false
+        }
+    }
+
+    private fun handleCustomStartupDocPicked(uri: Uri) {
+        val context = context ?: return
+        try {
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        } catch (e: Exception) {
+            // Ignore if non-persistable
+        }
+
+        var fileName: String? = null
+        if (uri.scheme == "content") {
+            context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        fileName = cursor.getString(nameIndex)
+                    }
+                }
+            }
+        }
+        if (fileName == null) {
+            fileName = uri.path?.substringAfterLast('/') ?: "Document.md"
+        }
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        prefs.edit()
+            .putString("pref_startup_custom_document_uri", uri.toString())
+            .putString("pref_startup_custom_document_name", fileName)
+            .apply()
+
+        updateCustomStartupDocSummary()
+        Toast.makeText(context, "Custom startup document set to: $fileName", Toast.LENGTH_SHORT).show()
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {

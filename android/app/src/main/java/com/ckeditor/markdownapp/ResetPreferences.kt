@@ -114,6 +114,12 @@ object PreferenceResetHelper {
             return !fontPath.isNullOrEmpty() || !fontName.isNullOrEmpty()
         }
 
+        if (key == "pref_startup_custom_document_pick") {
+            val customUri = prefs.getString("pref_startup_custom_document_uri", null)
+            val customName = prefs.getString("pref_startup_custom_document_name", null)
+            return !customUri.isNullOrEmpty() || !customName.isNullOrEmpty()
+        }
+
         if (!prefs.contains(key)) return false
 
         val defaultVal = getDefaultValue(key) ?: return false
@@ -220,6 +226,16 @@ object PreferenceResetHelper {
                 pref.callNotifyChanged()
             }
             Toast.makeText(context, "Font reset to default system font", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (key == "pref_startup_custom_document_pick") {
+            prefs.edit().remove("pref_startup_custom_document_uri").remove("pref_startup_custom_document_name").apply()
+            pref.summary = "Tap to select custom file to open on startup"
+            if (pref is ResettablePreference) {
+                pref.callNotifyChanged()
+            }
+            Toast.makeText(context, "Custom startup document reset", Toast.LENGTH_SHORT).show()
             return
         }
 

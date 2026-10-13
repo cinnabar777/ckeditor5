@@ -36,6 +36,11 @@
             app:entryValues="@array/pref_startup_doc_values"
             app:defaultValue="last_opened" />
 
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_startup_custom_document_pick"
+            app:title="Select Custom Startup Document"
+            app:summary="Tap to select custom file to open on startup" />
+
         <com.ckeditor.markdownapp.ResetListPreference
             app:key="pref_image_mode"
             app:title="Image Insertion Mode"
