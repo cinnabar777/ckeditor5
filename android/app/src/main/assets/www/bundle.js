@@ -110700,7 +110700,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     underline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>`,
     strikethrough: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
     inlineCode: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><line x1="14" y1="4" x2="10" y2="20"/></svg>`,
-    codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="14" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>`,
+    codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 9l-2 3 2 3"/><path d="M12 9l2 3-2 3"/></svg>`,
     link: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
     image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
     blockQuote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
@@ -110720,65 +110720,151 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     squareMarker: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color2}"/></svg>`,
     circlePen: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color2}"/></svg>`
   };
-  function toggleFindAndReplace() {
-    if (!editorInstance) return;
-    try {
-      const dialog = editorInstance.plugins.get("Dialog");
-      if (dialog && dialog.id === "findAndReplace") {
-        dialog.hide();
+  var searchState = {
+    matchCase: false,
+    wholeWords: false,
+    useRegex: false,
+    showReplace: false
+  };
+  function initCustomSearchBar() {
+    const container = document.querySelector("#custom-search-bar");
+    if (!container) return;
+    const searchInput = container.querySelector("#search-input");
+    const replaceInput = container.querySelector("#replace-input");
+    const counter = container.querySelector("#search-counter");
+    const btnCase = container.querySelector("#search-btn-case");
+    const btnWord = container.querySelector("#search-btn-word");
+    const btnRegex = container.querySelector("#search-btn-regex");
+    const btnPrev = container.querySelector("#search-btn-prev");
+    const btnNext = container.querySelector("#search-btn-next");
+    const btnToggleReplace = container.querySelector("#search-btn-toggle-replace");
+    const btnClose = container.querySelector("#search-btn-close");
+    const replaceRow = container.querySelector("#search-replace-row");
+    const btnReplaceOne = container.querySelector("#search-btn-replace-one");
+    const btnReplaceAll = container.querySelector("#search-btn-replace-all");
+    const executeSearch = () => {
+      if (!editorInstance) return;
+      const query = searchInput.value || "";
+      if (!query) {
+        counter.textContent = "";
+        try {
+          const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
+          if (findEditing && findEditing.state) {
+            findEditing.state.clear(editorInstance.model);
+          }
+        } catch (e) {
+        }
         return;
       }
-      const findAndReplaceUI = editorInstance.plugins.get("FindAndReplaceUI");
-      if (findAndReplaceUI) {
-        if (typeof findAndReplaceUI._showDialog === "function") {
-          findAndReplaceUI._showDialog();
+      try {
+        if (searchState.useRegex) {
+          const flags = searchState.matchCase ? "g" : "gi";
+          const reg = new RegExp(query, flags);
+          const findCallback = ({ text: text10 }) => {
+            const matches2 = [...text10.matchAll(reg)];
+            return matches2.map((m) => ({
+              label: m[0],
+              start: m.index,
+              end: m.index + m[0].length
+            }));
+          };
+          editorInstance.execute("find", findCallback);
         } else {
-          const btn = editorInstance.ui.componentFactory.create("findAndReplace");
-          if (btn) btn.fire("execute");
+          editorInstance.execute("find", query, {
+            matchCase: searchState.matchCase,
+            wholeWords: searchState.wholeWords
+          });
         }
-        const formView = findAndReplaceUI.formView;
-        if (formView && formView._advancedOptionsCollapsibleView) {
-          if (!formView._regexSwitchAdded) {
-            formView._regexSwitchAdded = true;
-            const regexSwitch = new SwitchButtonView(formView.locale);
-            regexSwitch.set({
-              label: "Use Regular Expressions (Regex)",
-              withText: true
-            });
-            let isRegexEnabled = false;
-            regexSwitch.on("execute", () => {
-              isRegexEnabled = !isRegexEnabled;
-              regexSwitch.isOn = isRegexEnabled;
-              formView.isDirty = true;
-            });
-            formView._advancedOptionsCollapsibleView.children.add(regexSwitch);
-            formView.on("findNext", (evt, data) => {
-              if (isRegexEnabled && data && data.searchText) {
-                evt.stop();
-                try {
-                  const flags = data.matchCase ? "g" : "gi";
-                  const reg = new RegExp(data.searchText, flags);
-                  const findCallback = ({ text: text10 }) => {
-                    const matches2 = [...text10.matchAll(reg)];
-                    return matches2.map((m) => ({
-                      label: m[0],
-                      start: m.index,
-                      end: m.index + m[0].length
-                    }));
-                  };
-                  editorInstance.execute("find", findCallback);
-                } catch (e) {
-                  if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
-                    window.AndroidNative.showToast("Invalid Regex pattern");
-                  }
-                }
-              }
-            }, { priority: "high" });
-          }
+        updateSearchCounter();
+      } catch (e) {
+        if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
+          window.AndroidNative.showToast("Invalid Regex pattern");
         }
       }
-    } catch (err) {
-      console.error("Failed to toggle FindAndReplace:", err);
+    };
+    const updateSearchCounter = () => {
+      if (!editorInstance) return;
+      try {
+        const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
+        if (findEditing && findEditing.state) {
+          const total = findEditing.state.results ? findEditing.state.results.length : 0;
+          const current = findEditing.state.highlightedOffset || (total > 0 ? 1 : 0);
+          counter.textContent = total > 0 ? `${current}/${total}` : "0/0";
+        }
+      } catch (e) {
+      }
+    };
+    searchInput.addEventListener("input", executeSearch);
+    btnCase.onclick = () => {
+      searchState.matchCase = !searchState.matchCase;
+      btnCase.classList.toggle("active", searchState.matchCase);
+      executeSearch();
+    };
+    btnWord.onclick = () => {
+      searchState.wholeWords = !searchState.wholeWords;
+      btnWord.classList.toggle("active", searchState.wholeWords);
+      executeSearch();
+    };
+    btnRegex.onclick = () => {
+      searchState.useRegex = !searchState.useRegex;
+      btnRegex.classList.toggle("active", searchState.useRegex);
+      executeSearch();
+    };
+    btnPrev.onclick = () => {
+      if (editorInstance) {
+        editorInstance.execute("findPrevious");
+        updateSearchCounter();
+      }
+    };
+    btnNext.onclick = () => {
+      if (editorInstance) {
+        editorInstance.execute("findNext");
+        updateSearchCounter();
+      }
+    };
+    btnToggleReplace.onclick = () => {
+      searchState.showReplace = !searchState.showReplace;
+      replaceRow.classList.toggle("hidden", !searchState.showReplace);
+      btnToggleReplace.classList.toggle("active", searchState.showReplace);
+    };
+    btnClose.onclick = () => {
+      toggleFindAndReplaceBar(false);
+    };
+    btnReplaceOne.onclick = () => {
+      if (editorInstance) {
+        editorInstance.execute("replace", replaceInput.value || "");
+        updateSearchCounter();
+      }
+    };
+    btnReplaceAll.onclick = () => {
+      if (editorInstance) {
+        editorInstance.execute("replaceAll", replaceInput.value || "");
+        updateSearchCounter();
+      }
+    };
+  }
+  function toggleFindAndReplaceBar(forceState) {
+    const container = document.querySelector("#custom-search-bar");
+    if (!container) return;
+    const newState = forceState !== void 0 ? forceState : container.classList.contains("hidden");
+    if (newState) {
+      container.classList.remove("hidden");
+      const input2 = container.querySelector("#search-input");
+      if (input2) {
+        input2.focus();
+        input2.select();
+      }
+    } else {
+      container.classList.add("hidden");
+      if (editorInstance) {
+        try {
+          const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
+          if (findEditing && findEditing.state) {
+            findEditing.state.clear(editorInstance.model);
+          }
+        } catch (e) {
+        }
+      }
     }
   }
   function toggleSourceEditing() {
@@ -110947,6 +111033,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }, { passive: true });
       }
       setupGroupedControlBar();
+      initCustomSearchBar();
       const editorMainArea = document.querySelector(".ck-editor__main");
       if (editorMainArea) {
         editorMainArea.addEventListener("click", (e) => {
@@ -111224,7 +111311,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.newFile, title: "New File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
           { icon: svgIcons.openFile, title: "Open File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
           { icon: svgIcons.saveFile, title: "Save File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
-          { icon: svgIcons.search, title: "Find & Replace", action: () => toggleFindAndReplace() },
+          { icon: svgIcons.search, title: "Find & Replace", action: () => toggleFindAndReplaceBar() },
           { icon: svgIcons.sourceEditing, title: "Toggle Source View", action: () => toggleSourceEditing() },
           { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
@@ -111631,7 +111718,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) exec("horizontalLine");
         else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) {
           e.preventDefault();
-          toggleFindAndReplace();
+          toggleFindAndReplaceBar();
         } else if (parseAndMatchHotkey(e, customHotkeys.sourceEditing)) {
           e.preventDefault();
           toggleSourceEditing();

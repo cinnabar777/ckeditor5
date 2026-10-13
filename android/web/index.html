@@ -87,6 +87,91 @@
       position: relative;
     }
 
+    /* Custom Compact Phone-Optimized Find & Replace Bar */
+    .search-bar-container {
+      background-color: #121212 !important;
+      color: #ffffff !important;
+      border-bottom: 1px solid #282828 !important;
+      padding: 6px 10px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 6px !important;
+      z-index: 10001 !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .search-bar-container.hidden {
+      display: none !important;
+    }
+
+    .search-bar-row {
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      width: 100% !important;
+    }
+
+    .search-bar-row.hidden {
+      display: none !important;
+    }
+
+    .search-input {
+      flex: 1 !important;
+      background-color: #1e1e1e !important;
+      color: #ffffff !important;
+      border: 1px solid #333333 !important;
+      border-radius: 6px !important;
+      padding: 4px 8px !important;
+      font-size: 14px !important;
+      height: 32px !important;
+      outline: none !important;
+      box-sizing: border-box !important;
+    }
+
+    .search-input:focus {
+      border-color: #0078d4 !important;
+    }
+
+    .search-counter {
+      font-size: 11px !important;
+      color: #888888 !important;
+      white-space: nowrap !important;
+      min-width: 32px !important;
+      text-align: center !important;
+    }
+
+    .search-icon-group {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+
+    .search-icon-btn {
+      background-color: #1e1e1e !important;
+      color: #aaaaaa !important;
+      border: 1px solid #333333 !important;
+      border-radius: 6px !important;
+      height: 32px !important;
+      min-width: 32px !important;
+      padding: 0 6px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      user-select: none !important;
+    }
+
+    .search-icon-btn.active,
+    .search-icon-btn:active {
+      background-color: #0078d4 !important;
+      color: #ffffff !important;
+      border-color: #0078d4 !important;
+    }
+
     #editor {
       flex: 1;
       height: 100%;
@@ -233,103 +318,6 @@
     /* Hide standard CKEditor toolbar since grouped control bar handles actions */
     .ck-toolbar {
       display: none !important;
-    }
-
-    /* Find & Replace Dialog Dark AMOLED Theme & Full-Width Pinned Top Layout */
-    .ck-dialog {
-      position: relative !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      background-color: #1e1e1e !important;
-      color: #ffffff !important;
-      border-bottom: 1px solid #333333 !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
-      z-index: 10002 !important;
-      border-radius: 0 !important;
-    }
-
-    .ck-dialog__wrapper {
-      position: relative !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      background-color: #1e1e1e !important;
-    }
-
-    .ck-dialog__header {
-      background-color: #121212 !important;
-      color: #ffffff !important;
-      border-bottom: 1px solid #2a2a2a !important;
-      padding: 8px 12px !important;
-    }
-
-    .ck-dialog__title {
-      color: #ffffff !important;
-      font-size: 15px !important;
-      font-weight: 600 !important;
-    }
-
-    .ck-find-and-replace-form {
-      background-color: #1e1e1e !important;
-      color: #ffffff !important;
-      padding: 10px 12px !important;
-    }
-
-    .ck-find-and-replace-form .ck-labeled-field-view,
-    .ck-find-and-replace-form .ck-input,
-    .ck-find-and-replace-form input[type="text"] {
-      background-color: #2a2a2a !important;
-      color: #ffffff !important;
-      border: 1px solid #444444 !important;
-      border-radius: 6px !important;
-    }
-
-    .ck-find-and-replace-form .ck-input:focus,
-    .ck-find-and-replace-form input[type="text"]:focus {
-      border-color: #0078d4 !important;
-      box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.3) !important;
-    }
-
-    .ck-find-and-replace-form .ck-label,
-    .ck-find-and-replace-form label {
-      color: #cccccc !important;
-    }
-
-    .ck-find-and-replace-form .ck-button,
-    .ck-find-and-replace-form button {
-      background-color: #333333 !important;
-      color: #ffffff !important;
-      border: 1px solid #444444 !important;
-      border-radius: 6px !important;
-    }
-
-    .ck-find-and-replace-form .ck-button:hover,
-    .ck-find-and-replace-form button:hover,
-    .ck-find-and-replace-form .ck-button:active {
-      background-color: #444444 !important;
-      color: #ffffff !important;
-    }
-
-    .ck-find-and-replace-form .ck-button-action {
-      background-color: #0078d4 !important;
-      color: #ffffff !important;
-      border: none !important;
-    }
-
-    .ck-find-and-replace-form .ck-results-counter {
-      color: #aaaaaa !important;
-    }
-
-    .ck-find-and-replace-form .ck-switch-button .ck-button__toggle {
-      background-color: #444444 !important;
-    }
-
-    .ck-find-and-replace-form .ck-switch-button.ck-on .ck-button__toggle {
-      background-color: #0078d4 !important;
     }
 
     .ck-editor__main {
@@ -606,6 +594,28 @@
 </head>
 <body class="toolbar-hidden">
   <div id="editor-container">
+    <div id="custom-search-bar" class="search-bar-container hidden">
+      <div class="search-bar-row">
+        <input type="text" id="search-input" class="search-input" placeholder="Find..." />
+        <span id="search-counter" class="search-counter"></span>
+        <div class="search-icon-group">
+          <button id="search-btn-case" class="search-icon-btn" title="Match Case">Aa</button>
+          <button id="search-btn-word" class="search-icon-btn" title="Match Whole Word">\b</button>
+          <button id="search-btn-regex" class="search-icon-btn" title="Use Regular Expression">.*</button>
+          <button id="search-btn-prev" class="search-icon-btn" title="Previous Result">▲</button>
+          <button id="search-btn-next" class="search-icon-btn" title="Next Result">▼</button>
+          <button id="search-btn-toggle-replace" class="search-icon-btn" title="Toggle Replace Bar">⇄</button>
+          <button id="search-btn-close" class="search-icon-btn" title="Close Search">✕</button>
+        </div>
+      </div>
+      <div id="search-replace-row" class="search-bar-row replace-row hidden">
+        <input type="text" id="replace-input" class="search-input" placeholder="Replace with..." />
+        <div class="search-icon-group">
+          <button id="search-btn-replace-one" class="search-icon-btn" title="Replace One">1➔</button>
+          <button id="search-btn-replace-all" class="search-icon-btn" title="Replace All">∀➔</button>
+        </div>
+      </div>
+    </div>
     <div id="editor"></div>
   </div>
   <div id="popup-toolbar-strip" class="popup-toolbar-strip hidden"></div>
