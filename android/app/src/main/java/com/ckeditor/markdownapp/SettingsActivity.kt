@@ -35,6 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         supportFragmentManager.addOnBackStackChangedListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.settings_container)
             supportActionBar?.title = when (currentFragment) {
+                is SettingsThemeFragment -> "Settings Theme & Custom Colors"
                 is StylingSettingsFragment -> "Styling & Typography"
                 is HotkeysSettingsFragment -> "Custom Keyboard Shortcuts"
                 is PluginsSettingsFragment -> "Editor Plugins & Tools"
@@ -66,9 +67,48 @@ class SettingsActivity : AppCompatActivity() {
 open class BaseSettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {}
 
+    override fun setPreferencesFromResource(preferencesResId: Int, key: String?) {
+        super.setPreferencesFromResource(preferencesResId, key)
+        preferenceScreen?.let { applyCustomLayouts(it) }
+    }
+
+    private fun applyCustomLayouts(group: androidx.preference.PreferenceGroup) {
+        for (i in 0 until group.preferenceCount) {
+            val pref = group.getPreference(i)
+            pref.isIconSpaceReserved = false
+            if (pref is androidx.preference.PreferenceCategory) {
+                pref.layoutResource = R.layout.preference_category_custom
+                applyCustomLayouts(pref)
+            } else {
+                pref.layoutResource = R.layout.preference_custom
+                if (pref is androidx.preference.PreferenceGroup) {
+                    applyCustomLayouts(pref)
+                }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val context = context ?: return
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val bgColorHex = prefs.getString("pref_settings_bg_color", "#000000") ?: "#000000"
+        val bgColor = ColorPickerDialog.parseHexColor(bgColorHex, Color.BLACK)
+        view.setBackgroundColor(bgColor)
+        listView?.setBackgroundColor(bgColor)
+    }
+
     override fun onResume() {
         super.onResume()
         preferenceScreen?.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+        view?.let { v ->
+            val context = context ?: return
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val bgColorHex = prefs.getString("pref_settings_bg_color", "#000000") ?: "#000000"
+            val bgColor = ColorPickerDialog.parseHexColor(bgColorHex, Color.BLACK)
+            v.setBackgroundColor(bgColor)
+            listView?.setBackgroundColor(bgColor)
+        }
     }
 
     override fun onPause() {
@@ -84,6 +124,17 @@ open class BaseSettingsFragment : PreferenceFragmentCompat(), SharedPreferences.
             }
             if (key == "pref_startup_document") {
                 (this as? SettingsFragment)?.updateCustomStartupDocSummary()
+            }
+            if (key.startsWith("pref_settings_")) {
+                listView?.adapter?.notifyDataSetChanged()
+                view?.let { v ->
+                    val context = context ?: return
+                    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                    val bgColorHex = prefs.getString("pref_settings_bg_color", "#000000") ?: "#000000"
+                    val bgColor = ColorPickerDialog.parseHexColor(bgColorHex, Color.BLACK)
+                    v.setBackgroundColor(bgColor)
+                    listView?.setBackgroundColor(bgColor)
+                }
             }
         }
     }
@@ -192,6 +243,13 @@ class SettingsFragment : BaseSettingsFragment() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         val key = preference.key ?: return super.onPreferenceTreeClick(preference)
         when (key) {
+            "pref_page_settings_theme" -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.settings_container, SettingsThemeFragment())
+                    .addToBackStack(null)
+                    .commit()
+                return true
+            }
             "pref_page_styling", "pref_styling_page" -> {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.settings_container, StylingSettingsFragment())
@@ -450,5 +508,11 @@ class HotkeysSettingsFragment : BaseSettingsFragment() {
 class PluginsSettingsFragment : BaseSettingsFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_plugins, rootKey)
+    }
+}
+
+class SettingsThemeFragment : BaseSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_settings_theme, rootKey)
     }
 }

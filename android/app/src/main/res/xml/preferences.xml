@@ -4,6 +4,11 @@
 
     <PreferenceCategory app:title="Editor Configuration Pages">
         <Preference
+            app:key="pref_page_settings_theme"
+            app:title="Settings UI Theme &amp; Custom Colors"
+            app:summary="Customize category header, title, subtext, toggle &amp; background colors" />
+
+        <Preference
             app:key="pref_page_styling"
             app:title="Styling &amp; Typography Settings"
             app:summary="Fonts, weights, sizes, heading colors, line thickness &amp; element colors" />

@@ -56,6 +56,12 @@ object PreferenceResetHelper {
             key == "pref_app_theme" -> "amoled"
             key == "pref_image_mode" -> "picker"
             key == "pref_startup_document" -> "last_opened"
+            key == "pref_settings_category_title_color" -> "#00E5FF"
+            key == "pref_settings_title_color" -> "#FFFFFF"
+            key == "pref_settings_summary_color" -> "#AAAAAA"
+            key == "pref_settings_switch_color" -> "#00E5FF"
+            key == "pref_settings_reset_icon_color" -> "#00E5FF"
+            key == "pref_settings_bg_color" -> "#000000"
             key == "pref_auto_save_on_leave" -> true
             key == "pref_multi_window" -> true
             key == "pref_hotkey_new" -> "ctrl+n"
@@ -202,6 +208,70 @@ object PreferenceResetHelper {
             }
         } else {
             btnReset.visibility = View.GONE
+        }
+
+        applySettingsTheme(holder, preference)
+    }
+
+    fun applySettingsTheme(holder: PreferenceViewHolder, preference: Preference) {
+        val context = preference.context
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+        val catColorHex = prefs.getString("pref_settings_category_title_color", "#00E5FF") ?: "#00E5FF"
+        val titleColorHex = prefs.getString("pref_settings_title_color", "#FFFFFF") ?: "#FFFFFF"
+        val summaryColorHex = prefs.getString("pref_settings_summary_color", "#AAAAAA") ?: "#AAAAAA"
+        val switchColorHex = prefs.getString("pref_settings_switch_color", "#00E5FF") ?: "#00E5FF"
+        val resetIconColorHex = prefs.getString("pref_settings_reset_icon_color", "#00E5FF") ?: "#00E5FF"
+
+        val catColor = ColorPickerDialog.parseHexColor(catColorHex, android.graphics.Color.parseColor("#00E5FF"))
+        val titleColor = ColorPickerDialog.parseHexColor(titleColorHex, android.graphics.Color.WHITE)
+        val summaryColor = ColorPickerDialog.parseHexColor(summaryColorHex, android.graphics.Color.parseColor("#AAAAAA"))
+        val switchColor = ColorPickerDialog.parseHexColor(switchColorHex, android.graphics.Color.parseColor("#00E5FF"))
+        val resetIconColor = ColorPickerDialog.parseHexColor(resetIconColorHex, android.graphics.Color.parseColor("#00E5FF"))
+
+        val titleView = holder.findViewById(android.R.id.title) as? android.widget.TextView
+        val summaryView = holder.findViewById(android.R.id.summary) as? android.widget.TextView
+
+        if (preference is androidx.preference.PreferenceCategory) {
+            titleView?.apply {
+                textSize = 20f
+                setTypeface(typeface, android.graphics.Typeface.BOLD)
+                setTextColor(catColor)
+            }
+        } else {
+            titleView?.apply {
+                textSize = 16f
+                setTypeface(typeface, android.graphics.Typeface.BOLD)
+                setTextColor(titleColor)
+            }
+            summaryView?.apply {
+                textSize = 13f
+                setTextColor(summaryColor)
+            }
+        }
+
+        val btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
+        btnReset?.setColorFilter(resetIconColor)
+
+        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
+        if (widgetFrame != null) {
+            findAndTintSwitches(widgetFrame, switchColor)
+        }
+    }
+
+    private fun findAndTintSwitches(viewGroup: ViewGroup, color: Int) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            if (child is androidx.appcompat.widget.SwitchCompat) {
+                child.thumbTintList = android.content.res.ColorStateList.valueOf(color)
+                child.trackTintList = android.content.res.ColorStateList.valueOf(
+                    android.graphics.Color.argb(128, android.graphics.Color.red(color), android.graphics.Color.green(color), android.graphics.Color.blue(color))
+                )
+            } else if (child is android.widget.CompoundButton) {
+                child.buttonTintList = android.content.res.ColorStateList.valueOf(color)
+            } else if (child is ViewGroup) {
+                findAndTintSwitches(child, color)
+            }
         }
     }
 
