@@ -110736,6 +110736,46 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           const btn = editorInstance.ui.componentFactory.create("findAndReplace");
           if (btn) btn.fire("execute");
         }
+        const formView = findAndReplaceUI.formView;
+        if (formView && formView._advancedOptionsCollapsibleView) {
+          if (!formView._regexSwitchAdded) {
+            formView._regexSwitchAdded = true;
+            const regexSwitch = new SwitchButtonView(formView.locale);
+            regexSwitch.set({
+              label: "Use Regular Expressions (Regex)",
+              withText: true
+            });
+            let isRegexEnabled = false;
+            regexSwitch.on("execute", () => {
+              isRegexEnabled = !isRegexEnabled;
+              regexSwitch.isOn = isRegexEnabled;
+              formView.isDirty = true;
+            });
+            formView._advancedOptionsCollapsibleView.children.add(regexSwitch);
+            formView.on("findNext", (evt, data) => {
+              if (isRegexEnabled && data && data.searchText) {
+                evt.stop();
+                try {
+                  const flags = data.matchCase ? "g" : "gi";
+                  const reg = new RegExp(data.searchText, flags);
+                  const findCallback = ({ text: text10 }) => {
+                    const matches2 = [...text10.matchAll(reg)];
+                    return matches2.map((m) => ({
+                      label: m[0],
+                      start: m.index,
+                      end: m.index + m[0].length
+                    }));
+                  };
+                  editorInstance.execute("find", findCallback);
+                } catch (e) {
+                  if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
+                    window.AndroidNative.showToast("Invalid Regex pattern");
+                  }
+                }
+              }
+            }, { priority: "high" });
+          }
+        }
       }
     } catch (err) {
       console.error("Failed to toggle FindAndReplace:", err);

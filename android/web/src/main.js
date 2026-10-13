@@ -40,7 +40,8 @@ import {
   Autoformat,
   Indent,
   IndentBlock,
-  PasteFromOffice
+  PasteFromOffice,
+  SwitchButtonView
 } from 'ckeditor5';
 
 import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
@@ -152,6 +153,49 @@ function toggleFindAndReplace() {
       } else {
         const btn = editorInstance.ui.componentFactory.create('findAndReplace');
         if (btn) btn.fire('execute');
+      }
+
+      // Add Regex switch button to Find & Replace Form View
+      const formView = findAndReplaceUI.formView;
+      if (formView && formView._advancedOptionsCollapsibleView) {
+        if (!formView._regexSwitchAdded) {
+          formView._regexSwitchAdded = true;
+          const regexSwitch = new SwitchButtonView(formView.locale);
+          regexSwitch.set({
+            label: 'Use Regular Expressions (Regex)',
+            withText: true
+          });
+          let isRegexEnabled = false;
+          regexSwitch.on('execute', () => {
+            isRegexEnabled = !isRegexEnabled;
+            regexSwitch.isOn = isRegexEnabled;
+            formView.isDirty = true;
+          });
+          formView._advancedOptionsCollapsibleView.children.add(regexSwitch);
+
+          formView.on('findNext', (evt, data) => {
+            if (isRegexEnabled && data && data.searchText) {
+              evt.stop();
+              try {
+                const flags = (data.matchCase ? 'g' : 'gi');
+                const reg = new RegExp(data.searchText, flags);
+                const findCallback = ({ text }) => {
+                  const matches = [...text.matchAll(reg)];
+                  return matches.map(m => ({
+                    label: m[0],
+                    start: m.index,
+                    end: m.index + m[0].length
+                  }));
+                };
+                editorInstance.execute('find', findCallback);
+              } catch (e) {
+                if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+                  window.AndroidNative.showToast('Invalid Regex pattern');
+                }
+              }
+            }
+          }, { priority: 'high' });
+        }
       }
     }
   } catch (err) {
