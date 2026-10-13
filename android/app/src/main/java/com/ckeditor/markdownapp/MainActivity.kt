@@ -188,32 +188,15 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            if (isMultiWindowEnabled) {
-                val am = getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
-                if (am != null) {
-                    for (appTask in am.appTasks) {
-                        val baseIntent = appTask.taskInfo.baseIntent
-                        val taskData = baseIntent.data ?: (baseIntent.getStringExtra("open_target_uri")?.let { Uri.parse(it) })
-                        if (taskData == data && appTask.taskInfo.taskId != taskId) {
-                            appTask.moveToFront()
-                            if (currentFileUri == null) {
-                                finish()
-                            }
-                            return
-                        }
-                    }
+            if (isMultiWindowEnabled && currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
+                val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
+                    action = android.content.Intent.ACTION_VIEW
+                    setDataAndType(data, "text/markdown")
+                    putExtra("open_target_uri", data.toString())
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
                 }
-
-                if (currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
-                    val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
-                        action = android.content.Intent.ACTION_VIEW
-                        setDataAndType(data, "text/markdown")
-                        putExtra("open_target_uri", data.toString())
-                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                    }
-                    startActivity(newIntent)
-                    return
-                }
+                startActivity(newIntent)
+                return
             }
 
             if (isEditorReady) {
@@ -610,24 +593,12 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            val am = getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
-            if (am != null) {
-                for (appTask in am.appTasks) {
-                    val baseIntent = appTask.taskInfo.baseIntent
-                    val taskData = baseIntent.data ?: (baseIntent.getStringExtra("open_target_uri")?.let { Uri.parse(it) })
-                    if (taskData == uri && appTask.taskInfo.taskId != taskId) {
-                        appTask.moveToFront()
-                        return
-                    }
-                }
-            }
-
             if (currentFileUri != null) {
                 val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(uri, "text/markdown")
                     putExtra("open_target_uri", uri.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
                 }
                 startActivity(newIntent)
                 return
