@@ -110720,6 +110720,32 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     squareMarker: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color2}"/></svg>`,
     circlePen: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color2}"/></svg>`
   };
+  function toggleFindAndReplace() {
+    if (!editorInstance) return;
+    try {
+      const findAndReplaceUI = editorInstance.plugins.get("FindAndReplaceUI");
+      if (findAndReplaceUI) {
+        if (findAndReplaceUI.isOpened) {
+          findAndReplaceUI.close();
+        } else {
+          findAndReplaceUI.open();
+        }
+      }
+    } catch (err) {
+      console.error("Failed to toggle FindAndReplace:", err);
+    }
+  }
+  function toggleSourceEditing() {
+    if (!editorInstance) return;
+    try {
+      const sourceEditing = editorInstance.plugins.get("SourceEditing");
+      if (sourceEditing) {
+        sourceEditing.isSourceEditingMode = !sourceEditing.isSourceEditingMode;
+      }
+    } catch (err) {
+      console.error("Failed to toggle SourceEditing:", err);
+    }
+  }
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (editorInstance) {
       await editorInstance.destroy();
@@ -111108,7 +111134,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.italic, title: "Italic", action: () => execCmd("italic") },
           { icon: svgIcons.strikethrough, title: "Strikethrough", action: () => execCmd("strikethrough") },
           { icon: svgIcons.underline, title: "Underline", action: () => execCmd("underline") },
-          { icon: svgIcons.code, title: "Inline Code", action: () => execCmd("code") },
           { icon: svgIcons.squareMarker("#ffe066"), title: "Yellow Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
           { icon: svgIcons.squareMarker("#a8f087"), title: "Green Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
           { icon: svgIcons.squareMarker("#ff99c8"), title: "Pink Marker", action: () => execCmd("highlight", { value: "pinkMarker" }) },
@@ -111153,8 +111178,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.newFile, title: "New File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
           { icon: svgIcons.openFile, title: "Open File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
           { icon: svgIcons.saveFile, title: "Save File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
-          { icon: svgIcons.search, title: "Find & Replace", action: () => execCmd("findAndReplace") },
-          { icon: svgIcons.sourceEditing, title: "Toggle Source View", action: () => execCmd("sourceEditing") },
+          { icon: svgIcons.search, title: "Find & Replace", action: () => toggleFindAndReplace() },
+          { icon: svgIcons.sourceEditing, title: "Toggle Source View", action: () => toggleSourceEditing() },
           { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
@@ -111558,9 +111583,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         else if (parseAndMatchHotkey(e, customHotkeys.indent)) exec("indent");
         else if (parseAndMatchHotkey(e, customHotkeys.outdent)) exec("outdent");
         else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) exec("horizontalLine");
-        else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) exec("findAndReplace");
-        else if (parseAndMatchHotkey(e, customHotkeys.sourceEditing)) exec("sourceEditing");
-        else if (parseAndMatchHotkey(e, customHotkeys.heading_p)) exec("heading", { value: "paragraph" });
+        else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) {
+          e.preventDefault();
+          toggleFindAndReplace();
+        } else if (parseAndMatchHotkey(e, customHotkeys.sourceEditing)) {
+          e.preventDefault();
+          toggleSourceEditing();
+        } else if (parseAndMatchHotkey(e, customHotkeys.heading_p)) exec("heading", { value: "paragraph" });
         else if (parseAndMatchHotkey(e, customHotkeys.heading_1)) exec("heading", { value: "heading1" });
         else if (parseAndMatchHotkey(e, customHotkeys.heading_2)) exec("heading", { value: "heading2" });
         else if (parseAndMatchHotkey(e, customHotkeys.heading_3)) exec("heading", { value: "heading3" });
