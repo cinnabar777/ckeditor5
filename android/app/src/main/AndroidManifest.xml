@@ -12,7 +12,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:maxRecents="10"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="false"
