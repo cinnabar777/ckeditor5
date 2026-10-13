@@ -115,8 +115,8 @@ const svgIcons = {
   italic: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>`,
   underline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>`,
   strikethrough: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
-  code: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
-  codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="8 10 6 12 8 14"/><polyline points="16 10 18 12 16 14"/><line x1="12" y1="8" x2="12" y2="16"/></svg>`,
+  inlineCode: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><line x1="14" y1="4" x2="10" y2="20"/></svg>`,
+  codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="14" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>`,
   link: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
   image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
   blockQuote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
@@ -140,12 +140,18 @@ const svgIcons = {
 function toggleFindAndReplace() {
   if (!editorInstance) return;
   try {
+    const dialog = editorInstance.plugins.get('Dialog');
+    if (dialog && dialog.id === 'findAndReplace') {
+      dialog.hide();
+      return;
+    }
     const findAndReplaceUI = editorInstance.plugins.get('FindAndReplaceUI');
     if (findAndReplaceUI) {
-      if (findAndReplaceUI.isOpened) {
-        findAndReplaceUI.close();
+      if (typeof findAndReplaceUI._showDialog === 'function') {
+        findAndReplaceUI._showDialog();
       } else {
-        findAndReplaceUI.open();
+        const btn = editorInstance.ui.componentFactory.create('findAndReplace');
+        if (btn) btn.fire('execute');
       }
     }
   } catch (err) {
@@ -629,7 +635,7 @@ function setupGroupedControlBar() {
       togglePopupStrip('insert', insertBtn, [
         { icon: svgIcons.image, title: 'Insert Image', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('image') },
         { icon: svgIcons.link, title: 'Insert Link', action: () => execCmd('link') },
-        { icon: svgIcons.code, title: 'Inline Code', action: () => execCmd('code') },
+        { icon: svgIcons.inlineCode, title: 'Inline Code', action: () => execCmd('code') },
         { icon: svgIcons.blockQuote, title: 'Insert Quote', action: () => execCmd('blockQuote') },
         { icon: svgIcons.codeBlock, title: 'Insert Code Block', action: () => execCmd('codeBlock') },
         { icon: svgIcons.horizontalLine, title: 'Insert Line', action: () => execCmd('horizontalLine') }
