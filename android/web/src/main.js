@@ -144,6 +144,52 @@ let searchState = {
   showReplace: false
 };
 
+function addLongPressToast(btn, message) {
+  if (!btn) return;
+  let timer = null;
+  let isLongPress = false;
+
+  const showToastMsg = () => {
+    if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+      window.AndroidNative.showToast(message);
+    }
+  };
+
+  btn.addEventListener('pointerdown', () => {
+    isLongPress = false;
+    timer = setTimeout(() => {
+      isLongPress = true;
+      showToastMsg();
+    }, 400);
+  });
+
+  const cancelTimer = () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+
+  btn.addEventListener('pointerup', cancelTimer);
+  btn.addEventListener('pointercancel', cancelTimer);
+
+  btn.addEventListener('click', (e) => {
+    if (isLongPress) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      isLongPress = false;
+      return false;
+    }
+  }, true);
+
+  btn.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    showToastMsg();
+  });
+}
+
 function initCustomSearchBar() {
   const container = document.querySelector('#custom-search-bar');
   if (!container) return;
@@ -156,11 +202,18 @@ function initCustomSearchBar() {
   const btnRegex = container.querySelector('#search-btn-regex');
   const btnPrev = container.querySelector('#search-btn-prev');
   const btnNext = container.querySelector('#search-btn-next');
-  const btnToggleReplace = container.querySelector('#search-btn-toggle-replace');
   const btnClose = container.querySelector('#search-btn-close');
-  const replaceRow = container.querySelector('#search-replace-row');
   const btnReplaceOne = container.querySelector('#search-btn-replace-one');
   const btnReplaceAll = container.querySelector('#search-btn-replace-all');
+
+  addLongPressToast(btnCase, 'Match Case');
+  addLongPressToast(btnWord, 'Whole Words Only (\\b)');
+  addLongPressToast(btnRegex, 'Regular Expression (.*)');
+  addLongPressToast(btnPrev, 'Previous Match');
+  addLongPressToast(btnNext, 'Next Match');
+  addLongPressToast(btnClose, 'Close Search');
+  addLongPressToast(btnReplaceOne, 'Replace One (1➔)');
+  addLongPressToast(btnReplaceAll, 'Replace All (∀➔)');
 
   const executeSearch = () => {
     if (!editorInstance) return;
@@ -250,12 +303,6 @@ function initCustomSearchBar() {
     }
   };
 
-  btnToggleReplace.onclick = () => {
-    searchState.showReplace = !searchState.showReplace;
-    replaceRow.classList.toggle('hidden', !searchState.showReplace);
-    btnToggleReplace.classList.toggle('active', searchState.showReplace);
-  };
-
   btnClose.onclick = () => {
     toggleFindAndReplaceBar(false);
   };
@@ -269,7 +316,7 @@ function initCustomSearchBar() {
 
   btnReplaceAll.onclick = () => {
     if (editorInstance) {
-      editorInstance.execute('replaceAll', replaceInput.value || '');
+      editorInstance.execute('replaceAll', replaceInput.value || '', searchInput.value || '');
       updateSearchCounter();
     }
   };

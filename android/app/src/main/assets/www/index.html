@@ -601,15 +601,14 @@
         <span id="search-counter" class="search-counter"></span>
         <div class="search-icon-group">
           <button id="search-btn-case" class="search-icon-btn" title="Match Case">Aa</button>
-          <button id="search-btn-word" class="search-icon-btn" title="Match Whole Word">\b</button>
-          <button id="search-btn-regex" class="search-icon-btn" title="Use Regular Expression">.*</button>
-          <button id="search-btn-prev" class="search-icon-btn" title="Previous Result">▲</button>
-          <button id="search-btn-next" class="search-icon-btn" title="Next Result">▼</button>
-          <button id="search-btn-toggle-replace" class="search-icon-btn" title="Toggle Replace Bar">⇄</button>
+          <button id="search-btn-word" class="search-icon-btn" title="Whole Words Only (\b)">\b</button>
+          <button id="search-btn-regex" class="search-icon-btn" title="Regular Expression (.*)">.*</button>
+          <button id="search-btn-prev" class="search-icon-btn" title="Previous Match">▲</button>
+          <button id="search-btn-next" class="search-icon-btn" title="Next Match">▼</button>
           <button id="search-btn-close" class="search-icon-btn" title="Close Search">✕</button>
         </div>
       </div>
-      <div id="search-replace-row" class="search-bar-row replace-row hidden">
+      <div id="search-replace-row" class="search-bar-row replace-row">
         <input type="text" id="replace-input" class="search-input" placeholder="Replace with..." />
         <div class="search-icon-group">
           <button id="search-btn-replace-one" class="search-icon-btn" title="Replace One">1➔</button>
