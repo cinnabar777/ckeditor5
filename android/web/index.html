@@ -599,19 +599,20 @@
         <input type="text" id="search-input" class="search-input" placeholder="Find..." />
         <span id="search-counter" class="search-counter"></span>
         <div class="search-icon-group">
-          <button id="search-btn-prev" class="search-icon-btn" title="Previous Match">▲</button>
-          <button id="search-btn-next" class="search-icon-btn" title="Next Match">▼</button>
+          <button id="search-btn-prev" class="search-icon-btn" title="Find Previous">▲</button>
+          <button id="search-btn-next" class="search-icon-btn" title="Find Next">▼</button>
+          <button id="search-btn-highlight" class="search-icon-btn active" title="Highlight All Instances">≡</button>
+          <button id="search-btn-regex" class="search-icon-btn" title="Regular Expression">.*</button>
           <button id="search-btn-close" class="search-icon-btn" title="Close Search">✕</button>
         </div>
       </div>
       <div id="search-replace-row" class="search-bar-row replace-row">
-        <input type="text" id="replace-input" class="search-input" placeholder="Replace with..." />
+        <input type="text" id="replace-input" class="search-input" placeholder="Replace..." />
         <div class="search-icon-group">
+          <button id="search-btn-replace-one" class="search-icon-btn" title="Replace One">1➔</button>
+          <button id="search-btn-replace-all" class="search-icon-btn" title="Replace All">∀➔</button>
           <button id="search-btn-case" class="search-icon-btn" title="Match Case">Aa</button>
-          <button id="search-btn-word" class="search-icon-btn" title="Whole Words Only (\b)">\b</button>
-          <button id="search-btn-regex" class="search-icon-btn" title="Regular Expression (.*)">.*</button>
-          <button id="search-btn-replace-one" class="search-icon-btn" title="Replace One">Replace</button>
-          <button id="search-btn-replace-all" class="search-icon-btn" title="Replace All">All</button>
+          <button id="search-btn-word" class="search-icon-btn" title="Match Whole Word">\b</button>
         </div>
       </div>
     </div>

@@ -41,6 +41,48 @@ class MainActivity : AppCompatActivity() {
     private var isEditorReady: Boolean = false
     private var latestMarkdownContent: String? = null
     private var pendingOpenUri: Uri? = null
+    private var currentToast: Toast? = null
+
+    private fun showCustomToast(message: String) {
+        runOnUiThread {
+            try {
+                currentToast?.cancel()
+            } catch (e: Exception) {}
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val isLightTheme = prefs.getString("pref_app_theme", "amoled") == "light"
+
+            val textView = android.widget.TextView(this).apply {
+                text = message
+                textSize = 14f
+                setPadding(
+                    (16 * resources.displayMetrics.density).toInt(),
+                    (10 * resources.displayMetrics.density).toInt(),
+                    (16 * resources.displayMetrics.density).toInt(),
+                    (10 * resources.displayMetrics.density).toInt()
+                )
+                gravity = android.view.Gravity.CENTER
+
+                val bgDrawable = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = 20 * resources.displayMetrics.density
+                    if (isLightTheme) {
+                        setColor(Color.parseColor("#E0E0E0"))
+                    } else {
+                        setColor(Color.parseColor("#282828"))
+                    }
+                }
+                background = bgDrawable
+                setTextColor(if (isLightTheme) Color.parseColor("#111111") else Color.parseColor("#FFFFFF"))
+            }
+
+            val toast = Toast(this).apply {
+                duration = Toast.LENGTH_SHORT
+                view = textView
+            }
+            currentToast = toast
+            toast.show()
+        }
+    }
 
     private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let { openFile(it) }
@@ -692,9 +734,7 @@ class MainActivity : AppCompatActivity() {
     inner class WebAppInterface {
         @JavascriptInterface
         fun showToast(message: String) {
-            runOnUiThread {
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-            }
+            showCustomToast(message)
         }
 
         @JavascriptInterface

@@ -110735,12 +110735,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         window.AndroidNative.showToast(message);
       }
     };
-    btn.addEventListener("pointerdown", () => {
+    btn.addEventListener("pointerdown", (e) => {
       isLongPress = false;
+      clearTimeout(timer);
       timer = setTimeout(() => {
         isLongPress = true;
         showToastMsg();
-      }, 400);
+      }, 450);
     });
     const cancelTimer = () => {
       if (timer) {
@@ -110762,7 +110763,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     btn.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      showToastMsg();
     });
   }
   function initCustomSearchBar() {
@@ -110771,22 +110771,24 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     const searchInput = container.querySelector("#search-input");
     const replaceInput = container.querySelector("#replace-input");
     const counter = container.querySelector("#search-counter");
-    const btnCase = container.querySelector("#search-btn-case");
-    const btnWord = container.querySelector("#search-btn-word");
-    const btnRegex = container.querySelector("#search-btn-regex");
     const btnPrev = container.querySelector("#search-btn-prev");
     const btnNext = container.querySelector("#search-btn-next");
+    const btnHighlight = container.querySelector("#search-btn-highlight");
+    const btnRegex = container.querySelector("#search-btn-regex");
     const btnClose = container.querySelector("#search-btn-close");
     const btnReplaceOne = container.querySelector("#search-btn-replace-one");
     const btnReplaceAll = container.querySelector("#search-btn-replace-all");
-    addLongPressToast(btnCase, "Match Case");
-    addLongPressToast(btnWord, "Whole Words Only (\\b)");
-    addLongPressToast(btnRegex, "Regular Expression (.*)");
-    addLongPressToast(btnPrev, "Previous Match");
-    addLongPressToast(btnNext, "Next Match");
+    const btnCase = container.querySelector("#search-btn-case");
+    const btnWord = container.querySelector("#search-btn-word");
+    addLongPressToast(btnPrev, "Find Previous");
+    addLongPressToast(btnNext, "Find Next");
+    addLongPressToast(btnHighlight, "Highlight All Instances");
+    addLongPressToast(btnRegex, "Regular Expression");
     addLongPressToast(btnClose, "Close Search");
     addLongPressToast(btnReplaceOne, "Replace One");
     addLongPressToast(btnReplaceAll, "Replace All");
+    addLongPressToast(btnCase, "Match Case");
+    addLongPressToast(btnWord, "Match Whole Word");
     const executeSearch = () => {
       if (!editorInstance) return;
       const query = searchInput.value || "";
@@ -110840,6 +110842,20 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
     };
     searchInput.addEventListener("input", executeSearch);
+    btnHighlight.onclick = () => {
+      const isActive = btnHighlight.classList.toggle("active");
+      if (!isActive) {
+        try {
+          const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
+          if (findEditing && findEditing.state) {
+            findEditing.state.clear(editorInstance.model);
+          }
+        } catch (e) {
+        }
+      } else {
+        executeSearch();
+      }
+    };
     btnCase.onclick = () => {
       searchState.matchCase = !searchState.matchCase;
       btnCase.classList.toggle("active", searchState.matchCase);
