@@ -212,28 +212,7 @@ class MainActivity : AppCompatActivity() {
                         addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                     }
                     startActivity(newIntent)
-                    finish()
                     return
-                }
-            } else {
-                val am = getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
-                if (am != null) {
-                    for (appTask in am.appTasks) {
-                        if (appTask.taskInfo.taskId != taskId) {
-                            appTask.moveToFront()
-                            val passIntent = android.content.Intent(this, MainActivity::class.java).apply {
-                                action = android.content.Intent.ACTION_VIEW
-                                setDataAndType(data, "text/markdown")
-                                putExtra("open_target_uri", data.toString())
-                                addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP or android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                            }
-                            startActivity(passIntent)
-                            if (currentFileUri == null) {
-                                finish()
-                            }
-                            return
-                        }
-                    }
                 }
             }
 
