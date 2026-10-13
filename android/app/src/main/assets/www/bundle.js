@@ -110639,6 +110639,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   var isProgrammaticChange = false;
   var isToolbarVisible = false;
   var isLineWrapEnabled = true;
+  var activePopupGroup = null;
   var customHotkeys = {
     new: "ctrl+n",
     open: "ctrl+o",
@@ -110822,27 +110823,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           }
         }, { passive: true });
       }
-      const topContainer = document.querySelector(".ck-editor__top");
-      if (topContainer) {
-        if (!document.querySelector(".toolbar-header-row")) {
-          const headerRow = document.createElement("div");
-          headerRow.className = "toolbar-header-row";
-          headerRow.innerHTML = `
-          <div id="file-title" class="toolbar-title-container">Untitled.md</div>
-          <div class="toolbar-app-actions">
-            <button class="toolbar-app-btn" title="New" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new')">\u{1F4C4}</button>
-            <button class="toolbar-app-btn" title="Open" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('open')">\u{1F4C2}</button>
-            <button class="toolbar-app-btn" title="Save" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save')">\u{1F4BE}</button>
-            <button class="toolbar-app-btn" title="Save As" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('save_as')">\u{1F4D1}</button>
-            <button class="toolbar-app-btn" title="Line Wrap" onclick="window.editorBridge.toggleLineWrap()">\u21A9</button>
-            <button class="toolbar-app-btn" title="Image" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('image')">\u{1F5BC}</button>
-            <button class="toolbar-app-btn" title="New Window" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('new_window')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="8" x2="21" y2="8"></line><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg></button>
-            <button class="toolbar-app-btn settings-btn" title="Settings" onclick="window.AndroidNative && window.AndroidNative.onNativeAction('settings')">\u2699</button>
-          </div>
-        `;
-          topContainer.prepend(headerRow);
-        }
-      }
+      setupGroupedControlBar();
       const editorMainArea = document.querySelector(".ck-editor__main");
       if (editorMainArea) {
         editorMainArea.addEventListener("click", (e) => {
@@ -110977,37 +110958,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           }
         });
       }
-      const findPlugin = editorInstance.plugins.get("FindAndReplace");
-      if (findPlugin) {
-        const observer = new MutationObserver(() => {
-          const form = document.querySelector(".ck-find-and-replace-form");
-          if (form && !form.querySelector(".regex-toggle-row")) {
-            const row2 = document.createElement("div");
-            row2.className = "regex-toggle-row";
-            row2.innerHTML = `
-            <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
-              <input type="checkbox" id="find-regex-chk"> Use RegEx (.*)
-            </label>
-          `;
-            form.insertBefore(row2, form.lastElementChild);
-            const chk = row2.querySelector("#find-regex-chk");
-            if (chk) {
-              chk.onchange = () => {
-                const findInput = form.querySelector(".ck-labeled-field-view input");
-                if (findInput && findInput.value) {
-                  try {
-                    const pattern = chk.checked ? new RegExp(findInput.value, "g") : findInput.value;
-                    findPlugin.find(pattern);
-                  } catch (err) {
-                    console.error("Invalid RegEx pattern:", err);
-                  }
-                }
-              };
-            }
-          }
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-      }
       if (isInitialInit) {
         setupFloatingToggle();
         setupKeyboardShortcuts();
@@ -111019,6 +110969,190 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     } catch (error) {
       console.error("Failed to initialize CKEditor 5:", error);
     }
+  }
+  function setupGroupedControlBar() {
+    const topContainer = document.querySelector(".ck-editor__top");
+    if (!topContainer) return;
+    let bar = topContainer.querySelector(".grouped-control-bar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.className = "grouped-control-bar";
+      topContainer.appendChild(bar);
+    }
+    bar.innerHTML = `
+    <button class="grouped-key-btn" id="grp-btn-undo" title="Undo (Hold: Redo)">\u21B6</button>
+    <button class="grouped-key-btn" id="grp-btn-heading" title="Paragraph & Headings">\xB6</button>
+    <button class="grouped-key-btn" id="grp-btn-lists" title="Lists">\u2261</button>
+    <button class="grouped-key-btn" id="grp-btn-format" title="Format">T</button>
+    <button class="grouped-key-btn" id="grp-btn-table" title="Table">\u229E</button>
+    <button class="grouped-key-btn" id="grp-btn-insert" title="Insert">+</button>
+    <button class="grouped-key-btn" id="grp-btn-menu" title="Menu">\u22EE</button>
+    <button class="grouped-key-btn" id="grp-btn-wrap" title="Line Wrap Toggle">\u21A9</button>
+  `;
+    const undoBtn = bar.querySelector("#grp-btn-undo");
+    if (undoBtn) {
+      let holdTimer = null;
+      let didRedo = false;
+      undoBtn.addEventListener("pointerdown", () => {
+        didRedo = false;
+        holdTimer = setTimeout(() => {
+          didRedo = true;
+          if (editorInstance) editorInstance.execute("redo");
+        }, 500);
+      });
+      const clearHold = () => {
+        clearTimeout(holdTimer);
+      };
+      undoBtn.addEventListener("pointerup", (e) => {
+        clearHold();
+        if (!didRedo) {
+          if (editorInstance) editorInstance.execute("undo");
+        }
+      });
+      undoBtn.addEventListener("pointercancel", clearHold);
+    }
+    document.addEventListener("pointerdown", (e) => {
+      const strip = document.querySelector("#popup-toolbar-strip");
+      const barEl = document.querySelector(".grouped-control-bar");
+      if (strip && !strip.classList.contains("hidden")) {
+        if (!strip.contains(e.target) && (!barEl || !barEl.contains(e.target))) {
+          hidePopupStrip();
+        }
+      }
+    });
+    const headingBtn = bar.querySelector("#grp-btn-heading");
+    if (headingBtn) {
+      headingBtn.onclick = (e) => {
+        e.stopPropagation();
+        togglePopupStrip("heading", headingBtn, [
+          { label: "P", action: () => execCmd("heading", { value: "paragraph" }) },
+          { label: "H1", action: () => execCmd("heading", { value: "heading1" }) },
+          { label: "H2", action: () => execCmd("heading", { value: "heading2" }) },
+          { label: "H3", action: () => execCmd("heading", { value: "heading3" }) },
+          { label: "H4", action: () => execCmd("heading", { value: "heading4" }) },
+          { label: "H5", action: () => execCmd("heading", { value: "heading5" }) },
+          { label: "H6", action: () => execCmd("heading", { value: "heading6" }) }
+        ]);
+      };
+    }
+    const listsBtn = bar.querySelector("#grp-btn-lists");
+    if (listsBtn) {
+      listsBtn.onclick = (e) => {
+        e.stopPropagation();
+        togglePopupStrip("lists", listsBtn, [
+          { label: "\u2022 Bullet", action: () => execCmd("bulletedList") },
+          { label: "1. Number", action: () => execCmd("numberedList") },
+          { label: "\u2611 Todo", action: () => execCmd("todoList") },
+          { label: "\u2794 Indent", action: () => execCmd("indent") },
+          { label: "\u2B05 Outdent", action: () => execCmd("outdent") }
+        ]);
+      };
+    }
+    const formatBtn = bar.querySelector("#grp-btn-format");
+    if (formatBtn) {
+      formatBtn.onclick = (e) => {
+        e.stopPropagation();
+        togglePopupStrip("format", formatBtn, [
+          { label: "B Bold", action: () => execCmd("bold") },
+          { label: "I Italic", action: () => execCmd("italic") },
+          { label: "S Strike", action: () => execCmd("strikethrough") },
+          { label: "U Underline", action: () => execCmd("underline") },
+          { label: "\u{1F7E8} Marker", action: () => execCmd("highlight", { value: "yellowMarker" }) },
+          { label: "\u{1F7E2} Marker", action: () => execCmd("highlight", { value: "greenMarker" }) },
+          { label: "\u{1F534} Marker", action: () => execCmd("highlight", { value: "redMarker" }) },
+          { label: "\u2715 Clear", action: () => execCmd("highlight", { value: null }) }
+        ]);
+      };
+    }
+    const tableBtn = bar.querySelector("#grp-btn-table");
+    if (tableBtn) {
+      tableBtn.onclick = (e) => {
+        e.stopPropagation();
+        togglePopupStrip("table", tableBtn, [
+          { label: "\u229E Insert", action: () => execCmd("insertTable") },
+          { label: "+Col Column", action: () => execCmd("tableColumn") },
+          { label: "+Row Row", action: () => execCmd("tableRow") },
+          { label: "\u2715 Merge", action: () => execCmd("mergeTableCells") }
+        ]);
+      };
+    }
+    const insertBtn = bar.querySelector("#grp-btn-insert");
+    if (insertBtn) {
+      insertBtn.onclick = (e) => {
+        e.stopPropagation();
+        togglePopupStrip("insert", insertBtn, [
+          { label: "\u{1F5BC}\uFE0F Image", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
+          { label: "\u{1F517} Link", action: () => execCmd("link") },
+          { label: "\u201D Quote", action: () => execCmd("blockQuote") },
+          { label: "</> Code", action: () => execCmd("code") },
+          { label: "``` Code Block", action: () => execCmd("codeBlock") },
+          { label: "\u2015 Line", action: () => execCmd("horizontalLine") }
+        ]);
+      };
+    }
+    const menuBtn = bar.querySelector("#grp-btn-menu");
+    if (menuBtn) {
+      menuBtn.onclick = (e) => {
+        e.stopPropagation();
+        togglePopupStrip("menu", menuBtn, [
+          { label: "\u{1F4C4} New", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
+          { label: "\u{1F4C2} Open", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
+          { label: "\u{1F4BE} Save", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
+          { label: "\u{1F4D1} Save As", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save_as") },
+          { label: "\u{1FA9F} New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
+          { label: "\u2699\uFE0F Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
+        ]);
+      };
+    }
+    const wrapBtn = bar.querySelector("#grp-btn-wrap");
+    if (wrapBtn) {
+      wrapBtn.onclick = (e) => {
+        e.stopPropagation();
+        hidePopupStrip();
+        window.editorBridge.toggleLineWrap();
+      };
+    }
+  }
+  function execCmd(cmdName, options) {
+    if (editorInstance) {
+      try {
+        editorInstance.execute(cmdName, options);
+      } catch (err) {
+        console.error(`Command ${cmdName} failed:`, err);
+      }
+    }
+  }
+  function hidePopupStrip() {
+    const strip = document.querySelector("#popup-toolbar-strip");
+    if (strip) {
+      strip.classList.add("hidden");
+      strip.innerHTML = "";
+    }
+    activePopupGroup = null;
+    document.querySelectorAll(".grouped-key-btn").forEach((btn) => btn.classList.remove("active"));
+  }
+  function togglePopupStrip(groupKey, targetBtn, items) {
+    const strip = document.querySelector("#popup-toolbar-strip");
+    if (!strip) return;
+    if (activePopupGroup === groupKey) {
+      hidePopupStrip();
+      return;
+    }
+    hidePopupStrip();
+    activePopupGroup = groupKey;
+    targetBtn.classList.add("active");
+    items.forEach((item) => {
+      const btn = document.createElement("button");
+      btn.className = "popup-strip-btn";
+      btn.textContent = item.label;
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        hidePopupStrip();
+        item.action();
+      };
+      strip.appendChild(btn);
+    });
+    strip.classList.remove("hidden");
   }
   function setupFastScrollbar() {
     const mainArea = document.querySelector(".ck-editor__main");
@@ -111050,7 +111184,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       const velocity = dt2 > 0 ? dy / dt2 : 0;
       lastScrollTop = mainArea.scrollTop;
       lastScrollTime = now;
-      if (velocity > 0.8 || dy > 40) {
+      if (velocity > 2.5 || dy > 120) {
         updateThumbPosition();
         track2.classList.add("visible");
         clearTimeout(hideTimer);

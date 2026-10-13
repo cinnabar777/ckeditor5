@@ -5,17 +5,17 @@
     <PreferenceCategory app:title="Editor Configuration Pages">
         <Preference
             app:key="pref_page_styling"
-            app:title="🎨 Styling &amp; Typography Settings"
+            app:title="Styling &amp; Typography Settings"
             app:summary="Fonts, weights, sizes, heading colors, line thickness &amp; element colors" />
 
         <Preference
             app:key="pref_page_hotkeys"
-            app:title="⌨️ Custom Keyboard Shortcuts"
+            app:title="Custom Keyboard Shortcuts"
             app:summary="Configure hotkeys for actions, formatting, headings &amp; highlighter markers" />
 
         <Preference
             app:key="pref_page_plugins"
-            app:title="🔌 Editor Plugins &amp; Toolbar Tools"
+            app:title="Editor Plugins &amp; Toolbar Tools"
             app:summary="Enable or disable active editor plugins and toolbar items" />
     </PreferenceCategory>
 

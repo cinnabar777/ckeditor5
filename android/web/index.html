@@ -38,7 +38,7 @@
       --blockquote-border-color: #444444;
       --callout-border-width: 4px;
       --callout-border-color: #29b6f6;
-      --toggle-bg: rgba(255, 255, 255, 0.15);
+      --toggle-bg: transparent;
       --toggle-color: #ffffff;
     }
 
@@ -54,7 +54,7 @@
       --code-bg-color: #f1f3f4;
       --code-block-color: #212121;
       --code-block-bg-color: #f5f5f5;
-      --toggle-bg: rgba(0, 0, 0, 0.15);
+      --toggle-bg: transparent;
       --toggle-color: #111111;
     }
 
@@ -114,86 +114,91 @@
       display: none !important;
     }
 
-    /* Action Strip & Document Title Row */
-    .toolbar-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 10px;
-      border-bottom: 1px solid var(--border-color);
-      background-color: var(--toolbar-bg);
-      overflow-x: auto;
-    }
-
-    .toolbar-title-container {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text-color);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-right: 10px;
-      max-width: 140px;
-    }
-
-    .toolbar-app-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px; /* Uniform 12px gap between all icons */
-      flex-shrink: 0;
-      padding-right: 40px; /* Space so toggle button doesn't obscure action buttons */
-    }
-
-    .toolbar-app-btn {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      font-size: 16px;
-      font-weight: 500;
-      padding: 5px 8px;
-      cursor: pointer;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    .toolbar-app-btn.settings-btn {
-      margin-left: 0 !important;
-      padding: 5px 8px !important;
-      font-size: 16px !important;
-    }
-
-    .toolbar-app-btn:active {
-      background-color: var(--button-hover);
-    }
-
-    /* Main CKEditor Toolbar */
-    .ck-toolbar {
-      background: var(--toolbar-bg) !important;
-      border: none !important;
-      padding: 4px 8px !important;
-      margin: 0 !important;
+    /* Floating Rounded Sub-Toolbar Strip */
+    .popup-toolbar-strip {
+      position: fixed;
+      bottom: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #282a2e !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 14px !important;
+      padding: 6px 10px !important;
       display: flex !important;
-      flex-wrap: wrap !important;
-      padding-right: 45px !important;
+      align-items: center !important;
+      gap: 6px !important;
+      z-index: 10003 !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+      max-width: 94vw;
+      overflow-x: auto;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
     }
 
-    .ck-toolbar .ck-button,
-    .ck-toolbar .ck-dropdown__button {
-      color: var(--text-color) !important;
+    .popup-toolbar-strip.hidden {
+      display: none !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .popup-strip-btn {
       background: transparent !important;
+      color: #ffffff !important;
       border: none !important;
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      padding: 6px 10px !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      white-space: nowrap !important;
+      user-select: none !important;
     }
 
-    /* Force Dropdown and Panel Popups to Open UPWARDS */
-    .ck-dropdown__panel {
-      bottom: 100% !important;
-      top: auto !important;
-      margin-bottom: 4px !important;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5) !important;
+    .popup-strip-btn:active,
+    .popup-strip-btn.active {
+      background-color: rgba(255, 255, 255, 0.2) !important;
     }
 
-    .ck-balloon-panel {
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5) !important;
+    /* Bottom 8-Key Grouped Control Bar */
+    .grouped-control-bar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      padding: 6px 4px !important;
+      background-color: var(--toolbar-bg) !important;
+      border-top: 1px solid var(--border-color) !important;
+      padding-right: 44px !important; /* Space for corner toggle button */
+    }
+
+    .grouped-key-btn {
+      background: transparent !important;
+      color: var(--text-color) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 8px !important;
+      padding: 6px 8px !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-width: 34px;
+      user-select: none !important;
+    }
+
+    .grouped-key-btn:active,
+    .grouped-key-btn.active {
+      background-color: var(--button-hover) !important;
+      border-color: #0078d4 !important;
+    }
+
+    /* Hide standard CKEditor toolbar since grouped control bar handles actions */
+    .ck-toolbar {
+      display: none !important;
     }
 
     .ck-editor__main {
@@ -392,7 +397,6 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 14dp;
       width: 14px;
       height: 100vh;
       z-index: 10005;
@@ -410,10 +414,10 @@
       position: absolute;
       top: 0;
       right: 2px;
-      width: 10px;
+      width: 8px;
       height: 60px;
-      background-color: rgba(255, 152, 0, 0.85);
-      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.25) !important;
+      border-radius: 4px;
       cursor: grab;
       user-select: none;
       touch-action: none;
@@ -422,7 +426,7 @@
 
     #fast-scrollbar-thumb:active {
       cursor: grabbing;
-      background-color: rgba(255, 152, 0, 1.0);
+      background-color: rgba(255, 255, 255, 0.45) !important;
     }
 
     /* Dark Mode Source Editing View Fix */
@@ -437,209 +441,33 @@
       box-sizing: border-box !important;
     }
 
-    /* Find & Replace Regex Enhancements */
-    .ck-find-and-replace-form .regex-toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 8px;
-      font-size: 13px;
-      user-select: none;
-    }
-
-    /* Dark Mode CKEditor Forms & Find/Replace Panel Comprehensive Overrides */
-    body:not(.light-theme) .ck-find-and-replace-form,
-    body:not(.light-theme) .ck-find-and-replace-form-header,
-    body:not(.light-theme) .ck-form__header,
-    body:not(.light-theme) .ck-form,
-    body:not(.light-theme) .ck-balloon-panel,
-    body:not(.light-theme) .ck-dropdown__panel {
-      background-color: #1e1e1e !important;
-      color: #ffffff !important;
-      border-color: #333333 !important;
-    }
-
-    body:not(.light-theme) .ck-find-and-replace-form-header *,
-    body:not(.light-theme) .ck-form__header * {
-      background-color: #1e1e1e !important;
-      color: #ffffff !important;
-    }
-
-    body:not(.light-theme) .ck-labeled-field-view,
-    body:not(.light-theme) .ck-labeled-field-view *,
-    body:not(.light-theme) .ck-label,
-    body:not(.light-theme) .ck-input {
-      background-color: #2a2a2a !important;
-      color: #ffffff !important;
-      border-color: #444444 !important;
-    }
-
-    body:not(.light-theme) .ck-input::placeholder {
-      color: #888888 !important;
-    }
-
-    body:not(.light-theme) .ck.ck-reset_all,
-    body:not(.light-theme) .ck.ck-reset_all * {
-      color: #ffffff !important;
-    }
-
-    body:not(.light-theme) .ck-dropdown__panel,
-    body:not(.light-theme) .ck-list {
-      background: #181818 !important;
-      border-color: #333333 !important;
-    }
-
-    /* Slide-over Table of Contents (TOC) Panel */
-    #toc-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 10001;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    #toc-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    #toc-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 80vw;
-      max-width: 360px;
-      height: 100vh;
-      background-color: var(--toolbar-bg);
-      color: var(--text-color);
-      border-left: 1px solid var(--border-color);
-      z-index: 10002;
-      transform: translateX(100%);
-      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      display: flex;
-      flex-direction: column;
-      box-shadow: -4px 0 16px rgba(0, 0, 0, 0.4);
-      box-sizing: border-box;
-    }
-
-    #toc-panel.open {
-      transform: translateX(0);
-    }
-
-    .toc-header {
-      padding: 16px;
-      font-size: 16px;
-      font-weight: bold;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .toc-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px 8px;
-    }
-
-    .toc-item {
-      display: flex;
-      align-items: center;
-      padding: 8px 10px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      user-select: none;
-      margin-bottom: 4px;
-    }
-
-    .toc-item:active {
-      background-color: var(--button-hover);
-    }
-
-    .toc-item.active-section {
-      color: #ffff00 !important;
-      font-weight: bold !important;
-    }
-
-    .toc-item.active-section .toc-text {
-      color: #ffff00 !important;
-      font-weight: bold !important;
-    }
-
-    .toc-toggle {
-      width: 32px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-right: 8px;
-      border-radius: 4px;
-      background-color: rgba(255, 255, 255, 0.15);
-      font-size: 24px;
-      flex-shrink: 0;
-      user-select: none;
-    }
-
-    .toc-text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;
-      font-size: 16px;
-    }
-
-    .toc-global-toggle-btn {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      font-size: 20px;
-      font-weight: bold;
-      padding: 2px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .toc-item.level-1 { padding-left: 8px; font-weight: 600; }
-    .toc-item.level-2 { padding-left: 20px; }
-    .toc-item.level-3 { padding-left: 32px; }
-    .toc-item.level-4 { padding-left: 44px; }
-    .toc-item.level-5 { padding-left: 56px; }
-    .toc-item.level-6 { padding-left: 68px; }
-
-    /* Floating Corner Toggle Button (Dark Semi-transparent style) */
+    /* Transparent Floating Corner Toggle Button */
     .floating-toggle-btn {
       position: fixed;
-      bottom: 12px;
-      right: 12px;
-      z-index: 10000;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--toggle-bg);
-      color: var(--toggle-color);
-      border: 1px solid var(--border-color);
-      font-size: 16px;
+      bottom: 10px;
+      right: 10px;
+      z-index: 10004;
+      width: 34px;
+      height: 34px;
+      background: transparent !important;
+      background-color: transparent !important;
+      color: var(--text-color) !important;
+      border: none !important;
+      font-size: 18px;
       font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: none !important;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      opacity: 0.7;
     }
 
     .floating-toggle-btn:active {
       transform: scale(0.92);
-      opacity: 0.8;
+      opacity: 1.0;
     }
   </style>
 </head>
@@ -647,6 +475,7 @@
   <div id="editor-container">
     <div id="editor"></div>
   </div>
+  <div id="popup-toolbar-strip" class="popup-toolbar-strip hidden"></div>
   <div id="fast-scrollbar-track">
     <div id="fast-scrollbar-thumb"></div>
   </div>

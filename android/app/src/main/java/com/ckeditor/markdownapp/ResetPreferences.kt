@@ -99,7 +99,7 @@ object PreferenceResetHelper {
 
     fun isModifiedFromDefault(context: Context, key: String?): Boolean {
         if (key == null) return false
-        if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults") return false
+        if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults" || key.startsWith("pref_page_") || key.endsWith("_page")) return false
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -125,7 +125,7 @@ object PreferenceResetHelper {
         val context = preference.context
         val key = preference.key ?: return
 
-        if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults") {
+        if (key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults" || key.startsWith("pref_page_") || key.endsWith("_page")) {
             return
         }
 
@@ -134,9 +134,9 @@ object PreferenceResetHelper {
             btnReset = TextView(context).apply {
                 id = btnResetId
                 text = "↺"
-                textSize = 22f
+                textSize = 18f
                 setTextColor(Color.parseColor("#FF9800"))
-                setPadding(24, 12, 24, 12)
+                setPadding(16, 4, 16, 4)
                 isFocusable = true
                 isClickable = true
                 val typedValue = TypedValue()

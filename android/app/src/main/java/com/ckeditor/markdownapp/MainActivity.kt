@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                 val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(data, "text/markdown")
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP or android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 }
                 startActivity(newIntent)
                 return
