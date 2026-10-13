@@ -22,6 +22,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceManager
 import androidx.webkit.WebViewAssetLoader
 import org.json.JSONArray
@@ -105,6 +107,8 @@ class MainActivity : AppCompatActivity() {
             val insetsController = WindowCompat.getInsetsController(window, window.decorView)
             insetsController.isAppearanceLightStatusBars = false
             insetsController.isAppearanceLightNavigationBars = false
+            insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            insetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
     }
 
@@ -132,6 +136,21 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
+            val am = getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
+            if (am != null) {
+                for (appTask in am.appTasks) {
+                    val baseIntent = appTask.taskInfo.baseIntent
+                    val taskData = baseIntent.data ?: (baseIntent.getStringExtra("open_target_uri")?.let { Uri.parse(it) })
+                    if (taskData == data && appTask.taskInfo.taskId != taskId) {
+                        appTask.moveToFront()
+                        if (currentFileUri != data) {
+                            finish()
+                        }
+                        return
+                    }
+                }
+            }
+
             if (isMultiWindowEnabled && currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
                 val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
                     action = android.content.Intent.ACTION_VIEW
@@ -154,14 +173,19 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val lastUriString = prefs.getString("last_opened_uri", null)
-        if (lastUriString != null) {
-            val lastUri = Uri.parse(lastUriString)
-            if (isEditorReady) {
-                openFile(lastUri)
-            } else {
-                pendingOpenUri = lastUri
+        val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
+        if (startupMode == "last_opened") {
+            val lastUriString = prefs.getString("last_opened_uri", null)
+            if (lastUriString != null) {
+                val lastUri = Uri.parse(lastUriString)
+                if (isEditorReady) {
+                    openFile(lastUri)
+                } else {
+                    pendingOpenUri = lastUri
+                }
             }
+        } else {
+            createNewDocument()
         }
     }
 

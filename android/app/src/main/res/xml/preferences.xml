@@ -29,6 +29,14 @@
             app:defaultValue="amoled" />
 
         <com.ckeditor.markdownapp.ResetListPreference
+            app:key="pref_startup_document"
+            app:title="Startup Document Preference"
+            app:summary="Select document to load when launching app from launcher icon"
+            app:entries="@array/pref_startup_doc_entries"
+            app:entryValues="@array/pref_startup_doc_values"
+            app:defaultValue="last_opened" />
+
+        <com.ckeditor.markdownapp.ResetListPreference
             app:key="pref_image_mode"
             app:title="Image Insertion Mode"
             app:summary="Select how images are added to document"

@@ -55,6 +55,7 @@ object PreferenceResetHelper {
             key == "pref_toolbar_height" -> 48
             key == "pref_app_theme" -> "amoled"
             key == "pref_image_mode" -> "picker"
+            key == "pref_startup_document" -> "last_opened"
             key == "pref_auto_save_on_leave" -> true
             key == "pref_multi_window" -> true
             key == "pref_hotkey_new" -> "ctrl+n"
@@ -131,8 +132,10 @@ object PreferenceResetHelper {
             return
         }
 
-        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup ?: return
-        var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
+        val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
+        val itemViewGroup = holder.itemView as? ViewGroup ?: return
+
+        var btnReset = itemViewGroup.findViewById<ImageView>(R.id.btn_reset_widget)
 
         if (btnReset == null) {
             btnReset = ImageView(context).apply {
@@ -147,18 +150,31 @@ object PreferenceResetHelper {
                 context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)
                 setBackgroundResource(typedValue.resourceId)
             }
+
             val sizePx = (36 * context.resources.displayMetrics.density).toInt()
-            val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
-                gravity = Gravity.CENTER_VERTICAL
-                marginEnd = (4 * context.resources.displayMetrics.density).toInt()
+            if (widgetFrame != null) {
+                val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                    marginEnd = (4 * context.resources.displayMetrics.density).toInt()
+                }
+                widgetFrame.addView(btnReset, 0, params)
+            } else {
+                val params = if (itemViewGroup is LinearLayout) {
+                    LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = (8 * context.resources.displayMetrics.density).toInt()
+                    }
+                } else {
+                    ViewGroup.LayoutParams(sizePx, sizePx)
+                }
+                itemViewGroup.addView(btnReset, params)
             }
-            widgetFrame.addView(btnReset, 0, params)
         }
 
         val isModified = isModifiedFromDefault(context, key)
         if (isModified) {
             btnReset.visibility = View.VISIBLE
-            widgetFrame.visibility = View.VISIBLE
+            widgetFrame?.visibility = View.VISIBLE
             btnReset.setOnClickListener {
                 resetSinglePreference(context, preference)
             }
