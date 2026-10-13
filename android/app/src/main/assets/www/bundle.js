@@ -111543,7 +111543,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       const deltaY = e.changedTouches[0].clientY - touchStartY;
       const isSelectionActive = window.getSelection() && window.getSelection().toString().length > 0;
       if (!isSelectionActive && Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        if (deltaX < 0 && !panel.classList.contains("open")) {
+        const screenWidth = window.innerWidth;
+        const isRightEdgeTouch = touchStartX >= screenWidth * 0.8;
+        if (deltaX < 0 && !panel.classList.contains("open") && isRightEdgeTouch) {
           openToc();
         } else if (deltaX > 0 && panel.classList.contains("open")) {
           closeToc();
