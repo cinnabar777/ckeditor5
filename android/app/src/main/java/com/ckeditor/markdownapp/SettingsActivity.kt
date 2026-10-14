@@ -36,6 +36,15 @@ class SettingsActivity : AppCompatActivity() {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.settings_container)
             supportActionBar?.title = when (currentFragment) {
                 is SettingsThemeFragment -> "Settings Theme & Custom Colors"
+                is StylingHeadingsFragment -> "Headings Styling"
+                is StylingParagraphFragment -> "Paragraph & Body Styling"
+                is StylingInlineFragment -> "Inline Formats Styling"
+                is StylingListsFragment -> "Lists & Todos Styling"
+                is StylingBlockquotesFragment -> "Block Quotes & Callouts Styling"
+                is StylingTablesFragment -> "Tables Styling"
+                is StylingCodeFragment -> "Code Blocks Styling"
+                is StylingHrFragment -> "Horizontal Dividers Styling"
+                is StylingControlbarFragment -> "Bottom Control Bar Styling"
                 is StylingSettingsFragment -> "Styling & Typography"
                 is HotkeysSettingsFragment -> "Custom Keyboard Shortcuts"
                 is PluginsSettingsFragment -> "Editor Plugins & Tools"
@@ -396,7 +405,7 @@ class SettingsFragment : BaseSettingsFragment() {
     }
 }
 
-class StylingSettingsFragment : BaseSettingsFragment() {
+open class StylingSettingsFragment : BaseSettingsFragment() {
     private var activeFontTargetKey: String? = null
 
     private val pickFontLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -430,6 +439,25 @@ class StylingSettingsFragment : BaseSettingsFragment() {
         if (key.startsWith("pref_font_file_")) {
             activeFontTargetKey = key
             pickFontLauncher.launch("*/*")
+            return true
+        }
+        val targetFragment: PreferenceFragmentCompat? = when (key) {
+            "pref_styling_page_headings" -> StylingHeadingsFragment()
+            "pref_styling_page_paragraph" -> StylingParagraphFragment()
+            "pref_styling_page_inline" -> StylingInlineFragment()
+            "pref_styling_page_lists" -> StylingListsFragment()
+            "pref_styling_page_blockquotes" -> StylingBlockquotesFragment()
+            "pref_styling_page_tables" -> StylingTablesFragment()
+            "pref_styling_page_code" -> StylingCodeFragment()
+            "pref_styling_page_hr" -> StylingHrFragment()
+            "pref_styling_page_controlbar" -> StylingControlbarFragment()
+            else -> null
+        }
+        if (targetFragment != null) {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.settings_container, targetFragment)
+                .addToBackStack(null)
+                .commit()
             return true
         }
         return super.onPreferenceTreeClick(preference)
@@ -500,6 +528,60 @@ class StylingSettingsFragment : BaseSettingsFragment() {
             }
         }
         return result
+    }
+}
+
+class StylingHeadingsFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_headings, rootKey)
+    }
+}
+
+class StylingParagraphFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_paragraph, rootKey)
+    }
+}
+
+class StylingInlineFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_inline, rootKey)
+    }
+}
+
+class StylingListsFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_lists, rootKey)
+    }
+}
+
+class StylingBlockquotesFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_blockquotes, rootKey)
+    }
+}
+
+class StylingTablesFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_tables, rootKey)
+    }
+}
+
+class StylingCodeFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_code, rootKey)
+    }
+}
+
+class StylingHrFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_hr, rootKey)
+    }
+}
+
+class StylingControlbarFragment : StylingSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_styling_controlbar, rootKey)
     }
 }
 

@@ -2,265 +2,51 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Bottom Control Bar Customization">
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_toolbar_bg_color"
-            app:title="Toolbar Background Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_toolbar_icon_color"
-            app:title="Toolbar Icon Color"
-            app:summary="Tap to select color for toolbar SVG icons or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_toolbar_height"
-            app:title="Toolbar Height (dp)"
-            app:summary="Default: 48dp (Range: 36dp to 72dp)"
-            android:defaultValue="48"
-            app:min="36"
-            android:max="72"
-            app:showSeekBarValue="true" />
-    </com.ckeditor.markdownapp.ResetPreferenceCategory>
-
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Font &amp; Paragraph Typography Settings">
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_body_font_size"
-            app:title="Body Text Size (px)"
-            app:summary="Adjust font size for regular editor text"
-            app:min="12"
-            android:max="32"
-            app:defaultValue="16"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_heading_scale_percent"
-            app:title="Heading Size Scale (%)"
-            app:summary="Scales all heading levels relative to text"
-            app:min="50"
-            android:max="200"
-            app:defaultValue="100"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_font_weight_bold"
-            app:title="Bold Font Weight"
-            app:summary="Adjust font weight for bold text (100-900)"
-            app:min="100"
-            android:max="900"
-            app:defaultValue="700"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_font_weight_italic"
-            app:title="Italic Font Weight"
-            app:summary="Adjust font weight for italic text (100-900)"
-            app:min="100"
-            android:max="900"
-            app:defaultValue="400"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_font_weight_heading"
-            app:title="Headings Font Weight"
-            app:summary="Adjust font weight for all heading levels (100-900)"
-            app:min="100"
-            android:max="900"
-            app:defaultValue="700"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetSwitchPreference
-            app:key="pref_line_wrap"
-            app:title="Enable Line Wrap"
-            app:summary="When disabled, lines will not wrap and horizontally scroll"
-            android:defaultValue="true" />
-    </com.ckeditor.markdownapp.ResetPreferenceCategory>
-
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Fonts (File Pickers)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Element Styling &amp; Typography Categories">
         <com.ckeditor.markdownapp.ResetPreference
-            app:key="pref_font_file_body"
-            app:title="Body / Paragraph Font File"
-            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+            app:key="pref_styling_page_headings"
+            app:title="Headings (H1 – H6)"
+            app:summary="Fonts, scale, alignment, underline, margins &amp; colors" />
 
         <com.ckeditor.markdownapp.ResetPreference
-            app:key="pref_font_file_heading"
-            app:title="Headings Font File"
-            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+            app:key="pref_styling_page_paragraph"
+            app:title="Paragraph &amp; Body Text"
+            app:summary="Font size, line height, letter spacing, alignment &amp; indents" />
 
         <com.ckeditor.markdownapp.ResetPreference
-            app:key="pref_font_file_bold"
-            app:title="Bold Text Font File"
-            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+            app:key="pref_styling_page_inline"
+            app:title="Inline Formats (Bold, Italic, Links, Inline Code)"
+            app:summary="Colors, font weights, link decorations &amp; inline code padding" />
 
         <com.ckeditor.markdownapp.ResetPreference
-            app:key="pref_font_file_italic"
-            app:title="Italic Text Font File"
-            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
+            app:key="pref_styling_page_lists"
+            app:title="Lists (Bulleted, Numbered, Todo Checkboxes)"
+            app:summary="Indentation, list item spacing, bullet colors &amp; todo checkbox colors" />
 
         <com.ckeditor.markdownapp.ResetPreference
-            app:key="pref_font_file_code"
-            app:title="Code Font File"
-            app:summary="Tap to pick a font file (.ttf, .otf, .woff, .woff2)" />
-    </com.ckeditor.markdownapp.ResetPreferenceCategory>
+            app:key="pref_styling_page_blockquotes"
+            app:title="Block Quotes &amp; Callouts"
+            app:summary="Borders, colors, background tints, paddings &amp; indents" />
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Heading Colors 1–6 (Color Pickers)">
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_heading_1_color"
-            app:title="Heading 1 Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_styling_page_tables"
+            app:title="Tables"
+            app:summary="Borders, header row colors &amp; text, font weight &amp; cell padding" />
 
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_heading_2_color"
-            app:title="Heading 2 Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_styling_page_code"
+            app:title="Code Blocks"
+            app:summary="Text &amp; background colors, language labels, padding &amp; border radius" />
 
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_heading_3_color"
-            app:title="Heading 3 Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_styling_page_hr"
+            app:title="Horizontal Rules / Dividers"
+            app:summary="Thickness, border styles, width, colors &amp; vertical margins" />
 
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_heading_4_color"
-            app:title="Heading 4 Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_heading_5_color"
-            app:title="Heading 5 Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_heading_6_color"
-            app:title="Heading 6 Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-    </com.ckeditor.markdownapp.ResetPreferenceCategory>
-
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Block Quote &amp; Callout Line Settings">
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_blockquote_line_thickness"
-            app:title="Block Quote Line Thickness (px)"
-            app:summary="Default: 4px (Range: 1px to 20px)"
-            android:defaultValue="4"
-            app:min="1"
-            android:max="20"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_blockquote_line_color"
-            app:title="Block Quote Line Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_callout_line_thickness"
-            app:title="Callout Line Thickness (px)"
-            app:summary="Default: 4px (Range: 1px to 20px)"
-            android:defaultValue="4"
-            app:min="1"
-            android:max="20"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_callout_line_color"
-            app:title="Callout Line Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-    </com.ckeditor.markdownapp.ResetPreferenceCategory>
-
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Horizontal Rule &amp; Paragraph Settings">
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_hr_thickness"
-            app:title="Line Thickness (px)"
-            app:summary="Default: 2px (Range: 1px to 20px)"
-            android:defaultValue="2"
-            app:min="1"
-            android:max="20"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_hr_color"
-            app:title="Line Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetSeekBarPreference
-            app:key="pref_hr_width_percent"
-            app:title="Line Width (%)"
-            app:summary="Default: 100% (Range: 10% to 100%)"
-            android:defaultValue="100"
-            app:min="10"
-            android:max="100"
-            app:showSeekBarValue="true" />
-
-        <com.ckeditor.markdownapp.ResetSwitchPreference
-            app:key="pref_justify_paragraph"
-            app:title="Justify Paragraph Text Only"
-            app:summary="Align paragraph text to both left and right margins (does NOT affect headings, lists, or code)"
-            android:defaultValue="false" />
-
-        <com.ckeditor.markdownapp.ResetEditTextPreference
-            app:key="pref_paragraph_line_height"
-            app:title="Paragraph Line Height"
-            app:summary="Line height multiplier for paragraphs only (e.g. 1.6 or default)"
-            app:defaultValue="1.6" />
-
-        <com.ckeditor.markdownapp.ResetEditTextPreference
-            app:key="pref_letter_spacing"
-            app:title="Global Letter Spacing (px)"
-            app:summary="Letter spacing for all text EXCEPT code blocks (e.g. 0.5px or 0px)"
-            app:defaultValue="0px" />
-    </com.ckeditor.markdownapp.ResetPreferenceCategory>
-
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Text &amp; Element Colors (Color Pickers)">
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_bold_color"
-            app:title="Bold Text Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_italic_color"
-            app:title="Italic Text Color"
-            app:summary="Tap to select color or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_link_color"
-            app:title="Link Color"
-            app:summary="Tap to select color for hyperlink text or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_code_color"
-            app:title="Inline Code Text Color"
-            app:summary="Tap to select color for inline code text or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_code_bg_color"
-            app:title="Inline Code Background Color"
-            app:summary="Tap to select color for inline code background or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_code_block_color"
-            app:title="Code Block Text Color"
-            app:summary="Tap to select color for code block text or default"
-            app:defaultValue="default" />
-
-        <com.ckeditor.markdownapp.ResetColorPickerPreference
-            app:key="pref_code_block_bg_color"
-            app:title="Code Block Background Color"
-            app:summary="Tap to select color for code block background or default"
-            app:defaultValue="default" />
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_styling_page_controlbar"
+            app:title="Bottom Control Bar &amp; UI Theme"
+            app:summary="Toolbar height, background color, icon color &amp; active selection color" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

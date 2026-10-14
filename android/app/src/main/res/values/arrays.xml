@@ -44,4 +44,77 @@
         <item>new_document</item>
         <item>custom</item>
     </string-array>
+
+    <string-array name="align_entries">
+        <item>Default</item>
+        <item>Left</item>
+        <item>Center</item>
+        <item>Right</item>
+        <item>Justify</item>
+    </string-array>
+    <string-array name="align_values">
+        <item>default</item>
+        <item>left</item>
+        <item>center</item>
+        <item>right</item>
+        <item>justify</item>
+    </string-array>
+
+    <string-array name="text_transform_entries">
+        <item>None</item>
+        <item>Uppercase</item>
+        <item>Lowercase</item>
+        <item>Capitalize</item>
+    </string-array>
+    <string-array name="text_transform_values">
+        <item>none</item>
+        <item>uppercase</item>
+        <item>lowercase</item>
+        <item>capitalize</item>
+    </string-array>
+
+    <string-array name="underline_style_entries">
+        <item>None</item>
+        <item>Solid</item>
+        <item>Double</item>
+        <item>Dashed</item>
+        <item>Dotted</item>
+        <item>Wavy</item>
+    </string-array>
+    <string-array name="underline_style_values">
+        <item>none</item>
+        <item>solid</item>
+        <item>double</item>
+        <item>dashed</item>
+        <item>dotted</item>
+        <item>wavy</item>
+    </string-array>
+
+    <string-array name="border_style_entries">
+        <item>Solid</item>
+        <item>Double</item>
+        <item>Dashed</item>
+        <item>Dotted</item>
+        <item>None</item>
+    </string-array>
+    <string-array name="border_style_values">
+        <item>solid</item>
+        <item>double</item>
+        <item>dashed</item>
+        <item>dotted</item>
+        <item>none</item>
+    </string-array>
+
+    <string-array name="font_weight_entries">
+        <item>Normal (400)</item>
+        <item>Semi-Bold (600)</item>
+        <item>Bold (700)</item>
+        <item>Extra Bold (800)</item>
+    </string-array>
+    <string-array name="font_weight_values">
+        <item>400</item>
+        <item>600</item>
+        <item>700</item>
+        <item>800</item>
+    </string-array>
 </resources>

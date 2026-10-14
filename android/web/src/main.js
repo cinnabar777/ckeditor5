@@ -1401,6 +1401,126 @@ function setupKeyboardShortcuts() {
 
 // Global JS Bridge exposure
 window.editorBridge = {
+  applyAllPreferences: function(prefsJson) {
+    if (!prefsJson) return;
+    const prefs = typeof prefsJson === 'string' ? JSON.parse(prefsJson) : prefsJson;
+
+    const setCssVar = (varName, val, unit = '') => {
+      if (val !== undefined && val !== null && val !== 'default' && val !== '') {
+        document.documentElement.style.setProperty(varName, val + unit);
+      } else {
+        document.documentElement.style.removeProperty(varName);
+      }
+    };
+
+    // Theme & Wrap
+    if (prefs.pref_app_theme === 'light') {
+      document.body.classList.add('light-theme');
+    } else if (prefs.pref_app_theme === 'amoled') {
+      document.body.classList.remove('light-theme');
+    }
+    if (prefs.pref_line_wrap === false) {
+      document.body.classList.add('no-line-wrap');
+    } else if (prefs.pref_line_wrap === true) {
+      document.body.classList.remove('no-line-wrap');
+    }
+
+    // Body & Headings typography
+    setCssVar('--body-font-size', prefs.pref_body_font_size, 'px');
+    setCssVar('--heading-scale', prefs.pref_heading_scale_percent ? (prefs.pref_heading_scale_percent / 100.0) : null);
+    setCssVar('--bold-font-weight', prefs.pref_font_weight_bold);
+    setCssVar('--italic-font-weight', prefs.pref_font_weight_italic);
+    setCssVar('--heading-font-weight', prefs.pref_font_weight_heading);
+    setCssVar('--heading-align', prefs.pref_heading_align);
+    setCssVar('--heading-line-height', prefs.pref_heading_line_height);
+    setCssVar('--heading-letter-spacing', prefs.pref_heading_letter_spacing);
+    setCssVar('--heading-text-transform', prefs.pref_heading_text_transform);
+    setCssVar('--heading-underline-style', prefs.pref_heading_underline_style);
+    setCssVar('--heading-underline-thickness', prefs.pref_heading_underline_thickness, 'px');
+    setCssVar('--heading-underline-color', prefs.pref_heading_underline_color);
+    setCssVar('--heading-margin-top', prefs.pref_heading_margin_top, 'px');
+    setCssVar('--heading-margin-bottom', prefs.pref_heading_margin_bottom, 'px');
+
+    // Heading colors 1-6
+    for (let i = 1; i <= 6; i++) {
+      setCssVar(`--heading-${i}-color`, prefs[`pref_heading_${i}_color`]);
+    }
+
+    // Paragraph
+    setCssVar('--paragraph-align', prefs.pref_paragraph_align);
+    setCssVar('--paragraph-line-height', prefs.pref_paragraph_line_height);
+    setCssVar('--letter-spacing', prefs.pref_letter_spacing);
+    setCssVar('--paragraph-first-line-indent', prefs.pref_paragraph_first_line_indent, 'px');
+    setCssVar('--paragraph-margin-top', prefs.pref_paragraph_margin_top, 'px');
+    setCssVar('--paragraph-margin-bottom', prefs.pref_paragraph_margin_bottom, 'px');
+
+    // Inline
+    setCssVar('--bold-color', prefs.pref_bold_color);
+    setCssVar('--italic-color', prefs.pref_italic_color);
+    setCssVar('--link-color', prefs.pref_link_color);
+    setCssVar('--link-decoration', prefs.pref_link_decoration);
+    setCssVar('--code-color', prefs.pref_code_color);
+    setCssVar('--code-bg-color', prefs.pref_code_bg_color);
+    setCssVar('--code-padding', prefs.pref_code_padding, 'px');
+    setCssVar('--code-border-radius', prefs.pref_code_border_radius, 'px');
+
+    // Lists & Todos
+    setCssVar('--list-left-indent', prefs.pref_list_left_indent, 'px');
+    setCssVar('--list-item-spacing', prefs.pref_list_item_spacing, 'px');
+    setCssVar('--list-line-height', prefs.pref_list_line_height);
+    setCssVar('--list-bullet-color', prefs.pref_list_bullet_color);
+    setCssVar('--list-number-color', prefs.pref_list_number_color);
+    setCssVar('--todo-unchecked-color', prefs.pref_todo_unchecked_color);
+    setCssVar('--todo-checked-color', prefs.pref_todo_checked_color);
+
+    // BlockQuotes & Callouts
+    setCssVar('--blockquote-border-width', prefs.pref_blockquote_line_thickness, 'px');
+    setCssVar('--blockquote-border-style', prefs.pref_blockquote_line_style);
+    setCssVar('--blockquote-border-color', prefs.pref_blockquote_line_color);
+    setCssVar('--blockquote-bg-color', prefs.pref_blockquote_bg_color);
+    setCssVar('--blockquote-text-color', prefs.pref_blockquote_text_color);
+    setCssVar('--blockquote-left-indent', prefs.pref_blockquote_left_indent, 'px');
+    setCssVar('--blockquote-padding', prefs.pref_blockquote_padding, 'px');
+
+    setCssVar('--callout-border-width', prefs.pref_callout_line_thickness, 'px');
+    setCssVar('--callout-border-style', prefs.pref_callout_line_style);
+    setCssVar('--callout-border-color', prefs.pref_callout_line_color);
+    setCssVar('--callout-bg-color', prefs.pref_callout_bg_color);
+    setCssVar('--callout-padding', prefs.pref_callout_padding, 'px');
+
+    // Tables
+    setCssVar('--table-border-style', prefs.pref_table_border_style);
+    setCssVar('--table-border-width', prefs.pref_table_border_thickness, 'px');
+    setCssVar('--table-border-color', prefs.pref_table_border_color);
+    setCssVar('--table-header-bg', prefs.pref_table_header_bg_color);
+    setCssVar('--table-header-color', prefs.pref_table_header_text_color);
+    setCssVar('--table-header-font-weight', prefs.pref_table_header_font_weight);
+    setCssVar('--table-cell-bg', prefs.pref_table_cell_bg_color);
+    setCssVar('--table-cell-color', prefs.pref_table_cell_text_color);
+    setCssVar('--table-cell-padding', prefs.pref_table_cell_padding, 'px');
+
+    // Code Blocks
+    setCssVar('--code-block-color', prefs.pref_code_block_color);
+    setCssVar('--code-block-bg-color', prefs.pref_code_block_bg_color);
+    setCssVar('--code-block-padding', prefs.pref_code_block_padding, 'px');
+    setCssVar('--code-block-border-radius', prefs.pref_code_block_border_radius, 'px');
+    setCssVar('--code-block-line-height', prefs.pref_code_block_line_height);
+    setCssVar('--code-block-lang-label-color', prefs.pref_code_block_lang_label_color);
+
+    // HR
+    setCssVar('--hr-thickness', prefs.pref_hr_thickness, 'px');
+    setCssVar('--hr-style', prefs.pref_hr_style);
+    setCssVar('--hr-color', prefs.pref_hr_color);
+    setCssVar('--hr-width', prefs.pref_hr_width_percent ? prefs.pref_hr_width_percent + '%' : null);
+    setCssVar('--hr-margin-top', prefs.pref_hr_margin_top, 'px');
+    setCssVar('--hr-margin-bottom', prefs.pref_hr_margin_bottom, 'px');
+
+    // Toolbar
+    setCssVar('--toolbar-bg', prefs.pref_toolbar_bg_color);
+    setCssVar('--toolbar-icon-color', prefs.pref_toolbar_icon_color);
+    setCssVar('--toolbar-active-icon-color', prefs.pref_toolbar_active_icon_color);
+    setCssVar('--toolbar-height', prefs.pref_toolbar_height, 'px');
+  },
   getMarkdown: function() {
     if (!editorInstance) return '';
     return editorInstance.getData();

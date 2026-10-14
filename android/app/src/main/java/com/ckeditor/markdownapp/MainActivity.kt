@@ -2,6 +2,7 @@ package com.ckeditor.markdownapp
 
 import android.content.Context
 import android.graphics.Color
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,7 +31,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
@@ -253,17 +254,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
         if (::webView.isInitialized) {
             webView.onResume()
+            applyThemeAndFullscreenPreferences()
         }
     }
 
     override fun onPause() {
         super.onPause()
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
         if (::webView.isInitialized) {
             webView.onPause()
         }
         performAutoSaveOnLeave()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (::webView.isInitialized) {
+            applyThemeAndFullscreenPreferences()
+        }
     }
 
     override fun onStop() {
@@ -376,10 +386,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun applyThemeAndFullscreenPreferences() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val themeMode = prefs.getString("pref_app_theme", "amoled") ?: "amoled"
 
-        val escapedTheme = JSONObjectWrapper.quote(themeMode)
-        webView.evaluateJavascript("window.editorBridge.setTheme($escapedTheme);", null)
+        val jsonObject = org.json.JSONObject()
+        val allEntries = prefs.all
+        for ((key, value) in allEntries) {
+            jsonObject.put(key, value)
+        }
+        val escapedJson = JSONObjectWrapper.quote(jsonObject.toString())
+        webView.evaluateJavascript("if (window.editorBridge && window.editorBridge.applyAllPreferences) { window.editorBridge.applyAllPreferences($escapedJson); }", null)
+
+        val fontBodyData = loadFontDataUri(prefs.getString("pref_font_file_body_path", null))
+        val fontHeadingData = loadFontDataUri(prefs.getString("pref_font_file_heading_path", null))
+        val fontBoldData = loadFontDataUri(prefs.getString("pref_font_file_bold_path", null))
+        val fontItalicData = loadFontDataUri(prefs.getString("pref_font_file_italic_path", null))
+        val fontCodeData = loadFontDataUri(prefs.getString("pref_font_file_code_path", null))
 
         val bodyFontSize = prefs.getInt("pref_body_font_size", 16)
         val headingScalePercent = prefs.getInt("pref_heading_scale_percent", 100)
@@ -396,12 +416,6 @@ class MainActivity : AppCompatActivity() {
         val codeBlockColor = JSONObjectWrapper.quote(prefs.getString("pref_code_block_color", "default"))
         val codeBlockBgColor = JSONObjectWrapper.quote(prefs.getString("pref_code_block_bg_color", "default"))
 
-        val fontBodyData = loadFontDataUri(prefs.getString("pref_font_file_body_path", null))
-        val fontHeadingData = loadFontDataUri(prefs.getString("pref_font_file_heading_path", null))
-        val fontBoldData = loadFontDataUri(prefs.getString("pref_font_file_bold_path", null))
-        val fontItalicData = loadFontDataUri(prefs.getString("pref_font_file_italic_path", null))
-        val fontCodeData = loadFontDataUri(prefs.getString("pref_font_file_code_path", null))
-
         val escapedBodyFont = JSONObjectWrapper.quote(fontBodyData)
         val escapedHeadingFont = JSONObjectWrapper.quote(fontHeadingData)
         val escapedBoldFont = JSONObjectWrapper.quote(fontBoldData)
@@ -409,57 +423,7 @@ class MainActivity : AppCompatActivity() {
         val escapedCodeFont = JSONObjectWrapper.quote(fontCodeData)
 
         webView.evaluateJavascript(
-            "window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor, $linkColor, $codeColor, $codeBgColor, $codeBlockColor, $codeBlockBgColor, $escapedBodyFont, $escapedHeadingFont, $escapedBoldFont, $escapedItalicFont, $escapedCodeFont, $fontWeightBold, $fontWeightItalic, $fontWeightHeading);",
-            null
-        )
-
-        val lineWrap = prefs.getBoolean("pref_line_wrap", true)
-        webView.evaluateJavascript("window.editorBridge.setLineWrap($lineWrap);", null)
-
-        val h1Color = JSONObjectWrapper.quote(prefs.getString("pref_heading_1_color", "default"))
-        val h2Color = JSONObjectWrapper.quote(prefs.getString("pref_heading_2_color", "default"))
-        val h3Color = JSONObjectWrapper.quote(prefs.getString("pref_heading_3_color", "default"))
-        val h4Color = JSONObjectWrapper.quote(prefs.getString("pref_heading_4_color", "default"))
-        val h5Color = JSONObjectWrapper.quote(prefs.getString("pref_heading_5_color", "default"))
-        val h6Color = JSONObjectWrapper.quote(prefs.getString("pref_heading_6_color", "default"))
-
-        webView.evaluateJavascript("window.editorBridge.setHeadingColors($h1Color, $h2Color, $h3Color, $h4Color, $h5Color, $h6Color);", null)
-
-        // Pass Toolbar preferences
-        val toolbarBgColor = JSONObjectWrapper.quote(prefs.getString("pref_toolbar_bg_color", "default"))
-        val toolbarIconColor = JSONObjectWrapper.quote(prefs.getString("pref_toolbar_icon_color", "default"))
-        val toolbarHeight = prefs.getInt("pref_toolbar_height", 48)
-
-        webView.evaluateJavascript("window.editorBridge.setToolbarSettings($toolbarBgColor, $toolbarIconColor, $toolbarHeight);", null)
-
-        // Pass Horizontal Rule preferences
-        val hrThickness = prefs.getInt("pref_hr_thickness", 2)
-        val hrColor = JSONObjectWrapper.quote(prefs.getString("pref_hr_color", "default"))
-        val hrWidthPercent = prefs.getInt("pref_hr_width_percent", 100)
-
-        webView.evaluateJavascript(
-            "window.editorBridge.setHrSettings($hrThickness, $hrColor, $hrWidthPercent);",
-            null
-        )
-
-        // Pass Typography settings
-        val justifyParagraph = prefs.getBoolean("pref_justify_paragraph", false)
-        val paragraphLineHeight = JSONObjectWrapper.quote(prefs.getString("pref_paragraph_line_height", "1.6"))
-        val letterSpacing = JSONObjectWrapper.quote(prefs.getString("pref_letter_spacing", "0px"))
-
-        webView.evaluateJavascript(
-            "window.editorBridge.setTypographySettings($justifyParagraph, $paragraphLineHeight, $letterSpacing);",
-            null
-        )
-
-        // Pass Blockquote & Callout line settings
-        val bqThickness = prefs.getInt("pref_blockquote_line_thickness", 4)
-        val bqColor = JSONObjectWrapper.quote(prefs.getString("pref_blockquote_line_color", "default"))
-        val calloutThickness = prefs.getInt("pref_callout_line_thickness", 4)
-        val calloutColor = JSONObjectWrapper.quote(prefs.getString("pref_callout_line_color", "default"))
-
-        webView.evaluateJavascript(
-            "window.editorBridge.setBlockquoteAndCalloutSettings($bqThickness, $bqColor, $calloutThickness, $calloutColor);",
+            "if (window.editorBridge && window.editorBridge.setFontSettings) { window.editorBridge.setFontSettings($bodyFontSize, $headingScale, $boldColor, $italicColor, $linkColor, $codeColor, $codeBgColor, $codeBlockColor, $codeBlockBgColor, $escapedBodyFont, $escapedHeadingFont, $escapedBoldFont, $escapedItalicFont, $escapedCodeFont, $fontWeightBold, $fontWeightItalic, $fontWeightHeading); }",
             null
         )
 

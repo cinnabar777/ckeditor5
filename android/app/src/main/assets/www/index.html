@@ -393,6 +393,17 @@
     .ck-heading-dropdown .ck-button__label {
       font-family: var(--heading-font-family), var(--body-font-family), sans-serif !important;
       font-weight: var(--heading-font-weight, 700) !important;
+      text-align: var(--heading-align, inherit) !important;
+      line-height: var(--heading-line-height, 1.2) !important;
+      letter-spacing: var(--heading-letter-spacing, 0px) !important;
+      text-transform: var(--heading-text-transform, none) !important;
+      text-decoration: var(--heading-underline-style, none) !important;
+      text-decoration-thickness: var(--heading-underline-thickness, 2px) !important;
+      text-decoration-color: var(--heading-underline-color, currentColor) !important;
+    }
+    .ck-content h1, .ck-content h2, .ck-content h3, .ck-content h4, .ck-content h5, .ck-content h6 {
+      margin-top: var(--heading-margin-top, 16px) !important;
+      margin-bottom: var(--heading-margin-bottom, 8px) !important;
     }
     .ck-content h1 { font-size: calc(2.0em * var(--heading-scale)) !important; }
     .ck-content h2 { font-size: calc(1.6em * var(--heading-scale)) !important; }
@@ -409,6 +420,15 @@
     .ck-content h5, .ck-content h5 * { color: var(--heading-5-color, inherit) !important; }
     .ck-content h6, .ck-content h6 * { color: var(--heading-6-color, inherit) !important; }
 
+    /* Custom Paragraph & Body Typography */
+    .ck-content p {
+      text-align: var(--paragraph-align, var(--paragraph-justify, left)) !important;
+      line-height: var(--paragraph-line-height, 1.6) !important;
+      text-indent: var(--paragraph-first-line-indent, 0px) !important;
+      margin-top: var(--paragraph-margin-top, 0px) !important;
+      margin-bottom: var(--paragraph-margin-bottom, 8px) !important;
+    }
+
     /* Custom Bold / Italic / Link Colors, Fonts, and Weights */
     .ck-content strong, .ck-content strong *,
     .ck-content b, .ck-content b * {
@@ -424,6 +444,7 @@
     }
     .ck-content a {
       color: var(--link-color) !important;
+      text-decoration: var(--link-decoration, underline) !important;
     }
 
     /* Custom Inline Code Styling & Font */
@@ -431,15 +452,34 @@
       color: var(--code-color) !important;
       background-color: var(--code-bg-color) !important;
       font-family: var(--code-font-family), monospace !important;
-      padding: 2px 5px !important;
-      border-radius: 4px !important;
+      padding: var(--code-padding, 4px) !important;
+      border-radius: var(--code-border-radius, 4px) !important;
+    }
+
+    /* Lists & Todos Styling */
+    .ck-content ul, .ck-content ol {
+      padding-left: var(--list-left-indent, 24px) !important;
+    }
+    .ck-content li {
+      margin-bottom: var(--list-item-spacing, 4px) !important;
+      line-height: var(--list-line-height, 1.5) !important;
+    }
+    .ck-content ul > li::marker {
+      color: var(--list-bullet-color, currentColor) !important;
+    }
+    .ck-content ol > li::marker {
+      color: var(--list-number-color, currentColor) !important;
+    }
+    .ck-content .todo-list__label > input[type="checkbox"] {
+      accent-color: var(--todo-checked-color, #00e5ff) !important;
+      border-color: var(--todo-unchecked-color, #888888) !important;
     }
 
     /* Table Dark & Light Theme Styling Overrides */
     .ck-content table,
     .ck-content figure.table,
     .ck-content figure.table table {
-      border-color: var(--border-color) !important;
+      border-color: var(--table-border-color, var(--border-color)) !important;
       background-color: transparent !important;
       color: var(--text-color) !important;
     }
@@ -448,30 +488,31 @@
     .ck-content table th,
     .ck-content figure.table table td,
     .ck-content figure.table table th {
-      border: 1px solid var(--border-color) !important;
-      color: var(--text-color) !important;
-      background-color: transparent !important;
+      border: var(--table-border-width, 1px) var(--table-border-style, solid) var(--table-border-color, var(--border-color)) !important;
+      color: var(--table-cell-color, var(--text-color)) !important;
+      background-color: var(--table-cell-bg, transparent) !important;
+      padding: var(--table-cell-padding, 8px) !important;
     }
 
     .ck-content table th,
     .ck-content figure.table th,
     .ck-content figure.table table th {
-      background-color: rgba(255, 255, 255, 0.12) !important;
-      color: var(--text-color) !important;
-      font-weight: bold !important;
+      background-color: var(--table-header-bg, rgba(255, 255, 255, 0.12)) !important;
+      color: var(--table-header-color, var(--text-color)) !important;
+      font-weight: var(--table-header-font-weight, 700) !important;
     }
 
     body.light-theme .ck-content table th,
     body.light-theme .ck-content figure.table th,
     body.light-theme .ck-content figure.table table th {
-      background-color: rgba(0, 0, 0, 0.05) !important;
+      background-color: var(--table-header-bg, rgba(0, 0, 0, 0.05)) !important;
     }
 
     .ck-content table td *,
     .ck-content table th *,
     .ck-content figure.table table td *,
     .ck-content figure.table table th * {
-      color: var(--text-color) !important;
+      color: var(--table-cell-color, var(--text-color)) !important;
     }
 
     /* Custom Code Block Styling, Font & Language Label Position */
@@ -481,8 +522,10 @@
       background-color: var(--code-block-bg-color) !important;
       font-family: var(--code-font-family), monospace !important;
       letter-spacing: normal !important;
-      border-radius: 6px !important;
-      padding-top: 36px !important;
+      border-radius: var(--code-block-border-radius, 6px) !important;
+      padding: var(--code-block-padding, 16px) !important;
+      padding-top: calc(var(--code-block-padding, 16px) + 20px) !important;
+      line-height: var(--code-block-line-height, 1.4) !important;
     }
 
     .ck-content pre[data-language]::before,
@@ -492,7 +535,7 @@
       left: 8px !important;
       right: auto !important;
       font-size: 12px !important;
-      color: #aaaaaa !important;
+      color: var(--code-block-lang-label-color, #aaaaaa) !important;
       user-select: none !important;
       pointer-events: none !important;
       z-index: 5 !important;
@@ -525,17 +568,22 @@
 
     /* Block Quote & Callout Line Styling Overrides */
     .ck-content blockquote {
-      border-left: var(--blockquote-border-width) solid var(--blockquote-border-color) !important;
-      padding-left: 12px !important;
-      margin-left: 0 !important;
+      border-left: var(--blockquote-border-width) var(--blockquote-border-style, solid) var(--blockquote-border-color) !important;
+      background-color: var(--blockquote-bg-color, transparent) !important;
+      color: var(--blockquote-text-color, inherit) !important;
+      margin-left: var(--blockquote-left-indent, 0px) !important;
+      padding-left: var(--blockquote-padding, 12px) !important;
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
       margin-right: 0 !important;
       font-style: italic;
     }
 
     .ck-content .callout,
     .ck-content [data-callout] {
-      border-left: var(--callout-border-width) solid var(--callout-border-color) !important;
-      padding: 10px 12px !important;
+      border-left: var(--callout-border-width) var(--callout-border-style, solid) var(--callout-border-color) !important;
+      background-color: var(--callout-bg-color, transparent) !important;
+      padding: var(--callout-padding, 12px) !important;
       border-radius: 4px;
       margin: 8px 0 !important;
     }
@@ -555,13 +603,20 @@
     .ck-content .ck-horizontal-line hr {
       border: none !important;
       height: var(--hr-thickness) !important;
-      background-color: var(--hr-color) !important;
+      border-top: var(--hr-thickness) var(--hr-style, solid) var(--hr-color) !important;
+      background-color: transparent !important;
       width: var(--hr-width) !important;
       margin-left: auto !important;
       margin-right: auto !important;
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
+      margin-top: var(--hr-margin-top, 16px) !important;
+      margin-bottom: var(--hr-margin-bottom, 16px) !important;
       display: block !important;
+    }
+
+    /* Active Toolbar Icon Accent Color */
+    .grouped-key-btn.active svg,
+    .popup-strip-btn.active svg {
+      stroke: var(--toolbar-active-icon-color, var(--toolbar-icon-color)) !important;
     }
 
     /* Slide-over Table of Contents (TOC) Panel */

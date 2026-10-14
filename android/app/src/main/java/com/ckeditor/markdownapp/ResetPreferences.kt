@@ -34,8 +34,13 @@ object PreferenceResetHelper {
             "pref_settings_bg_color" -> "#000000"
             "pref_toolbar_bg_color" -> "#121212"
             "pref_toolbar_icon_color" -> "#FFFFFF"
+            "pref_toolbar_active_icon_color" -> "#00E5FF"
+            "pref_heading_underline_color" -> "#FFFFFF"
             "pref_blockquote_line_color" -> "#444444"
+            "pref_blockquote_bg_color" -> "#1A1A1A"
+            "pref_blockquote_text_color" -> "#FFFFFF"
             "pref_callout_line_color" -> "#29B6F6"
+            "pref_callout_bg_color" -> "#1A232A"
             "pref_hr_color" -> "#444444"
             "pref_bold_color" -> "#FFFFFF"
             "pref_italic_color" -> "#FFFFFF"
@@ -44,6 +49,16 @@ object PreferenceResetHelper {
             "pref_code_bg_color" -> "#212121"
             "pref_code_block_color" -> "#E0E0E0"
             "pref_code_block_bg_color" -> "#121212"
+            "pref_code_block_lang_label_color" -> "#AAAAAA"
+            "pref_list_bullet_color" -> "#00E5FF"
+            "pref_list_number_color" -> "#00E5FF"
+            "pref_todo_unchecked_color" -> "#888888"
+            "pref_todo_checked_color" -> "#00E5FF"
+            "pref_table_border_color" -> "#444444"
+            "pref_table_header_bg_color" -> "#252525"
+            "pref_table_header_text_color" -> "#FFFFFF"
+            "pref_table_cell_bg_color" -> "#000000"
+            "pref_table_cell_text_color" -> "#FFFFFF"
             else -> {
                 if (key != null && key.startsWith("pref_heading_") && key.endsWith("_color")) {
                     "#FFFFFF"
@@ -61,13 +76,60 @@ object PreferenceResetHelper {
             key == "pref_font_weight_bold" -> 700
             key == "pref_font_weight_italic" -> 400
             key == "pref_font_weight_heading" -> 700
+            key == "pref_heading_align" -> "default"
+            key == "pref_heading_line_height" -> "1.2"
+            key == "pref_heading_letter_spacing" -> "0px"
+            key == "pref_heading_text_transform" -> "none"
+            key == "pref_heading_underline_style" -> "none"
+            key == "pref_heading_underline_thickness" -> 2
+            key == "pref_heading_underline_color" -> "default"
+            key == "pref_heading_margin_top" -> 16
+            key == "pref_heading_margin_bottom" -> 8
+            key == "pref_paragraph_align" -> "left"
+            key == "pref_paragraph_first_line_indent" -> 0
+            key == "pref_paragraph_margin_top" -> 0
+            key == "pref_paragraph_margin_bottom" -> 8
+            key == "pref_link_decoration" -> "solid"
+            key == "pref_code_padding" -> 4
+            key == "pref_code_border_radius" -> 4
+            key == "pref_list_left_indent" -> 24
+            key == "pref_list_item_spacing" -> 4
+            key == "pref_list_line_height" -> "1.5"
+            key == "pref_list_bullet_color" -> "default"
+            key == "pref_list_number_color" -> "default"
+            key == "pref_todo_unchecked_color" -> "default"
+            key == "pref_todo_checked_color" -> "default"
             key == "pref_blockquote_line_thickness" -> 4
+            key == "pref_blockquote_line_style" -> "solid"
             key == "pref_blockquote_line_color" -> "default"
+            key == "pref_blockquote_bg_color" -> "default"
+            key == "pref_blockquote_text_color" -> "default"
+            key == "pref_blockquote_left_indent" -> 0
+            key == "pref_blockquote_padding" -> 12
             key == "pref_callout_line_thickness" -> 4
+            key == "pref_callout_line_style" -> "solid"
             key == "pref_callout_line_color" -> "default"
+            key == "pref_callout_bg_color" -> "default"
+            key == "pref_callout_padding" -> 12
+            key == "pref_table_border_style" -> "solid"
+            key == "pref_table_border_thickness" -> 1
+            key == "pref_table_border_color" -> "default"
+            key == "pref_table_header_bg_color" -> "default"
+            key == "pref_table_header_text_color" -> "default"
+            key == "pref_table_header_font_weight" -> 700
+            key == "pref_table_cell_bg_color" -> "default"
+            key == "pref_table_cell_text_color" -> "default"
+            key == "pref_table_cell_padding" -> 8
+            key == "pref_code_block_padding" -> 16
+            key == "pref_code_block_border_radius" -> 6
+            key == "pref_code_block_line_height" -> "1.4"
+            key == "pref_code_block_lang_label_color" -> "default"
             key == "pref_hr_thickness" -> 2
+            key == "pref_hr_style" -> "solid"
             key == "pref_hr_color" -> "default"
             key == "pref_hr_width_percent" -> 100
+            key == "pref_hr_margin_top" -> 16
+            key == "pref_hr_margin_bottom" -> 16
             key == "pref_justify_paragraph" -> false
             key == "pref_paragraph_line_height" -> "1.6"
             key == "pref_letter_spacing" -> "0px"
@@ -82,6 +144,7 @@ object PreferenceResetHelper {
             key.startsWith("pref_heading_") && key.endsWith("_color") -> "default"
             key == "pref_toolbar_bg_color" -> "default"
             key == "pref_toolbar_icon_color" -> "default"
+            key == "pref_toolbar_active_icon_color" -> "default"
             key == "pref_toolbar_height" -> 48
             key == "pref_app_theme" -> "amoled"
             key == "pref_image_mode" -> "picker"
