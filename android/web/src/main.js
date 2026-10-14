@@ -578,7 +578,10 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           const rect = pre.getBoundingClientRect();
           const clickX = e.clientX - rect.left;
           const clickY = e.clientY - rect.top;
-          if (clickX > rect.width - 60 && clickY < 36) {
+          // Trigger copy when tapping top-left language label area
+          const langLabel = e.target.closest('.ck-code-block-language-label');
+          const isTopLeftTap = (clickX < 140 && clickY < 36) || !!langLabel;
+          if (isTopLeftTap) {
             e.preventDefault();
             e.stopPropagation();
             const codeEl = pre.querySelector('code') || pre;

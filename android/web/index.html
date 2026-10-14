@@ -535,29 +535,22 @@
       left: 8px !important;
       right: auto !important;
       font-size: 12px !important;
+      font-weight: 600 !important;
       color: var(--code-block-lang-label-color, #aaaaaa) !important;
-      user-select: none !important;
-      pointer-events: none !important;
-      z-index: 5 !important;
-    }
-
-    .ck-content pre::after {
-      content: '📋' !important;
-      position: absolute !important;
-      top: 6px !important;
-      right: 8px !important;
-      left: auto !important;
-      background: rgba(255, 255, 255, 0.15) !important;
-      color: #ffffff !important;
-      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
       border-radius: 4px !important;
-      padding: 3px 6px !important;
-      font-size: 14px !important;
-      font-family: sans-serif !important;
+      padding: 2px 8px !important;
       cursor: pointer !important;
       user-select: none !important;
-      pointer-events: none !important;
+      pointer-events: auto !important;
       z-index: 10 !important;
+      transition: background-color 0.2s ease !important;
+    }
+
+    .ck-content pre[data-language]::before:active,
+    .ck-content pre .ck-code-block-language-label:active {
+      background: rgba(255, 255, 255, 0.25) !important;
     }
 
     .ck-content pre code {
