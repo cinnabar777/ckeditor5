@@ -111805,12 +111805,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     setMarkdown: function(markdownText) {
       if (!editorInstance) return;
       isProgrammaticChange = true;
-      requestAnimationFrame(() => {
+      try {
         editorInstance.setData(markdownText || "");
-        setTimeout(() => {
-          isProgrammaticChange = false;
-        }, 50);
-      });
+      } catch (e) {
+        console.error("Error setting markdown:", e);
+      }
+      setTimeout(() => {
+        isProgrammaticChange = false;
+      }, 50);
     },
     toggleLineWrap: function() {
       isLineWrapEnabled = !isLineWrapEnabled;

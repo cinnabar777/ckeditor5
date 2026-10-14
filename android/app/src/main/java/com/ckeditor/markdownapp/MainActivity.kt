@@ -188,15 +188,21 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            if (isMultiWindowEnabled && currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
-                val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
-                    action = android.content.Intent.ACTION_VIEW
-                    setDataAndType(data, "text/markdown")
-                    putExtra("open_target_uri", data.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            if (isMultiWindowEnabled) {
+                if (currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
+                    val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
+                        action = android.content.Intent.ACTION_VIEW
+                        setDataAndType(data, "text/markdown")
+                        putExtra("open_target_uri", data.toString())
+                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    }
+                    startActivity(newIntent)
+                    return
                 }
-                startActivity(newIntent)
-                return
+            } else {
+                if (currentFileUri != null && currentFileUri != data) {
+                    documentHistoryStack.push(currentFileUri)
+                }
             }
 
             if (isEditorReady) {
@@ -245,8 +251,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::webView.isInitialized) {
+            webView.onResume()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
+        if (::webView.isInitialized) {
+            webView.onPause()
+        }
         performAutoSaveOnLeave()
     }
 
@@ -561,6 +577,10 @@ class MainActivity : AppCompatActivity() {
                 val escaped = JSONObjectWrapper.quote(content)
                 webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
                     restoreCursorAndScrollState()
+                    webView.post {
+                        webView.requestLayout()
+                        webView.invalidate()
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -632,6 +652,12 @@ class MainActivity : AppCompatActivity() {
                 val escaped = JSONObjectWrapper.quote(content)
                 webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
                     restoreCursorAndScrollState()
+                    webView.post {
+                        webView.requestFocus()
+                        webView.requestLayout()
+                        webView.invalidate()
+                        webView.postInvalidate()
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -843,6 +869,11 @@ class MainActivity : AppCompatActivity() {
                 pendingOpenUri?.let { uri ->
                     pendingOpenUri = null
                     openFile(uri)
+                }
+
+                webView.post {
+                    webView.requestLayout()
+                    webView.invalidate()
                 }
             }
         }
