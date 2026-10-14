@@ -65,6 +65,7 @@ let customHotkeys = {
   open: 'ctrl+o',
   save: 'ctrl+s',
   save_as: 'ctrl+shift+s',
+  export: 'ctrl+shift+e',
   image: 'ctrl+shift+i',
   settings: 'ctrl+,',
   toggle_toolbar: 'ctrl+t',
@@ -370,6 +371,44 @@ function toggleFindAndReplaceBar(forceState) {
       } catch (e) {}
     }
   }
+}
+
+function insertCodeBlockPrompt() {
+  if (!editorInstance) return;
+  const languages = [
+    { label: 'Plain text', value: 'plaintext' },
+    { label: 'JavaScript', value: 'javascript' },
+    { label: 'HTML', value: 'html' },
+    { label: 'CSS', value: 'css' },
+    { label: 'Python', value: 'python' },
+    { label: 'Java', value: 'java' },
+    { label: 'Kotlin', value: 'kotlin' },
+    { label: 'C++', value: 'cpp' },
+    { label: 'C#', value: 'cs' },
+    { label: 'C', value: 'c' },
+    { label: 'JSON', value: 'json' },
+    { label: 'Markdown', value: 'markdown' },
+    { label: 'SQL', value: 'sql' },
+    { label: 'TypeScript', value: 'typescript' },
+    { label: 'XML', value: 'xml' },
+    { label: 'YAML', value: 'yaml' }
+  ];
+
+  const popupItems = languages.map(lang => ({
+    icon: lang.label,
+    title: lang.label,
+    action: () => {
+      hidePopupStrip();
+      try {
+        editorInstance.execute('codeBlock', { language: lang.value });
+      } catch (e) {
+        editorInstance.execute('codeBlock');
+      }
+    }
+  }));
+
+  const insertBtn = document.querySelector('#grp-btn-insert');
+  togglePopupStrip('codeBlockLang', insertBtn, popupItems);
 }
 
 function insertLinkPrompt() {
@@ -965,7 +1004,7 @@ function setupGroupedControlBar() {
         { icon: svgIcons.link, title: 'Insert Link', action: () => insertLinkPrompt() },
         { icon: svgIcons.inlineCode, title: 'Inline Code', action: () => execCmd('code') },
         { icon: svgIcons.blockQuote, title: 'Insert Quote', action: () => execCmd('blockQuote') },
-        { icon: svgIcons.codeBlock, title: 'Insert Code Block', action: () => execCmd('codeBlock') },
+        { icon: svgIcons.codeBlock, title: 'Insert Code Block', action: () => insertCodeBlockPrompt() },
         { icon: svgIcons.horizontalLine, title: 'Insert Line', action: () => execCmd('horizontalLine') },
         { icon: svgIcons.footnote, title: 'Insert Footnote', action: () => execCmd('InsertFootnote') }
       ]);
@@ -981,6 +1020,7 @@ function setupGroupedControlBar() {
         { icon: svgIcons.openFile, title: 'Open File', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('open') },
         { icon: svgIcons.saveFile, title: 'Save File', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('save') },
         { icon: svgIcons.saveAsFile, title: 'Save As', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('save_as') },
+        { icon: svgIcons.saveFile, title: 'Export HTML / MHTML', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('export') },
         { icon: svgIcons.search, title: 'Find & Replace', action: () => { hidePopupStrip(); toggleFindAndReplaceBar(); } },
         { icon: svgIcons.sourceEditing, title: 'Toggle Source View', action: () => toggleSourceEditing() },
         { icon: svgIcons.newWindow, title: 'New Window', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('new_window') },
@@ -1431,6 +1471,9 @@ function setupKeyboardShortcuts() {
     } else if (parseAndMatchHotkey(e, customHotkeys.save_as)) {
       e.preventDefault();
       window.AndroidNative && window.AndroidNative.onNativeAction('save_as');
+    } else if (parseAndMatchHotkey(e, customHotkeys.export)) {
+      e.preventDefault();
+      window.AndroidNative && window.AndroidNative.onNativeAction('export');
     } else if (parseAndMatchHotkey(e, customHotkeys.save)) {
       e.preventDefault();
       window.AndroidNative && window.AndroidNative.onNativeAction('save');

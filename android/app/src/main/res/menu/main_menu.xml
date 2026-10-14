@@ -22,6 +22,10 @@
         android:title="@string/action_insert_image"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_export"
+        android:title="Export HTML / MHTML"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never" />

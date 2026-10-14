@@ -117,4 +117,21 @@
         <item>700</item>
         <item>800</item>
     </string-array>
+    <string-array name="pref_export_format_entries">
+        <item>Clean HTML Document (.html)</item>
+        <item>MHTML Self-Contained Archive (.mht / .mhtml)</item>
+    </string-array>
+    <string-array name="pref_export_format_values">
+        <item>html</item>
+        <item>mhtml</item>
+    </string-array>
+
+    <string-array name="pref_export_css_placement_entries">
+        <item>Embed CSS in HTML &lt;head&gt;</item>
+        <item>Export Separate .css Stylesheet File</item>
+    </string-array>
+    <string-array name="pref_export_css_placement_values">
+        <item>head</item>
+        <item>file</item>
+    </string-array>
 </resources>

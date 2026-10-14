@@ -28,6 +28,12 @@
             app:defaultValue="ctrl+shift+s" />
 
         <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_export"
+            app:title="Export HTML / MHTML Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+e)"
+            app:defaultValue="ctrl+shift+e" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_image"
             app:title="Insert Image Shortcut"
             app:summary="Key combination (e.g. ctrl+shift+i)"

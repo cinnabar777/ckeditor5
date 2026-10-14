@@ -22,6 +22,11 @@
             app:key="pref_page_plugins"
             app:title="Editor Plugins &amp; Toolbar Tools"
             app:summary="Enable or disable active editor plugins and toolbar items" />
+
+        <com.ckeditor.markdownapp.ResetPreference
+            app:key="pref_page_export"
+            app:title="HTML &amp; MHTML Export Settings"
+            app:summary="Configure HTML/MHTML format, TOC levels, CSS embedding &amp; stylesheet options" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
     <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="App Display &amp; Image Settings">

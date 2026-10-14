@@ -95,6 +95,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         uri?.let { saveFileToUri(it) }
     }
 
+    private val exportDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { uri ->
+        uri?.let { saveExportToUri(it) }
+    }
+
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { insertImageFromUri(it) }
     }
@@ -456,6 +460,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             "open" to prefs.getString("pref_hotkey_open", "ctrl+o"),
             "save" to prefs.getString("pref_hotkey_save", "ctrl+s"),
             "save_as" to prefs.getString("pref_hotkey_save_as", "ctrl+shift+s"),
+            "export" to prefs.getString("pref_hotkey_export", "ctrl+shift+e"),
             "image" to prefs.getString("pref_hotkey_image", "ctrl+shift+i"),
             "settings" to prefs.getString("pref_hotkey_settings", "ctrl+,"),
             "toggle_toolbar" to prefs.getString("pref_hotkey_toggle_toolbar", "ctrl+t"),
@@ -519,6 +524,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
             R.id.action_save_as -> {
                 handleSaveAsFile()
+                true
+            }
+            R.id.action_export -> {
+                handleExportDocument()
                 true
             }
             R.id.action_insert_image -> {
@@ -730,6 +739,48 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             "$currentFileName.textpack"
         }
         createDocumentLauncher.launch(defaultName)
+    }
+
+    private fun handleExportDocument() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val format = prefs.getString("pref_export_format", "html") ?: "html"
+        val baseName = if (currentFileName.contains(".")) currentFileName.substringBeforeLast(".") else currentFileName
+        val defaultName = if (format == "mhtml") "$baseName.mht" else "$baseName.html"
+        exportDocumentLauncher.launch(defaultName)
+    }
+
+    private fun saveExportToUri(targetUri: Uri) {
+        val targetName = getFileNameFromUri(targetUri)
+        val isMht = targetName.endsWith(".mht", ignoreCase = true) ||
+                    targetName.endsWith(".mhtml", ignoreCase = true) ||
+                    PreferenceManager.getDefaultSharedPreferences(this).getString("pref_export_format", "html") == "mhtml"
+
+        webView.evaluateJavascript("document.querySelector('.ck-content').innerHTML;") { htmlResult ->
+            val htmlPayload = JSONObjectWrapper.unquote(htmlResult)
+            val (cleanHtml, _) = DocumentExporter.generateCleanHtml(this, htmlPayload, currentFileName)
+
+            if (isMht) {
+                Toast.makeText(this, "Generating MHTML archive...", Toast.LENGTH_SHORT).show()
+                DocumentExporter.exportToMht(this, cleanHtml, targetUri) { success, errorMsg ->
+                    if (success) {
+                        Toast.makeText(this, "MHTML archive exported successfully!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Export failed: $errorMsg", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } else {
+                try {
+                    contentResolver.openOutputStream(targetUri, "rwt")?.use { out ->
+                        val writer = OutputStreamWriter(out)
+                        writer.write(cleanHtml)
+                        writer.flush()
+                    }
+                    Toast.makeText(this, "HTML document exported successfully!", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Export failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     private fun saveFileToUri(uri: Uri) {
@@ -949,6 +1000,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     "open" -> handleOpenFile()
                     "save" -> handleSaveFile()
                     "save_as" -> handleSaveAsFile()
+                    "export" -> handleExportDocument()
                     "image" -> handleInsertImage()
                     "new_window" -> handleNewWindow()
                     "settings" -> settingsLauncher.launch(android.content.Intent(this@MainActivity, SettingsActivity::class.java))

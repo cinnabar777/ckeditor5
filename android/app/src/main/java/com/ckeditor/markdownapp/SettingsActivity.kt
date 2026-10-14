@@ -46,6 +46,7 @@ class SettingsActivity : AppCompatActivity() {
                 is StylingHrFragment -> "Horizontal Dividers Styling"
                 is StylingControlbarFragment -> "Bottom Control Bar Styling"
                 is StylingSettingsFragment -> "Styling & Typography"
+                is ExportSettingsFragment -> "HTML & MHTML Export Settings"
                 is HotkeysSettingsFragment -> "Custom Keyboard Shortcuts"
                 is PluginsSettingsFragment -> "Editor Plugins & Tools"
                 else -> getString(R.string.settings_title)
@@ -259,6 +260,13 @@ class SettingsFragment : BaseSettingsFragment() {
             "pref_page_settings_theme" -> {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.settings_container, SettingsThemeFragment())
+                    .addToBackStack(null)
+                    .commit()
+                return true
+            }
+            "pref_page_export", "pref_export_page" -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.settings_container, ExportSettingsFragment())
                     .addToBackStack(null)
                     .commit()
                 return true
@@ -588,6 +596,12 @@ class StylingControlbarFragment : StylingSettingsFragment() {
 class HotkeysSettingsFragment : BaseSettingsFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_hotkeys, rootKey)
+    }
+}
+
+class ExportSettingsFragment : BaseSettingsFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences_export, rootKey)
     }
 }
 
