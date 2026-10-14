@@ -24,6 +24,36 @@ interface ResettablePreference {
 
 object PreferenceResetHelper {
 
+    fun getDefaultColorHex(key: String?): String {
+        return when (key) {
+            "pref_settings_category_title_color" -> "#00E5FF"
+            "pref_settings_title_color" -> "#FFFFFF"
+            "pref_settings_summary_color" -> "#AAAAAA"
+            "pref_settings_switch_color" -> "#00E5FF"
+            "pref_settings_reset_icon_color" -> "#00E5FF"
+            "pref_settings_bg_color" -> "#000000"
+            "pref_toolbar_bg_color" -> "#121212"
+            "pref_toolbar_icon_color" -> "#FFFFFF"
+            "pref_blockquote_line_color" -> "#444444"
+            "pref_callout_line_color" -> "#29B6F6"
+            "pref_hr_color" -> "#444444"
+            "pref_bold_color" -> "#FFFFFF"
+            "pref_italic_color" -> "#FFFFFF"
+            "pref_link_color" -> "#29B6F6"
+            "pref_code_color" -> "#FF80AB"
+            "pref_code_bg_color" -> "#212121"
+            "pref_code_block_color" -> "#E0E0E0"
+            "pref_code_block_bg_color" -> "#121212"
+            else -> {
+                if (key != null && key.startsWith("pref_heading_") && key.endsWith("_color")) {
+                    "#FFFFFF"
+                } else {
+                    "#FFFFFF"
+                }
+            }
+        }
+    }
+
     fun getDefaultValue(key: String): Any? {
         return when {
             key == "pref_body_font_size" -> 16
@@ -400,17 +430,13 @@ open class ResetColorPickerPreference @JvmOverloads constructor(
 
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val colorHex = prefs.getString(key, "default") ?: "default"
-            val colorInt = ColorPickerDialog.parseHexColor(colorHex, android.graphics.Color.parseColor("#00E5FF"))
+            val effectiveHex = if (colorHex == "default") PreferenceResetHelper.getDefaultColorHex(key) else colorHex
+            val colorInt = ColorPickerDialog.parseHexColor(effectiveHex, android.graphics.Color.WHITE)
 
             previewCircle.background = android.graphics.drawable.GradientDrawable().apply {
                 shape = android.graphics.drawable.GradientDrawable.OVAL
-                if (colorHex == "default") {
-                    setColor(android.graphics.Color.parseColor("#333333"))
-                    setStroke((2 * context.resources.displayMetrics.density).toInt(), android.graphics.Color.parseColor("#888888"))
-                } else {
-                    setColor(colorInt)
-                    setStroke((1 * context.resources.displayMetrics.density).toInt(), android.graphics.Color.WHITE)
-                }
+                setColor(colorInt)
+                setStroke((1.5 * context.resources.displayMetrics.density).toInt(), android.graphics.Color.parseColor("#888888"))
             }
         }
     }
@@ -418,8 +444,9 @@ open class ResetColorPickerPreference @JvmOverloads constructor(
     override fun onClick() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val currentColor = prefs.getString(key, "default") ?: "default"
+        val effectiveHex = if (currentColor == "default") PreferenceResetHelper.getDefaultColorHex(key) else currentColor
 
-        ColorPickerDialog(context, currentColor) { selectedHex ->
+        ColorPickerDialog(context, effectiveHex) { selectedHex ->
             prefs.edit().putString(key, selectedHex).apply()
             notifyChanged()
             Toast.makeText(context, "Color set to $selectedHex", Toast.LENGTH_SHORT).show()

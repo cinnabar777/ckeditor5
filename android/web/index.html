@@ -11,7 +11,7 @@
       --toolbar-bg: #121212;
       --toolbar-icon-color: #ffffff;
       --toolbar-height: 48px;
-      --border-color: #222222;
+      --border-color: #444444;
       --button-hover: #1f1f1f;
       --body-font-size: 16px;
       --heading-scale: 1.0;
@@ -437,26 +437,41 @@
 
     /* Table Dark & Light Theme Styling Overrides */
     .ck-content table,
+    .ck-content figure.table,
     .ck-content figure.table table {
       border-color: var(--border-color) !important;
+      background-color: transparent !important;
+      color: var(--text-color) !important;
     }
 
     .ck-content table td,
     .ck-content table th,
     .ck-content figure.table table td,
     .ck-content figure.table table th {
-      border-color: var(--border-color) !important;
+      border: 1px solid var(--border-color) !important;
       color: var(--text-color) !important;
+      background-color: transparent !important;
     }
 
     .ck-content table th,
+    .ck-content figure.table th,
     .ck-content figure.table table th {
-      background-color: rgba(255, 255, 255, 0.08) !important;
+      background-color: rgba(255, 255, 255, 0.12) !important;
+      color: var(--text-color) !important;
+      font-weight: bold !important;
     }
 
     body.light-theme .ck-content table th,
+    body.light-theme .ck-content figure.table th,
     body.light-theme .ck-content figure.table table th {
       background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .ck-content table td *,
+    .ck-content table th *,
+    .ck-content figure.table table td *,
+    .ck-content figure.table table th * {
+      color: var(--text-color) !important;
     }
 
     /* Custom Code Block Styling, Font & Language Label Position */
