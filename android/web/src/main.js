@@ -472,7 +472,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
   addIfEnabled('horizontalLine', HorizontalLine, 'horizontalLine');
   addIfEnabled('sourceEditing', SourceEditing, 'sourceEditing');
-  addIfEnabled('findAndReplace', FindAndReplace, 'findAndReplace');
+  addIfEnabled('findAndReplace', FindAndReplaceEditing, 'findAndReplace');
   addIfEnabled('autoformat', Autoformat);
 
   try {
