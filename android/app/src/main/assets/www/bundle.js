@@ -58450,7 +58450,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   }
 
   // ../packages/ckeditor5-autoformat/src/inlineautoformatediting.ts
-  function inlineAutoformatEditing(editor, plugin, testRegexpOrCallback, formatCallback) {
+  function inlineAutoformatEditing(editor, plugin, testRegexpOrCallback, formatCallback2) {
     let regExp;
     let testCallback;
     if (testRegexpOrCallback instanceof RegExp) {
@@ -58515,7 +58515,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         return;
       }
       model.enqueueChange((writer) => {
-        const hasChanged = formatCallback(writer, rangesToFormat);
+        const hasChanged = formatCallback2(writer, rangesToFormat);
         if (hasChanged === false) {
           return;
         }
@@ -60284,6 +60284,17 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
     }
     return model.schema.findOptimalInsertionRange(selection);
+  }
+  function viewToModelPositionOutsideModelElement(model, viewElementMatcher) {
+    return (evt, data) => {
+      const { mapper, viewPosition } = data;
+      const viewParent = mapper.findMappedViewAncestor(viewPosition);
+      if (!viewElementMatcher(viewParent)) {
+        return;
+      }
+      const modelParent = mapper.toModelElement(viewParent);
+      data.modelPosition = model.createPositionAt(modelParent, viewPosition.isAtStart ? "before" : "after");
+    };
   }
   function getFillerOffset5() {
     return null;
@@ -85045,7 +85056,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return value.replace(/[\t\n\r ]+/g, " ").replace(/^ | $/g, "").toLowerCase().toUpperCase();
   }
 
-  // ../node_modules/.pnpm/mdast-util-gfm-footnote@2.1.0/node_modules/mdast-util-gfm-footnote/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-footnote@2.1.0_supports-color@7.2.0/node_modules/mdast-util-gfm-footnote/lib/index.js
   footnoteReference.peek = footnoteReferencePeek;
   function enterFootnoteCallString() {
     this.buffer();
@@ -85158,7 +85169,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return (blank ? "" : "    ") + line;
   }
 
-  // ../node_modules/.pnpm/mdast-util-gfm-strikethrough@2.0.0/node_modules/mdast-util-gfm-strikethrough/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-strikethrough@2.0.0_supports-color@7.2.0/node_modules/mdast-util-gfm-strikethrough/lib/index.js
   var constructsWithoutStrikethrough = [
     "autolink",
     "destinationLiteral",
@@ -86929,7 +86940,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return safe(this, value, config);
   }
 
-  // ../node_modules/.pnpm/mdast-util-gfm-table@2.0.0/node_modules/mdast-util-gfm-table/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-table@2.0.0_supports-color@7.2.0/node_modules/mdast-util-gfm-table/lib/index.js
   function gfmTableFromMarkdown() {
     return {
       enter: {
@@ -87082,7 +87093,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/mdast-util-gfm-task-list-item@2.0.0/node_modules/mdast-util-gfm-task-list-item/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm-task-list-item@2.0.0_supports-color@7.2.0/node_modules/mdast-util-gfm-task-list-item/lib/index.js
   function gfmTaskListItemFromMarkdown() {
     return {
       exit: {
@@ -87155,7 +87166,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/mdast-util-gfm@3.1.0/node_modules/mdast-util-gfm/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-gfm@3.1.0_supports-color@7.2.0/node_modules/mdast-util-gfm/lib/index.js
   function gfmFromMarkdown() {
     return [
       gfmAutolinkLiteralFromMarkdown(),
@@ -91528,7 +91539,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     ]);
   }
 
-  // ../node_modules/.pnpm/remark-gfm@4.0.1/node_modules/remark-gfm/lib/index.js
+  // ../node_modules/.pnpm/remark-gfm@4.0.1_supports-color@7.2.0/node_modules/remark-gfm/lib/index.js
   var emptyOptions2 = {};
   function remarkGfm(options) {
     const self2 = (
@@ -91545,7 +91556,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     toMarkdownExtensions.push(gfmToMarkdown(settings));
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/content.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/initialize/content.js
   var content2 = {
     tokenize: initializeContent
   };
@@ -91595,7 +91606,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/document.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/initialize/document.js
   var document2 = {
     tokenize: initializeDocument
   };
@@ -91777,7 +91788,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return factorySpace(effects, effects.attempt(this.parser.constructs.document, ok3, nok), "linePrefix", this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4);
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/flow.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/initialize/flow.js
   var flow = {
     tokenize: initializeFlow
   };
@@ -91815,7 +91826,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/initialize/text.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/initialize/text.js
   var resolver = {
     resolveAll: createResolver()
   };
@@ -91954,7 +91965,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return events;
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/constructs.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/constructs.js
   var constructs_exports = {};
   __export(constructs_exports, {
     attentionMarkers: () => attentionMarkers,
@@ -92029,7 +92040,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     null: []
   };
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/create-tokenizer.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/create-tokenizer.js
   function createTokenizer(parser, initialize, from) {
     let point4 = {
       _bufferIndex: -1,
@@ -92352,7 +92363,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     return result.join("");
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/parse.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/parse.js
   function parse2(options) {
     const settings = options || {};
     const constructs2 = (
@@ -92378,14 +92389,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/postprocess.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/postprocess.js
   function postprocess(events) {
     while (!subtokenize(events)) {
     }
     return events;
   }
 
-  // ../node_modules/.pnpm/micromark@4.0.2/node_modules/micromark/lib/preprocess.js
+  // ../node_modules/.pnpm/micromark@4.0.2_supports-color@7.2.0/node_modules/micromark/lib/preprocess.js
   var search = /[\0\t\n\r]/g;
   function preprocess() {
     let column = 1;
@@ -92464,7 +92475,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/mdast-util-from-markdown@2.0.3/node_modules/mdast-util-from-markdown/lib/index.js
+  // ../node_modules/.pnpm/mdast-util-from-markdown@2.0.3_supports-color@7.2.0/node_modules/mdast-util-from-markdown/lib/index.js
   var own4 = {}.hasOwnProperty;
   function fromMarkdown(value, encoding, options) {
     if (encoding && typeof encoding === "object") {
@@ -93173,7 +93184,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
 
-  // ../node_modules/.pnpm/remark-parse@11.0.0/node_modules/remark-parse/lib/index.js
+  // ../node_modules/.pnpm/remark-parse@11.0.0_supports-color@7.2.0/node_modules/remark-parse/lib/index.js
   function remarkParse(options) {
     const self2 = this;
     self2.parser = parser;
@@ -110634,6 +110645,860 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   };
 
+  // ../node_modules/.pnpm/@tomaitken+ckeditor5-footnotes@0.0.4_ckeditor5@packages+ckeditor5/node_modules/@tomaitken/ckeditor5-footnotes/dist/index.js
+  var insertFootnoteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">\n  <text x="2" y="15" font-family="Arial, sans-serif" font-size="14" fill="black">ab</text>\n  <text x="17" y="10" font-family="Arial, sans-serif" font-size="8" fill="black">1</text>\n</svg>\n';
+  var TOOLBAR_COMPONENT_NAME = "footnote";
+  var ELEMENTS = {
+    footnoteItem: "footnoteItem",
+    footnoteReference: "footnoteReference",
+    footnoteSection: "footnoteSection",
+    footnoteContent: "footnoteContent",
+    footnoteBackLink: "footnoteBackLink"
+  };
+  var CLASSES = {
+    footnoteContent: "footnote-content",
+    footnoteItem: "footnote-item",
+    footnoteReference: "footnote-reference",
+    footnoteSection: "footnote-section",
+    footnoteBackLink: "footnote-back-link",
+    footnotes: "footnotes",
+    hidden: "hidden"
+  };
+  var COMMANDS = {
+    insertFootnote: "InsertFootnote"
+  };
+  var ATTRIBUTES = {
+    footnoteContent: "data-footnote-content",
+    footnoteId: "data-footnote-id",
+    footnoteIndex: "data-footnote-index",
+    footnoteItem: "data-footnote-item",
+    footnoteReference: "data-footnote-reference",
+    footnoteSection: "data-footnote-section",
+    footnoteBackLink: "data-footnote-back-link",
+    footnoteBackLinkHref: "data-footnote-back-link-href"
+  };
+  var modelQueryElementsAll = (editor, rootElement, predicate = (_) => true) => {
+    const range = editor.model.createRangeIn(rootElement);
+    const output = [];
+    for (const item of range.getItems()) {
+      if (!(item instanceof ModelElement)) {
+        continue;
+      }
+      if (predicate(item)) {
+        output.push(item);
+      }
+    }
+    return output;
+  };
+  var modelQueryElement = (editor, rootElement, predicate = (_) => true) => {
+    const range = editor.model.createRangeIn(rootElement);
+    for (const item of range.getItems()) {
+      if (!(item instanceof ModelElement)) {
+        continue;
+      }
+      if (predicate(item)) {
+        return item;
+      }
+    }
+    return null;
+  };
+  var viewQueryElement = (editor, rootElement, predicate = (_) => true) => {
+    const range = editor.editing.view.createRangeIn(rootElement);
+    for (const item of range.getItems()) {
+      if (!(item instanceof ViewElement)) {
+        continue;
+      }
+      if (predicate(item)) {
+        return item;
+      }
+    }
+    return null;
+  };
+  var regexMatchCallback = (editor, text10) => {
+    const selectionStart = editor.model.document.selection.anchor;
+    const surroundingText = selectionStart && (selectionStart.textNode || selectionStart.getShiftedBy(-1).textNode);
+    if (!selectionStart || !surroundingText) {
+      return {
+        remove: [],
+        format: []
+      };
+    }
+    const results = text10.matchAll(/\[\^([0-9]+)\]/g);
+    for (const result of results || []) {
+      const removeStartIndex = text10.indexOf(result[0]);
+      const removeEndIndex = removeStartIndex + result[0].length;
+      const textNodeOffset = selectionStart.parent.getChildStartOffset(surroundingText);
+      if (textNodeOffset === null || selectionStart.offset !== textNodeOffset + removeEndIndex) {
+        continue;
+      }
+      const formatStartIndex = removeStartIndex + 2;
+      const formatEndIndex = formatStartIndex + result[1].length;
+      return {
+        remove: [
+          [
+            removeStartIndex,
+            removeEndIndex
+          ]
+        ],
+        format: [
+          [
+            formatStartIndex,
+            formatEndIndex
+          ]
+        ]
+      };
+    }
+    return {
+      remove: [],
+      format: []
+    };
+  };
+  var formatCallback = (ranges, editor, rootElement) => {
+    const command = editor.commands.get(COMMANDS.insertFootnote);
+    if (!command || !command.isEnabled) {
+      return;
+    }
+    const text10 = [
+      ...ranges[0].getItems()
+    ][0];
+    if (!(text10 instanceof ModelTextProxy || text10 instanceof ModelText)) {
+      return false;
+    }
+    const match = text10.data.match(/[0-9]+/);
+    if (!match) {
+      return false;
+    }
+    const footnoteIndex = parseInt(match[0]);
+    const footnoteSection = modelQueryElement(editor, rootElement, (element6) => element6.is("element", ELEMENTS.footnoteSection));
+    if (!footnoteSection) {
+      if (footnoteIndex !== 1) {
+        return false;
+      }
+      editor.execute(COMMANDS.insertFootnote);
+      return;
+    }
+    const footnoteCount = modelQueryElementsAll(editor, footnoteSection, (element6) => element6.is("element", ELEMENTS.footnoteItem)).length;
+    if (footnoteIndex === footnoteCount + 1) {
+      editor.execute(COMMANDS.insertFootnote);
+      return;
+    } else if (footnoteIndex >= 1 && footnoteIndex <= footnoteCount) {
+      editor.execute(COMMANDS.insertFootnote, {
+        footnoteIndex
+      });
+      return;
+    }
+    return false;
+  };
+  var addFootnoteAutoformatting = (editor, rootElement) => {
+    if (editor.plugins.has("Autoformat")) {
+      const autoformatPluginInstance = editor.plugins.get("Autoformat");
+      inlineAutoformatEditing(editor, autoformatPluginInstance, (text10) => regexMatchCallback(editor, text10), (_, ranges) => formatCallback(ranges, editor, rootElement));
+    }
+  };
+  var defineConverters = (editor) => {
+    const conversion = editor.conversion;
+    conversion.for("downcast").attributeToAttribute({
+      model: ATTRIBUTES.footnoteId,
+      view: ATTRIBUTES.footnoteId
+    });
+    conversion.for("downcast").attributeToAttribute({
+      model: ATTRIBUTES.footnoteIndex,
+      view: ATTRIBUTES.footnoteIndex
+    });
+    conversion.for("upcast").elementToElement({
+      view: {
+        attributes: {
+          [ATTRIBUTES.footnoteSection]: true
+        }
+      },
+      model: ELEMENTS.footnoteSection,
+      converterPriority: "high"
+    });
+    conversion.for("dataDowncast").elementToElement({
+      model: ELEMENTS.footnoteSection,
+      view: {
+        name: "ol",
+        attributes: {
+          [ATTRIBUTES.footnoteSection]: "",
+          role: "doc-endnotes"
+        },
+        classes: [
+          CLASSES.footnoteSection,
+          CLASSES.footnotes
+        ]
+      }
+    });
+    conversion.for("editingDowncast").elementToElement({
+      model: ELEMENTS.footnoteSection,
+      view: (_, conversionApi) => {
+        const viewWriter = conversionApi.writer;
+        const section = viewWriter.createContainerElement("div", {
+          [ATTRIBUTES.footnoteSection]: "",
+          role: "doc-endnotes list",
+          class: CLASSES.footnoteSection
+        });
+        return toWidget(section, viewWriter, {
+          label: "footnote widget"
+        });
+      }
+    });
+    conversion.for("upcast").elementToElement({
+      view: {
+        attributes: {
+          [ATTRIBUTES.footnoteContent]: true
+        }
+      },
+      model: (viewElement, conversionApi) => {
+        const modelWriter = conversionApi.writer;
+        return modelWriter.createElement(ELEMENTS.footnoteContent);
+      }
+    });
+    conversion.for("dataDowncast").elementToElement({
+      model: ELEMENTS.footnoteContent,
+      view: {
+        name: "div",
+        attributes: {
+          [ATTRIBUTES.footnoteContent]: ""
+        },
+        classes: [
+          CLASSES.footnoteContent
+        ]
+      }
+    });
+    conversion.for("editingDowncast").elementToElement({
+      model: ELEMENTS.footnoteContent,
+      view: (_, conversionApi) => {
+        const viewWriter = conversionApi.writer;
+        const section = viewWriter.createEditableElement("div", {
+          [ATTRIBUTES.footnoteContent]: "",
+          class: CLASSES.footnoteContent
+        });
+        return toWidgetEditable(section, viewWriter);
+      }
+    });
+    conversion.for("upcast").elementToElement({
+      view: {
+        attributes: {
+          [ATTRIBUTES.footnoteItem]: true
+        }
+      },
+      model: (viewElement, conversionApi) => {
+        const modelWriter = conversionApi.writer;
+        const id = viewElement.getAttribute(ATTRIBUTES.footnoteId);
+        const index2 = viewElement.getAttribute(ATTRIBUTES.footnoteIndex);
+        if (id === void 0 || index2 === void 0) {
+          return null;
+        }
+        return modelWriter.createElement(ELEMENTS.footnoteItem, {
+          [ATTRIBUTES.footnoteIndex]: index2,
+          [ATTRIBUTES.footnoteId]: id
+        });
+      },
+      /** converterPriority is needed to supersede the builtin upcastListItemStyle
+      *  which for unknown reasons causes a null reference error.
+      */
+      converterPriority: "high"
+    });
+    conversion.for("dataDowncast").elementToElement({
+      model: ELEMENTS.footnoteItem,
+      view: createFootnoteItemViewElement
+    });
+    conversion.for("editingDowncast").elementToElement({
+      model: ELEMENTS.footnoteItem,
+      view: createFootnoteItemViewElement
+    });
+    conversion.for("upcast").elementToElement({
+      view: {
+        attributes: {
+          [ATTRIBUTES.footnoteReference]: true
+        }
+      },
+      model: (viewElement, conversionApi) => {
+        const modelWriter = conversionApi.writer;
+        const index2 = viewElement.getAttribute(ATTRIBUTES.footnoteIndex);
+        const id = viewElement.getAttribute(ATTRIBUTES.footnoteId);
+        if (index2 === void 0 || id === void 0) {
+          return null;
+        }
+        return modelWriter.createElement(ELEMENTS.footnoteReference, {
+          [ATTRIBUTES.footnoteIndex]: index2,
+          [ATTRIBUTES.footnoteId]: id
+        });
+      }
+    });
+    conversion.for("editingDowncast").elementToElement({
+      model: ELEMENTS.footnoteReference,
+      view: (modelElement, conversionApi) => {
+        const viewWriter = conversionApi.writer;
+        const footnoteReferenceViewElement = createFootnoteReferenceViewElement(modelElement, conversionApi);
+        return toWidget(footnoteReferenceViewElement, viewWriter);
+      }
+    });
+    conversion.for("dataDowncast").elementToElement({
+      model: ELEMENTS.footnoteReference,
+      view: createFootnoteReferenceViewElement
+    });
+    conversion.for("editingDowncast").add((dispatcher) => {
+      dispatcher.on(`attribute:${ATTRIBUTES.footnoteIndex}:${ELEMENTS.footnoteReference}`, (_, data, conversionApi) => updateFootnoteReferenceView(data, conversionApi, editor), {
+        priority: "high"
+      });
+    });
+    conversion.for("upcast").elementToElement({
+      view: {
+        attributes: {
+          [ATTRIBUTES.footnoteBackLink]: true
+        }
+      },
+      model: (viewElement, conversionApi) => {
+        const modelWriter = conversionApi.writer;
+        const id = viewElement.getAttribute(ATTRIBUTES.footnoteId);
+        if (id === void 0) {
+          return null;
+        }
+        return modelWriter.createElement(ELEMENTS.footnoteBackLink, {
+          [ATTRIBUTES.footnoteId]: id
+        });
+      }
+    });
+    conversion.for("dataDowncast").elementToElement({
+      model: ELEMENTS.footnoteBackLink,
+      view: createFootnoteBackLinkViewElement
+    });
+    conversion.for("editingDowncast").elementToElement({
+      model: ELEMENTS.footnoteBackLink,
+      view: createFootnoteBackLinkViewElement
+    });
+  };
+  function createFootnoteBackLinkViewElement(modelElement, conversionApi) {
+    const viewWriter = conversionApi.writer;
+    const id = `${modelElement.getAttribute(ATTRIBUTES.footnoteId)}`;
+    if (id === void 0) {
+      throw new Error("Footnote return link has no provided Id.");
+    }
+    const footnoteBackLinkView = viewWriter.createContainerElement("span", {
+      class: CLASSES.footnoteBackLink,
+      [ATTRIBUTES.footnoteBackLink]: "",
+      [ATTRIBUTES.footnoteId]: id
+    });
+    const sup = viewWriter.createContainerElement("sup");
+    const strong4 = viewWriter.createContainerElement("strong");
+    const anchor = viewWriter.createContainerElement("a", {
+      href: `#fnref${id}`
+    });
+    const innerText = viewWriter.createText("^");
+    viewWriter.insert(viewWriter.createPositionAt(anchor, 0), innerText);
+    viewWriter.insert(viewWriter.createPositionAt(strong4, 0), anchor);
+    viewWriter.insert(viewWriter.createPositionAt(sup, 0), strong4);
+    viewWriter.insert(viewWriter.createPositionAt(footnoteBackLinkView, 0), sup);
+    return footnoteBackLinkView;
+  }
+  function createFootnoteReferenceViewElement(modelElement, conversionApi) {
+    const viewWriter = conversionApi.writer;
+    const index2 = `${modelElement.getAttribute(ATTRIBUTES.footnoteIndex)}`;
+    const id = `${modelElement.getAttribute(ATTRIBUTES.footnoteId)}`;
+    if (index2 === "undefined") {
+      throw new Error("Footnote reference has no provided index.");
+    }
+    if (id === "undefined") {
+      throw new Error("Footnote reference has no provided id.");
+    }
+    const footnoteReferenceView = viewWriter.createContainerElement("span", {
+      class: CLASSES.footnoteReference,
+      [ATTRIBUTES.footnoteReference]: "",
+      [ATTRIBUTES.footnoteIndex]: index2,
+      [ATTRIBUTES.footnoteId]: id,
+      role: "doc-noteref",
+      id: `fnref${id}`
+    });
+    const innerText = viewWriter.createText(`[${index2}]`);
+    const link4 = viewWriter.createContainerElement("a", {
+      href: `#fn${id}`
+    });
+    const superscript = viewWriter.createContainerElement("sup");
+    viewWriter.insert(viewWriter.createPositionAt(link4, 0), innerText);
+    viewWriter.insert(viewWriter.createPositionAt(superscript, 0), link4);
+    viewWriter.insert(viewWriter.createPositionAt(footnoteReferenceView, 0), superscript);
+    return footnoteReferenceView;
+  }
+  function createFootnoteItemViewElement(modelElement, conversionApi) {
+    const viewWriter = conversionApi.writer;
+    const index2 = modelElement.getAttribute(ATTRIBUTES.footnoteIndex);
+    const id = modelElement.getAttribute(ATTRIBUTES.footnoteId);
+    if (!index2) {
+      throw new Error("Footnote item has no provided index.");
+    }
+    if (!id) {
+      throw new Error("Footnote item has no provided id.");
+    }
+    return viewWriter.createContainerElement("li", {
+      class: CLASSES.footnoteItem,
+      [ATTRIBUTES.footnoteItem]: "",
+      [ATTRIBUTES.footnoteIndex]: `${index2}`,
+      [ATTRIBUTES.footnoteId]: `${id}`,
+      role: "doc-endnote",
+      id: `fn${id}`
+    });
+  }
+  function updateFootnoteReferenceView(data, conversionApi, editor) {
+    const { item, attributeNewValue: newIndex } = data;
+    if (!(item instanceof ModelElement) || !conversionApi.consumable.consume(item, `attribute:${ATTRIBUTES.footnoteIndex}:${ELEMENTS.footnoteReference}`)) {
+      return;
+    }
+    const footnoteReferenceView = conversionApi.mapper.toViewElement(item);
+    if (!footnoteReferenceView) {
+      return;
+    }
+    const viewWriter = conversionApi.writer;
+    const anchor = viewQueryElement(editor, footnoteReferenceView, (element6) => element6.name === "a");
+    const textNode = anchor == null ? void 0 : anchor.getChild(0);
+    if (!textNode || !anchor) {
+      viewWriter.remove(footnoteReferenceView);
+      return;
+    }
+    viewWriter.remove(textNode);
+    const innerText = viewWriter.createText(`[${newIndex}]`);
+    viewWriter.insert(viewWriter.createPositionAt(anchor, 0), innerText);
+    viewWriter.setAttribute("href", `#fn${item.getAttribute(ATTRIBUTES.footnoteId)}`, anchor);
+    viewWriter.setAttribute(ATTRIBUTES.footnoteIndex, newIndex, footnoteReferenceView);
+  }
+  var defineSchema = (schema) => {
+    schema.register(ELEMENTS.footnoteSection, {
+      isObject: true,
+      allowWhere: "$block",
+      allowIn: "$root",
+      allowChildren: ELEMENTS.footnoteItem,
+      allowAttributes: [
+        ATTRIBUTES.footnoteSection
+      ]
+    });
+    schema.register(ELEMENTS.footnoteItem, {
+      isBlock: true,
+      isObject: true,
+      allowContentOf: "$root",
+      allowAttributes: [
+        ATTRIBUTES.footnoteSection,
+        ATTRIBUTES.footnoteId,
+        ATTRIBUTES.footnoteIndex
+      ]
+    });
+    schema.register(ELEMENTS.footnoteContent, {
+      allowIn: ELEMENTS.footnoteItem,
+      allowContentOf: "$root",
+      allowAttributes: [
+        ATTRIBUTES.footnoteSection
+      ]
+    });
+    schema.register(ELEMENTS.footnoteReference, {
+      allowWhere: "$text",
+      isInline: true,
+      isObject: true,
+      allowAttributes: [
+        ATTRIBUTES.footnoteReference,
+        ATTRIBUTES.footnoteId,
+        ATTRIBUTES.footnoteIndex
+      ]
+    });
+    schema.register(ELEMENTS.footnoteBackLink, {
+      allowIn: ELEMENTS.footnoteItem,
+      isInline: true,
+      isSelectable: false,
+      allowAttributes: [
+        ATTRIBUTES.footnoteBackLink,
+        ATTRIBUTES.footnoteId
+      ]
+    });
+    schema.addChildCheck((context, childDefinition) => {
+      if (context.endsWith(ELEMENTS.footnoteContent) && childDefinition.name === ELEMENTS.footnoteSection) {
+        return false;
+      }
+      if (context.endsWith(ELEMENTS.footnoteContent) && childDefinition.name === "listItem") {
+        return false;
+      }
+    });
+  };
+  var InsertFootnoteCommand = class extends Command {
+    /**
+    * Creates a footnote reference with the given index, and creates a matching
+    * footnote if one doesn't already exist. Also creates the footnote section
+    * if it doesn't exist. If `footnoteIndex` is 0 (or not provided), the added
+    * footnote is given the next unused index--e.g. 7, if 6 footnotes exist so far.
+    */
+    execute({ footnoteIndex } = {
+      footnoteIndex: 0
+    }) {
+      this.editor.model.enqueueChange((modelWriter) => {
+        const doc = this.editor.model.document;
+        const rootElement = doc.getRoot();
+        if (!rootElement) {
+          return;
+        }
+        const footnoteSection = this._getFootnoteSection(modelWriter, rootElement);
+        let index2 = void 0;
+        let id = void 0;
+        if (footnoteIndex === 0) {
+          index2 = `${footnoteSection.maxOffset + 1}`;
+          id = Math.random().toString(36).slice(2);
+        } else {
+          index2 = `${footnoteIndex}`;
+          const matchingFootnote = modelQueryElement(this.editor, footnoteSection, (element6) => element6.is("element", ELEMENTS.footnoteItem) && element6.getAttribute(ATTRIBUTES.footnoteIndex) === index2);
+          if (matchingFootnote) {
+            id = matchingFootnote.getAttribute(ATTRIBUTES.footnoteId);
+          }
+        }
+        if (!id || !index2) {
+          return;
+        }
+        modelWriter.setSelection(doc.selection.getLastPosition());
+        const footnoteReference3 = modelWriter.createElement(ELEMENTS.footnoteReference, {
+          [ATTRIBUTES.footnoteId]: id,
+          [ATTRIBUTES.footnoteIndex]: index2
+        });
+        this.editor.model.insertContent(footnoteReference3);
+        modelWriter.setSelection(footnoteReference3, "after");
+        if (footnoteIndex !== 0) {
+          return;
+        }
+        const footnoteContent = modelWriter.createElement(ELEMENTS.footnoteContent);
+        const footnoteItem = modelWriter.createElement(ELEMENTS.footnoteItem, {
+          [ATTRIBUTES.footnoteId]: id,
+          [ATTRIBUTES.footnoteIndex]: index2
+        });
+        const footnoteBackLink = modelWriter.createElement(ELEMENTS.footnoteBackLink, {
+          [ATTRIBUTES.footnoteId]: id
+        });
+        const p4 = modelWriter.createElement("paragraph");
+        modelWriter.append(p4, footnoteContent);
+        modelWriter.append(footnoteContent, footnoteItem);
+        modelWriter.insert(footnoteBackLink, footnoteItem, 0);
+        this.editor.model.insertContent(footnoteItem, modelWriter.createPositionAt(footnoteSection, footnoteSection.maxOffset));
+      });
+    }
+    /**
+    * Called automatically when changes are applied to the document. Sets `isEnabled`
+    * to determine whether footnote creation is allowed at the current location.
+    */
+    refresh() {
+      const model = this.editor.model;
+      const lastPosition = model.document.selection.getLastPosition();
+      const allowedIn = lastPosition && model.schema.findAllowedParent(lastPosition, ELEMENTS.footnoteSection);
+      this.isEnabled = allowedIn !== null;
+    }
+    /**
+    * Returns the footnote section if it exists, or creates on if it doesn't.
+    */
+    _getFootnoteSection(writer, rootElement) {
+      const footnoteSection = modelQueryElement(this.editor, rootElement, (element6) => element6.is("element", ELEMENTS.footnoteSection));
+      if (footnoteSection) {
+        return footnoteSection;
+      }
+      const newFootnoteSection = writer.createElement(ELEMENTS.footnoteSection);
+      this.editor.model.insertContent(newFootnoteSection, writer.createPositionAt(rootElement, rootElement.maxOffset));
+      return newFootnoteSection;
+    }
+  };
+  var FootnoteEditing = class extends Plugin {
+    static get requires() {
+      return [
+        Widget,
+        Autoformat
+      ];
+    }
+    /**
+    * The root element of the document.
+    */
+    get rootElement() {
+      const rootElement = this.editor.model.document.getRoot();
+      if (!rootElement) {
+        throw new Error("Document has no rootElement element.");
+      }
+      return rootElement;
+    }
+    init() {
+      defineSchema(this.editor.model.schema);
+      defineConverters(this.editor);
+      this.editor.commands.add(COMMANDS.insertFootnote, new InsertFootnoteCommand(this.editor));
+      addFootnoteAutoformatting(this.editor, this.rootElement);
+      this.editor.model.document.on("change:data", (eventInfo, batch) => {
+        const eventSource = eventInfo.source;
+        const diffItems = [
+          ...eventSource.differ.getChanges()
+        ];
+        if (diffItems.some((diffItem) => diffItem.type === "insert" && diffItem.name === ELEMENTS.footnoteReference)) {
+          this._orderFootnotes(batch);
+        }
+        diffItems.forEach((diffItem) => {
+          if (diffItem.type === "attribute" && diffItem.attributeKey === ATTRIBUTES.footnoteIndex) {
+            const { attributeNewValue: newFootnoteIndex } = diffItem;
+            const footnote = [
+              ...diffItem.range.getItems()
+            ].find((item) => item.is("element", ELEMENTS.footnoteItem));
+            const footnoteId = footnote instanceof ModelElement && footnote.getAttribute(ATTRIBUTES.footnoteId);
+            if (!footnoteId) {
+              return;
+            }
+            this._updateReferenceIndices(batch, `${footnoteId}`, newFootnoteIndex);
+          }
+        });
+      }, {
+        priority: "high"
+      });
+      this._handleDelete();
+      this.editor.editing.mapper.on("viewToModelPosition", viewToModelPositionOutsideModelElement(this.editor.model, (viewElement) => viewElement.hasAttribute(ATTRIBUTES.footnoteReference)));
+    }
+    /**
+    * This method broadly deals with deletion of text and elements, and updating the model
+    * accordingly. In particular, the following cases are handled:
+    * 1. If the footnote section gets deleted, all footnote references are removed.
+    * 2. If a delete operation happens in an empty footnote, the footnote is deleted.
+    */
+    _handleDelete() {
+      const viewDocument = this.editor.editing.view.document;
+      const editor = this.editor;
+      this.listenTo(viewDocument, "delete", (evt, data) => {
+        const doc = editor.model.document;
+        const deletedElement = doc.selection.getSelectedElement();
+        const selectionEndPos = doc.selection.getLastPosition();
+        const selectionStartPos = doc.selection.getFirstPosition();
+        if (!selectionEndPos || !selectionStartPos) {
+          throw new Error("Selection must have at least one range to perform delete operation.");
+        }
+        this.editor.model.change((modelWriter) => {
+          if (deletedElement && deletedElement.is("element", ELEMENTS.footnoteSection)) {
+            this._removeReferences(modelWriter);
+          }
+          const deletingFootnote = deletedElement && deletedElement.is("element", ELEMENTS.footnoteItem);
+          const currentFootnote = deletingFootnote ? deletedElement : selectionEndPos.findAncestor(ELEMENTS.footnoteItem);
+          if (!currentFootnote) {
+            return;
+          }
+          const endParagraph = selectionEndPos.findAncestor("paragraph");
+          const startParagraph = selectionStartPos.findAncestor("paragraph");
+          const currentFootnoteContent = selectionEndPos.findAncestor(ELEMENTS.footnoteContent);
+          if (!currentFootnoteContent || !startParagraph || !endParagraph) {
+            return;
+          }
+          const footnoteIsEmpty = startParagraph.maxOffset === 0 && currentFootnoteContent.childCount === 1;
+          if (deletingFootnote || footnoteIsEmpty) {
+            this._removeFootnote(modelWriter, currentFootnote);
+            data.preventDefault();
+            evt.stop();
+          }
+        });
+      }, {
+        priority: "high"
+      });
+    }
+    /**
+    * Clear the children of the provided footnoteContent element,
+    * leaving an empty paragraph behind. This allows users to empty
+    * a footnote without deleting it. modelWriter is passed in to
+    * batch these changes with the ones that instantiated them,
+    * such that the set can be undone with a single action.
+    */
+    _clearContents(modelWriter, footnoteContent) {
+      const contents = modelWriter.createRangeIn(footnoteContent);
+      modelWriter.appendElement("paragraph", footnoteContent);
+      modelWriter.remove(contents);
+    }
+    /**
+    * Removes a footnote and its references, and renumbers subsequent footnotes. When a footnote's
+    * id attribute changes, it's references automatically update from a dispatcher event in converters.js,
+    * which triggers the `updateReferenceIds` method. modelWriter is passed in to batch these changes with
+    * the ones that instantiated them, such that the set can be undone with a single action.
+    */
+    _removeFootnote(modelWriter, footnote) {
+      if (!this.editor) {
+        return;
+      }
+      const footnoteSection = footnote.findAncestor(ELEMENTS.footnoteSection);
+      if (!footnoteSection) {
+        modelWriter.remove(footnote);
+        return;
+      }
+      const index2 = footnoteSection.getChildIndex(footnote);
+      const id = footnote.getAttribute(ATTRIBUTES.footnoteId);
+      this._removeReferences(modelWriter, `${id}`);
+      modelWriter.remove(footnote);
+      if (footnoteSection.childCount === 0) {
+        modelWriter.remove(footnoteSection);
+        this._removeReferences(modelWriter);
+      } else {
+        if (index2 == null) {
+          throw new Error("Index is nullish");
+        }
+        const neighborFootnote = index2 === 0 ? footnoteSection.getChild(index2) : footnoteSection.getChild((index2 ?? 0) - 1);
+        if (!(neighborFootnote instanceof ModelElement)) {
+          return;
+        }
+        const neighborEndParagraph = modelQueryElementsAll(this.editor, neighborFootnote, (element6) => element6.is("element", "paragraph")).pop();
+        if (neighborEndParagraph) {
+          modelWriter.setSelection(neighborEndParagraph, "end");
+        }
+      }
+      if (index2 == null) {
+        throw new Error("Index is nullish");
+      }
+      const subsequentFootnotes = [
+        ...footnoteSection.getChildren()
+      ].slice(index2 ?? 0);
+      for (const [i, child] of subsequentFootnotes.entries()) {
+        modelWriter.setAttribute(ATTRIBUTES.footnoteIndex, `${index2 ?? 0 + i + 1}`, child);
+      }
+    }
+    /**
+    * Deletes all references to the footnote with the given id. If no id is provided,
+    * all references are deleted. modelWriter is passed in to batch these changes with
+    * the ones that instantiated them, such that the set can be undone with a single action.
+    */
+    _removeReferences(modelWriter, footnoteId = void 0) {
+      const removeList = [];
+      if (!this.rootElement) {
+        throw new Error("Document has no root element.");
+      }
+      const footnoteReferences = modelQueryElementsAll(this.editor, this.rootElement, (e) => e.is("element", ELEMENTS.footnoteReference));
+      footnoteReferences.forEach((footnoteReference3) => {
+        const id = footnoteReference3.getAttribute(ATTRIBUTES.footnoteId);
+        if (!footnoteId || id === footnoteId) {
+          removeList.push(footnoteReference3);
+        }
+      });
+      for (const item of removeList) {
+        modelWriter.remove(item);
+      }
+    }
+    /**
+    * Updates all references for a single footnote. This function is called when
+    * the index attribute of an existing footnote changes, which happens when a footnote
+    * with a lower index is deleted. batch is passed in to group these changes with
+    * the ones that instantiated them.
+    */
+    _updateReferenceIndices(batch, footnoteId, newFootnoteIndex) {
+      const footnoteReferences = modelQueryElementsAll(this.editor, this.rootElement, (e) => e.is("element", ELEMENTS.footnoteReference) && e.getAttribute(ATTRIBUTES.footnoteId) === footnoteId);
+      this.editor.model.enqueueChange(batch, (writer) => {
+        footnoteReferences.forEach((footnoteReference3) => {
+          writer.setAttribute(ATTRIBUTES.footnoteIndex, newFootnoteIndex, footnoteReference3);
+        });
+      });
+    }
+    /**
+    * Reindexes footnotes such that footnote references occur in order, and reorders
+    * footnote items in the footer section accordingly. batch is passed in to group changes with
+    * the ones that instantiated them.
+    */
+    _orderFootnotes(batch) {
+      const footnoteReferences = modelQueryElementsAll(this.editor, this.rootElement, (e) => e.is("element", ELEMENTS.footnoteReference));
+      const uniqueIds = new Set(footnoteReferences.map((e) => e.getAttribute(ATTRIBUTES.footnoteId)));
+      const orderedFootnotes = [
+        ...uniqueIds
+      ].map((id) => modelQueryElement(this.editor, this.rootElement, (e) => e.is("element", ELEMENTS.footnoteItem) && e.getAttribute(ATTRIBUTES.footnoteId) === id));
+      this.editor.model.enqueueChange(batch, (writer) => {
+        const footnoteSection = modelQueryElement(this.editor, this.rootElement, (e) => e.is("element", ELEMENTS.footnoteSection));
+        if (!footnoteSection) {
+          return;
+        }
+        for (const footnote of orderedFootnotes.reverse()) {
+          if (footnote) {
+            writer.move(writer.createRangeOn(footnote), footnoteSection, 0);
+          }
+        }
+        for (const footnote of modelQueryElementsAll(this.editor, footnoteSection, (e) => e.is("element", ELEMENTS.footnoteItem))) {
+          const index2 = `${((footnoteSection == null ? void 0 : footnoteSection.getChildIndex(footnote)) ?? -1) + 1}`;
+          if (footnote) {
+            writer.setAttribute(ATTRIBUTES.footnoteIndex, index2, footnote);
+          }
+          const id = footnote.getAttribute(ATTRIBUTES.footnoteId);
+          if (id) {
+            this._updateReferenceIndices(batch, `${id}`, `${index2}`);
+          }
+        }
+      });
+    }
+  };
+  var FootnoteUI = class extends Plugin {
+    init() {
+      const editor = this.editor;
+      const translate = editor.t;
+      editor.ui.componentFactory.add(TOOLBAR_COMPONENT_NAME, (locale) => {
+        const dropdownView = createDropdown(locale);
+        const command = editor.commands.get(COMMANDS.insertFootnote);
+        if (!command) {
+          throw new Error("Command not found.");
+        }
+        dropdownView.buttonView.set({
+          label: translate("Footnote"),
+          icon: insertFootnoteIcon,
+          tooltip: true
+        });
+        dropdownView.class = "ck-code-block-dropdown";
+        dropdownView.bind("isEnabled").to(command);
+        dropdownView.on("change:isOpen", (evt, propertyName, newValue) => {
+          var _a, _b, _c;
+          (_a = dropdownView == null ? void 0 : dropdownView.listView) == null ? void 0 : _a.items.clear();
+          if (newValue) {
+            addListToDropdown(dropdownView, this.getDropdownItemsDefinitions());
+          } else {
+            (_b = dropdownView == null ? void 0 : dropdownView.listView) == null ? void 0 : _b.items.clear();
+            const listElement = (_c = dropdownView == null ? void 0 : dropdownView.listView) == null ? void 0 : _c.element;
+            if (listElement && listElement.parentNode) {
+              listElement.parentNode.removeChild(listElement);
+            }
+          }
+        });
+        this.listenTo(dropdownView, "execute", (evt) => {
+          editor.execute(COMMANDS.insertFootnote, {
+            footnoteIndex: evt.source.commandParam
+          });
+          editor.editing.view.focus();
+        });
+        return dropdownView;
+      });
+    }
+    getDropdownItemsDefinitions() {
+      const itemDefinitions = new Collection();
+      const defaultDef = {
+        type: "button",
+        model: new UIModel({
+          commandParam: 0,
+          label: "New footnote",
+          withText: true
+        })
+      };
+      itemDefinitions.add(defaultDef);
+      const rootElement = this.editor.model.document.getRoot();
+      if (!rootElement) {
+        throw new Error("Document has no root element.");
+      }
+      const footnoteSection = modelQueryElement(this.editor, rootElement, (element6) => element6.is("element", ELEMENTS.footnoteSection));
+      if (footnoteSection) {
+        const footnoteItems = modelQueryElementsAll(this.editor, rootElement, (element6) => element6.is("element", ELEMENTS.footnoteItem));
+        footnoteItems.forEach((footnote) => {
+          const index2 = footnote.getAttribute(ATTRIBUTES.footnoteIndex);
+          const definition3 = {
+            type: "button",
+            model: new UIModel({
+              commandParam: index2,
+              label: `Insert footnote ${index2}`,
+              withText: true
+            })
+          };
+          itemDefinitions.add(definition3);
+        });
+      }
+      return itemDefinitions;
+    }
+  };
+  var Footnotes = class extends Plugin {
+    static get pluginName() {
+      return "Footnotes";
+    }
+    static get requires() {
+      return [
+        FootnoteEditing,
+        FootnoteUI
+      ];
+    }
+  };
+
   // web/src/main.js
   var editorInstance = null;
   var isProgrammaticChange = false;
@@ -110717,6 +111582,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     sourceEditing: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="20" x2="12" y2="4"/></svg>`,
     settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
     newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`,
+    footnote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M4 15h16"/><path d="M9 11V5h6v6"/><path d="M9 8h6"/></svg>`,
     squareMarker: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color2}"/></svg>`,
     circlePen: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color2}"/></svg>`
   };
@@ -110947,6 +111813,65 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       console.error("Failed to toggle SourceEditing:", err);
     }
   }
+  function setupMarkdownFootnotesProcessor(editor) {
+    if (!editor || !editor.data || !editor.data.processor) return;
+    const processor = editor.data.processor;
+    const originalToView = processor.toView.bind(processor);
+    const originalToData = processor.toData.bind(processor);
+    processor.toView = function(data) {
+      if (typeof data !== "string") return originalToView(data);
+      const footnoteDefRegex = /^\[\^([^\]]+)\]:\s*([\s\S]*?)(?=(?:\n\[\^[^\]]+\]:)|$)/gm;
+      const definitions = [];
+      let cleanMarkdown = data.replace(footnoteDefRegex, (fullMatch, id, text10) => {
+        definitions.push({ id, text: text10.trim() });
+        return "";
+      }).trim();
+      if (definitions.length > 0) {
+        definitions.forEach((def, idx) => {
+          const indexNum = idx + 1;
+          const refRegex = new RegExp(`\\[\\^${def.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\]`, "g");
+          cleanMarkdown = cleanMarkdown.replace(refRegex, `<sup data-footnote-reference data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><a href="#fn${def.id}" id="fnref${def.id}">${indexNum}</a></sup>`);
+        });
+        let sectionHtml = `<ol data-footnote-section class="footnote-section footnotes" role="doc-endnotes">`;
+        definitions.forEach((def, idx) => {
+          const indexNum = idx + 1;
+          sectionHtml += `<li data-footnote-item data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><div data-footnote-content><p>${def.text}</p></div><span data-footnote-back-link data-footnote-id="${def.id}"><sup><strong><a href="#fnref${def.id}">^</a></strong></sup></span></li>`;
+        });
+        sectionHtml += `</ol>`;
+        cleanMarkdown += "\n\n" + sectionHtml;
+      }
+      return originalToView(cleanMarkdown);
+    };
+    processor.toData = function(viewFragment) {
+      let markdown = originalToData(viewFragment);
+      if (typeof markdown !== "string") return markdown;
+      markdown = markdown.replace(/<sup[^>]*data-footnote-reference[^>]*data-footnote-index="([^"]+)"[^>]*>[\s\S]*?<\/sup>/gi, "[^$1]");
+      markdown = markdown.replace(/<sup[^>]*data-footnote-index="([^"]+)"[^>]*data-footnote-reference[^>]*>[\s\S]*?<\/sup>/gi, "[^$1]");
+      const sectionMatch = markdown.match(/<(ol|div)[^>]*data-footnote-section[^>]*>([\s\S]*?)<\/\1>/i);
+      if (sectionMatch) {
+        const sectionHtml = sectionMatch[2];
+        const items = [];
+        const itemRegex = /<li[^>]*data-footnote-id="([^"]+)"[^>]*data-footnote-index="([^"]+)"[^>]*>([\s\S]*?)<\/li>/gi;
+        let itemMatch;
+        while ((itemMatch = itemRegex.exec(sectionHtml)) !== null) {
+          const fnId = itemMatch[1];
+          const fnIndex = itemMatch[2];
+          const itemContentHtml = itemMatch[3];
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = itemContentHtml;
+          const backLink = tempDiv.querySelector("[data-footnote-back-link]");
+          if (backLink) backLink.remove();
+          const text10 = tempDiv.innerText.trim().replace(/\n+/g, " ");
+          items.push({ id: fnIndex || fnId, text: text10 });
+        }
+        markdown = markdown.replace(sectionMatch[0], "").trim();
+        if (items.length > 0) {
+          markdown += "\n\n" + items.map((item) => `[^${item.id}]: ${item.text}`).join("\n");
+        }
+      }
+      return markdown.trim();
+    };
+  }
   async function initEditor(disabledPlugins = [], isInitialInit = false) {
     if (editorInstance) {
       await editorInstance.destroy();
@@ -111019,6 +111944,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     addIfEnabled("sourceEditing", SourceEditing, "sourceEditing");
     addIfEnabled("findAndReplace", FindAndReplace, "findAndReplace");
     addIfEnabled("autoformat", Autoformat);
+    addIfEnabled("footnotes", Footnotes);
     try {
       editorInstance = await ClassicEditor.create(editorElement, {
         licenseKey: "GPL",
@@ -111075,6 +112001,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"]
         }
       });
+      setupMarkdownFootnotesProcessor(editorInstance);
       editorInstance.model.document.on("change:data", () => {
         if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
           const text10 = editorInstance.getData();
@@ -111105,29 +112032,42 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       initCustomSearchBar();
       const editorMainArea = document.querySelector(".ck-editor__main");
       if (editorMainArea) {
-        editorMainArea.addEventListener("click", (e) => {
+        let lastCopyTime = 0;
+        const handleCodeBlockCopy = (e) => {
           const pre = e.target.closest("pre");
           if (pre) {
             const rect = pre.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const clickY = e.clientY - rect.top;
             const langLabel = e.target.closest(".ck-code-block-language-label");
-            const isTopLeftTap = clickX < 140 && clickY < 36 || !!langLabel;
+            const isTopLeftTap = clickX < 150 && clickY < 36 || !!langLabel;
             if (isTopLeftTap) {
               e.preventDefault();
               e.stopPropagation();
-              const codeEl = pre.querySelector("code") || pre;
-              const textToCopy = codeEl.innerText || codeEl.textContent;
-              if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textToCopy).catch(() => {
-                });
+              if (typeof e.stopImmediatePropagation === "function") {
+                e.stopImmediatePropagation();
               }
-              if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
-                window.AndroidNative.showToast("Code block copied to clipboard");
+              const now = Date.now();
+              if (now - lastCopyTime > 600) {
+                lastCopyTime = now;
+                const codeEl = pre.querySelector("code") || pre;
+                const textToCopy = codeEl.innerText || codeEl.textContent;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                  navigator.clipboard.writeText(textToCopy).catch(() => {
+                  });
+                }
+                if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
+                  window.AndroidNative.showToast("Code block copied to clipboard");
+                }
               }
+              return false;
             }
           }
-        });
+        };
+        editorMainArea.addEventListener("pointerdown", handleCodeBlockCopy, true);
+        editorMainArea.addEventListener("touchstart", handleCodeBlockCopy, true);
+        editorMainArea.addEventListener("mousedown", handleCodeBlockCopy, true);
+        editorMainArea.addEventListener("click", handleCodeBlockCopy, true);
       }
       setupFastScrollbar();
       let lastWysiwygScrollTop = 0;
@@ -111370,7 +112310,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.inlineCode, title: "Inline Code", action: () => execCmd("code") },
           { icon: svgIcons.blockQuote, title: "Insert Quote", action: () => execCmd("blockQuote") },
           { icon: svgIcons.codeBlock, title: "Insert Code Block", action: () => execCmd("codeBlock") },
-          { icon: svgIcons.horizontalLine, title: "Insert Line", action: () => execCmd("horizontalLine") }
+          { icon: svgIcons.horizontalLine, title: "Insert Line", action: () => execCmd("horizontalLine") },
+          { icon: svgIcons.footnote, title: "Insert Footnote", action: () => execCmd("InsertFootnote") }
         ]);
       };
     }

@@ -132,5 +132,8 @@
   },
   "ck-lts-versions": [
     47
-  ]
+  ],
+  "dependencies": {
+    "@tomaitken/ckeditor5-footnotes": "^0.0.4"
+  }
 }

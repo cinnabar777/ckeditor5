@@ -46,10 +46,13 @@ import {
   PasteFromOffice
 } from 'ckeditor5';
 
+import { Footnotes } from '@tomaitken/ckeditor5-footnotes';
+
 import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
 import '../../../packages/ckeditor5-ui/theme/index-editor.css';
 import '../../../packages/ckeditor5-highlight/theme/index-editor.css';
 import '../../../packages/ckeditor5-highlight/theme/index-content.css';
+import '../../../node_modules/@tomaitken/ckeditor5-footnotes/dist/index-editor.css';
 
 let editorInstance = null;
 let isProgrammaticChange = false;
@@ -137,6 +140,7 @@ const svgIcons = {
   sourceEditing: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="20" x2="12" y2="4"/></svg>`,
   settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
   newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`,
+  footnote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M4 15h16"/><path d="M9 11V5h6v6"/><path d="M9 8h6"/></svg>`,
   squareMarker: (color) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color}"/></svg>`,
   circlePen: (color) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color}"/></svg>`
 };
@@ -393,6 +397,85 @@ function toggleSourceEditing() {
   }
 }
 
+function setupMarkdownFootnotesProcessor(editor) {
+  if (!editor || !editor.data || !editor.data.processor) return;
+  const processor = editor.data.processor;
+
+  const originalToView = processor.toView.bind(processor);
+  const originalToData = processor.toData.bind(processor);
+
+  processor.toView = function(data) {
+    if (typeof data !== 'string') return originalToView(data);
+
+    // Extract footnote definitions: [^id]: text
+    const footnoteDefRegex = /^\[\^([^\]]+)\]:\s*([\s\S]*?)(?=(?:\n\[\^[^\]]+\]:)|$)/gm;
+    const definitions = [];
+
+    let cleanMarkdown = data.replace(footnoteDefRegex, (fullMatch, id, text) => {
+      definitions.push({ id, text: text.trim() });
+      return '';
+    }).trim();
+
+    if (definitions.length > 0) {
+      // Replace inline references [^id]
+      definitions.forEach((def, idx) => {
+        const indexNum = idx + 1;
+        const refRegex = new RegExp(`\\[\\^${def.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
+        cleanMarkdown = cleanMarkdown.replace(refRegex, `<sup data-footnote-reference data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><a href="#fn${def.id}" id="fnref${def.id}">${indexNum}</a></sup>`);
+      });
+
+      // Construct footnote section HTML
+      let sectionHtml = `<ol data-footnote-section class="footnote-section footnotes" role="doc-endnotes">`;
+      definitions.forEach((def, idx) => {
+        const indexNum = idx + 1;
+        sectionHtml += `<li data-footnote-item data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><div data-footnote-content><p>${def.text}</p></div><span data-footnote-back-link data-footnote-id="${def.id}"><sup><strong><a href="#fnref${def.id}">^</a></strong></sup></span></li>`;
+      });
+      sectionHtml += `</ol>`;
+
+      cleanMarkdown += '\n\n' + sectionHtml;
+    }
+
+    return originalToView(cleanMarkdown);
+  };
+
+  processor.toData = function(viewFragment) {
+    let markdown = originalToData(viewFragment);
+    if (typeof markdown !== 'string') return markdown;
+
+    // Convert inline footnote reference tags to [^N]
+    markdown = markdown.replace(/<sup[^>]*data-footnote-reference[^>]*data-footnote-index="([^"]+)"[^>]*>[\s\S]*?<\/sup>/gi, '[^$1]');
+    markdown = markdown.replace(/<sup[^>]*data-footnote-index="([^"]+)"[^>]*data-footnote-reference[^>]*>[\s\S]*?<\/sup>/gi, '[^$1]');
+
+    // Extract footnote section HTML
+    const sectionMatch = markdown.match(/<(ol|div)[^>]*data-footnote-section[^>]*>([\s\S]*?)<\/\1>/i);
+    if (sectionMatch) {
+      const sectionHtml = sectionMatch[2];
+      const items = [];
+      const itemRegex = /<li[^>]*data-footnote-id="([^"]+)"[^>]*data-footnote-index="([^"]+)"[^>]*>([\s\S]*?)<\/li>/gi;
+      let itemMatch;
+      while ((itemMatch = itemRegex.exec(sectionHtml)) !== null) {
+        const fnId = itemMatch[1];
+        const fnIndex = itemMatch[2];
+        const itemContentHtml = itemMatch[3];
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = itemContentHtml;
+        const backLink = tempDiv.querySelector('[data-footnote-back-link]');
+        if (backLink) backLink.remove();
+        const text = tempDiv.innerText.trim().replace(/\n+/g, ' ');
+        items.push({ id: fnIndex || fnId, text });
+      }
+
+      markdown = markdown.replace(sectionMatch[0], '').trim();
+
+      if (items.length > 0) {
+        markdown += '\n\n' + items.map(item => `[^${item.id}]: ${item.text}`).join('\n');
+      }
+    }
+
+    return markdown.trim();
+  };
+}
+
 async function initEditor(disabledPlugins = [], isInitialInit = false) {
   if (editorInstance) {
     await editorInstance.destroy();
@@ -475,6 +558,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
   addIfEnabled('sourceEditing', SourceEditing, 'sourceEditing');
   addIfEnabled('findAndReplace', FindAndReplace, 'findAndReplace');
   addIfEnabled('autoformat', Autoformat);
+  addIfEnabled('footnotes', Footnotes);
 
   try {
     editorInstance = await ClassicEditor.create(editorElement, {
@@ -533,6 +617,8 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
       }
     });
 
+    setupMarkdownFootnotesProcessor(editorInstance);
+
     editorInstance.model.document.on('change:data', () => {
       if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
         const text = editorInstance.getData();
@@ -572,29 +658,42 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     // Safe Copy Code event handler via delegation on editor container
     const editorMainArea = document.querySelector('.ck-editor__main');
     if (editorMainArea) {
-      editorMainArea.addEventListener('click', (e) => {
+      let lastCopyTime = 0;
+      const handleCodeBlockCopy = (e) => {
         const pre = e.target.closest('pre');
         if (pre) {
           const rect = pre.getBoundingClientRect();
           const clickX = e.clientX - rect.left;
           const clickY = e.clientY - rect.top;
-          // Trigger copy when tapping top-left language label area
           const langLabel = e.target.closest('.ck-code-block-language-label');
-          const isTopLeftTap = (clickX < 140 && clickY < 36) || !!langLabel;
+          const isTopLeftTap = (clickX < 150 && clickY < 36) || !!langLabel;
           if (isTopLeftTap) {
             e.preventDefault();
             e.stopPropagation();
-            const codeEl = pre.querySelector('code') || pre;
-            const textToCopy = codeEl.innerText || codeEl.textContent;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(textToCopy).catch(() => {});
+            if (typeof e.stopImmediatePropagation === 'function') {
+              e.stopImmediatePropagation();
             }
-            if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
-              window.AndroidNative.showToast('Code block copied to clipboard');
+            const now = Date.now();
+            if (now - lastCopyTime > 600) {
+              lastCopyTime = now;
+              const codeEl = pre.querySelector('code') || pre;
+              const textToCopy = codeEl.innerText || codeEl.textContent;
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).catch(() => {});
+              }
+              if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+                window.AndroidNative.showToast('Code block copied to clipboard');
+              }
             }
+            return false;
           }
         }
-      });
+      };
+
+      editorMainArea.addEventListener('pointerdown', handleCodeBlockCopy, true);
+      editorMainArea.addEventListener('touchstart', handleCodeBlockCopy, true);
+      editorMainArea.addEventListener('mousedown', handleCodeBlockCopy, true);
+      editorMainArea.addEventListener('click', handleCodeBlockCopy, true);
     }
 
     // Fast Scrollbar Implementation
@@ -866,7 +965,8 @@ function setupGroupedControlBar() {
         { icon: svgIcons.inlineCode, title: 'Inline Code', action: () => execCmd('code') },
         { icon: svgIcons.blockQuote, title: 'Insert Quote', action: () => execCmd('blockQuote') },
         { icon: svgIcons.codeBlock, title: 'Insert Code Block', action: () => execCmd('codeBlock') },
-        { icon: svgIcons.horizontalLine, title: 'Insert Line', action: () => execCmd('horizontalLine') }
+        { icon: svgIcons.horizontalLine, title: 'Insert Line', action: () => execCmd('horizontalLine') },
+        { icon: svgIcons.footnote, title: 'Insert Footnote', action: () => execCmd('InsertFootnote') }
       ]);
     };
   }
