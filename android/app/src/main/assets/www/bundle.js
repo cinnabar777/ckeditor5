@@ -110713,6 +110713,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     newFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`,
     openFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,
     saveFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+    saveAsFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/><path d="M12 10v4m-2-2h4"/></svg>`,
     search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
     sourceEditing: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="20" x2="12" y2="4"/></svg>`,
     settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
@@ -110923,6 +110924,19 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
     }
   }
+  function insertLinkPrompt() {
+    if (!editorInstance) return;
+    const linkCommand = editorInstance.commands.get("link");
+    const currentUrl = linkCommand && linkCommand.value ? linkCommand.value : "";
+    const url = prompt("Enter link URL:", currentUrl || "https://");
+    if (url !== null && url.trim() !== "") {
+      try {
+        editorInstance.execute("link", url.trim());
+      } catch (err) {
+        console.error("Failed to insert link:", err);
+      }
+    }
+  }
   function toggleSourceEditing() {
     if (!editorInstance) return;
     try {
@@ -110978,7 +110992,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
     addIfEnabled("link", Link, "link");
     if (addIfEnabled("image", Image)) {
-      pluginsToLoad.push(ImageCaption, ImageStyle, ImageToolbar, ImageResize, ImageInsert);
+      pluginsToLoad.push(ImageBlock, ImageInline, ImageCaption, ImageStyle, ImageToolbar, ImageResize, ImageInsert);
       toolbarItems.push("insertImage");
     }
     addIfEnabled("blockQuote", BlockQuote, "blockQuote");
@@ -111351,7 +111365,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         e.stopPropagation();
         togglePopupStrip("insert", insertBtn, [
           { icon: svgIcons.image, title: "Insert Image", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
-          { icon: svgIcons.link, title: "Insert Link", action: () => execCmd("link") },
+          { icon: svgIcons.link, title: "Insert Link", action: () => insertLinkPrompt() },
           { icon: svgIcons.inlineCode, title: "Inline Code", action: () => execCmd("code") },
           { icon: svgIcons.blockQuote, title: "Insert Quote", action: () => execCmd("blockQuote") },
           { icon: svgIcons.codeBlock, title: "Insert Code Block", action: () => execCmd("codeBlock") },
@@ -111367,7 +111381,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.newFile, title: "New File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new") },
           { icon: svgIcons.openFile, title: "Open File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("open") },
           { icon: svgIcons.saveFile, title: "Save File", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save") },
-          { icon: svgIcons.search, title: "Find & Replace", action: () => toggleFindAndReplaceBar() },
+          { icon: svgIcons.saveAsFile, title: "Save As", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("save_as") },
+          { icon: svgIcons.search, title: "Find & Replace", action: () => {
+            hidePopupStrip();
+            toggleFindAndReplaceBar();
+          } },
           { icon: svgIcons.sourceEditing, title: "Toggle Source View", action: () => toggleSourceEditing() },
           { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
@@ -111530,6 +111548,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     let touchStartY = 0;
     let isSwiping = false;
     window.addEventListener("touchstart", (e) => {
+      const popupStrip = document.querySelector("#popup-toolbar-strip");
+      if (popupStrip && popupStrip.contains(e.target)) {
+        isSwiping = false;
+        return;
+      }
       if (e.touches.length === 1) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -111765,8 +111788,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         else if (parseAndMatchHotkey(e, customHotkeys.underline)) exec("underline");
         else if (parseAndMatchHotkey(e, customHotkeys.strikethrough)) exec("strikethrough");
         else if (parseAndMatchHotkey(e, customHotkeys.code)) exec("code");
-        else if (parseAndMatchHotkey(e, customHotkeys.link)) exec("link");
-        else if (parseAndMatchHotkey(e, customHotkeys.blockQuote)) exec("blockQuote");
+        else if (parseAndMatchHotkey(e, customHotkeys.link)) {
+          e.preventDefault();
+          insertLinkPrompt();
+        } else if (parseAndMatchHotkey(e, customHotkeys.blockQuote)) exec("blockQuote");
         else if (parseAndMatchHotkey(e, customHotkeys.codeBlock)) exec("codeBlock");
         else if (parseAndMatchHotkey(e, customHotkeys.bulletedList)) exec("bulletedList");
         else if (parseAndMatchHotkey(e, customHotkeys.numberedList)) exec("numberedList");

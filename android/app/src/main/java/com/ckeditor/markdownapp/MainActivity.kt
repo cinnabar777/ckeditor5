@@ -325,6 +325,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        webView.webChromeClient = object : android.webkit.WebChromeClient() {
+            override fun onJsPrompt(
+                view: WebView?,
+                url: String?,
+                message: String?,
+                defaultValue: String?,
+                result: android.webkit.JsPromptResult?
+            ): Boolean {
+                val input = EditText(this@MainActivity)
+                input.setText(defaultValue ?: "")
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle(message ?: "Enter URL")
+                    .setView(input)
+                    .setPositiveButton("OK") { _, _ ->
+                        result?.confirm(input.text.toString())
+                    }
+                    .setNegativeButton("Cancel") { _, _ ->
+                        result?.cancel()
+                    }
+                    .setOnCancelListener {
+                        result?.cancel()
+                    }
+                    .show()
+                return true
+            }
+        }
+
         webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
     }
 
