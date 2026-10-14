@@ -535,28 +535,70 @@
       left: 8px !important;
       right: auto !important;
       font-size: 12px !important;
-      font-weight: 600 !important;
-      color: var(--code-block-lang-label-color, #aaaaaa) !important;
-      background: rgba(255, 255, 255, 0.1) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      font-weight: 700 !important;
+      color: var(--code-block-lang-label-color, #ffffff) !important;
+      background: rgba(255, 255, 255, 0.2) !important;
+      border: 1px solid rgba(255, 255, 255, 0.35) !important;
       border-radius: 4px !important;
-      padding: 2px 8px !important;
+      padding: 3px 10px !important;
       cursor: pointer !important;
       user-select: none !important;
-      pointer-events: auto !important;
+      pointer-events: none !important;
       z-index: 10 !important;
-      transition: background-color 0.2s ease !important;
-    }
-
-    .ck-content pre[data-language]::before:active,
-    .ck-content pre .ck-code-block-language-label:active {
-      background: rgba(255, 255, 255, 0.25) !important;
     }
 
     .ck-content pre code {
       color: var(--code-block-color) !important;
       background-color: var(--code-block-bg-color) !important;
       font-family: var(--code-font-family), monospace !important;
+    }
+
+    /* Footnotes Styling & Themes */
+    .ck-content .footnote-section,
+    .ck-content .ck-widget.footnote-section,
+    .ck-content ol.footnote-section {
+      background-color: var(--footnote-bg-color, rgba(255, 255, 255, 0.05)) !important;
+      border: 1px solid var(--border-color, #444444) !important;
+      border-radius: 6px !important;
+      padding: 12px !important;
+      margin-top: 1.5em !important;
+      color: var(--footnote-text-color, var(--text-color)) !important;
+    }
+
+    body.light-theme .ck-content .footnote-section,
+    body.light-theme .ck-content .ck-widget.footnote-section,
+    body.light-theme .ck-content ol.footnote-section {
+      background-color: var(--footnote-bg-color, rgba(0, 0, 0, 0.03)) !important;
+    }
+
+    .ck-content .footnote-item,
+    .ck-content .footnote-item * {
+      color: var(--footnote-text-color, var(--text-color)) !important;
+      font-size: var(--footnote-font-size, 14px) !important;
+    }
+
+    .ck-content .footnote-content,
+    .ck-content .footnote-content.ck-editor__nested-editable,
+    .ck-content .footnote-content.ck-editor__editable {
+      background-color: transparent !important;
+      color: var(--footnote-text-color, var(--text-color)) !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    .ck-content .footnote-reference,
+    .ck-content .footnote-reference *,
+    .ck-content sup[data-footnote-reference],
+    .ck-content sup[data-footnote-reference] * {
+      color: var(--footnote-ref-color, var(--link-color, #29b6f6)) !important;
+      font-weight: bold !important;
+    }
+
+    .ck-content .footnote-back-link,
+    .ck-content .footnote-back-link * {
+      color: var(--footnote-link-color, var(--link-color, #29b6f6)) !important;
+      text-decoration: none !important;
     }
 
     /* Block Quote & Callout Line Styling Overrides */

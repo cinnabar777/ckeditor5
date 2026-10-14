@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private var latestMarkdownContent: String? = null
     private var pendingOpenUri: Uri? = null
     private var currentToast: Toast? = null
+    private var currentTextPackSession: TextPackSession? = null
     private val documentHistoryStack = java.util.ArrayDeque<Uri>()
 
     private fun showCustomToast(message: String) {
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         uri?.let { openFile(it) }
     }
 
-    private val createDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")) { uri ->
+    private val createDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { uri ->
         uri?.let { saveFileToUri(it) }
     }
 
@@ -465,6 +466,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             "strikethrough" to prefs.getString("pref_hotkey_strikethrough", "ctrl+shift+x"),
             "code" to prefs.getString("pref_hotkey_code", "ctrl+e"),
             "link" to prefs.getString("pref_hotkey_link", "ctrl+k"),
+            "footnote" to prefs.getString("pref_hotkey_footnote", "ctrl+shift+f"),
             "blockQuote" to prefs.getString("pref_hotkey_blockQuote", "ctrl+shift+q"),
             "codeBlock" to prefs.getString("pref_hotkey_codeBlock", "ctrl+shift+c"),
             "bulletedList" to prefs.getString("pref_hotkey_bulletedList", "ctrl+shift+8"),
@@ -554,6 +556,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         if (!isMultiWindowEnabled && currentFileUri != null) {
             documentHistoryStack.push(currentFileUri)
         }
+        currentTextPackSession = null
         currentFileUri = null
         currentFileName = getString(R.string.untitled_document)
         isDirty = false
@@ -606,9 +609,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun handleOpenFile() {
         if (isDirty) {
-            showUnsavedChangesDialog { openDocumentLauncher.launch(arrayOf("text/markdown", "text/plain", "*/*")) }
+            showUnsavedChangesDialog { openDocumentLauncher.launch(arrayOf("text/markdown", "text/plain", "application/zip", "application/x-zip-compressed", "*/*")) }
         } else {
-            openDocumentLauncher.launch(arrayOf("text/markdown", "text/plain", "*/*"))
+            openDocumentLauncher.launch(arrayOf("text/markdown", "text/plain", "application/zip", "application/x-zip-compressed", "*/*"))
         }
     }
 
@@ -652,24 +655,43 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 // Ignore if not a persistable document grant
             }
 
-            contentResolver.openInputStream(uri)?.use { inputStream ->
-                val reader = BufferedReader(InputStreamReader(inputStream))
-                val content = reader.readText()
+            val fileName = getFileNameFromUri(uri)
+
+            if (TextPackManager.isTextPackFile(this, uri, fileName)) {
+                val session = TextPackManager.openTextPack(this, uri)
+                currentTextPackSession = session
                 currentFileUri = uri
-                currentFileName = getFileNameFromUri(uri)
+                currentFileName = fileName
                 isDirty = false
                 updateTitle()
 
                 prefs.edit().putString("last_opened_uri", uri.toString()).apply()
 
-                val escaped = JSONObjectWrapper.quote(content)
+                val escaped = JSONObjectWrapper.quote(session.markdownContent)
                 webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
                     restoreCursorAndScrollState()
-                    webView.post {
-                        webView.requestFocus()
-                        webView.requestLayout()
-                        webView.invalidate()
-                        webView.postInvalidate()
+                }
+            } else {
+                currentTextPackSession = null
+                contentResolver.openInputStream(uri)?.use { inputStream ->
+                    val reader = BufferedReader(InputStreamReader(inputStream))
+                    val content = reader.readText()
+                    currentFileUri = uri
+                    currentFileName = fileName
+                    isDirty = false
+                    updateTitle()
+
+                    prefs.edit().putString("last_opened_uri", uri.toString()).apply()
+
+                    val escaped = JSONObjectWrapper.quote(content)
+                    webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
+                        restoreCursorAndScrollState()
+                        webView.post {
+                            webView.requestFocus()
+                            webView.requestLayout()
+                            webView.invalidate()
+                            webView.postInvalidate()
+                        }
                     }
                 }
             }
@@ -700,20 +722,39 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun handleSaveAsFile() {
-        createDocumentLauncher.launch(currentFileName)
+        val defaultName = if (currentFileName.endsWith(".textpack", ignoreCase = true)) {
+            currentFileName
+        } else if (currentFileName.contains(".")) {
+            "${currentFileName.substringBeforeLast(".")}.textpack"
+        } else {
+            "$currentFileName.textpack"
+        }
+        createDocumentLauncher.launch(defaultName)
     }
 
     private fun saveFileToUri(uri: Uri) {
         webView.evaluateJavascript("window.editorBridge.getMarkdown();") { result ->
             val markdownText = JSONObjectWrapper.unquote(result)
             try {
-                contentResolver.openOutputStream(uri, "rwt")?.use { outputStream ->
-                    val writer = OutputStreamWriter(outputStream)
-                    writer.write(markdownText)
-                    writer.flush()
+                val targetFileName = getFileNameFromUri(uri)
+                val isTextPackTarget = targetFileName.endsWith(".textpack", ignoreCase = true) ||
+                                       targetFileName.endsWith(".textpack.zip", ignoreCase = true) ||
+                                       currentTextPackSession != null
+
+                if (isTextPackTarget) {
+                    val session = currentTextPackSession ?: TextPackManager.openTextPack(this, uri)
+                    currentTextPackSession = session
+                    TextPackManager.saveTextPack(this, session, markdownText, uri)
+                } else {
+                    contentResolver.openOutputStream(uri, "rwt")?.use { outputStream ->
+                        val writer = OutputStreamWriter(outputStream)
+                        writer.write(markdownText)
+                        writer.flush()
+                    }
                 }
+
                 currentFileUri = uri
-                currentFileName = getFileNameFromUri(uri)
+                currentFileName = targetFileName
                 isDirty = false
                 updateTitle()
                 Toast.makeText(this, "File saved successfully", Toast.LENGTH_SHORT).show()
@@ -770,12 +811,21 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private fun insertImageFromUri(uri: Uri) {
         try {
             contentResolver.openInputStream(uri)?.use { inputStream ->
-                val bytes = inputStream.readBytes()
-                val mimeType = contentResolver.getType(uri) ?: "image/png"
-                val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-                val dataUri = "data:$mimeType;base64,$base64"
-                val escapedUri = JSONObjectWrapper.quote(dataUri)
-                webView.evaluateJavascript("window.editorBridge.insertImage($escapedUri);", null)
+                val session = currentTextPackSession
+                if (session != null) {
+                    val originalName = getFileNameFromUri(uri)
+                    val assetPath = TextPackManager.addAssetImage(session, inputStream, originalName)
+                    val markdownImageTag = "![Image]($assetPath)"
+                    val escapedTag = JSONObjectWrapper.quote(markdownImageTag)
+                    webView.evaluateJavascript("window.editorBridge.insertImage($escapedTag);", null)
+                } else {
+                    val bytes = inputStream.readBytes()
+                    val mimeType = contentResolver.getType(uri) ?: "image/png"
+                    val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                    val dataUri = "data:$mimeType;base64,$base64"
+                    val escapedUri = JSONObjectWrapper.quote(dataUri)
+                    webView.evaluateJavascript("window.editorBridge.insertImage($escapedUri);", null)
+                }
             }
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to insert image: ${e.localizedMessage}", Toast.LENGTH_LONG).show()

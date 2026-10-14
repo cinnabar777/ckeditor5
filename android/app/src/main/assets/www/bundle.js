@@ -111519,6 +111519,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     strikethrough: "ctrl+shift+x",
     code: "ctrl+e",
     link: "ctrl+k",
+    footnote: "ctrl+shift+f",
     blockQuote: "ctrl+shift+q",
     codeBlock: "ctrl+shift+c",
     bulletedList: "ctrl+shift+8",
@@ -112037,18 +112038,18 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           const pre = e.target.closest("pre");
           if (pre) {
             const rect = pre.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const clickY = e.clientY - rect.top;
-            const langLabel = e.target.closest(".ck-code-block-language-label");
-            const isTopLeftTap = clickX < 150 && clickY < 36 || !!langLabel;
-            if (isTopLeftTap) {
+            const clientX = e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX || 0;
+            const clientY = e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY || 0;
+            const clickX = clientX - rect.left;
+            const clickY = clientY - rect.top;
+            if (clickX >= 0 && clickX < 160 && clickY >= 0 && clickY < 38) {
               e.preventDefault();
               e.stopPropagation();
               if (typeof e.stopImmediatePropagation === "function") {
                 e.stopImmediatePropagation();
               }
               const now = Date.now();
-              if (now - lastCopyTime > 600) {
+              if (now - lastCopyTime > 500) {
                 lastCopyTime = now;
                 const codeEl = pre.querySelector("code") || pre;
                 const textToCopy = codeEl.innerText || codeEl.textContent;
@@ -112064,10 +112065,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             }
           }
         };
-        editorMainArea.addEventListener("pointerdown", handleCodeBlockCopy, true);
-        editorMainArea.addEventListener("touchstart", handleCodeBlockCopy, true);
-        editorMainArea.addEventListener("mousedown", handleCodeBlockCopy, true);
-        editorMainArea.addEventListener("click", handleCodeBlockCopy, true);
+        ["pointerdown", "touchstart", "mousedown", "click"].forEach((evtType) => {
+          editorMainArea.addEventListener(evtType, handleCodeBlockCopy, { capture: true, passive: false });
+        });
       }
       setupFastScrollbar();
       let lastWysiwygScrollTop = 0;
@@ -112817,6 +112817,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       setCssVar("--code-bg-color", prefs.pref_code_bg_color);
       setCssVar("--code-padding", prefs.pref_code_padding, "px");
       setCssVar("--code-border-radius", prefs.pref_code_border_radius, "px");
+      setCssVar("--footnote-font-size", prefs.pref_footnote_font_size, "px");
+      setCssVar("--footnote-text-color", prefs.pref_footnote_text_color);
+      setCssVar("--footnote-ref-color", prefs.pref_footnote_ref_color);
+      setCssVar("--footnote-link-color", prefs.pref_footnote_link_color);
+      setCssVar("--footnote-bg-color", prefs.pref_footnote_bg_color);
       setCssVar("--list-left-indent", prefs.pref_list_left_indent, "px");
       setCssVar("--list-item-spacing", prefs.pref_list_item_spacing, "px");
       setCssVar("--list-line-height", prefs.pref_list_line_height);

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -59,6 +60,10 @@ object PreferenceResetHelper {
             "pref_table_header_text_color" -> "#FFFFFF"
             "pref_table_cell_bg_color" -> "#000000"
             "pref_table_cell_text_color" -> "#FFFFFF"
+            "pref_footnote_text_color" -> "#E0E0E0"
+            "pref_footnote_ref_color" -> "#29B6F6"
+            "pref_footnote_link_color" -> "#29B6F6"
+            "pref_footnote_bg_color" -> "#1A1A1A"
             else -> {
                 if (key != null && key.startsWith("pref_heading_") && key.endsWith("_color")) {
                     "#FFFFFF"
@@ -238,8 +243,9 @@ object PreferenceResetHelper {
         val isExcluded = key == null || key.startsWith("pref_export") || key.startsWith("pref_import") || key == "pref_reset_all_defaults" || key.startsWith("pref_page_") || key.endsWith("_page")
 
         if (!isExcluded) {
-            val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
-            if (widgetFrame != null) {
+            val titleView = holder.findViewById(android.R.id.title) as? TextView
+            if (titleView != null && titleView.parent is ViewGroup) {
+                val titleParent = titleView.parent as ViewGroup
                 var btnReset = holder.itemView.findViewById<ImageView>(R.id.btn_reset_widget)
 
                 if (btnReset == null) {
@@ -257,38 +263,28 @@ object PreferenceResetHelper {
                     }
 
                     val sizePx = (32 * context.resources.displayMetrics.density).toInt()
-                    val marginPx = (2 * context.resources.displayMetrics.density).toInt()
+                    val marginPx = (4 * context.resources.displayMetrics.density).toInt()
                     val params = LinearLayout.LayoutParams(sizePx, sizePx).apply {
                         gravity = Gravity.CENTER_VERTICAL
                         marginStart = marginPx
-                        marginEnd = marginPx
                     }
 
-                    widgetFrame.visibility = View.VISIBLE
-
-                    if (widgetFrame is LinearLayout) {
-                        widgetFrame.orientation = LinearLayout.HORIZONTAL
-                        widgetFrame.gravity = Gravity.CENTER_VERTICAL
-                        widgetFrame.addView(btnReset, 0, params)
+                    if (titleParent is LinearLayout && titleParent.orientation == LinearLayout.HORIZONTAL) {
+                        titleParent.addView(btnReset, params)
                     } else {
-                        val containerTag = "widget_reset_row_container"
-                        var container = widgetFrame.findViewWithTag<LinearLayout>(containerTag)
+                        val containerTag = "title_reset_row_container"
+                        var container = titleParent.findViewWithTag<LinearLayout>(containerTag)
                         if (container == null) {
+                            val indexInParent = titleParent.indexOfChild(titleView)
+                            titleParent.removeView(titleView)
                             container = LinearLayout(context).apply {
                                 tag = containerTag
                                 orientation = LinearLayout.HORIZONTAL
                                 gravity = Gravity.CENTER_VERTICAL
                             }
-                            val existingViews = ArrayList<View>()
-                            for (i in 0 until widgetFrame.childCount) {
-                                existingViews.add(widgetFrame.getChildAt(i))
-                            }
-                            widgetFrame.removeAllViews()
+                            container.addView(titleView, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f))
                             container.addView(btnReset, params)
-                            for (child in existingViews) {
-                                container.addView(child)
-                            }
-                            widgetFrame.addView(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                            titleParent.addView(container, indexInParent)
                         }
                     }
                 }

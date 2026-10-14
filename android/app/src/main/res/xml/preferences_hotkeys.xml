@@ -65,8 +65,13 @@
 
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_underline"
-            app:title="Hotkey: Underline"
+            app:title="Underline Shortcut"
             app:defaultValue="ctrl+u" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_footnote"
+            app:title="Insert Footnote Shortcut"
+            app:defaultValue="ctrl+shift+f" />
 
         <com.ckeditor.markdownapp.ResetEditTextPreference
             app:key="pref_hotkey_strikethrough"
