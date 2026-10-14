@@ -33,18 +33,6 @@
             app:entryValues="@array/pref_theme_values"
             app:defaultValue="amoled" />
 
-        <com.ckeditor.markdownapp.ResetSwitchPreference
-            app:key="pref_auto_hide_status_bar"
-            app:title="Auto-Hide Notification / Status Bar"
-            app:summary="Automatically hide the top status bar displaying clock and notifications"
-            android:defaultValue="false" />
-
-        <com.ckeditor.markdownapp.ResetSwitchPreference
-            app:key="pref_auto_hide_nav_bar"
-            app:title="Auto-Hide Navigation Bar"
-            app:summary="Automatically hide the bottom gesture / navigation bar (swipe from edge to reveal)"
-            android:defaultValue="false" />
-
         <com.ckeditor.markdownapp.ResetListPreference
             app:key="pref_startup_document"
             app:title="Startup Document Preference"

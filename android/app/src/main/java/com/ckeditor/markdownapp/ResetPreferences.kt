@@ -155,8 +155,6 @@ object PreferenceResetHelper {
             key == "pref_settings_switch_color" -> "#00E5FF"
             key == "pref_settings_reset_icon_color" -> "#00E5FF"
             key == "pref_settings_bg_color" -> "#000000"
-            key == "pref_auto_hide_status_bar" -> false
-            key == "pref_auto_hide_nav_bar" -> false
             key == "pref_auto_save_on_leave" -> true
             key == "pref_multi_window" -> true
             key == "pref_hotkey_new" -> "ctrl+n"
