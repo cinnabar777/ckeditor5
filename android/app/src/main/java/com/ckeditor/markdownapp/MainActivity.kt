@@ -151,17 +151,38 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun applySystemBarDimming() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val hideStatusBar = prefs.getBoolean("pref_hide_status_bar", false)
+            val hideNavBar = prefs.getBoolean("pref_hide_nav_bar", false)
+
             window.statusBarColor = Color.BLACK
             window.navigationBarColor = Color.BLACK
+
+            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+            insetsController.isAppearanceLightStatusBars = false
+            insetsController.isAppearanceLightNavigationBars = false
+
+            if (hideStatusBar) {
+                insetsController.hide(WindowInsetsCompat.Type.statusBars())
+            } else {
+                insetsController.show(WindowInsetsCompat.Type.statusBars())
+            }
+
+            if (hideNavBar) {
+                insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+            } else {
+                insetsController.show(WindowInsetsCompat.Type.navigationBars())
+            }
+
+            if (hideStatusBar || hideNavBar) {
+                insetsController.systemBarsBehavior = androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_LOW_PROFILE
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             )
-            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-            insetsController.isAppearanceLightStatusBars = false
-            insetsController.isAppearanceLightNavigationBars = false
-            insetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
 
@@ -386,6 +407,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun applyThemeAndFullscreenPreferences() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        applySystemBarDimming()
 
         val jsonObject = org.json.JSONObject()
         val allEntries = prefs.all

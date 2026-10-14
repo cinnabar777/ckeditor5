@@ -33,6 +33,18 @@
             app:entryValues="@array/pref_theme_values"
             app:defaultValue="amoled" />
 
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_hide_status_bar"
+            app:title="Hide Status Bar (Notification Bar)"
+            app:summary="Hide top system status bar for fullscreen editing"
+            android:defaultValue="false" />
+
+        <com.ckeditor.markdownapp.ResetSwitchPreference
+            app:key="pref_hide_nav_bar"
+            app:title="Hide Navigation Bar"
+            app:summary="Hide bottom system navigation bar"
+            android:defaultValue="false" />
+
         <com.ckeditor.markdownapp.ResetListPreference
             app:key="pref_startup_document"
             app:title="Startup Document Preference"

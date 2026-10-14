@@ -1233,10 +1233,12 @@ function setupTocGestureAndPanel() {
   }
 }
 
-function toggleBottomToolbar() {
+function toggleBottomToolbar(forceState) {
   const toggleBtn = document.querySelector('#floating-toggle-btn');
-  isToolbarVisible = !isToolbarVisible;
-  if (isToolbarVisible) {
+  const isCurrentlyHidden = document.body.classList.contains('toolbar-hidden');
+  const shouldShow = forceState !== undefined ? forceState : isCurrentlyHidden;
+
+  if (shouldShow) {
     document.body.classList.remove('toolbar-hidden');
     if (toggleBtn) toggleBtn.innerHTML = '⟩';
   } else {
