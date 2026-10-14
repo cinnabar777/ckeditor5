@@ -79,6 +79,10 @@ open class BaseSettingsFragment : PreferenceFragmentCompat(), SharedPreferences.
             if (pref is androidx.preference.PreferenceCategory) {
                 pref.layoutResource = R.layout.preference_category_custom
                 applyCustomLayouts(pref)
+            } else if (pref is androidx.preference.SeekBarPreference) {
+                if (pref is androidx.preference.PreferenceGroup) {
+                    applyCustomLayouts(pref)
+                }
             } else {
                 pref.layoutResource = R.layout.preference_custom
                 if (pref is androidx.preference.PreferenceGroup) {

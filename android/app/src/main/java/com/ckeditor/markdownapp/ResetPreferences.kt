@@ -431,11 +431,12 @@ open class ResetColorPickerPreference @JvmOverloads constructor(
     }
 }
 
-open class ResetSeekBarPreference @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = androidx.preference.R.attr.seekBarPreferenceStyle
-) : SeekBarPreference(context, attrs, defStyleAttr), ResettablePreference {
+open class ResetSeekBarPreference : SeekBarPreference, ResettablePreference {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, androidx.preference.R.attr.seekBarPreferenceStyle)
+    constructor(context: Context) : super(context)
+
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -445,11 +446,12 @@ open class ResetSeekBarPreference @JvmOverloads constructor(
     }
 }
 
-open class ResetEditTextPreference @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = androidx.preference.R.attr.editTextPreferenceStyle
-) : EditTextPreference(context, attrs, defStyleAttr), ResettablePreference {
+open class ResetEditTextPreference : EditTextPreference, ResettablePreference {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, androidx.preference.R.attr.editTextPreferenceStyle)
+    constructor(context: Context) : super(context)
+
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -459,11 +461,12 @@ open class ResetEditTextPreference @JvmOverloads constructor(
     }
 }
 
-open class ResetListPreference @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = androidx.preference.R.attr.dialogPreferenceStyle
-) : ListPreference(context, attrs, defStyleAttr), ResettablePreference {
+open class ResetListPreference : ListPreference, ResettablePreference {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, androidx.preference.R.attr.dialogPreferenceStyle)
+    constructor(context: Context) : super(context)
+
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
@@ -473,11 +476,12 @@ open class ResetListPreference @JvmOverloads constructor(
     }
 }
 
-open class ResetSwitchPreference @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = androidx.preference.R.attr.switchPreferenceCompatStyle
-) : SwitchPreferenceCompat(context, attrs, defStyleAttr), ResettablePreference {
+open class ResetSwitchPreference : SwitchPreferenceCompat, ResettablePreference {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, androidx.preference.R.attr.switchPreferenceCompatStyle)
+    constructor(context: Context) : super(context)
+
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         PreferenceResetHelper.bindResetButton(holder, this)
