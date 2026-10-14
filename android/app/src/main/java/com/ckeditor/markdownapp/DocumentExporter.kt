@@ -6,9 +6,7 @@ import android.webkit.ValueCallback
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.preference.PreferenceManager
-import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
 
 object DocumentExporter {
 
@@ -19,34 +17,32 @@ object DocumentExporter {
         val includeCss = prefs.getBoolean("pref_export_include_css", true)
         val cssPlacement = prefs.getString("pref_export_css_placement", "head") ?: "head"
 
-        var tocHtml = ""
-        if (includeToc) {
-            tocHtml = generateTocHtml(ckEditorData, tocLevels)
-        }
+        val (processedBodyHtml, tocHtml) = processHeadingsAndToc(ckEditorData, includeToc, tocLevels)
+
+        val formattedBodyHtml = formatHtmlPayload(processedBodyHtml)
 
         val cssContent = if (includeCss) buildExportCss(context) else ""
 
         val styleTag = when {
             !includeCss -> ""
-            cssPlacement == "file" -> "<link rel=\"stylesheet\" href=\"styles.css\">"
-            else -> "<style>\n$cssContent\n</style>"
+            cssPlacement == "file" -> "    <link rel=\"stylesheet\" href=\"styles.css\">"
+            else -> "    <style>\n${cssContent.prependIndent("        ")}\n    </style>"
         }
 
         val htmlContent = """
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>${escapeXml(documentTitle)}</title>
-                $styleTag
-            </head>
-            <body>
-                $tocHtml
-                $ckEditorData
-            </body>
-            </html>
-        """.trimIndent()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeXml(documentTitle)}</title>
+$styleTag
+</head>
+<body>
+${if (includeToc && tocHtml.isNotEmpty()) tocHtml.prependIndent("    ") + "\n" else ""}${formattedBodyHtml.prependIndent("    ")}
+</body>
+</html>
+""".trim()
 
         val separateCss = if (includeCss && cssPlacement == "file") cssContent else null
         return Pair(htmlContent, separateCss)
@@ -107,30 +103,91 @@ object DocumentExporter {
         }
     }
 
-    private fun generateTocHtml(html: String, maxLevel: Int): String {
-        val headingRegex = Regex("""<h([1-6])[^>]*>(.*?)</h[1-6]>""", RegexOption.IGNORE_CASE)
-        val matches = headingRegex.findAll(html).toList()
-        val filtered = matches.filter {
-            val level = it.groupValues[1].toIntOrNull() ?: 1
-            level <= maxLevel
+    private fun processHeadingsAndToc(html: String, includeToc: Boolean, maxLevel: Int): Pair<String, String> {
+        val headingRegex = Regex("""<h([1-6])([^>]*)>(.*?)</h\1>""", RegexOption.IGNORE_CASE)
+        var headingIndex = 0
+        val tocItems = mutableListOf<Pair<Int, String>>()
+        val tocAnchors = mutableListOf<String>()
+
+        val processedHtml = headingRegex.replace(html) { match ->
+            headingIndex++
+            val level = match.groupValues[1].toIntOrNull() ?: 1
+            val attrs = match.groupValues[2]
+            val innerHtml = match.groupValues[3]
+            val anchorId = "heading-$headingIndex"
+            val plainTitle = innerHtml.replace(Regex("""<[^>]*>"""), "").trim()
+
+            if (level <= maxLevel) {
+                tocItems.add(Pair(level, plainTitle))
+                tocAnchors.add(anchorId)
+            }
+
+            val newAttrs = if (attrs.contains("id=", ignoreCase = true)) {
+                attrs
+            } else {
+                """ id="$anchorId"$attrs"""
+            }
+
+            "<h$level$newAttrs>$innerHtml</h$level>"
         }
 
-        if (filtered.isEmpty()) return ""
+        if (!includeToc || tocItems.isEmpty()) {
+            return Pair(processedHtml, "")
+        }
 
         val sb = StringBuilder()
-        sb.append("""<nav class="toc-container">""")
-        sb.append("""<h2 class="toc-title">Table of Contents</h2>""")
-        sb.append("""<ul class="toc-list">""")
+        sb.append("<nav class=\"toc-container\">\n")
+        sb.append("  <h2 class=\"toc-title\">Table of Contents</h2>\n")
+        sb.append("  <ul class=\"toc-list\">\n")
 
-        for (match in filtered) {
-            val level = match.groupValues[1].toIntOrNull() ?: 1
-            val title = match.groupValues[2].replace(Regex("""<[^>]*>"""), "").trim()
+        for (i in tocItems.indices) {
+            val (level, title) = tocItems[i]
+            val anchorId = tocAnchors[i]
             val indentPx = (level - 1) * 16
-            sb.append("""<li class="toc-item level-$level" style="margin-left: ${indentPx}px;"><span class="toc-text">$title</span></li>""")
+            sb.append("""    <li class="toc-item level-$level" style="margin-left: ${indentPx}px;"><a href="#$anchorId" class="toc-link">$title</a></li>""").append("\n")
         }
 
-        sb.append("""</ul></nav>""")
-        return sb.toString()
+        sb.append("  </ul>\n</nav>")
+        return Pair(processedHtml, sb.toString())
+    }
+
+    private fun formatHtmlPayload(html: String): String {
+        val sb = StringBuilder()
+        var indentLevel = 0
+        fun indent() = "  ".repeat(indentLevel)
+
+        val tokenRegex = Regex("""(<[^>]+>|[^<]+)""")
+        val matches = tokenRegex.findAll(html).map { it.value.trim() }.filter { it.isNotEmpty() }.toList()
+
+        val blockTags = setOf("p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote", "pre", "table", "thead", "tbody", "tr", "th", "td", "div", "nav", "section", "hr", "header", "footer")
+
+        for (token in matches) {
+            if (token.startsWith("<")) {
+                val isClosing = token.startsWith("</")
+                val isSelfClosing = token.endsWith("/>") || token.equals("<hr>", ignoreCase = true) || token.equals("<br>", ignoreCase = true)
+                val tagName = token.replace(Regex("""[</>]"""), "").split(" ").firstOrNull()?.lowercase() ?: ""
+
+                if (isClosing) {
+                    if (blockTags.contains(tagName) && indentLevel > 0) {
+                        indentLevel--
+                        sb.append("\n").append(indent())
+                    }
+                    sb.append(token)
+                } else {
+                    if (blockTags.contains(tagName)) {
+                        sb.append("\n").append(indent())
+                    }
+                    sb.append(token)
+                    if (!isSelfClosing && blockTags.contains(tagName)) {
+                        indentLevel++
+                    }
+                }
+            } else {
+                sb.append(token)
+            }
+        }
+
+        return sb.toString().trim()
     }
 
     private fun buildExportCss(context: Context): String {
@@ -168,6 +225,8 @@ object DocumentExporter {
             .toc-title { margin-top: 0; font-size: 18px; border-bottom: 1px solid #444444; padding-bottom: 8px; }
             .toc-list { list-style: none; padding-left: 0; margin: 0; }
             .toc-item { padding: 4px 0; }
+            .toc-link { color: $linkColor; text-decoration: none; font-weight: 500; }
+            .toc-link:hover { text-decoration: underline; }
         """.trimIndent()
     }
 

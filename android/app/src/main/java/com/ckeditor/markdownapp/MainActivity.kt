@@ -679,6 +679,12 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 val escaped = JSONObjectWrapper.quote(session.markdownContent)
                 webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
                     restoreCursorAndScrollState()
+                    webView.post {
+                        webView.requestFocus()
+                        webView.requestLayout()
+                        webView.invalidate()
+                        webView.postInvalidate()
+                    }
                 }
             } else {
                 currentTextPackSession = null

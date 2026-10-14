@@ -29,7 +29,8 @@ object TextPackManager {
                     var entry = zip.nextEntry
                     var foundMdOrInfo = false
                     while (entry != null) {
-                        if (entry.name == "text.md" || entry.name == "info.json") {
+                        val name = entry.name.lowercase()
+                        if (name.endsWith("text.md") || name.endsWith("info.json") || name.endsWith(".textpack")) {
                             foundMdOrInfo = true
                             break
                         }
@@ -55,29 +56,37 @@ object TextPackManager {
         val assetsDir = File(sessionDir, "assets")
         assetsDir.mkdirs()
 
-        var markdownContent = ""
-
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
             ZipInputStream(inputStream).use { zip ->
                 var entry = zip.nextEntry
                 while (entry != null) {
-                    val entryName = entry.name
+                    val entryName = entry.name.replace("\\", "/")
                     if (!entry.isDirectory) {
-                        val outputFile = File(sessionDir, entryName)
-                        outputFile.parentFile?.mkdirs()
-
-                        FileOutputStream(outputFile).use { out ->
-                            zip.copyTo(out)
+                        val fileNameOnly = entryName.substringAfterLast("/")
+                        val isAsset = entryName.contains("assets/", ignoreCase = true)
+                        val targetFile = if (isAsset) {
+                            File(assetsDir, fileNameOnly)
+                        } else {
+                            File(sessionDir, fileNameOnly)
                         }
 
-                        if (entryName == "text.md" || (markdownContent.isEmpty() && entryName.endsWith(".md"))) {
-                            markdownContent = outputFile.readText()
+                        targetFile.parentFile?.mkdirs()
+                        FileOutputStream(targetFile).use { out ->
+                            zip.copyTo(out)
                         }
                     }
                     entry = zip.nextEntry
                 }
             }
         }
+
+        var markdownFile = File(sessionDir, "text.md")
+        if (!markdownFile.exists()) {
+            markdownFile = sessionDir.walkTopDown().firstOrNull { it.isFile && it.name.endsWith(".md", ignoreCase = true) }
+                ?: File(sessionDir, "text.md")
+        }
+
+        var markdownContent = if (markdownFile.exists()) markdownFile.readText() else ""
 
         val infoFile = File(sessionDir, "info.json")
         if (!infoFile.exists()) {

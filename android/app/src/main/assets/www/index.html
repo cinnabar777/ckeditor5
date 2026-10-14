@@ -547,6 +547,24 @@
       z-index: 10 !important;
     }
 
+    /* Transparent Click/Touch Copy Overlay over language label */
+    .ck-content pre::after {
+      content: 'COPY' !important;
+      position: absolute !important;
+      top: 6px !important;
+      left: 8px !important;
+      right: auto !important;
+      height: 26px !important;
+      min-width: 80px !important;
+      padding: 3px 10px !important;
+      background: transparent !important;
+      color: transparent !important;
+      border: none !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      z-index: 20 !important;
+    }
+
     .ck-content pre code {
       color: var(--code-block-color) !important;
       background-color: var(--code-block-bg-color) !important;
