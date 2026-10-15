@@ -1160,6 +1160,66 @@
       transform: scale(0.92);
       opacity: 1.0;
     }
+
+    /* CodeMirror 6 Live Preview Styling Rules */
+    .cm-editor {
+      height: 100% !important;
+      background-color: var(--bg-color) !important;
+      color: var(--text-color) !important;
+    }
+    .cm-scroller {
+      overflow: auto !important;
+    }
+    .cm-content {
+      font-size: var(--body-font-size, 16px) !important;
+      font-family: var(--body-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+      line-height: var(--paragraph-line-height, 1.6) !important;
+      color: var(--text-color) !important;
+      caret-color: var(--text-color) !important;
+      padding: 12px 16px !important;
+    }
+    .cm-heading {
+      font-family: var(--heading-font-family), var(--body-font-family), sans-serif !important;
+      font-weight: var(--heading-font-weight, 700) !important;
+      line-height: var(--heading-line-height, 1.2) !important;
+    }
+    .cm-heading-1 { font-size: calc(2.0em * var(--heading-scale, 1.0)) !important; color: var(--heading-1-color, inherit) !important; }
+    .cm-heading-2 { font-size: calc(1.6em * var(--heading-scale, 1.0)) !important; color: var(--heading-2-color, inherit) !important; }
+    .cm-heading-3 { font-size: calc(1.3em * var(--heading-scale, 1.0)) !important; color: var(--heading-3-color, inherit) !important; }
+    .cm-heading-4 { font-size: calc(1.1em * var(--heading-scale, 1.0)) !important; color: var(--heading-4-color, inherit) !important; }
+    .cm-heading-5 { font-size: calc(1.0em * var(--heading-scale, 1.0)) !important; color: var(--heading-5-color, inherit) !important; }
+    .cm-heading-6 { font-size: calc(0.9em * var(--heading-scale, 1.0)) !important; color: var(--heading-6-color, inherit) !important; }
+
+    .cm-bold { font-weight: var(--bold-font-weight, 700) !important; color: var(--bold-color, inherit) !important; }
+    .cm-italic { font-style: italic !important; color: var(--italic-color, inherit) !important; }
+    .cm-strikethrough { text-decoration: line-through !important; }
+    .cm-inline-code {
+      font-family: var(--code-font-family), monospace !important;
+      color: var(--code-color, #ff80ab) !important;
+      background-color: var(--code-bg-color, #212121) !important;
+      padding: var(--code-padding, 2px 4px) !important;
+      border-radius: var(--code-border-radius, 4px) !important;
+    }
+    .cm-blockquote {
+      border-left: var(--blockquote-border-width, 4px) var(--blockquote-border-style, solid) var(--blockquote-border-color, #444444) !important;
+      background-color: var(--blockquote-bg-color, transparent) !important;
+      color: var(--blockquote-text-color, inherit) !important;
+      padding-left: var(--blockquote-padding, 12px) !important;
+    }
+    .cm-link {
+      color: var(--link-color, #29b6f6) !important;
+      text-decoration: var(--link-decoration, underline) !important;
+    }
+    .cm-hr {
+      border-bottom: var(--hr-thickness, 2px) var(--hr-style, solid) var(--hr-color, #444444) !important;
+    }
+    .cm-todo-checkbox {
+      accent-color: var(--todo-checked-color, #00e5ff) !important;
+      margin-right: 6px !important;
+      transform: scale(1.1) !important;
+      vertical-align: middle !important;
+      cursor: pointer !important;
+    }
   </style>
 </head>
 <body class="toolbar-hidden">

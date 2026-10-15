@@ -137425,6 +137425,143 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   });
 
   // web/src/main.js
+  var CheckboxWidget = class extends WidgetType {
+    constructor(checked, pos) {
+      super();
+      this.checked = checked;
+      this.pos = pos;
+    }
+    toDOM(view) {
+      const input2 = document.createElement("input");
+      input2.type = "checkbox";
+      input2.checked = this.checked;
+      input2.className = "cm-todo-checkbox";
+      input2.addEventListener("click", (e) => {
+        e.preventDefault();
+        const newText = this.checked ? "[ ]" : "[x]";
+        view.dispatch({
+          changes: { from: this.pos, to: this.pos + 3, insert: newText }
+        });
+      });
+      return input2;
+    }
+  };
+  var livePreviewPlugin = ViewPlugin.fromClass(class {
+    constructor(view) {
+      this.decorations = this.buildDecorations(view);
+    }
+    update(update) {
+      if (update.docChanged || update.viewportChanged || update.selectionSet) {
+        this.decorations = this.buildDecorations(update.view);
+      }
+    }
+    buildDecorations(view) {
+      const builder = [];
+      const tree = syntaxTree(view.state);
+      const selection = view.state.selection.main;
+      const activeLine = view.state.doc.lineAt(selection.head).number;
+      for (const { from, to } of view.visibleRanges) {
+        tree.iterate({
+          from,
+          to,
+          enter: (node2) => {
+            const line = view.state.doc.lineAt(node2.from);
+            const isLineActive = activeLine === line.number;
+            if (node2.name.startsWith("ATXHeading")) {
+              const level = node2.name.replace("ATXHeading", "");
+              builder.push(Decoration.line({ attributes: { class: `cm-heading cm-heading-${level}` } }).range(line.from));
+            }
+            if (node2.name === "HeaderMark" && !isLineActive) {
+              const end = Math.min(node2.to + 1, line.to);
+              if (end > node2.from) {
+                builder.push(Decoration.replace({}).range(node2.from, end));
+              }
+            }
+            if (node2.name === "StrongEmphasis") {
+              builder.push(Decoration.mark({ class: "cm-bold" }).range(node2.from, node2.to));
+            }
+            if (node2.name === "EmphasisMark" && !isLineActive) {
+              builder.push(Decoration.replace({}).range(node2.from, node2.to));
+            }
+            if (node2.name === "Emphasis") {
+              builder.push(Decoration.mark({ class: "cm-italic" }).range(node2.from, node2.to));
+            }
+            if (node2.name === "Strikethrough") {
+              builder.push(Decoration.mark({ class: "cm-strikethrough" }).range(node2.from, node2.to));
+            }
+            if (node2.name === "StrikethroughMark" && !isLineActive) {
+              builder.push(Decoration.replace({}).range(node2.from, node2.to));
+            }
+            if (node2.name === "InlineCode") {
+              builder.push(Decoration.mark({ class: "cm-inline-code" }).range(node2.from, node2.to));
+            }
+            if (node2.name === "CodeMark" && !isLineActive) {
+              builder.push(Decoration.replace({}).range(node2.from, node2.to));
+            }
+            if (node2.name === "Blockquote") {
+              builder.push(Decoration.line({ attributes: { class: "cm-blockquote" } }).range(line.from));
+            }
+            if (node2.name === "QuoteMark" && !isLineActive) {
+              const end = Math.min(node2.to + 1, line.to);
+              if (end > node2.from) {
+                builder.push(Decoration.replace({}).range(node2.from, end));
+              }
+            }
+            if (node2.name === "Task") {
+              const taskText = view.state.doc.sliceString(node2.from, node2.to);
+              const isChecked = taskText.includes("[x]") || taskText.includes("[X]");
+              if (!isLineActive) {
+                builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, node2.from) }).range(node2.from, node2.to));
+              }
+            }
+            if (node2.name === "HorizontalRule") {
+              builder.push(Decoration.line({ attributes: { class: "cm-hr" } }).range(line.from));
+            }
+            if (node2.name === "URL" || node2.name === "Link") {
+              builder.push(Decoration.mark({ class: "cm-link" }).range(node2.from, node2.to));
+            }
+          }
+        });
+      }
+      builder.sort((a2, b) => a2.from - b.from || a2.to - b.to);
+      return Decoration.set(builder, true);
+    }
+  }, {
+    decorations: (v) => v.decorations
+  });
+  function cmToggleLinePrefix(view, prefix2) {
+    if (!view) return;
+    const selection = view.state.selection.main;
+    const line = view.state.doc.lineAt(selection.head);
+    const lineText = line.text;
+    if (prefix2 === "") {
+      const cleanText = lineText.replace(/^(#{1,6}\s+|- \[\s?[xX]?\]\s+|- |\d+\.\s+|> )/, "");
+      view.dispatch({
+        changes: { from: line.from, to: line.to, insert: cleanText }
+      });
+      return;
+    }
+    if (lineText.startsWith(prefix2)) {
+      view.dispatch({
+        changes: { from: line.from, to: line.from + prefix2.length, insert: "" }
+      });
+    } else {
+      const cleanText = lineText.replace(/^(#{1,6}\s+|- \[\s?[xX]?\]\s+|- |\d+\.\s+|> )/, "");
+      view.dispatch({
+        changes: { from: line.from, to: line.to, insert: prefix2 + cleanText }
+      });
+    }
+  }
+  function cmWrapSelection(view, before, after2 = before) {
+    if (!view) return;
+    const sel = view.state.selection.main;
+    const selectedText = view.state.doc.sliceString(sel.from, sel.to);
+    const replacement = before + (selectedText || "text") + after2;
+    view.dispatch({
+      changes: { from: sel.from, to: sel.to, insert: replacement },
+      selection: { anchor: sel.from + before.length, head: sel.from + before.length + (selectedText.length || 4) }
+    });
+  }
   var editorInstance = null;
   var activeAdapter = null;
   var currentEditorMode = "rich_text";
@@ -137847,6 +137984,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           highlightActiveLine(),
           markdown(),
           syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+          livePreviewPlugin,
           this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),
           EditorView.theme({
             "&": {
@@ -138247,6 +138385,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       await adapter.init(containerEl, existingText);
       activeAdapter = adapter;
     } else {
+      window._lastDisabledPluginsStr = JSON.stringify([...disabledPlugins].sort());
       const adapter = new CKEditorAdapter();
       const containerEl = document.querySelector("#editor-container");
       await adapter.init(containerEl, existingText, disabledPlugins);
@@ -138402,6 +138541,32 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
   function execCmd(cmdName, options) {
+    if (activeAdapter && activeAdapter.mode === "source" && activeAdapter.view) {
+      const view = activeAdapter.view;
+      if (cmdName === "bold") cmWrapSelection(view, "**");
+      else if (cmdName === "italic") cmWrapSelection(view, "*");
+      else if (cmdName === "strikethrough") cmWrapSelection(view, "~~");
+      else if (cmdName === "underline") cmWrapSelection(view, "<u>", "</u>");
+      else if (cmdName === "code") cmWrapSelection(view, "`");
+      else if (cmdName === "blockQuote") cmToggleLinePrefix(view, "> ");
+      else if (cmdName === "codeBlock") cmWrapSelection(view, "```\n", "\n```");
+      else if (cmdName === "bulletedList") cmToggleLinePrefix(view, "- ");
+      else if (cmdName === "numberedList") cmToggleLinePrefix(view, "1. ");
+      else if (cmdName === "todoList") cmToggleLinePrefix(view, "- [ ] ");
+      else if (cmdName === "horizontalLine") cmWrapSelection(view, "\n---\n", "");
+      else if (cmdName === "InsertFootnote") cmWrapSelection(view, "[^1]", "\n[^1]: footnote text");
+      else if (cmdName === "heading") {
+        const val = options ? options.value : "";
+        if (val === "paragraph") cmToggleLinePrefix(view, "");
+        else if (val === "heading1") cmToggleLinePrefix(view, "# ");
+        else if (val === "heading2") cmToggleLinePrefix(view, "## ");
+        else if (val === "heading3") cmToggleLinePrefix(view, "### ");
+        else if (val === "heading4") cmToggleLinePrefix(view, "#### ");
+        else if (val === "heading5") cmToggleLinePrefix(view, "##### ");
+        else if (val === "heading6") cmToggleLinePrefix(view, "###### ");
+      }
+      return;
+    }
     if (editorInstance && activeAdapter && activeAdapter.mode === "rich_text") {
       try {
         editorInstance.execute(cmdName, options);
@@ -138429,9 +138594,10 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     hidePopupStrip();
     activePopupGroup = groupKey;
     targetBtn.classList.add("active");
+    const isSourceMode = activeAdapter && activeAdapter.mode === "source";
     items.forEach((item) => {
       if (item.ckeComponent) {
-        if (editorInstance && editorInstance.ui.componentFactory.has(item.ckeComponent)) {
+        if (!isSourceMode && editorInstance && editorInstance.ui.componentFactory.has(item.ckeComponent)) {
           try {
             const view = editorInstance.ui.componentFactory.create(item.ckeComponent);
             if (!view.element) {
@@ -138442,6 +138608,34 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             }
           } catch (e) {
             console.error("Failed to create CKE component:", item.ckeComponent, e);
+          }
+        } else if (isSourceMode) {
+          const btn = document.createElement("button");
+          btn.className = "popup-strip-btn";
+          const ckeMap = {
+            heading: { title: "Headings", action: () => execCmd("heading", { value: "heading1" }), icon: svgIcons.paragraph },
+            bulletedList: { title: "Bulleted List", action: () => execCmd("bulletedList"), icon: svgIcons.bulletedList },
+            numberedList: { title: "Numbered List", action: () => execCmd("numberedList"), icon: svgIcons.numberedList },
+            insertTable: { title: "Insert Table", action: () => cmWrapSelection(activeAdapter.view, "\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n", ""), icon: svgIcons.insertTable },
+            tableColumn: { title: "Table", action: () => {
+            }, icon: svgIcons.table },
+            tableRow: { title: "Table", action: () => {
+            }, icon: svgIcons.table },
+            mergeTableCells: { title: "Table", action: () => {
+            }, icon: svgIcons.table },
+            insertImage: { title: "Insert Image", action: () => window.editorBridge.insertImage("https://"), icon: svgIcons.image },
+            link: { title: "Insert Link", action: () => cmWrapSelection(activeAdapter.view, "[", "](https://)"), icon: svgIcons.link },
+            codeBlock: { title: "Code Block", action: () => execCmd("codeBlock"), icon: svgIcons.codeBlock }
+          };
+          const mapped = ckeMap[item.ckeComponent];
+          if (mapped) {
+            btn.title = mapped.title;
+            btn.innerHTML = mapped.icon;
+            btn.onclick = (e) => {
+              e.stopPropagation();
+              mapped.action();
+            };
+            strip.appendChild(btn);
           }
         }
       } else {
@@ -138471,7 +138665,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }
   }
   function setupFastScrollbar() {
-    const mainArea = document.querySelector(".ck-editor__main") || document.querySelector(".cm-editor");
+    const mainArea = document.querySelector(".ck-editor__main") || document.querySelector(".cm-scroller");
     const track2 = document.querySelector("#fast-scrollbar-track");
     const thumb = document.querySelector("#fast-scrollbar-thumb");
     if (!mainArea || !track2 || !thumb) return;
