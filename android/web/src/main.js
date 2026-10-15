@@ -978,9 +978,9 @@ function setupGroupedControlBar() {
       e.stopPropagation();
       togglePopupStrip('table', tableBtn, [
         { ckeComponent: 'insertTable' },
-        { icon: svgIcons.addColumn, title: 'Add Column', action: () => execCmd('tableColumn') },
-        { icon: svgIcons.addRow, title: 'Add Row', action: () => execCmd('tableRow') },
-        { icon: svgIcons.mergeCells, title: 'Merge Cells', action: () => execCmd('mergeTableCells') }
+        { ckeComponent: 'tableColumn' },
+        { ckeComponent: 'tableRow' },
+        { ckeComponent: 'mergeTableCells' }
       ]);
     };
   }

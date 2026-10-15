@@ -1,4 +1,4 @@
-/* packages/ckeditor5-engine/theme/placeholder.css */
+/* ../packages/ckeditor5-engine/theme/placeholder.css */
 .ck.ck-placeholder,
 .ck .ck-placeholder {
   position: relative;
@@ -44,18 +44,18 @@
   position: relative;
 }
 
-/* packages/ckeditor5-engine/theme/renderer.css */
+/* ../packages/ckeditor5-engine/theme/renderer.css */
 .ck.ck-editor__editable span[data-ck-unsafe-element] {
   display: none;
 }
 
-/* packages/ckeditor5-engine/theme/index-editor.css */
+/* ../packages/ckeditor5-engine/theme/index-editor.css */
 
-/* packages/ckeditor5-engine/theme/index-content.css */
+/* ../packages/ckeditor5-engine/theme/index-content.css */
 
-/* packages/ckeditor5-core/theme/index-editor.css */
+/* ../packages/ckeditor5-core/theme/index-editor.css */
 
-/* packages/ckeditor5-core/theme/index-content.css */
+/* ../packages/ckeditor5-core/theme/index-content.css */
 :root,
 :host {
   --ck-content-font-family:
@@ -79,7 +79,7 @@
   overflow-wrap: var(--ck-content-overflow-wrap);
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_foundation.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_foundation.css */
 :root,
 :host {
   --ck-color-base-foreground: hsl(0 0% 97%);
@@ -116,7 +116,7 @@
   --ck-color-base-comment: 42.1 95.4% 57.3%;
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_semantic-surface.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_semantic-surface.css */
 :root,
 :host {
   --ck-color-surface-canvas: var(--ck-color-base-background);
@@ -128,7 +128,7 @@
   --ck-color-divider: var(--ck-color-base-border);
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_semantic-feedback.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_semantic-feedback.css */
 :root,
 :host {
   --ck-color-feedback-error: var(--ck-color-base-error);
@@ -137,7 +137,7 @@
   --ck-color-feedback-highlight: var(--ck-color-base-highlight);
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_semantic-diff.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_semantic-diff.css */
 :root,
 :host {
   --ck-color-diff-insertion-border: hsl(var(--ck-color-base-diff-insertion) / 50%);
@@ -166,7 +166,7 @@
   --ck-color-comment-box-border: hsl(var(--ck-color-base-comment) / 100%);
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_semantic-text.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_semantic-text.css */
 :root,
 :host {
   --ck-color-text-primary: var(--ck-color-base-text);
@@ -177,7 +177,7 @@
   --ck-color-text: var(--ck-color-text-primary);
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_semantic-interactive.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_semantic-interactive.css */
 :root,
 :host {
   --ck-color-interactive-focus-border-coordinates:
@@ -206,7 +206,7 @@
   --ck-color-focus-error-shadow: var(--ck-color-interactive-focus-error-shadow);
 }
 
-/* packages/ckeditor5-ui/theme/globals/colors/_legacy-misc.css */
+/* ../packages/ckeditor5-ui/theme/globals/colors/_legacy-misc.css */
 :root,
 :host {
   --ck-color-engine-placeholder-text: hsl(0 0% 44%);
@@ -218,15 +218,15 @@
   --ck-color-light-red: hsl(0 100% 90%);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_colors.css */
+/* ../packages/ckeditor5-ui/theme/globals/_colors.css */
 
-/* packages/ckeditor5-ui/theme/globals/_disabled.css */
+/* ../packages/ckeditor5-ui/theme/globals/_disabled.css */
 :root,
 :host {
   --ck-opacity-disabled: .5;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_focus.css */
+/* ../packages/ckeditor5-ui/theme/globals/_focus.css */
 :root,
 :host {
   --ck-focus-shadow-geometry: 0 0 0 3px;
@@ -238,7 +238,7 @@
   --ck-outline-fake-caret: solid 1px hsl(0 0% 100% / .5);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_fonts.css */
+/* ../packages/ckeditor5-ui/theme/globals/_fonts.css */
 :root,
 :host {
   --ck-font-size-base: 16px;
@@ -268,14 +268,14 @@
   --ck-font-weight-bold: 700;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_border.css */
+/* ../packages/ckeditor5-ui/theme/globals/_border.css */
 :root,
 :host {
   --ck-border-width-thin: 1px;
   --ck-border-width-thick: 2px;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_reset.css */
+/* ../packages/ckeditor5-ui/theme/globals/_reset.css */
 :root,
 :host {
   --ck-size-min-height: 2.3em;
@@ -338,7 +338,7 @@
   text-align: right;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_rounded.css */
+/* ../packages/ckeditor5-ui/theme/globals/_rounded.css */
 :root,
 :host {
   --ck-radius-base: var(--ck-radius-unit, 8px);
@@ -354,7 +354,7 @@
   --ck-radius-corners: var(--ck-border-radius, var(--ck-radius-base));
 }
 
-/* packages/ckeditor5-ui/theme/globals/_shadow.css */
+/* ../packages/ckeditor5-ui/theme/globals/_shadow.css */
 :root,
 :host {
   --ck-inset-shadow-sm: 0 1px 4px hsl(0 0% 0% / .05), 0 2px 10px hsl(0 0% 0% / .05) inset;
@@ -363,7 +363,7 @@
   --ck-shadow-xl: 0 16px 32px -4px hsl(0 0% 0% / 0.102), 0 4px 16px hsl(0 0% 0% / 0.102);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_spacing.css */
+/* ../packages/ckeditor5-ui/theme/globals/_spacing.css */
 :root,
 :host {
   --ck-spacing-base: var(--ck-spacing-unit, 8px);
@@ -376,7 +376,7 @@
   --ck-spacing-ms: var(--ck-spacing-medium-small, var(--ck-spacing-md));
 }
 
-/* packages/ckeditor5-ui/theme/globals/_width.css */
+/* ../packages/ckeditor5-ui/theme/globals/_width.css */
 :root,
 :host {
   --ck-width-xs: calc(var(--ck-font-size-normal, var(--ck-font-size-base)) * 15);
@@ -387,7 +387,7 @@
   --ck-width-2xl: calc(var(--ck-font-size-normal, var(--ck-font-size-base)) * 40);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-typography.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-typography.css */
 :root,
 :host {
   --ck-font-weight-ui-default: var(--ck-font-weight-normal);
@@ -402,7 +402,7 @@
   --ck-menubar-text-font-size: inherit;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-spacing.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-spacing.css */
 :root,
 :host {
   --ck-spacing-control-padding-block: var(--ck-spacing-small, var(--ck-spacing-sm));
@@ -425,7 +425,7 @@
   --ck-spacing-gap-spacious: var(--ck-spacing-extra-large, var(--ck-spacing-xl));
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-shape.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-shape.css */
 :root,
 :host {
   --ck-border-width-control: var(--ck-border-width-thin);
@@ -448,13 +448,13 @@
   --ck-border-radius-surface-cut-bottom-left: var(--ck-border-radius-surface-attached) var(--ck-border-radius-surface-attached) var(--ck-border-radius-surface-attached) 0;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-surface.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-surface.css */
 :root,
 :host {
   --ck-shadow-surface-floating: var(--ck-shadow-xl);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-interactive.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-interactive.css */
 :root,
 :host {
   --ck-interactive-focus-ring: var(--ck-focus-ring);
@@ -464,13 +464,13 @@
   --ck-interactive-focus-error-shadow: var(--ck-focus-error-outer-shadow, var(--ck-focus-shadow-error));
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-layout.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-layout.css */
 :root,
 :host {
   --ck-size-control-min-height: var(--ck-ui-component-min-height, calc(var(--ck-font-size-normal, var(--ck-font-size-base))*2));
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-width.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-width.css */
 :root,
 :host {
   --ck-width-balloon-form: min(var(--ck-width-md), 90vw);
@@ -478,12 +478,12 @@
   --ck-width-dialog-lg: min(var(--ck-width-xl), 90vw);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_hidden.css */
+/* ../packages/ckeditor5-ui/theme/globals/_hidden.css */
 .ck-hidden {
   display: none !important;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_zindex.css */
+/* ../packages/ckeditor5-ui/theme/globals/_zindex.css */
 :root,
 :host {
   --ck-z-base: 1;
@@ -491,7 +491,7 @@
   --ck-z-modal: 9999;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-layer.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-layer.css */
 :root,
 :host {
   --ck-layer-base: var(--ck-z-default, var(--ck-z-base));
@@ -505,7 +505,7 @@
   --ck-layer-balloon-arrow-front: calc(var(--ck-layer-balloon-arrow-back) + 1);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_transition.css */
+/* ../packages/ckeditor5-ui/theme/globals/_transition.css */
 :root,
 :host {
   --ck-duration-fast: .1s;
@@ -533,7 +533,7 @@
   transition: none !important;
 }
 
-/* packages/ckeditor5-ui/theme/globals/_semantic-motion.css */
+/* ../packages/ckeditor5-ui/theme/globals/_semantic-motion.css */
 :root,
 :host {
   --ck-transition-duration-control-fast: var(--ck-duration-fast);
@@ -554,7 +554,7 @@
   --ck-animation-fill-mode-feedback: var(--ck-animation-fill-both);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_poweredby.css */
+/* ../packages/ckeditor5-ui/theme/globals/_poweredby.css */
 :root,
 :host {
   --ck-powered-by-font-size: calc(0.5 * var(--ck-font-size-normal, var(--ck-font-size-base)));
@@ -622,7 +622,7 @@
   border-color: var(--ck-powered-by-border-color);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_evaluationbadge.css */
+/* ../packages/ckeditor5-ui/theme/globals/_evaluationbadge.css */
 :root,
 :host {
   --ck-evaluation-badge-font-size: calc(var(--ck-font-size-normal, var(--ck-font-size-base)) * 7.5 / 13);
@@ -667,7 +667,7 @@
   border-color: var(--ck-evaluation-badge-border-color);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_scrollbars.css */
+/* ../packages/ckeditor5-ui/theme/globals/_scrollbars.css */
 :root,
 :host {
   --ck-scrollbar-thumb-color: hsl(225 10% 60%);
@@ -677,7 +677,7 @@
   scrollbar-color: var(--ck-scrollbar-thumb-color) var(--ck-scrollbar-track-color);
 }
 
-/* packages/ckeditor5-ui/theme/globals/_legacy-foundation-aliases.css */
+/* ../packages/ckeditor5-ui/theme/globals/_legacy-foundation-aliases.css */
 :root,
 :host {
   --ck-z-default: var(--ck-z-base);
@@ -685,7 +685,7 @@
   --ck-z-dialog: var(--ck-z-modal);
 }
 
-/* packages/ckeditor5-ui/theme/components/responsive-form/responsiveform.css */
+/* ../packages/ckeditor5-ui/theme/components/responsive-form/responsiveform.css */
 :root,
 :host {
   --ck-responsive-form-padding: var(--ck-spacing-padding-comfortable);
@@ -773,7 +773,7 @@
   display: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/form/form.css */
+/* ../packages/ckeditor5-ui/theme/components/form/form.css */
 :root,
 :host {
   --ck-form-default-width: var(--ck-width-md);
@@ -835,7 +835,7 @@
   margin-left: 0;
 }
 
-/* packages/ckeditor5-ui/theme/components/arialiveannouncer/arialiveannouncer.css */
+/* ../packages/ckeditor5-ui/theme/components/arialiveannouncer/arialiveannouncer.css */
 .ck.ck-aria-live-announcer {
   position: absolute;
   left: -10000px;
@@ -845,7 +845,7 @@
   list-style-type: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/editorui/accessibilityhelp.css */
+/* ../packages/ckeditor5-ui/theme/components/editorui/accessibilityhelp.css */
 :root,
 :host {
   --ck-accessibility-help-dialog-max-height: 400px;
@@ -933,7 +933,7 @@
   margin-left: 2px;
 }
 
-/* packages/ckeditor5-ui/theme/components/button/button.css */
+/* ../packages/ckeditor5-ui/theme/components/button/button.css */
 :root,
 :host {
   --ck-button-padding: var(--ck-spacing-control-padding-block);
@@ -1230,7 +1230,7 @@
   background: var(--ck-button-outline-hover-background);
 }
 
-/* packages/ckeditor5-ui/theme/components/button/switchbutton.css */
+/* ../packages/ckeditor5-ui/theme/components/button/switchbutton.css */
 :root,
 :host {
   --ck-switch-button-toggle-width: 2.6153846154em;
@@ -1323,7 +1323,7 @@
   transform: translateX(calc(-1 * var(--ck-switch-button-translation)));
 }
 
-/* packages/ckeditor5-ui/theme/components/button/listitembutton.css */
+/* ../packages/ckeditor5-ui/theme/components/button/listitembutton.css */
 :root,
 :host {
   --ck-list-item-button-padding: var(--ck-spacing-control-padding-block) calc(2 * var(--ck-spacing-control-padding-inline));
@@ -1387,7 +1387,7 @@
   height: 100%;
 }
 
-/* packages/ckeditor5-ui/theme/components/collapsible/collapsible.css */
+/* ../packages/ckeditor5-ui/theme/components/collapsible/collapsible.css */
 :root,
 :host {
   --ck-collapsible-padding: var(--ck-spacing-padding);
@@ -1428,7 +1428,7 @@
   display: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/colorgrid/colorgrid.css */
+/* ../packages/ckeditor5-ui/theme/components/colorgrid/colorgrid.css */
 :root,
 :host {
   --ck-color-grid-tile-size: 24px;
@@ -1516,7 +1516,7 @@
   padding: 0 var(--ck-spacing-control-padding-inline);
 }
 
-/* packages/ckeditor5-ui/theme/components/colorpicker/colorpicker.css */
+/* ../packages/ckeditor5-ui/theme/components/colorpicker/colorpicker.css */
 .color-picker-hex-input {
   width: max-content;
 }
@@ -1542,7 +1542,7 @@
   padding-right: var(--ck-spacing-control-icon-gap);
 }
 
-/* packages/ckeditor5-ui/theme/components/colorselector/colorselector.css */
+/* ../packages/ckeditor5-ui/theme/components/colorselector/colorselector.css */
 :root,
 :host {
   --ck-color-selector-padding: var(--ck-spacing-padding-compact);
@@ -1611,7 +1611,7 @@
   flex: 1;
 }
 
-/* packages/ckeditor5-ui/theme/components/dialog/dialog.css */
+/* ../packages/ckeditor5-ui/theme/components/dialog/dialog.css */
 :root,
 :host {
   --ck-dialog-max-height: 90vh;
@@ -1676,7 +1676,7 @@
   }
 }
 
-/* packages/ckeditor5-ui/theme/components/dialog/dialogactions.css */
+/* ../packages/ckeditor5-ui/theme/components/dialog/dialogactions.css */
 .ck.ck-dialog .ck.ck-dialog__actions {
   padding: var(--ck-dialog-actions-padding);
   display: flex;
@@ -1684,7 +1684,7 @@
   justify-content: flex-end;
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/dropdown.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/dropdown.css */
 :root,
 :host {
   --ck-dropdown-arrow-size: calc(0.5 * var(--ck-icon-size));
@@ -1830,7 +1830,7 @@
   z-index: var(--ck-layer-panel-above);
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/splitbutton.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/splitbutton.css */
 .ck.ck-splitbutton {
   font-size: inherit;
 }
@@ -1921,7 +1921,7 @@
   background-color: var(--ck-color-button-on-hover-background, var(--ck-button-on-hover-background-color));
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/toolbardropdown.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/toolbardropdown.css */
 :root,
 :host {
   --ck-toolbar-dropdown-vertical-padding: var(--ck-spacing-padding-compact);
@@ -1940,7 +1940,7 @@
   z-index: var(--ck-layer-control-raised);
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/listdropdown.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/listdropdown.css */
 :root,
 :host {
   --ck-list-dropdown-uniform-border-radius: var(--ck-border-radius-uniform);
@@ -1959,12 +1959,12 @@
   border-radius: var(--ck-list-dropdown-button-border-radius, var(--ck-list-dropdown-uniform-border-radius, 0 0 var(--ck-dropdown-panel-border-radius) var(--ck-dropdown-panel-border-radius)));
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenu.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenu.css */
 .ck.ck-dropdown-menu-list__nested-menu {
   display: block;
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenulistitem.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenulistitem.css */
 :root,
 :host {
   --ck-dropdown-menu-menu-item-min-width: 18em;
@@ -1973,7 +1973,7 @@
   min-width: var(--ck-dropdown-menu-menu-item-min-width);
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenulistitembutton.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenulistitembutton.css */
 :root,
 :host {
   --ck-dropdown-menu-list-item-spinner-size: 20px;
@@ -1997,7 +1997,7 @@
   background: var(--ck-color-button-default-hover-background, var(--ck-button-default-hover-background-color));
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenubutton.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenubutton.css */
 :root,
 :host {
   --ck-dropdown-menu-button-border-radius: var(--ck-list-item-button-border-radius);
@@ -2052,7 +2052,7 @@
   padding-right: var(--ck-spacing-control-padding-inline-compact);
 }
 
-/* packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenupanel.css */
+/* ../packages/ckeditor5-ui/theme/components/dropdown/menu/dropdownmenupanel.css */
 :root,
 :host {
   --ck-dropdown-menu-panel-max-height: 314px;
@@ -2096,7 +2096,7 @@
   outline: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/editorui/editorui.css */
+/* ../packages/ckeditor5-ui/theme/components/editorui/editorui.css */
 :root,
 :host {
   --ck-editor-editable-padding: 1em;
@@ -2194,7 +2194,7 @@
   border-bottom-right-radius: calc(var(--ck-balloon-panel-border-radius) - var(--ck-border-width-surface));
 }
 
-/* packages/ckeditor5-ui/theme/components/formrow/formrow.css */
+/* ../packages/ckeditor5-ui/theme/components/formrow/formrow.css */
 :root,
 :host {
   --ck-form-row-padding: var(--ck-spacing-padding-snug) var(--ck-spacing-padding-comfortable);
@@ -2239,7 +2239,7 @@
   padding: 0;
 }
 
-/* packages/ckeditor5-ui/theme/components/formheader/formheader.css */
+/* ../packages/ckeditor5-ui/theme/components/formheader/formheader.css */
 :root,
 :host {
   --ck-form-header-height: calc( var(--ck-form-header-label-font-size) * var(--ck-line-height-base) + var(--ck-spacing-padding-comfortable) + var(--ck-spacing-padding-compact) );
@@ -2284,7 +2284,7 @@
   overflow: hidden;
 }
 
-/* packages/ckeditor5-ui/theme/components/icon/icon.css */
+/* ../packages/ckeditor5-ui/theme/components/icon/icon.css */
 :root,
 :host {
   --ck-icon-size-ratio: calc(20 / 14);
@@ -2311,7 +2311,7 @@
   fill: currentColor;
 }
 
-/* packages/ckeditor5-ui/theme/components/input/input.css */
+/* ../packages/ckeditor5-ui/theme/components/input/input.css */
 :root,
 :host {
   --ck-input-width: 18em;
@@ -2388,12 +2388,12 @@
   }
 }
 
-/* packages/ckeditor5-ui/theme/components/textarea/textarea.css */
+/* ../packages/ckeditor5-ui/theme/components/textarea/textarea.css */
 .ck-textarea {
   overflow-x: hidden;
 }
 
-/* packages/ckeditor5-ui/theme/components/label/label.css */
+/* ../packages/ckeditor5-ui/theme/components/label/label.css */
 .ck.ck-label {
   font-weight: var(--ck-font-weight-ui-label);
   display: block;
@@ -2402,7 +2402,7 @@
   display: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/labeledfield/labeledfieldview.css */
+/* ../packages/ckeditor5-ui/theme/components/labeledfield/labeledfieldview.css */
 :root,
 :host {
   --ck-labeled-field-label-background-color: var(--ck-color-surface-control);
@@ -2498,7 +2498,7 @@
   flex-grow: 1;
 }
 
-/* packages/ckeditor5-ui/theme/components/labeledinput/labeledinput.css */
+/* ../packages/ckeditor5-ui/theme/components/labeledinput/labeledinput.css */
 .ck.ck-labeled-input .ck-labeled-input__status {
   font-size: var(--ck-font-size-small, var(--ck-font-size-sm));
   margin-top: var(--ck-spacing-gap-compact);
@@ -2508,7 +2508,7 @@
   color: var(--ck-color-feedback-error);
 }
 
-/* packages/ckeditor5-ui/theme/components/list/list.css */
+/* ../packages/ckeditor5-ui/theme/components/list/list.css */
 :root,
 :host {
   --ck-list-item-min-width: 10em;
@@ -2613,7 +2613,7 @@
   margin: var(--ck-spacing-gap-compact) var(--ck-list-separator-inline-margin);
 }
 
-/* packages/ckeditor5-ui/theme/components/panel/balloonpanel.css */
+/* ../packages/ckeditor5-ui/theme/components/panel/balloonpanel.css */
 :root,
 :host {
   --ck-balloon-panel-border-radius: var(--ck-border-radius-surface);
@@ -2775,7 +2775,7 @@
   display: block;
 }
 
-/* packages/ckeditor5-ui/theme/components/panel/balloonrotator.css */
+/* ../packages/ckeditor5-ui/theme/components/panel/balloonrotator.css */
 .ck .ck-balloon-rotator__navigation {
   background: var(--ck-color-toolbar-background, var(--ck-toolbar-background-color));
   border-bottom: var(--ck-border-divider);
@@ -2804,7 +2804,7 @@
   justify-content: center;
 }
 
-/* packages/ckeditor5-ui/theme/components/panel/fakepanel.css */
+/* ../packages/ckeditor5-ui/theme/components/panel/fakepanel.css */
 .ck .ck-fake-panel div {
   box-shadow: var(--ck-shadow-surface-floating), 0 0;
   min-height: 15px;
@@ -2849,7 +2849,7 @@
   margin-top: calc(-3 * var(--ck-balloon-fake-panel-offset-vertical, 6px));
 }
 
-/* packages/ckeditor5-ui/theme/components/panel/stickypanel.css */
+/* ../packages/ckeditor5-ui/theme/components/panel/stickypanel.css */
 :root,
 :host {
   --ck-sticky-panel-uniform-border-radius: initial;
@@ -2867,7 +2867,7 @@
   position: absolute;
 }
 
-/* packages/ckeditor5-ui/theme/components/autocomplete/autocomplete.css */
+/* ../packages/ckeditor5-ui/theme/components/autocomplete/autocomplete.css */
 :root,
 :host {
   --ck-autocomplete-results-max-height: 200px;
@@ -2902,7 +2902,7 @@
   bottom: auto;
 }
 
-/* packages/ckeditor5-ui/theme/components/search/search.css */
+/* ../packages/ckeditor5-ui/theme/components/search/search.css */
 :root,
 :host {
   --ck-search-results-info-padding: var(--ck-spacing-gap) var(--ck-spacing-padding-comfortable);
@@ -3001,7 +3001,7 @@
   display: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/highlightedtext/highlightedtext.css */
+/* ../packages/ckeditor5-ui/theme/components/highlightedtext/highlightedtext.css */
 .ck.ck-highlighted-text mark {
   background: var(--ck-color-highlight-background);
   vertical-align: initial;
@@ -3010,7 +3010,7 @@
   font-size: inherit;
 }
 
-/* packages/ckeditor5-ui/theme/components/tooltip/tooltip.css */
+/* ../packages/ckeditor5-ui/theme/components/tooltip/tooltip.css */
 :root,
 :host {
   --ck-tooltip-max-width: 200px;
@@ -3055,7 +3055,7 @@
   display: none;
 }
 
-/* packages/ckeditor5-ui/theme/components/spinner/spinner.css */
+/* ../packages/ckeditor5-ui/theme/components/spinner/spinner.css */
 :root,
 :host {
   --ck-toolbar-spinner-size: 18px;
@@ -3092,7 +3092,7 @@
   }
 }
 
-/* packages/ckeditor5-ui/theme/components/toolbar/toolbar.css */
+/* ../packages/ckeditor5-ui/theme/components/toolbar/toolbar.css */
 :root,
 :host {
   --ck-toolbar-item-gap-inline: var(--ck-spacing-gap-compact);
@@ -3267,7 +3267,7 @@
   line-height: calc(var(--ck-line-height-base) * var(--ck-button-font-size));
 }
 
-/* packages/ckeditor5-ui/theme/components/toolbar/blocktoolbar.css */
+/* ../packages/ckeditor5-ui/theme/components/toolbar/blocktoolbar.css */
 :root,
 :host {
   --ck-block-toolbar-button-size: var(--ck-font-size-normal, var(--ck-font-size-base));
@@ -3279,7 +3279,7 @@
   z-index: var(--ck-z-default, var(--ck-z-base));
 }
 
-/* packages/ckeditor5-ui/theme/components/menubar/menubar.css */
+/* ../packages/ckeditor5-ui/theme/components/menubar/menubar.css */
 :root,
 :host {
   --ck-menu-bar-padding: var(--ck-spacing-padding-compact);
@@ -3299,7 +3299,7 @@
   font-size: var(--ck-menubar-text-font-size);
 }
 
-/* packages/ckeditor5-ui/theme/components/menubar/menubarmenubutton.css */
+/* ../packages/ckeditor5-ui/theme/components/menubar/menubarmenubutton.css */
 :root,
 :host {
   --ck-menu-bar-button-border-radius: var(--ck-border-radius-control);
@@ -3359,7 +3359,7 @@
   opacity: var(--ck-disabled-opacity, var(--ck-opacity-disabled));
 }
 
-/* packages/ckeditor5-ui/theme/components/menubar/menubarmenupanel.css */
+/* ../packages/ckeditor5-ui/theme/components/menubar/menubarmenupanel.css */
 :root,
 :host {
   --ck-menu-bar-panel-uniform-border-radius: var(--ck-radius-md);
@@ -3450,7 +3450,7 @@
   box-shadow: var(--ck-focus-outer-shadow, var(--ck-interactive-focus-shadow)), 0 0;
 }
 
-/* packages/ckeditor5-ui/theme/components/menubar/menubarmenu.css */
+/* ../packages/ckeditor5-ui/theme/components/menubar/menubarmenu.css */
 .ck.ck-menu-bar__menu {
   font-size: inherit;
   display: block;
@@ -3460,7 +3460,7 @@
   max-width: 100%;
 }
 
-/* packages/ckeditor5-ui/theme/components/menubar/menubarmenulistitem.css */
+/* ../packages/ckeditor5-ui/theme/components/menubar/menubarmenulistitem.css */
 :root,
 :host {
   --ck-menu-bar-menu-item-min-width: 18em;
@@ -3469,7 +3469,7 @@
   min-width: var(--ck-menu-bar-menu-item-min-width);
 }
 
-/* packages/ckeditor5-ui/theme/components/menubar/menubarmenulistitembutton.css */
+/* ../packages/ckeditor5-ui/theme/components/menubar/menubarmenulistitembutton.css */
 :root,
 :host {
   --ck-menu-bar-list-item-button-border-radius: var(--ck-border-radius-control);
@@ -3491,7 +3491,7 @@
   margin-left: var(--ck-spacing-control-icon-gap);
 }
 
-/* packages/ckeditor5-ui/theme/components/tabs/tabbutton.css */
+/* ../packages/ckeditor5-ui/theme/components/tabs/tabbutton.css */
 :root,
 :host {
   --ck-tab-button-size: 36px;
@@ -3633,7 +3633,7 @@
   border-start-end-radius: var(--ck-tab-button-indicator-radius);
 }
 
-/* packages/ckeditor5-ui/theme/components/tabs/tabpanel.css */
+/* ../packages/ckeditor5-ui/theme/components/tabs/tabpanel.css */
 .ck-tab-panel {
   height: 100%;
   display: flex;
@@ -3647,27 +3647,27 @@
   opacity: var(--ck-disabled-opacity, var(--ck-opacity-disabled));
 }
 
-/* packages/ckeditor5-ui/theme/index-editor.css */
+/* ../packages/ckeditor5-ui/theme/index-editor.css */
 
-/* packages/ckeditor5-ui/theme/index-content.css */
+/* ../packages/ckeditor5-ui/theme/index-content.css */
 
-/* packages/ckeditor5-basic-styles/theme/code.css */
+/* ../packages/ckeditor5-basic-styles/theme/code.css */
 .ck.ck-editor__editable .ck-code_selected {
   background-color: hsla(0, 0%, 78%, 0.5);
 }
 
-/* packages/ckeditor5-basic-styles/theme/index-editor.css */
+/* ../packages/ckeditor5-basic-styles/theme/index-editor.css */
 
-/* packages/ckeditor5-basic-styles/theme/index-content.css */
+/* ../packages/ckeditor5-basic-styles/theme/index-content.css */
 .ck-content code {
   background-color: hsla(0, 0%, 78%, 0.3);
   padding: .15em;
   border-radius: 2px;
 }
 
-/* packages/ckeditor5-block-quote/theme/index-editor.css */
+/* ../packages/ckeditor5-block-quote/theme/index-editor.css */
 
-/* packages/ckeditor5-block-quote/theme/index-content.css */
+/* ../packages/ckeditor5-block-quote/theme/index-content.css */
 .ck-content blockquote {
   overflow: hidden;
   padding-right: 1.5em;
@@ -3682,7 +3682,7 @@
   border-right: solid 5px hsl(213, 40%, 90%);
 }
 
-/* packages/ckeditor5-widget/theme/widget.css */
+/* ../packages/ckeditor5-widget/theme/widget.css */
 :root,
 :host {
   --ck-widget-outline-thickness: 3px;
@@ -3870,7 +3870,7 @@
   transform: translate(-50%);
 }
 
-/* packages/ckeditor5-widget/theme/widgetresize.css */
+/* ../packages/ckeditor5-widget/theme/widgetresize.css */
 :root,
 :host {
   --ck-resizer-size: 10px;
@@ -3925,7 +3925,7 @@
   display: block;
 }
 
-/* packages/ckeditor5-widget/theme/widgettypearound.css */
+/* ../packages/ckeditor5-widget/theme/widgettypearound.css */
 :root,
 :host {
   --ck-widget-type-around-button-size: 20px;
@@ -4155,11 +4155,11 @@
   display: initial;
 }
 
-/* packages/ckeditor5-widget/theme/index-editor.css */
+/* ../packages/ckeditor5-widget/theme/index-editor.css */
 
-/* packages/ckeditor5-widget/theme/index-content.css */
+/* ../packages/ckeditor5-widget/theme/index-content.css */
 
-/* packages/ckeditor5-bookmark/theme/bookmark.css */
+/* ../packages/ckeditor5-bookmark/theme/bookmark.css */
 :root,
 :host {
   --ck-bookmark-icon-hover-fill-color: var(--ck-color-widget-hover-border);
@@ -4204,7 +4204,7 @@
   outline: var(--ck-outline-fake-caret);
 }
 
-/* packages/ckeditor5-bookmark/theme/bookmarktoolbar.css */
+/* ../packages/ckeditor5-bookmark/theme/bookmarktoolbar.css */
 .ck.ck-bookmark-balloon .ck.ck-toolbar > .ck-toolbar__items {
   flex-wrap: nowrap;
 }
@@ -4221,7 +4221,7 @@
   cursor: default;
 }
 
-/* packages/ckeditor5-bookmark/theme/bookmarkform.css */
+/* ../packages/ckeditor5-bookmark/theme/bookmarkform.css */
 :root,
 :host {
   --ck-bookmark-form-width: var(--ck-width-balloon-form);
@@ -4230,11 +4230,11 @@
   width: var(--ck-bookmark-form-width);
 }
 
-/* packages/ckeditor5-bookmark/theme/index-editor.css */
+/* ../packages/ckeditor5-bookmark/theme/index-editor.css */
 
-/* packages/ckeditor5-bookmark/theme/index-content.css */
+/* ../packages/ckeditor5-bookmark/theme/index-content.css */
 
-/* packages/ckeditor5-clipboard/theme/clipboard.css */
+/* ../packages/ckeditor5-clipboard/theme/clipboard.css */
 :root,
 :host {
   --ck-clipboard-drop-target-dot-width: 12px;
@@ -4309,11 +4309,11 @@
   border-color: transparent var(--ck-clipboard-drop-target-color) transparent transparent;
 }
 
-/* packages/ckeditor5-clipboard/theme/index-editor.css */
+/* ../packages/ckeditor5-clipboard/theme/index-editor.css */
 
-/* packages/ckeditor5-clipboard/theme/index-content.css */
+/* ../packages/ckeditor5-clipboard/theme/index-content.css */
 
-/* packages/ckeditor5-image/theme/imagecaption.css */
+/* ../packages/ckeditor5-image/theme/imagecaption.css */
 :root,
 :host {
   --ck-content-color-image-caption-background: hsl(0, 0%, 97%);
@@ -4338,7 +4338,7 @@
   }
 }
 
-/* packages/ckeditor5-image/theme/imageresize.css */
+/* ../packages/ckeditor5-image/theme/imageresize.css */
 .ck.ck-editor__editable td .image-inline.image_resized img,
 .ck.ck-editor__editable th .image-inline.image_resized img {
   max-width: 100%;
@@ -4353,7 +4353,7 @@
   width: 4em;
 }
 
-/* packages/ckeditor5-image/theme/imageuploadprogress.css */
+/* ../packages/ckeditor5-image/theme/imageuploadprogress.css */
 .ck.ck-editor__editable .image,
 .ck.ck-editor__editable .image-inline {
   position: relative;
@@ -4388,7 +4388,7 @@
   }
 }
 
-/* packages/ckeditor5-image/theme/imageuploadicon.css */
+/* ../packages/ckeditor5-image/theme/imageuploadicon.css */
 :root,
 :host {
   --ck-color-image-upload-icon: var(--ck-color-base-background);
@@ -4477,7 +4477,7 @@
   }
 }
 
-/* packages/ckeditor5-image/theme/imageuploadloader.css */
+/* ../packages/ckeditor5-image/theme/imageuploadloader.css */
 :root,
 :host {
   --ck-color-upload-placeholder-loader: hsl(0, 0%, 70%);
@@ -4520,7 +4520,7 @@
   }
 }
 
-/* packages/ckeditor5-image/theme/image.css */
+/* ../packages/ckeditor5-image/theme/image.css */
 .ck.ck-editor__editable .image > figcaption.ck-placeholder::before {
   padding-left: inherit;
   padding-right: inherit;
@@ -4551,12 +4551,12 @@
   max-width: none;
 }
 
-/* packages/ckeditor5-image/theme/imageplaceholder.css */
+/* ../packages/ckeditor5-image/theme/imageplaceholder.css */
 .ck.ck-editor__editable img.image_placeholder {
   background-size: 100% 100%;
 }
 
-/* packages/ckeditor5-image/theme/imageinsert.css */
+/* ../packages/ckeditor5-image/theme/imageinsert.css */
 :root,
 :host {
   --ck-image-insert-insert-by-url-width: var(--ck-width-md);
@@ -4614,7 +4614,7 @@
   outline: none;
 }
 
-/* packages/ckeditor5-image/theme/imagecustomresizeform.css */
+/* ../packages/ckeditor5-image/theme/imagecustomresizeform.css */
 :root,
 :host {
   --ck-image-custom-resize-form-width: var(--ck-width-balloon-form);
@@ -4623,7 +4623,7 @@
   width: var(--ck-image-custom-resize-form-width);
 }
 
-/* packages/ckeditor5-image/theme/textalternativeform.css */
+/* ../packages/ckeditor5-image/theme/textalternativeform.css */
 :root,
 :host {
   --ck-text-alternative-form-width: var(--ck-width-balloon-form);
@@ -4632,9 +4632,9 @@
   width: var(--ck-text-alternative-form-width);
 }
 
-/* packages/ckeditor5-image/theme/index-editor.css */
+/* ../packages/ckeditor5-image/theme/index-editor.css */
 
-/* packages/ckeditor5-image/theme/index-content.css */
+/* ../packages/ckeditor5-image/theme/index-content.css */
 :root,
 :host {
   --ck-content-color-image-caption-background: hsl(0, 0%, 97%);
@@ -4760,7 +4760,7 @@
   max-width: 100%;
 }
 
-/* packages/ckeditor5-link/theme/link.css */
+/* ../packages/ckeditor5-link/theme/link.css */
 .ck .ck-link_selected {
   background: var(--ck-color-link-selected-background);
 }
@@ -4777,7 +4777,7 @@
   outline: var(--ck-outline-fake-caret);
 }
 
-/* packages/ckeditor5-link/theme/linktoolbar.css */
+/* ../packages/ckeditor5-link/theme/linktoolbar.css */
 :root,
 :host {
   --ck-link-bookmark-icon-size: calc( var(--ck-icon-size) * 0.7);
@@ -4833,7 +4833,7 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   overflow: hidden;
 }
 
-/* packages/ckeditor5-link/theme/linkimage.css */
+/* ../packages/ckeditor5-link/theme/linkimage.css */
 :root,
 :host {
   --ck-link-image-indicator-icon-size: 20;
@@ -4857,7 +4857,7 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   position: absolute;
 }
 
-/* packages/ckeditor5-link/theme/linkform.css */
+/* ../packages/ckeditor5-link/theme/linkform.css */
 :root,
 :host {
   --ck-link-panel-width: var(--ck-width-balloon-form);
@@ -4921,7 +4921,7 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   display: none;
 }
 
-/* packages/ckeditor5-link/theme/linkproperties.css */
+/* ../packages/ckeditor5-link/theme/linkproperties.css */
 :root,
 :host {
   --ck-link-properties-width: var(--ck-width-balloon-form);
@@ -4930,7 +4930,7 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   width: var(--ck-link-properties-width);
 }
 
-/* packages/ckeditor5-link/theme/linkprovideritems.css */
+/* ../packages/ckeditor5-link/theme/linkprovideritems.css */
 :root,
 :host {
   --ck-link-providers-width: var(--ck-width-balloon-form);
@@ -4966,11 +4966,11 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   font-style: italic;
 }
 
-/* packages/ckeditor5-link/theme/index-editor.css */
+/* ../packages/ckeditor5-link/theme/index-editor.css */
 
-/* packages/ckeditor5-link/theme/index-content.css */
+/* ../packages/ckeditor5-link/theme/index-content.css */
 
-/* packages/ckeditor5-ckbox/theme/ckbox.css */
+/* ../packages/ckeditor5-ckbox/theme/ckbox.css */
 .ck.ck-reset_all-excluded.ckbox-wrapper {
   all: initial;
   display: block;
@@ -4981,7 +4981,7 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   z-index: calc(var(--ck-z-dialog, 100000) + 1);
 }
 
-/* packages/ckeditor5-ckbox/theme/ckboximageedit.css */
+/* ../packages/ckeditor5-ckbox/theme/ckboximageedit.css */
 :root,
 :host {
   --ck-image-processing-highlight-color: hsl(220, 10%, 98%);
@@ -5019,11 +5019,11 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   }
 }
 
-/* packages/ckeditor5-ckbox/theme/index-editor.css */
+/* ../packages/ckeditor5-ckbox/theme/index-editor.css */
 
-/* packages/ckeditor5-ckbox/theme/index-content.css */
+/* ../packages/ckeditor5-ckbox/theme/index-content.css */
 
-/* packages/ckeditor5-code-block/theme/codeblock.css */
+/* ../packages/ckeditor5-code-block/theme/codeblock.css */
 :root,
 :host {
   --ck-color-code-block-label-background: var(--ck-color-base-text-light);
@@ -5051,9 +5051,9 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   position: relative;
 }
 
-/* packages/ckeditor5-code-block/theme/index-editor.css */
+/* ../packages/ckeditor5-code-block/theme/index-editor.css */
 
-/* packages/ckeditor5-code-block/theme/index-content.css */
+/* ../packages/ckeditor5-code-block/theme/index-content.css */
 .ck-content pre {
   padding: 1em;
   color: hsl(0, 0%, 20.8%);
@@ -5074,21 +5074,21 @@ a.ck.ck-button.ck-link-toolbar__preview:has(.ck-icon) {
   border-radius: 0;
 }
 
-/* packages/ckeditor5-editor-classic/theme/index-editor.css */
+/* ../packages/ckeditor5-editor-classic/theme/index-editor.css */
 
-/* packages/ckeditor5-editor-classic/theme/index-content.css */
+/* ../packages/ckeditor5-editor-classic/theme/index-content.css */
 
-/* packages/ckeditor5-editor-inline/theme/inlineeditor.css */
+/* ../packages/ckeditor5-editor-inline/theme/inlineeditor.css */
 .ck.ck-toolbar-container .ck-menu-bar {
   border: none;
   border-bottom: 1px solid var(--ck-color-toolbar-border, var(--ck-toolbar-border-color));
 }
 
-/* packages/ckeditor5-editor-inline/theme/index-editor.css */
+/* ../packages/ckeditor5-editor-inline/theme/index-editor.css */
 
-/* packages/ckeditor5-editor-inline/theme/index-content.css */
+/* ../packages/ckeditor5-editor-inline/theme/index-content.css */
 
-/* packages/ckeditor5-mention/theme/mentionui.css */
+/* ../packages/ckeditor5-mention/theme/mentionui.css */
 :root,
 :host {
   --ck-mention-list-max-height: 300px;
@@ -5111,9 +5111,9 @@ div.ck.ck-balloon-panel.ck-mention-balloon {
   z-index: calc(var( --ck-z-dialog, var(--ck-z-modal) ) + 1);
 }
 
-/* packages/ckeditor5-mention/theme/index-editor.css */
+/* ../packages/ckeditor5-mention/theme/index-editor.css */
 
-/* packages/ckeditor5-mention/theme/index-content.css */
+/* ../packages/ckeditor5-mention/theme/index-content.css */
 :root,
 :host {
   --ck-content-color-mention-background: hsla(341, 100%, 30%, 0.1);
@@ -5124,7 +5124,7 @@ div.ck.ck-balloon-panel.ck-mention-balloon {
   color: var(--ck-content-color-mention-text);
 }
 
-/* packages/ckeditor5-emoji/theme/emojipicker.css */
+/* ../packages/ckeditor5-emoji/theme/emojipicker.css */
 .ck.ck-emoji {
   width: 320px;
 }
@@ -5151,7 +5151,7 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   z-index: calc(var( --ck-z-dialog, var(--ck-z-modal) ) + 1);
 }
 
-/* packages/ckeditor5-emoji/theme/emojicategories.css */
+/* ../packages/ckeditor5-emoji/theme/emojicategories.css */
 :root,
 :host {
   --ck-emoji-categories-list-margin: 0 var(--ck-spacing-padding-comfortable);
@@ -5167,7 +5167,7 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   font-size: var(--ck-tab-button-icon-size);
 }
 
-/* packages/ckeditor5-emoji/theme/emojigrid.css */
+/* ../packages/ckeditor5-emoji/theme/emojigrid.css */
 :root,
 :host {
   --ck-emoji-grid-tile-size: 27px;
@@ -5213,7 +5213,7 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   text-align: center;
 }
 
-/* packages/ckeditor5-emoji/theme/emojipickerform.css */
+/* ../packages/ckeditor5-emoji/theme/emojipickerform.css */
 .ck.ck-form.ck-emoji-picker-form {
   padding-bottom: 0;
 }
@@ -5221,7 +5221,7 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   border-color: transparent;
 }
 
-/* packages/ckeditor5-emoji/theme/emojitone.css */
+/* ../packages/ckeditor5-emoji/theme/emojitone.css */
 .ck.ck-emoji__skin-tone {
   margin-left: var(--ck-spacing-standard, var(--ck-spacing-base));
 }
@@ -5232,11 +5232,11 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   width: initial;
 }
 
-/* packages/ckeditor5-emoji/theme/index-editor.css */
+/* ../packages/ckeditor5-emoji/theme/index-editor.css */
 
-/* packages/ckeditor5-emoji/theme/index-content.css */
+/* ../packages/ckeditor5-emoji/theme/index-content.css */
 
-/* packages/ckeditor5-find-and-replace/theme/findandreplace.css */
+/* ../packages/ckeditor5-find-and-replace/theme/findandreplace.css */
 :root,
 :host {
   --ck-color-find-result-selected: hsl(29, 100%, 60%);
@@ -5249,7 +5249,7 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   background: var(--ck-color-find-result-selected);
 }
 
-/* packages/ckeditor5-find-and-replace/theme/findandreplaceform.css */
+/* ../packages/ckeditor5-find-and-replace/theme/findandreplaceform.css */
 :root,
 :host {
   --ck-find-and-replace-form-width: var(--ck-width-dialog);
@@ -5411,13 +5411,13 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   }
 }
 
-/* packages/ckeditor5-find-and-replace/theme/index-editor.css */
+/* ../packages/ckeditor5-find-and-replace/theme/index-editor.css */
 
-/* packages/ckeditor5-find-and-replace/theme/index-content.css */
+/* ../packages/ckeditor5-find-and-replace/theme/index-content.css */
 
-/* packages/ckeditor5-font/theme/index-editor.css */
+/* ../packages/ckeditor5-font/theme/index-editor.css */
 
-/* packages/ckeditor5-font/theme/index-content.css */
+/* ../packages/ckeditor5-font/theme/index-content.css */
 :root,
 :host {
   --ck-content-font-size-tiny: 0.7em;
@@ -5438,7 +5438,7 @@ div.ck.ck-balloon-panel.ck-emoji-picker-balloon {
   font-size: var(--ck-content-font-size-huge);
 }
 
-/* packages/ckeditor5-fullscreen/theme/fullscreen.css */
+/* ../packages/ckeditor5-fullscreen/theme/fullscreen.css */
 :root,
 :host {
   --ck-fullscreen-editor-top-margin: 28px;
@@ -5661,11 +5661,11 @@ body.ck-fullscreen .ck-source-editing-area textarea,
   width: 495px;
 }
 
-/* packages/ckeditor5-fullscreen/theme/index-editor.css */
+/* ../packages/ckeditor5-fullscreen/theme/index-editor.css */
 
-/* packages/ckeditor5-fullscreen/theme/index-content.css */
+/* ../packages/ckeditor5-fullscreen/theme/index-content.css */
 
-/* packages/ckeditor5-heading/theme/heading.css */
+/* ../packages/ckeditor5-heading/theme/heading.css */
 .ck.ck-heading_heading1 .ck-button__label {
   font-size: 20px;
 }
@@ -5685,13 +5685,13 @@ body.ck-fullscreen .ck-source-editing-area textarea,
   min-width: 18em;
 }
 
-/* packages/ckeditor5-heading/theme/index-editor.css */
+/* ../packages/ckeditor5-heading/theme/index-editor.css */
 
-/* packages/ckeditor5-heading/theme/index-content.css */
+/* ../packages/ckeditor5-heading/theme/index-content.css */
 
-/* packages/ckeditor5-highlight/theme/index-editor.css */
+/* ../packages/ckeditor5-highlight/theme/index-editor.css */
 
-/* packages/ckeditor5-highlight/theme/index-content.css */
+/* ../packages/ckeditor5-highlight/theme/index-content.css */
 :root,
 :host {
   --ck-content-highlight-marker-yellow: hsl(60, 97%, 73%);
@@ -5722,14 +5722,14 @@ body.ck-fullscreen .ck-source-editing-area textarea,
   background-color: transparent;
 }
 
-/* packages/ckeditor5-horizontal-line/theme/horizontalline.css */
+/* ../packages/ckeditor5-horizontal-line/theme/horizontalline.css */
 .ck-editor__editable .ck-horizontal-line {
   display: flow-root;
 }
 
-/* packages/ckeditor5-horizontal-line/theme/index-editor.css */
+/* ../packages/ckeditor5-horizontal-line/theme/index-editor.css */
 
-/* packages/ckeditor5-horizontal-line/theme/index-content.css */
+/* ../packages/ckeditor5-horizontal-line/theme/index-content.css */
 .ck-content hr {
   display: inline-block;
   width: 100%;
@@ -5740,7 +5740,7 @@ body.ck-fullscreen .ck-source-editing-area textarea,
   vertical-align: middle;
 }
 
-/* packages/ckeditor5-html-embed/theme/htmlembed.css */
+/* ../packages/ckeditor5-html-embed/theme/htmlembed.css */
 :root,
 :host {
   --ck-html-embed-content-width: calc(100% - 1.5 * var(--ck-icon-size));
@@ -5886,11 +5886,11 @@ body.ck-fullscreen .ck-source-editing-area textarea,
   justify-content: center;
 }
 
-/* packages/ckeditor5-html-embed/theme/index-editor.css */
+/* ../packages/ckeditor5-html-embed/theme/index-editor.css */
 
-/* packages/ckeditor5-html-embed/theme/index-content.css */
+/* ../packages/ckeditor5-html-embed/theme/index-content.css */
 
-/* packages/ckeditor5-html-support/theme/datafilter.css */
+/* ../packages/ckeditor5-html-support/theme/datafilter.css */
 :root,
 :host {
   --ck-html-object-embed-unfocused-outline-width: 1px;
@@ -5933,16 +5933,16 @@ span.ck-widget.html-object-embed {
   display: inline-block;
 }
 
-/* packages/ckeditor5-html-support/theme/index-editor.css */
+/* ../packages/ckeditor5-html-support/theme/index-editor.css */
 
-/* packages/ckeditor5-html-support/theme/index-content.css */
+/* ../packages/ckeditor5-html-support/theme/index-content.css */
 
-/* packages/ckeditor5-list/theme/documentlist.css */
+/* ../packages/ckeditor5-list/theme/documentlist.css */
 .ck-editor__editable .ck-list-bogus-paragraph {
   display: block;
 }
 
-/* packages/ckeditor5-list/theme/liststyles.css */
+/* ../packages/ckeditor5-list/theme/liststyles.css */
 :root,
 :host {
   --ck-list-style-button-size: 44px;
@@ -5967,7 +5967,7 @@ span.ck-widget.html-object-embed {
   height: var(--ck-list-style-button-size);
 }
 
-/* packages/ckeditor5-list/theme/listproperties.css */
+/* ../packages/ckeditor5-list/theme/listproperties.css */
 .ck.ck-list-properties.ck-list-properties_without-styles {
   padding: var(--ck-spacing-large, var(--ck-spacing-lg));
 }
@@ -6006,7 +6006,7 @@ span.ck-widget.html-object-embed {
   background: none;
 }
 
-/* packages/ckeditor5-list/theme/todolist.css */
+/* ../packages/ckeditor5-list/theme/todolist.css */
 :root,
 :host {
   --ck-content-todo-list-checkmark-size: 16px;
@@ -6080,9 +6080,9 @@ span.ck-widget.html-object-embed {
   position: absolute;
 }
 
-/* packages/ckeditor5-list/theme/index-editor.css */
+/* ../packages/ckeditor5-list/theme/index-editor.css */
 
-/* packages/ckeditor5-list/theme/index-content.css */
+/* ../packages/ckeditor5-list/theme/index-content.css */
 :root,
 :host {
   --ck-content-list-marker-color: var(--ck-content-font-color);
@@ -6225,7 +6225,7 @@ span.ck-widget.html-object-embed {
   position: absolute;
 }
 
-/* packages/ckeditor5-media-embed/theme/mediaembedediting.css */
+/* ../packages/ckeditor5-media-embed/theme/mediaembedediting.css */
 :root,
 :host {
   --ck-media-embed-placeholder-icon-size: 3em;
@@ -6340,7 +6340,7 @@ span.ck-widget.html-object-embed {
   pointer-events: none;
 }
 
-/* packages/ckeditor5-media-embed/theme/mediaembedresize.css */
+/* ../packages/ckeditor5-media-embed/theme/mediaembedresize.css */
 .ck .ck-widget.media:-webkit-drag > .ck-widget__resizer {
   display: none;
 }
@@ -6354,7 +6354,7 @@ span.ck-widget.html-object-embed {
   width: 4em;
 }
 
-/* packages/ckeditor5-media-embed/theme/mediaembedcustomresizeform.css */
+/* ../packages/ckeditor5-media-embed/theme/mediaembedcustomresizeform.css */
 :root,
 :host {
   --ck-media-embed-custom-resize-form-width: 340px;
@@ -6369,7 +6369,7 @@ span.ck-widget.html-object-embed {
   width: var(--ck-media-embed-custom-resize-form-width);
 }
 
-/* packages/ckeditor5-media-embed/theme/mediaform.css */
+/* ../packages/ckeditor5-media-embed/theme/mediaform.css */
 :root,
 :host {
   --ck-media-form-width: var(--ck-width-dialog);
@@ -6404,9 +6404,9 @@ span.ck-widget.html-object-embed {
   }
 }
 
-/* packages/ckeditor5-media-embed/theme/index-editor.css */
+/* ../packages/ckeditor5-media-embed/theme/index-editor.css */
 
-/* packages/ckeditor5-media-embed/theme/index-content.css */
+/* ../packages/ckeditor5-media-embed/theme/index-content.css */
 .ck-content .media {
   clear: both;
   margin: 0.9em auto;
@@ -6451,7 +6451,7 @@ span.ck-widget.html-object-embed {
   margin-right: 0;
 }
 
-/* packages/ckeditor5-minimap/theme/minimap.css */
+/* ../packages/ckeditor5-minimap/theme/minimap.css */
 :root,
 :host {
   --ck-color-minimap-tracker-background:
@@ -6525,13 +6525,13 @@ span.ck-widget.html-object-embed {
   }
 }
 
-/* packages/ckeditor5-minimap/theme/index-editor.css */
+/* ../packages/ckeditor5-minimap/theme/index-editor.css */
 
-/* packages/ckeditor5-minimap/theme/index-content.css */
+/* ../packages/ckeditor5-minimap/theme/index-content.css */
 
-/* packages/ckeditor5-page-break/theme/index-editor.css */
+/* ../packages/ckeditor5-page-break/theme/index-editor.css */
 
-/* packages/ckeditor5-page-break/theme/index-content.css */
+/* ../packages/ckeditor5-page-break/theme/index-content.css */
 .ck-content .page-break {
   position: relative;
   clear: both;
@@ -6574,7 +6574,7 @@ span.ck-widget.html-object-embed {
   }
 }
 
-/* packages/ckeditor5-restricted-editing/theme/restrictedediting.css */
+/* ../packages/ckeditor5-restricted-editing/theme/restrictedediting.css */
 :root,
 :host {
   --ck-color-restricted-editing-exception-background: hsla(31, 100%, 65%, .2);
@@ -6631,11 +6631,11 @@ span.ck-widget.html-object-embed {
   background: var(--ck-color-restricted-editing-exception-hover-background);
 }
 
-/* packages/ckeditor5-restricted-editing/theme/index-editor.css */
+/* ../packages/ckeditor5-restricted-editing/theme/index-editor.css */
 
-/* packages/ckeditor5-restricted-editing/theme/index-content.css */
+/* ../packages/ckeditor5-restricted-editing/theme/index-content.css */
 
-/* packages/ckeditor5-show-blocks/theme/showblocks.css */
+/* ../packages/ckeditor5-show-blocks/theme/showblocks.css */
 :root,
 :host {
   --ck-show-blocks-border-color: var(--ck-color-base-text-light);
@@ -6740,11 +6740,11 @@ span.ck-widget.html-object-embed {
   background-position: calc(100% - 1px) 1px;
 }
 
-/* packages/ckeditor5-show-blocks/theme/index-editor.css */
+/* ../packages/ckeditor5-show-blocks/theme/index-editor.css */
 
-/* packages/ckeditor5-show-blocks/theme/index-content.css */
+/* ../packages/ckeditor5-show-blocks/theme/index-content.css */
 
-/* packages/ckeditor5-source-editing/theme/sourceediting.css */
+/* ../packages/ckeditor5-source-editing/theme/sourceediting.css */
 :root,
 :host {
   --ck-source-editing-area-border-radius: var(--ck-radius-md);
@@ -6788,11 +6788,11 @@ span.ck-widget.html-object-embed {
   box-shadow: var(--ck-inner-shadow, var(--ck-inset-shadow-sm)), 0 0;
 }
 
-/* packages/ckeditor5-source-editing/theme/index-editor.css */
+/* ../packages/ckeditor5-source-editing/theme/index-editor.css */
 
-/* packages/ckeditor5-source-editing/theme/index-content.css */
+/* ../packages/ckeditor5-source-editing/theme/index-content.css */
 
-/* packages/ckeditor5-special-characters/theme/specialcharacters.css */
+/* ../packages/ckeditor5-special-characters/theme/specialcharacters.css */
 .ck.ck-special-characters-navigation > .ck-label {
   max-width: 160px;
   text-overflow: ellipsis;
@@ -6873,7 +6873,7 @@ span.ck-widget.html-object-embed {
   grid-area: 3 / 1 / 4 / 2;
 }
 
-/* packages/ckeditor5-special-characters/theme/charactergrid.css */
+/* ../packages/ckeditor5-special-characters/theme/charactergrid.css */
 :root,
 :host {
   --ck-character-grid-tile-size: 24px;
@@ -6915,7 +6915,7 @@ span.ck-widget.html-object-embed {
   text-align: center;
 }
 
-/* packages/ckeditor5-special-characters/theme/characterinfo.css */
+/* ../packages/ckeditor5-special-characters/theme/characterinfo.css */
 .ck.ck-character-info {
   padding: var(--ck-dialog-actions-padding);
   border-top: 1px solid var(--ck-color-base-border);
@@ -6936,16 +6936,16 @@ span.ck-widget.html-object-embed {
   opacity: .6;
 }
 
-/* packages/ckeditor5-special-characters/theme/index-editor.css */
+/* ../packages/ckeditor5-special-characters/theme/index-editor.css */
 
-/* packages/ckeditor5-special-characters/theme/index-content.css */
+/* ../packages/ckeditor5-special-characters/theme/index-content.css */
 
-/* packages/ckeditor5-style/theme/style.css */
+/* ../packages/ckeditor5-style/theme/style.css */
 .ck.ck-dropdown.ck-style-dropdown.ck-style-dropdown_multiple-active > .ck-button > .ck-button__label {
   font-style: italic;
 }
 
-/* packages/ckeditor5-style/theme/stylegrid.css */
+/* ../packages/ckeditor5-style/theme/stylegrid.css */
 :root,
 :host {
   --ck-style-panel-button-width: 120px;
@@ -7033,7 +7033,7 @@ span.ck-widget.html-object-embed {
   opacity: 1;
 }
 
-/* packages/ckeditor5-style/theme/stylegroup.css */
+/* ../packages/ckeditor5-style/theme/stylegroup.css */
 .ck.ck-style-panel .ck-style-panel__style-group > .ck-label {
   margin: var(--ck-spacing-large, var(--ck-spacing-lg)) 0;
 }
@@ -7041,7 +7041,7 @@ span.ck-widget.html-object-embed {
   margin-top: 0;
 }
 
-/* packages/ckeditor5-style/theme/stylepanel.css */
+/* ../packages/ckeditor5-style/theme/stylepanel.css */
 :root,
 :host {
   --ck-style-panel-max-height: 470px;
@@ -7052,17 +7052,17 @@ span.ck-widget.html-object-embed {
   max-height: var(--ck-style-panel-max-height);
 }
 
-/* packages/ckeditor5-style/theme/index-editor.css */
+/* ../packages/ckeditor5-style/theme/index-editor.css */
 
-/* packages/ckeditor5-style/theme/index-content.css */
+/* ../packages/ckeditor5-style/theme/index-content.css */
 
-/* packages/ckeditor5-table/theme/table.css */
+/* ../packages/ckeditor5-table/theme/table.css */
 .ck-editor__editable .ck-table-bogus-paragraph {
   display: inline-block;
   width: 100%;
 }
 
-/* packages/ckeditor5-table/theme/tableediting.css */
+/* ../packages/ckeditor5-table/theme/tableediting.css */
 :root,
 :host {
   --ck-color-table-focused-cell-background: hsla(212, 90%, 80%, .3);
@@ -7108,7 +7108,7 @@ span.ck-widget.html-object-embed {
   border-left: var(--ck-table-border-none-helper-line) !important;
 }
 
-/* packages/ckeditor5-table/theme/tablecellproperties.css */
+/* ../packages/ckeditor5-table/theme/tablecellproperties.css */
 :root,
 :host {
   --ck-table-cell-properties-width: var(--ck-width-balloon-form);
@@ -7161,7 +7161,7 @@ span.ck-widget.html-object-embed {
   width: 100%;
 }
 
-/* packages/ckeditor5-table/theme/tablelayout.css */
+/* ../packages/ckeditor5-table/theme/tablelayout.css */
 :root,
 :host {
   --ck-table-layout-widget-type-around-button-size: 16px;
@@ -7275,7 +7275,7 @@ span.ck-widget.html-object-embed {
   margin-bottom: var(--ck-spacing-large, var(--ck-spacing-lg));
 }
 
-/* packages/ckeditor5-table/theme/tablescroll.css */
+/* ../packages/ckeditor5-table/theme/tablescroll.css */
 :root,
 :host {
   --ck-table-scroll-widget-type-around-icon-width: 10px;
@@ -7347,7 +7347,7 @@ span.ck-widget.html-object-embed {
   bottom: 0;
 }
 
-/* packages/ckeditor5-table/theme/formrow.css */
+/* ../packages/ckeditor5-table/theme/formrow.css */
 .ck.ck-form__row > *:not(.ck-label) + * {
   margin-inline-start: var(--ck-spacing-large, var(--ck-spacing-lg));
 }
@@ -7363,7 +7363,7 @@ span.ck-widget.html-object-embed {
   justify-content: center;
 }
 
-/* packages/ckeditor5-table/theme/tableform.css */
+/* ../packages/ckeditor5-table/theme/tableform.css */
 :root,
 :host {
   --ck-table-properties-error-arrow-size: 6px;
@@ -7479,7 +7479,7 @@ span.ck-widget.html-object-embed {
   }
 }
 
-/* packages/ckeditor5-table/theme/tableproperties.css */
+/* ../packages/ckeditor5-table/theme/tableproperties.css */
 :root,
 :host {
   --ck-table-properties-width: var(--ck-width-balloon-form);
@@ -7526,7 +7526,7 @@ span.ck-widget.html-object-embed {
   margin-right: 0;
 }
 
-/* packages/ckeditor5-table/theme/tablecaption.css */
+/* ../packages/ckeditor5-table/theme/tablecaption.css */
 :root,
 :host {
   --ck-content-color-table-caption-background: hsl(0, 0%, 97%);
@@ -7555,7 +7555,7 @@ span.ck-widget.html-object-embed {
   }
 }
 
-/* packages/ckeditor5-table/theme/tableselection.css */
+/* ../packages/ckeditor5-table/theme/tableselection.css */
 :root,
 :host {
   --ck-table-selected-cell-background: hsla(208, 90%, 80%, .3);
@@ -7588,7 +7588,7 @@ span.ck-widget.html-object-embed {
   display: none;
 }
 
-/* packages/ckeditor5-table/theme/tablecolumnresize.css */
+/* ../packages/ckeditor5-table/theme/tablecolumnresize.css */
 :root,
 :host {
   --ck-color-table-column-resizer-hover: var(--ck-color-base-active);
@@ -7630,7 +7630,7 @@ span.ck-widget.html-object-embed {
   cursor: col-resize !important;
 }
 
-/* packages/ckeditor5-table/theme/colorinput.css */
+/* ../packages/ckeditor5-table/theme/colorinput.css */
 :root,
 :host {
   --ck-input-color-preview-border-radius: 0;
@@ -7726,7 +7726,7 @@ span.ck-widget.html-object-embed {
   display: none;
 }
 
-/* packages/ckeditor5-table/theme/inserttable.css */
+/* ../packages/ckeditor5-table/theme/inserttable.css */
 :root,
 :host {
   --ck-insert-table-dropdown-padding: var(--ck-spacing-padding);
@@ -7772,9 +7772,9 @@ span.ck-widget.html-object-embed {
   background: var(--ck-color-focus-outer-shadow, var(--ck-focus-shadow));
 }
 
-/* packages/ckeditor5-table/theme/index-editor.css */
+/* ../packages/ckeditor5-table/theme/index-editor.css */
 
-/* packages/ckeditor5-table/theme/index-content.css */
+/* ../packages/ckeditor5-table/theme/index-content.css */
 :root,
 :host {
   --ck-content-table-style-spacing: 1.5em;
@@ -7927,7 +7927,7 @@ span.ck-widget.html-object-embed {
   overflow-wrap: break-word;
 }
 
-/* packages/ckeditor5-word-count/theme/wordcount.css */
+/* ../packages/ckeditor5-word-count/theme/wordcount.css */
 :root,
 :host {
   --ck-word-count-font-size: var(--ck-font-size-md);
@@ -7936,11 +7936,11 @@ span.ck-widget.html-object-embed {
   font-size: var(--ck-word-count-font-size);
 }
 
-/* packages/ckeditor5-word-count/theme/index-editor.css */
+/* ../packages/ckeditor5-word-count/theme/index-editor.css */
 
-/* packages/ckeditor5-word-count/theme/index-content.css */
+/* ../packages/ckeditor5-word-count/theme/index-content.css */
 
-/* packages/ckeditor5-editor-classic/theme/classiceditor.css */
+/* ../packages/ckeditor5-editor-classic/theme/classiceditor.css */
 .ck.ck-editor__main > .ck-editor__editable {
   background: var(--ck-color-base-background);
 }
@@ -7958,7 +7958,7 @@ span.ck-widget.html-object-embed {
   z-index: var(--ck-z-panel, var(--ck-z-overlay));
 }
 
-/* node_modules/.pnpm/@tomaitken+ckeditor5-footnotes@0.0.4_ckeditor5@packages+ckeditor5/node_modules/@tomaitken/ckeditor5-footnotes/dist/index-editor.css */
+/* ../node_modules/.pnpm/@tomaitken+ckeditor5-footnotes@0.0.4_ckeditor5@packages+ckeditor5/node_modules/@tomaitken/ckeditor5-footnotes/dist/index-editor.css */
 .ck .footnote-section {
   padding: 10px;
   margin: 1em 0;

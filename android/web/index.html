@@ -244,9 +244,16 @@
       z-index: 10003 !important;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
       max-width: 94vw;
-      overflow-x: auto;
+      overflow: visible !important;
       white-space: nowrap;
       transition: opacity 0.2s ease;
+    }
+
+    body.light-theme .popup-toolbar-strip {
+      background-color: #f0f2f5 !important;
+      color: #111111 !important;
+      border: 1px solid rgba(0, 0, 0, 0.15) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
     }
 
     .popup-toolbar-strip.hidden {
@@ -335,6 +342,7 @@
       border: 1px solid #3a3d45 !important;
       border-radius: 10px !important;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+      z-index: 10005 !important;
     }
 
     body.light-theme .ck-balloon-panel,
@@ -345,6 +353,64 @@
       color: #111111 !important;
       border: 1px solid #e0e0e0 !important;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Native Split Buttons and Dropdowns inside Popup Toolbar Strip */
+    .popup-toolbar-strip .ck-dropdown,
+    .popup-toolbar-strip .ck-splitbutton {
+      display: inline-flex !important;
+      align-items: center !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .popup-toolbar-strip .ck-button,
+    .popup-toolbar-strip .ck-splitbutton__action,
+    .popup-toolbar-strip .ck-splitbutton__arrow {
+      background: transparent !important;
+      color: var(--toolbar-icon-color, #ffffff) !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 6px 8px !important;
+      cursor: pointer !important;
+    }
+
+    body.light-theme .popup-toolbar-strip .ck-button,
+    body.light-theme .popup-toolbar-strip .ck-splitbutton__action,
+    body.light-theme .popup-toolbar-strip .ck-splitbutton__arrow {
+      color: #111111 !important;
+    }
+
+    .popup-toolbar-strip .ck-button:hover,
+    .popup-toolbar-strip .ck-button:active,
+    .popup-toolbar-strip .ck-button.ck-on,
+    .popup-toolbar-strip .ck-splitbutton__action:hover,
+    .popup-toolbar-strip .ck-splitbutton__action:active,
+    .popup-toolbar-strip .ck-splitbutton__arrow:hover,
+    .popup-toolbar-strip .ck-splitbutton__arrow:active {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    body.light-theme .popup-toolbar-strip .ck-button:hover,
+    body.light-theme .popup-toolbar-strip .ck-button:active,
+    body.light-theme .popup-toolbar-strip .ck-button.ck-on,
+    body.light-theme .popup-toolbar-strip .ck-splitbutton__action:hover,
+    body.light-theme .popup-toolbar-strip .ck-splitbutton__action:active,
+    body.light-theme .popup-toolbar-strip .ck-splitbutton__arrow:hover,
+    body.light-theme .popup-toolbar-strip .ck-splitbutton__arrow:active {
+      background-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .popup-toolbar-strip .ck-icon,
+    .popup-toolbar-strip .ck-dropdown__arrow {
+      color: var(--toolbar-icon-color, #ffffff) !important;
+      fill: currentColor !important;
+    }
+
+    body.light-theme .popup-toolbar-strip .ck-icon,
+    body.light-theme .popup-toolbar-strip .ck-dropdown__arrow {
+      color: #111111 !important;
+      fill: currentColor !important;
     }
 
     /* Floating Contextual Toolbar inside Balloon Panel */
@@ -412,13 +478,31 @@
     }
 
     /* Labeled Input Fields & Forms (Link Balloon Form, Image URL Form, etc.) */
+    .ck-balloon-panel,
+    .ck-dropdown__panel {
+      --ck-color-text: #ffffff;
+      --ck-color-base-text: #ffffff;
+    }
+
+    body.light-theme .ck-balloon-panel,
+    body.light-theme .ck-dropdown__panel {
+      --ck-color-text: #111111;
+      --ck-color-base-text: #111111;
+    }
+
     .ck-labeled-field-view,
-    .ck-form {
+    .ck-form,
+    .ck-form__header,
+    .ck-form__header__label,
+    .ck-form__row {
       color: #ffffff !important;
     }
 
     body.light-theme .ck-labeled-field-view,
-    body.light-theme .ck-form {
+    body.light-theme .ck-form,
+    body.light-theme .ck-form__header,
+    body.light-theme .ck-form__header__label,
+    body.light-theme .ck-form__row {
       color: #111111 !important;
     }
 
@@ -445,10 +529,25 @@
       border: 1px solid #cccccc !important;
     }
 
+    .ck-button.ck-button-action,
+    .ck-button.ck-button-save {
+      background-color: #0078d4 !important;
+      color: #ffffff !important;
+      padding: 6px 16px !important;
+      border-radius: 6px !important;
+    }
+
+    .ck-button.ck-button-action:hover,
+    .ck-button.ck-button-action:active,
+    .ck-button.ck-button-save:hover,
+    .ck-button.ck-button-save:active {
+      background-color: #106ebe !important;
+    }
+
     /* Table Grid Picker Styling */
     .ck-table-grid__cell {
-      border-color: #444444 !important;
-      background-color: #18191c !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
+      background-color: rgba(255, 255, 255, 0.12) !important;
     }
 
     .ck-table-grid__cell.ck-table-grid__cell_focused,
@@ -466,6 +565,12 @@
       background-color: #f1f3f4 !important;
     }
 
+    body.light-theme .ck-table-grid__cell.ck-table-grid__cell_focused,
+    body.light-theme .ck-table-grid__cell.ck-table-grid__cell_selected {
+      background-color: #0078d4 !important;
+      border-color: #0078d4 !important;
+    }
+
     body.light-theme .ck-table-grid__label {
       color: #111111 !important;
     }
@@ -476,6 +581,11 @@
       color: #ffffff !important;
       border-radius: 4px !important;
       padding: 4px 8px !important;
+    }
+
+    /* Suppress tooltips inside popup toolbar strip to avoid overlapping buttons */
+    .popup-toolbar-strip .ck-tooltip {
+      display: none !important;
     }
 
     .ck-editor__main {
