@@ -17,6 +17,7 @@ function fixture() {
     pluginConfigurationTask: null,
     pendingMarkdown: null,
     rebuildMarkdown: null,
+    contentSnapshots: { cancel() {} },
     isProgrammaticChange: false,
     document: { querySelector: () => null },
     setTimeout: fn => fn(),
@@ -87,4 +88,36 @@ test('saving during a rebuild returns the pending file or retained snapshot', as
   assert.equal(f.bridge.getMarkdown(), '');
   f.finish();
   await rebuilding;
+});
+
+function snapshotFixture() {
+  const jobs = new Map();
+  let next = 0;
+  const context = vm.createContext({
+    setTimeout: fn => { jobs.set(++next, fn); return next; },
+    clearTimeout: id => jobs.delete(id)
+  });
+  vm.runInContext(source.slice(source.indexOf('function createContentSnapshotScheduler('),
+    source.indexOf('const contentSnapshots =')), context);
+  let reads = 0;
+  let dirty = 0;
+  const scheduler = context.createContentSnapshotScheduler(() => reads++, () => dirty++);
+  return { scheduler, jobs, counts: () => ({ reads, dirty }) };
+}
+
+test('rapid typing marks edits immediately but serializes only once after idle', () => {
+  const f = snapshotFixture();
+  for (let i = 0; i < 100; i++) f.scheduler.changed();
+  assert.deepEqual(f.counts(), { reads: 0, dirty: 100 });
+  assert.equal(f.jobs.size, 1);
+  [...f.jobs.values()][0]();
+  assert.equal(f.counts().reads, 1);
+});
+
+test('saving or replacing a document cancels its scheduled old snapshot', () => {
+  const f = snapshotFixture();
+  f.scheduler.changed();
+  f.scheduler.cancel();
+  assert.equal(f.jobs.size, 0);
+  assert.equal(f.counts().reads, 0);
 });

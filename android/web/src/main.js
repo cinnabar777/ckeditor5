@@ -59,6 +59,29 @@ let isProgrammaticChange = false;
 let pluginConfigurationTask = null;
 let pendingMarkdown = null;
 let rebuildMarkdown = null;
+// Keep document-sized serialization out of the keyboard's per-keystroke path.
+function createContentSnapshotScheduler(snapshot, dirty, delay = 750) {
+  let timer = null;
+  return {
+    changed() {
+      dirty();
+      this.cancel();
+      timer = setTimeout(() => { timer = null; snapshot(); }, delay);
+    },
+    cancel() {
+      if (timer !== null) clearTimeout(timer);
+      timer = null;
+    }
+  };
+}
+const contentSnapshots = createContentSnapshotScheduler(
+  () => {
+    if (editorInstance && !isProgrammaticChange && !pluginConfigurationTask) {
+      window.AndroidNative?.onContentChanged(editorInstance.getData());
+    }
+  },
+  () => window.AndroidNative?.onDocumentEdited()
+);
 let isToolbarVisible = false;
 let isLineWrapEnabled = true;
 let activePopupGroup = null;
@@ -516,6 +539,7 @@ function setupMarkdownFootnotesProcessor(editor) {
 }
 
 async function initEditor(disabledPlugins = [], isInitialInit = false) {
+  contentSnapshots.cancel();
   if (editorInstance) {
     await editorInstance.destroy();
     editorInstance = null;
@@ -660,8 +684,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
     editorInstance.model.document.on('change:data', () => {
       if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
-        const text = editorInstance.getData();
-        window.AndroidNative.onContentChanged(text);
+        contentSnapshots.changed();
       }
     });
 
@@ -1687,12 +1710,14 @@ window.editorBridge = {
     setCssVar('--toolbar-height', prefs.pref_toolbar_height, 'px');
   },
   getMarkdown: function() {
+    contentSnapshots.cancel();
     // Save requests during a rebuild must never serialize a destroyed/empty editor.
     if (pendingMarkdown !== null) return pendingMarkdown;
     if (pluginConfigurationTask || !editorInstance) return rebuildMarkdown ?? '';
     return editorInstance.getData();
   },
   setMarkdown: function(markdownText) {
+    contentSnapshots.cancel();
     // Native file intents may arrive while plugin settings rebuild the editor.
     // Keep the newest document, including an intentionally empty document.
     if (pluginConfigurationTask) {
