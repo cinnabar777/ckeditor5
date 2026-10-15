@@ -112041,8 +112041,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       setupMarkdownFootnotesProcessor(editorInstance);
       editorInstance.model.document.on("change:data", () => {
         if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
-          const text10 = editorInstance.getData();
-          window.AndroidNative.onContentChanged(text10);
+          window.AndroidNative.onContentChanged("");
         }
       });
       editorInstance.model.document.selection.on("change:range", () => {
@@ -112078,7 +112077,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             const clientY = e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY || 0;
             const clickX = clientX - rect.left;
             const clickY = clientY - rect.top;
-            if (clickX >= 0 && clickX < 160 && clickY >= 0 && clickY < 38) {
+            const isTopRightTap = clickX > rect.width - 150 && clickY >= 0 && clickY < 38;
+            const isTopLeftTap = clickX >= 0 && clickX < 150 && clickY >= 0 && clickY < 38;
+            if (isTopRightTap || isTopLeftTap) {
               e.preventDefault();
               e.stopPropagation();
               if (typeof e.stopImmediatePropagation === "function") {

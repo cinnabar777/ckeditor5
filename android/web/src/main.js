@@ -661,8 +661,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
 
     editorInstance.model.document.on('change:data', () => {
       if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
-        const text = editorInstance.getData();
-        window.AndroidNative.onContentChanged(text);
+        window.AndroidNative.onContentChanged('');
       }
     });
 
@@ -708,7 +707,9 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           const clickX = clientX - rect.left;
           const clickY = clientY - rect.top;
 
-          if (clickX >= 0 && clickX < 160 && clickY >= 0 && clickY < 38) {
+          const isTopRightTap = (clickX > rect.width - 150 && clickY >= 0 && clickY < 38);
+          const isTopLeftTap = (clickX >= 0 && clickX < 150 && clickY >= 0 && clickY < 38);
+          if (isTopRightTap || isTopLeftTap) {
             e.preventDefault();
             e.stopPropagation();
             if (typeof e.stopImmediatePropagation === 'function') {

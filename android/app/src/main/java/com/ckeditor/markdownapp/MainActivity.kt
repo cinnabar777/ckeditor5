@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private var pendingOpenUri: Uri? = null
     private var currentToast: Toast? = null
     private var currentTextPackSession: TextPackSession? = null
+    private var latestSelectionJson: String? = null
+    private var latestScrollTop: Int = 0
     private val documentHistoryStack = java.util.ArrayDeque<Uri>()
 
     private fun showCustomToast(message: String) {
@@ -215,21 +217,17 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 return
             }
 
-            if (isMultiWindowEnabled) {
-                if (currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
-                    val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
-                        action = android.content.Intent.ACTION_VIEW
-                        setDataAndType(data, "text/markdown")
-                        putExtra("open_target_uri", data.toString())
-                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                    }
-                    startActivity(newIntent)
-                    return
+            if (isMultiWindowEnabled && currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
+                val newIntent = android.content.Intent(applicationContext, MainActivity::class.java).apply {
+                    action = android.content.Intent.ACTION_VIEW
+                    setDataAndType(data, "text/markdown")
+                    putExtra("open_target_uri", data.toString())
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 }
-            } else {
-                if (currentFileUri != null && currentFileUri != data) {
-                    documentHistoryStack.push(currentFileUri)
-                }
+                applicationContext.startActivity(newIntent)
+                return
+            } else if (!isMultiWindowEnabled && currentFileUri != null && currentFileUri != data) {
+                documentHistoryStack.push(currentFileUri)
             }
 
             if (isEditorReady) {
@@ -244,36 +242,42 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             return
         }
 
-        val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
-        when (startupMode) {
-            "last_opened" -> {
-                val lastUriString = prefs.getString("last_opened_uri", null)
-                if (lastUriString != null) {
-                    val lastUri = Uri.parse(lastUriString)
-                    if (isEditorReady) {
-                        openFile(lastUri)
+        val action = intent.action
+        val isLauncherIntent = (action == android.content.Intent.ACTION_MAIN || action == null) &&
+                               (intent.categories?.contains(android.content.Intent.CATEGORY_LAUNCHER) == true || intent.data == null)
+
+        if (isLauncherIntent) {
+            val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
+            when (startupMode) {
+                "last_opened" -> {
+                    val lastUriString = prefs.getString("last_opened_uri", null)
+                    if (lastUriString != null) {
+                        val lastUri = Uri.parse(lastUriString)
+                        if (isEditorReady) {
+                            openFile(lastUri)
+                        } else {
+                            pendingOpenUri = lastUri
+                        }
                     } else {
-                        pendingOpenUri = lastUri
+                        createNewDocument()
                     }
-                } else {
+                }
+                "custom" -> {
+                    val customUriString = prefs.getString("pref_startup_custom_document_uri", null)
+                    if (customUriString != null) {
+                        val customUri = Uri.parse(customUriString)
+                        if (isEditorReady) {
+                            openFile(customUri)
+                        } else {
+                            pendingOpenUri = customUri
+                        }
+                    } else {
+                        createNewDocument()
+                    }
+                }
+                else -> {
                     createNewDocument()
                 }
-            }
-            "custom" -> {
-                val customUriString = prefs.getString("pref_startup_custom_document_uri", null)
-                if (customUriString != null) {
-                    val customUri = Uri.parse(customUriString)
-                    if (isEditorReady) {
-                        openFile(customUri)
-                    } else {
-                        pendingOpenUri = customUri
-                    }
-                } else {
-                    createNewDocument()
-                }
-            }
-            else -> {
-                createNewDocument()
             }
         }
     }
@@ -290,6 +294,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onPause() {
         super.onPause()
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+        saveCursorAndScrollStateToPrefs()
         if (::webView.isInitialized) {
             webView.onPause()
         }
@@ -304,6 +309,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     override fun onStop() {
         super.onStop()
+        saveCursorAndScrollStateToPrefs()
         performAutoSaveOnLeave()
     }
 
@@ -400,14 +406,24 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun saveCurrentStateBeforeSettings() {
         if (!isEditorReady) return
-        webView.evaluateJavascript("window.editorBridge.getSelectionState();") { selectionJson ->
-            val fileName = currentFileName
-            if (fileName.isNotEmpty() && fileName != getString(R.string.untitled_document)) {
-                val key = "doc_$fileName"
-                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-                prefs.edit().putString("cursor_sel_$key", selectionJson).apply()
-            }
+        saveCursorAndScrollStateToPrefs()
+    }
+
+    private fun saveCursorAndScrollStateToPrefs() {
+        val fileName = currentFileName
+        if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
+        val key = "doc_$fileName"
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = prefs.edit()
+
+        val sel = latestSelectionJson
+        if (!sel.isNullOrEmpty() && sel != "{\"path\":[],\"offset\":0}" && sel != "{}") {
+            editor.putString("cursor_sel_$key", sel)
         }
+        if (latestScrollTop > 0) {
+            editor.putInt("cursor_scroll_$key", latestScrollTop)
+        }
+        editor.apply()
     }
 
     private fun applyThemeAndFullscreenPreferences() {
@@ -639,13 +655,13 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
 
             if (currentFileUri != null) {
-                val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
+                val newIntent = android.content.Intent(applicationContext, MainActivity::class.java).apply {
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(uri, "text/markdown")
                     putExtra("open_target_uri", uri.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                 }
-                startActivity(newIntent)
+                applicationContext.startActivity(newIntent)
                 return
             }
         } else {
@@ -1016,12 +1032,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         @JavascriptInterface
         fun onSelectionChanged(selectionJson: String) {
-            val fileName = currentFileName
-            if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
-            if (selectionJson.isEmpty() || selectionJson == "{\"path\":[],\"offset\":0}" || selectionJson == "{}") return
-            val key = "doc_$fileName"
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-            prefs.edit().putString("cursor_sel_$key", selectionJson).apply()
+            latestSelectionJson = selectionJson
         }
 
         @JavascriptInterface
@@ -1033,11 +1044,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         @JavascriptInterface
         fun onScrollChanged(scrollTop: Int) {
-            val fileName = currentFileName
-            if (fileName.isEmpty() || fileName == getString(R.string.untitled_document)) return
-            val key = "doc_$fileName"
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-            prefs.edit().putInt("cursor_scroll_$key", scrollTop).apply()
+            latestScrollTop = scrollTop
         }
     }
 

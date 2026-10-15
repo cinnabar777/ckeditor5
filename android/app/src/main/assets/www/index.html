@@ -528,12 +528,14 @@
       line-height: var(--code-block-line-height, 1.4) !important;
     }
 
+    /* Code Block Language Badge (Top-Right) */
     .ck-content pre[data-language]::before,
     .ck-content pre .ck-code-block-language-label {
+      content: attr(data-language) !important;
       position: absolute !important;
       top: 6px !important;
-      left: 8px !important;
-      right: auto !important;
+      right: 10px !important;
+      left: auto !important;
       font-size: 12px !important;
       font-weight: 700 !important;
       color: var(--code-block-lang-label-color, #ffffff) !important;
@@ -545,24 +547,7 @@
       user-select: none !important;
       pointer-events: none !important;
       z-index: 10 !important;
-    }
-
-    /* Transparent Click/Touch Copy Overlay over language label */
-    .ck-content pre::after {
-      content: 'COPY' !important;
-      position: absolute !important;
-      top: 6px !important;
-      left: 8px !important;
-      right: auto !important;
-      height: 26px !important;
-      min-width: 80px !important;
-      padding: 3px 10px !important;
-      background: transparent !important;
-      color: transparent !important;
-      border: none !important;
-      cursor: pointer !important;
-      user-select: none !important;
-      z-index: 20 !important;
+      display: inline-block !important;
     }
 
     .ck-content pre code {
