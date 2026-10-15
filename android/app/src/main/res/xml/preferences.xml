@@ -25,11 +25,11 @@
 
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_export"
-            app:title="HTML &amp; MHTML Export Settings"
+            app:title="HTML &amp; MHTML Export"
             app:summary="Configure HTML/MHTML format, TOC levels, CSS embedding &amp; stylesheet options" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="App Display &amp; Image Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="App Display &amp; Image">
         <com.ckeditor.markdownapp.ResetListPreference
             app:key="pref_app_theme"
             app:title="App Theme"
@@ -59,7 +59,7 @@
             app:defaultValue="picker" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Management Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Management">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_diagnostics"
             app:title="Diagnostic report"
@@ -84,7 +84,7 @@
             app:summary="Restore preferences and font files from a ZIP backup file" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Reset Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Reset">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_reset_all_defaults"
             app:title="Reset All Settings to Defaults ↺"
