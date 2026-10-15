@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
         })
 
-        handleIntent(intent)
+        handleIntent(intent, allowStartupDocument = true)
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    private fun handleIntent(intent: android.content.Intent?) {
+    private fun handleIntent(intent: android.content.Intent?, allowStartupDocument: Boolean = false) {
         if (intent == null) return
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
@@ -226,10 +226,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     startActivity(newIntent)
                     return
                 }
-            } else {
-                if (currentFileUri != null && currentFileUri != data) {
-                    documentHistoryStack.push(currentFileUri)
-                }
             }
 
             if (isEditorReady) {
@@ -240,7 +236,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             return
         }
 
-        if (currentFileUri != null) {
+        // A repeated launcher tap only focuses this window. File intents have
+        // already been handled above and must never fall through to startup.
+        if (!allowStartupDocument || intent.action != android.content.Intent.ACTION_MAIN ||
+            !intent.hasCategory(android.content.Intent.CATEGORY_LAUNCHER) ||
+            currentFileUri != null || isDirty) {
             return
         }
 
@@ -321,7 +321,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     currentFileUri?.let { uri ->
                         val session = currentTextPackSession
                         if (session != null) {
-                            // A textpack is an archive; writing raw Markdown corrupts it.
                             TextPackManager.saveTextPack(this, session, contentToSave, uri)
                         } else {
                             val output = contentResolver.openOutputStream(uri, "rwt")
@@ -814,7 +813,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     currentTextPackSession = session
                     TextPackManager.saveTextPack(this, session, markdownText, uri)
                 } else {
-                    contentResolver.openOutputStream(uri, "rwt")?.use { outputStream ->
+                    val output = contentResolver.openOutputStream(uri, "rwt")
+                        ?: throw java.io.IOException("Could not open document for writing")
+                    output.use { outputStream ->
                         val writer = OutputStreamWriter(outputStream)
                         writer.write(markdownText)
                         writer.flush()
@@ -823,6 +824,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
                 currentFileUri = uri
                 currentFileName = targetFileName
+                latestMarkdownContent = markdownText
                 isDirty = false
                 updateTitle()
                 Toast.makeText(this, "File saved successfully", Toast.LENGTH_SHORT).show()
@@ -848,6 +850,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
         startActivity(intent)
     }
+
 
     private fun handleInsertImage() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)

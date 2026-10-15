@@ -56,6 +56,9 @@ import '../../../node_modules/@tomaitken/ckeditor5-footnotes/dist/index-editor.c
 
 let editorInstance = null;
 let isProgrammaticChange = false;
+let pluginConfigurationTask = null;
+let pendingMarkdown = null;
+let rebuildMarkdown = null;
 let isToolbarVisible = false;
 let isLineWrapEnabled = true;
 let activePopupGroup = null;
@@ -855,6 +858,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
     }
 
     if (isInitialInit) {
+      window._lastDisabledPluginsStr = JSON.stringify([...disabledPlugins].sort());
       setupFloatingToggle();
       setupKeyboardShortcuts();
       setupTocGestureAndPanel();
@@ -1683,10 +1687,18 @@ window.editorBridge = {
     setCssVar('--toolbar-height', prefs.pref_toolbar_height, 'px');
   },
   getMarkdown: function() {
-    if (!editorInstance) return '';
+    // Save requests during a rebuild must never serialize a destroyed/empty editor.
+    if (pendingMarkdown !== null) return pendingMarkdown;
+    if (pluginConfigurationTask || !editorInstance) return rebuildMarkdown ?? '';
     return editorInstance.getData();
   },
   setMarkdown: function(markdownText) {
+    // Native file intents may arrive while plugin settings rebuild the editor.
+    // Keep the newest document, including an intentionally empty document.
+    if (pluginConfigurationTask) {
+      pendingMarkdown = markdownText || '';
+      return;
+    }
     if (!editorInstance) return;
     isProgrammaticChange = true;
     try {
@@ -1981,6 +1993,9 @@ window.editorBridge = {
     }
   },
   configurePlugins: function(disabledPluginsJson) {
+    if (pluginConfigurationTask) {
+      return pluginConfigurationTask.then(() => window.editorBridge.configurePlugins(disabledPluginsJson));
+    }
     let disabledPlugins = [];
     try {
       if (typeof disabledPluginsJson === 'string') {
@@ -1996,23 +2011,31 @@ window.editorBridge = {
     if (window._lastDisabledPluginsStr === currentDisabledStr && editorInstance) {
       return;
     }
-    window._lastDisabledPluginsStr = currentDisabledStr;
 
     const currentText = window.editorBridge.getMarkdown();
+    rebuildMarkdown = currentText;
     const currentState = window.editorBridge.getSelectionState();
     const mainEditingArea = document.querySelector('.ck-editor__main');
     const scrollTop = mainEditingArea ? mainEditingArea.scrollTop : 0;
 
     isProgrammaticChange = true;
-    initEditor(disabledPlugins).then(() => {
-      if (currentText) {
-        editorInstance.setData(currentText);
-      }
-      if (currentState) {
+    pluginConfigurationTask = initEditor(disabledPlugins).then(() => {
+      if (!editorInstance) throw new Error('Plugin configuration did not create an editor');
+      window._lastDisabledPluginsStr = currentDisabledStr;
+      const hasPendingDocument = pendingMarkdown !== null;
+      editorInstance.setData(hasPendingDocument ? pendingMarkdown : currentText);
+      pendingMarkdown = null;
+      if (!hasPendingDocument && currentState) {
         window.editorBridge.setSelectionState(currentState, scrollTop);
       }
+      if (hasPendingDocument && window.AndroidNative?.restoreNativeCursorAndScrollState) {
+        window.AndroidNative.restoreNativeCursorAndScrollState();
+      }
       setTimeout(() => { isProgrammaticChange = false; }, 50);
+    }).finally(() => {
+      pluginConfigurationTask = null;
     });
+    return pluginConfigurationTask;
   }
 };
 
