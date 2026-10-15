@@ -124526,440 +124526,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   GutterMarker.prototype.mapMode = MapMode.TrackBefore;
   GutterMarker.prototype.startSide = GutterMarker.prototype.endSide = -1;
   GutterMarker.prototype.point = true;
-  var gutterLineClass = /* @__PURE__ */ Facet.define();
-  var gutterWidgetClass = /* @__PURE__ */ Facet.define();
-  var activeGutters = /* @__PURE__ */ Facet.define();
-  var unfixGutters = /* @__PURE__ */ Facet.define({
-    combine: (values2) => values2.some((x) => x)
-  });
-  function gutters(config) {
-    let result = [
-      gutterView
-    ];
-    if (config && config.fixed === false)
-      result.push(unfixGutters.of(true));
-    return result;
-  }
-  var gutterView = /* @__PURE__ */ ViewPlugin.fromClass(class {
-    constructor(view) {
-      this.view = view;
-      this.domAfter = null;
-      this.prevViewport = view.viewport;
-      this.dom = document.createElement("div");
-      this.dom.className = "cm-gutters cm-gutters-before";
-      this.dom.setAttribute("aria-hidden", "true");
-      this.dom.style.minHeight = this.view.contentHeight / this.view.scaleY + "px";
-      this.gutters = view.state.facet(activeGutters).map((conf) => new SingleGutterView(view, conf));
-      this.fixed = !view.state.facet(unfixGutters);
-      for (let gutter2 of this.gutters) {
-        if (gutter2.config.side == "after")
-          this.getDOMAfter().appendChild(gutter2.dom);
-        else
-          this.dom.appendChild(gutter2.dom);
-      }
-      if (this.fixed) {
-        this.dom.style.position = "sticky";
-      }
-      this.syncGutters(false);
-      view.scrollDOM.insertBefore(this.dom, view.contentDOM);
-    }
-    getDOMAfter() {
-      if (!this.domAfter) {
-        this.domAfter = document.createElement("div");
-        this.domAfter.className = "cm-gutters cm-gutters-after";
-        this.domAfter.setAttribute("aria-hidden", "true");
-        this.domAfter.style.minHeight = this.view.contentHeight / this.view.scaleY + "px";
-        this.domAfter.style.position = this.fixed ? "sticky" : "";
-        this.view.scrollDOM.appendChild(this.domAfter);
-      }
-      return this.domAfter;
-    }
-    update(update) {
-      if (this.updateGutters(update)) {
-        let vpA = this.prevViewport, vpB = update.view.viewport;
-        let vpOverlap = Math.min(vpA.to, vpB.to) - Math.max(vpA.from, vpB.from);
-        this.syncGutters(vpOverlap < (vpB.to - vpB.from) * 0.8);
-      }
-      if (update.geometryChanged) {
-        let min = this.view.contentHeight / this.view.scaleY + "px";
-        this.dom.style.minHeight = min;
-        if (this.domAfter)
-          this.domAfter.style.minHeight = min;
-      }
-      if (this.view.state.facet(unfixGutters) != !this.fixed) {
-        this.fixed = !this.fixed;
-        this.dom.style.position = this.fixed ? "sticky" : "";
-        if (this.domAfter)
-          this.domAfter.style.position = this.fixed ? "sticky" : "";
-      }
-      this.prevViewport = update.view.viewport;
-    }
-    syncGutters(detach) {
-      let after2 = this.dom.nextSibling;
-      if (detach) {
-        this.dom.remove();
-        if (this.domAfter)
-          this.domAfter.remove();
-      }
-      let lineClasses = RangeSet.iter(this.view.state.facet(gutterLineClass), this.view.viewport.from);
-      let classSet = [];
-      let contexts2 = this.gutters.map((gutter2) => new UpdateContext(gutter2, this.view.viewport, -this.view.documentPadding.top));
-      for (let line of this.view.viewportLineBlocks) {
-        if (classSet.length)
-          classSet = [];
-        if (Array.isArray(line.type)) {
-          let first2 = true;
-          for (let b of line.type) {
-            if (b.type == BlockType.Text && first2) {
-              advanceCursor(lineClasses, classSet, b.from);
-              for (let cx of contexts2)
-                cx.line(this.view, b, classSet);
-              first2 = false;
-            } else if (b.widget) {
-              for (let cx of contexts2)
-                cx.widget(this.view, b);
-            }
-          }
-        } else if (line.type == BlockType.Text) {
-          advanceCursor(lineClasses, classSet, line.from);
-          for (let cx of contexts2)
-            cx.line(this.view, line, classSet);
-        } else if (line.widget) {
-          for (let cx of contexts2)
-            cx.widget(this.view, line);
-        }
-      }
-      for (let cx of contexts2)
-        cx.finish();
-      if (detach) {
-        this.view.scrollDOM.insertBefore(this.dom, after2);
-        if (this.domAfter)
-          this.view.scrollDOM.appendChild(this.domAfter);
-      }
-    }
-    updateGutters(update) {
-      let prev = update.startState.facet(activeGutters), cur = update.state.facet(activeGutters);
-      let change = update.docChanged || update.heightChanged || update.viewportChanged || !RangeSet.eq(update.startState.facet(gutterLineClass), update.state.facet(gutterLineClass), update.view.viewport.from, update.view.viewport.to);
-      if (prev == cur) {
-        for (let gutter2 of this.gutters)
-          if (gutter2.update(update))
-            change = true;
-      } else {
-        change = true;
-        let gutters2 = [];
-        for (let conf of cur) {
-          let known = prev.indexOf(conf);
-          if (known < 0) {
-            gutters2.push(new SingleGutterView(this.view, conf));
-          } else {
-            this.gutters[known].update(update);
-            gutters2.push(this.gutters[known]);
-          }
-        }
-        for (let g of this.gutters) {
-          g.dom.remove();
-          if (gutters2.indexOf(g) < 0)
-            g.destroy();
-        }
-        for (let g of gutters2) {
-          if (g.config.side == "after")
-            this.getDOMAfter().appendChild(g.dom);
-          else
-            this.dom.appendChild(g.dom);
-        }
-        this.gutters = gutters2;
-      }
-      return change;
-    }
-    destroy() {
-      for (let view of this.gutters)
-        view.destroy();
-      this.dom.remove();
-      if (this.domAfter)
-        this.domAfter.remove();
-    }
-  }, {
-    provide: (plugin) => EditorView.scrollMargins.of((view) => {
-      let value = view.plugin(plugin);
-      if (!value || value.gutters.length == 0 || !value.fixed)
-        return null;
-      let before = value.dom.offsetWidth * view.scaleX, after2 = value.domAfter ? value.domAfter.offsetWidth * view.scaleX : 0;
-      return view.textDirection == Direction.LTR ? { left: before, right: after2 } : { right: before, left: after2 };
-    })
-  });
-  function asArray2(val) {
-    return Array.isArray(val) ? val : [val];
-  }
-  function advanceCursor(cursor, collect, pos) {
-    while (cursor.value && cursor.from <= pos) {
-      if (cursor.from == pos)
-        collect.push(cursor.value);
-      cursor.next();
-    }
-  }
-  var UpdateContext = class {
-    constructor(gutter2, viewport, height) {
-      this.gutter = gutter2;
-      this.height = height;
-      this.i = 0;
-      this.cursor = RangeSet.iter(gutter2.markers, viewport.from);
-    }
-    addElement(view, block, markers) {
-      let { gutter: gutter2 } = this, above = (block.top - this.height) / view.scaleY, height = block.height / view.scaleY;
-      if (this.i == gutter2.elements.length) {
-        let newElt = new GutterElement(view, height, above, markers);
-        gutter2.elements.push(newElt);
-        gutter2.dom.appendChild(newElt.dom);
-      } else {
-        gutter2.elements[this.i].update(view, height, above, markers);
-      }
-      this.height = block.bottom;
-      this.i++;
-    }
-    line(view, line, extraMarkers) {
-      let localMarkers = [];
-      advanceCursor(this.cursor, localMarkers, line.from);
-      if (extraMarkers.length)
-        localMarkers = localMarkers.concat(extraMarkers);
-      let forLine = this.gutter.config.lineMarker(view, line, localMarkers);
-      if (forLine)
-        localMarkers.unshift(forLine);
-      let gutter2 = this.gutter;
-      if (localMarkers.length == 0 && !gutter2.config.renderEmptyElements)
-        return;
-      this.addElement(view, line, localMarkers);
-    }
-    widget(view, block) {
-      let marker = this.gutter.config.widgetMarker(view, block.widget, block), markers = marker ? [marker] : null;
-      for (let cls of view.state.facet(gutterWidgetClass)) {
-        let marker2 = cls(view, block.widget, block);
-        if (marker2)
-          (markers || (markers = [])).push(marker2);
-      }
-      if (markers)
-        this.addElement(view, block, markers);
-    }
-    finish() {
-      let gutter2 = this.gutter;
-      while (gutter2.elements.length > this.i) {
-        let last2 = gutter2.elements.pop();
-        gutter2.dom.removeChild(last2.dom);
-        last2.destroy();
-      }
-    }
-  };
-  var SingleGutterView = class {
-    constructor(view, config) {
-      this.view = view;
-      this.config = config;
-      this.elements = [];
-      this.spacer = null;
-      this.dom = document.createElement("div");
-      this.dom.className = "cm-gutter" + (this.config.class ? " " + this.config.class : "");
-      for (let prop in config.domEventHandlers) {
-        this.dom.addEventListener(prop, (event) => {
-          let target = event.target, y;
-          if (target != this.dom && this.dom.contains(target)) {
-            while (target.parentNode != this.dom)
-              target = target.parentNode;
-            let rect = target.getBoundingClientRect();
-            y = (rect.top + rect.bottom) / 2;
-          } else {
-            y = event.clientY;
-          }
-          let line = view.lineBlockAtHeight(y - view.documentTop);
-          if (config.domEventHandlers[prop](view, line, event))
-            event.preventDefault();
-        });
-      }
-      this.markers = asArray2(config.markers(view));
-      if (config.initialSpacer) {
-        this.spacer = new GutterElement(view, 0, 0, [config.initialSpacer(view)]);
-        this.dom.appendChild(this.spacer.dom);
-        this.spacer.dom.style.cssText += "visibility: hidden; pointer-events: none";
-      }
-    }
-    update(update) {
-      let prevMarkers = this.markers;
-      this.markers = asArray2(this.config.markers(update.view));
-      if (this.spacer && this.config.updateSpacer) {
-        let updated = this.config.updateSpacer(this.spacer.markers[0], update);
-        if (updated != this.spacer.markers[0])
-          this.spacer.update(update.view, 0, 0, [updated]);
-      }
-      let vp = update.view.viewport;
-      return !RangeSet.eq(this.markers, prevMarkers, vp.from, vp.to) || (this.config.lineMarkerChange ? this.config.lineMarkerChange(update) : false);
-    }
-    destroy() {
-      for (let elt2 of this.elements)
-        elt2.destroy();
-    }
-  };
-  var GutterElement = class {
-    constructor(view, height, above, markers) {
-      this.height = -1;
-      this.above = 0;
-      this.markers = [];
-      this.dom = document.createElement("div");
-      this.dom.className = "cm-gutterElement";
-      this.update(view, height, above, markers);
-    }
-    update(view, height, above, markers) {
-      if (this.height != height) {
-        this.height = height;
-        this.dom.style.height = height + "px";
-      }
-      if (this.above != above)
-        this.dom.style.marginTop = (this.above = above) ? above + "px" : "";
-      if (!sameMarkers(this.markers, markers))
-        this.setMarkers(view, markers);
-    }
-    setMarkers(view, markers) {
-      let cls = "cm-gutterElement", domPos = this.dom.firstChild;
-      for (let iNew = 0, iOld = 0; ; ) {
-        let skipTo = iOld, marker = iNew < markers.length ? markers[iNew++] : null, matched = false;
-        if (marker) {
-          let c = marker.elementClass;
-          if (c)
-            cls += " " + c;
-          for (let i2 = iOld; i2 < this.markers.length; i2++)
-            if (this.markers[i2].compare(marker)) {
-              skipTo = i2;
-              matched = true;
-              break;
-            }
-        } else {
-          skipTo = this.markers.length;
-        }
-        while (iOld < skipTo) {
-          let next = this.markers[iOld++];
-          if (next.toDOM) {
-            next.destroy(domPos);
-            let after2 = domPos.nextSibling;
-            domPos.remove();
-            domPos = after2;
-          }
-        }
-        if (!marker)
-          break;
-        if (marker.toDOM) {
-          if (matched)
-            domPos = domPos.nextSibling;
-          else
-            this.dom.insertBefore(marker.toDOM(view), domPos);
-        }
-        if (matched)
-          iOld++;
-      }
-      this.dom.className = cls;
-      this.markers = markers;
-    }
-    destroy() {
-      this.setMarkers(null, []);
-    }
-  };
-  function sameMarkers(a2, b) {
-    if (a2.length != b.length)
-      return false;
-    for (let i2 = 0; i2 < a2.length; i2++)
-      if (!a2[i2].compare(b[i2]))
-        return false;
-    return true;
-  }
-  var lineNumberMarkers = /* @__PURE__ */ Facet.define();
-  var lineNumberWidgetMarker = /* @__PURE__ */ Facet.define();
-  var lineNumberConfig = /* @__PURE__ */ Facet.define({
-    combine(values2) {
-      return combineConfig(values2, { formatNumber: String, domEventHandlers: {} }, {
-        domEventHandlers(a2, b) {
-          let result = Object.assign({}, a2);
-          for (let event in b) {
-            let exists = result[event], add2 = b[event];
-            result[event] = exists ? (view, line, event2) => exists(view, line, event2) || add2(view, line, event2) : add2;
-          }
-          return result;
-        }
-      });
-    }
-  });
-  var NumberMarker = class extends GutterMarker {
-    constructor(number3) {
-      super();
-      this.number = number3;
-    }
-    eq(other) {
-      return this.number == other.number;
-    }
-    toDOM() {
-      return document.createTextNode(this.number);
-    }
-  };
-  function formatNumber(view, number3) {
-    return view.state.facet(lineNumberConfig).formatNumber(number3, view.state);
-  }
-  var lineNumberGutter = /* @__PURE__ */ activeGutters.compute([lineNumberConfig], (state) => ({
-    class: "cm-lineNumbers",
-    renderEmptyElements: false,
-    markers(view) {
-      return view.state.facet(lineNumberMarkers);
-    },
-    lineMarker(view, line, others) {
-      if (others.some((m) => m.toDOM))
-        return null;
-      return new NumberMarker(formatNumber(view, view.state.doc.lineAt(line.from).number));
-    },
-    widgetMarker: (view, widget, block) => {
-      for (let m of view.state.facet(lineNumberWidgetMarker)) {
-        let result = m(view, widget, block);
-        if (result)
-          return result;
-      }
-      return null;
-    },
-    lineMarkerChange: (update) => update.startState.facet(lineNumberConfig) != update.state.facet(lineNumberConfig),
-    initialSpacer(view) {
-      return new NumberMarker(formatNumber(view, maxLineNumber(view.state.doc.lines)));
-    },
-    updateSpacer(spacer, update) {
-      let max = formatNumber(update.view, maxLineNumber(update.view.state.doc.lines));
-      return max == spacer.number ? spacer : new NumberMarker(max);
-    },
-    domEventHandlers: state.facet(lineNumberConfig).domEventHandlers,
-    side: "before"
-  }));
-  function lineNumbers(config = {}) {
-    return [
-      lineNumberConfig.of(config),
-      gutters(),
-      lineNumberGutter
-    ];
-  }
-  function maxLineNumber(lines) {
-    let last2 = 9;
-    while (last2 < lines)
-      last2 = last2 * 10 + 9;
-    return last2;
-  }
-  var activeLineGutterMarker = /* @__PURE__ */ new class extends GutterMarker {
-    constructor() {
-      super(...arguments);
-      this.elementClass = "cm-activeLineGutter";
-    }
-  }();
-  var activeLineGutterHighlighter = /* @__PURE__ */ gutterLineClass.compute(["selection"], (state) => {
-    let marks2 = [], last2 = -1;
-    for (let range of state.selection.ranges) {
-      let linePos = state.doc.lineAt(range.head).from;
-      if (linePos > last2) {
-        last2 = linePos;
-        marks2.push(activeLineGutterMarker.range(linePos));
-      }
-    }
-    return RangeSet.of(marks2);
-  });
-  function highlightActiveLineGutter() {
-    return activeLineGutterHighlighter;
-  }
 
   // ../node_modules/.pnpm/@lezer+common@1.5.3/node_modules/@lezer/common/dist/index.js
   var DefaultBufferLength = 1024;
@@ -137425,6 +136991,94 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   });
 
   // web/src/main.js
+  var editorInstance = null;
+  var activeAdapter = null;
+  var currentEditorMode = "rich_text";
+  var isProgrammaticChange = false;
+  var pluginConfigurationTask = null;
+  var pendingMarkdown = null;
+  var rebuildMarkdown = null;
+  var isLineWrapEnabled = true;
+  var activePopupGroup = null;
+  var customHotkeys = {
+    new: "ctrl+n",
+    open: "ctrl+o",
+    save: "ctrl+s",
+    save_as: "ctrl+shift+s",
+    export: "ctrl+shift+e",
+    image: "ctrl+shift+i",
+    settings: "ctrl+,",
+    toggle_toolbar: "ctrl+t",
+    line_wrap: "ctrl+alt+w",
+    bold: "ctrl+b",
+    italic: "ctrl+i",
+    underline: "ctrl+u",
+    strikethrough: "ctrl+shift+x",
+    code: "ctrl+e",
+    link: "ctrl+k",
+    footnote: "ctrl+shift+f",
+    blockQuote: "ctrl+shift+q",
+    codeBlock: "ctrl+shift+c",
+    bulletedList: "ctrl+shift+8",
+    numberedList: "ctrl+shift+7",
+    todoList: "ctrl+shift+l",
+    indent: "tab",
+    outdent: "shift+tab",
+    horizontalLine: "ctrl+shift+h",
+    findAndReplace: "ctrl+f",
+    heading_p: "ctrl+alt+0",
+    heading_1: "ctrl+alt+1",
+    heading_2: "ctrl+alt+2",
+    heading_3: "ctrl+alt+3",
+    heading_4: "ctrl+alt+4",
+    heading_5: "ctrl+alt+5",
+    heading_6: "ctrl+alt+6",
+    highlight_yellow: "ctrl+alt+y",
+    highlight_green: "ctrl+alt+g",
+    highlight_pink: "ctrl+alt+p",
+    highlight_blue: "ctrl+alt+b",
+    highlight_red: "ctrl+alt+r",
+    highlight_red_pen: "ctrl+alt+r",
+    highlight_green_pen: "ctrl+alt+shift+g",
+    highlight_remove: "ctrl+alt+x"
+  };
+  var svgIcons = {
+    undo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>`,
+    redo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>`,
+    paragraph: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13"/></svg>`,
+    lists: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+    format: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
+    table: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/></svg>`,
+    insertTable: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/><path d="M16 16h4m-2-2v4"/></svg>`,
+    insert: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>`,
+    wrap: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 21 6"/><path d="M3 12h15a3 3 0 0 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/></svg>`,
+    bold: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>`,
+    italic: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>`,
+    underline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>`,
+    strikethrough: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
+    inlineCode: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><line x1="14" y1="4" x2="10" y2="20"/></svg>`,
+    codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 9l-2 3 2 3"/><path d="M12 9l2 3-2 3"/></svg>`,
+    link: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+    image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+    blockQuote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+    horizontalLine: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/></svg>`,
+    bulletedList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+    numberedList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>`,
+    todoList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+    indent: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 10 7 14 3 18"/><line x1="21" y1="6" x2="11" y2="6"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="18" x2="11" y2="18"/></svg>`,
+    outdent: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 10 3 14 7 18"/><line x1="21" y1="6" x2="11" y2="6"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="18" x2="11" y2="18"/></svg>`,
+    newFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`,
+    openFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,
+    saveFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+    saveAsFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/><path d="M12 10v4m-2-2h4"/></svg>`,
+    search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+    settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+    newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`,
+    footnote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M4 15h16"/><path d="M9 11V5h6v6"/><path d="M9 8h6"/></svg>`,
+    squareMarker: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color2}"/></svg>`,
+    circlePen: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color2}"/></svg>`
+  };
   var CheckboxWidget = class extends WidgetType {
     constructor(checked, pos) {
       super();
@@ -137446,6 +137100,20 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       return input2;
     }
   };
+  var customHighlightStyle = HighlightStyle.define([
+    { tag: tags.heading, color: "var(--heading-1-color, #ffffff)", fontWeight: "bold" },
+    { tag: tags.emphasis, fontStyle: "italic", color: "var(--italic-color, inherit)" },
+    { tag: tags.strong, fontWeight: "bold", color: "var(--bold-color, inherit)" },
+    { tag: tags.strikethrough, textDecoration: "line-through" },
+    { tag: tags.link, color: "var(--link-color, #29b6f6)", textDecoration: "underline" },
+    { tag: tags.monospace, color: "var(--code-color, #ff80ab)" },
+    { tag: tags.meta, color: "#888888" },
+    { tag: tags.comment, color: "#888888" },
+    { tag: tags.propertyName, color: "#29b6f6" },
+    { tag: tags.string, color: "#00e676" },
+    { tag: tags.number, color: "#ffea00" },
+    { tag: tags.keyword, color: "#ff4081", fontWeight: "bold" }
+  ]);
   var livePreviewPlugin = ViewPlugin.fromClass(class {
     constructor(view) {
       this.decorations = this.buildDecorations(view);
@@ -137562,345 +137230,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       selection: { anchor: sel.from + before.length, head: sel.from + before.length + (selectedText.length || 4) }
     });
   }
-  var editorInstance = null;
-  var activeAdapter = null;
-  var currentEditorMode = "rich_text";
-  var isProgrammaticChange = false;
-  var pluginConfigurationTask = null;
-  var pendingMarkdown = null;
-  var rebuildMarkdown = null;
-  var isLineWrapEnabled = true;
-  var activePopupGroup = null;
-  var customHotkeys = {
-    new: "ctrl+n",
-    open: "ctrl+o",
-    save: "ctrl+s",
-    save_as: "ctrl+shift+s",
-    export: "ctrl+shift+e",
-    image: "ctrl+shift+i",
-    settings: "ctrl+,",
-    toggle_toolbar: "ctrl+t",
-    line_wrap: "ctrl+alt+w",
-    bold: "ctrl+b",
-    italic: "ctrl+i",
-    underline: "ctrl+u",
-    strikethrough: "ctrl+shift+x",
-    code: "ctrl+e",
-    link: "ctrl+k",
-    footnote: "ctrl+shift+f",
-    blockQuote: "ctrl+shift+q",
-    codeBlock: "ctrl+shift+c",
-    bulletedList: "ctrl+shift+8",
-    numberedList: "ctrl+shift+7",
-    todoList: "ctrl+shift+l",
-    indent: "tab",
-    outdent: "shift+tab",
-    horizontalLine: "ctrl+shift+h",
-    findAndReplace: "ctrl+f",
-    sourceEditing: "ctrl+shift+u",
-    heading_p: "ctrl+alt+0",
-    heading_1: "ctrl+alt+1",
-    heading_2: "ctrl+alt+2",
-    heading_3: "ctrl+alt+3",
-    heading_4: "ctrl+alt+4",
-    heading_5: "ctrl+alt+5",
-    heading_6: "ctrl+alt+6",
-    highlight_yellow: "ctrl+alt+y",
-    highlight_green: "ctrl+alt+g",
-    highlight_pink: "ctrl+alt+p",
-    highlight_blue: "ctrl+alt+b",
-    highlight_red: "ctrl+alt+r",
-    highlight_red_pen: "ctrl+alt+r",
-    highlight_green_pen: "ctrl+alt+shift+g",
-    highlight_remove: "ctrl+alt+x"
-  };
-  var svgIcons = {
-    undo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>`,
-    redo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>`,
-    paragraph: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13"/></svg>`,
-    lists: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
-    format: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
-    table: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/></svg>`,
-    insertTable: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/><path d="M16 16h4m-2-2v4"/></svg>`,
-    addColumn: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/><path d="M16 12h4m-2-2v4"/></svg>`,
-    addRow: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 16v4m-2-2h4"/></svg>`,
-    mergeCells: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8m-3-3l3 3-3 3"/></svg>`,
-    insert: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
-    menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>`,
-    wrap: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 21 6"/><path d="M3 12h15a3 3 0 0 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/></svg>`,
-    bold: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>`,
-    italic: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>`,
-    underline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>`,
-    strikethrough: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
-    inlineCode: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><line x1="14" y1="4" x2="10" y2="20"/></svg>`,
-    codeBlock: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 9l-2 3 2 3"/><path d="M12 9l2 3-2 3"/></svg>`,
-    link: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
-    image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
-    blockQuote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
-    horizontalLine: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/></svg>`,
-    bulletedList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
-    numberedList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>`,
-    todoList: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
-    indent: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 10 7 14 3 18"/><line x1="21" y1="6" x2="11" y2="6"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="18" x2="11" y2="18"/></svg>`,
-    outdent: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 10 3 14 7 18"/><line x1="21" y1="6" x2="11" y2="6"/><line x1="21" y1="12" x2="11" y2="12"/><line x1="21" y1="18" x2="11" y2="18"/></svg>`,
-    newFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`,
-    openFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,
-    saveFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
-    saveAsFile: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/><path d="M12 10v4m-2-2h4"/></svg>`,
-    search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
-    sourceEditing: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="20" x2="12" y2="4"/></svg>`,
-    settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
-    newWindow: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>`,
-    footnote: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M4 15h16"/><path d="M9 11V5h6v6"/><path d="M9 8h6"/></svg>`,
-    squareMarker: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="${color2}"/></svg>`,
-    circlePen: (color2) => `<svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="${color2}"/></svg>`
-  };
-  var searchState = {
-    matchCase: false,
-    wholeWords: false,
-    useRegex: false,
-    showReplace: false
-  };
-  function addLongPressToast(btn, message) {
-    if (!btn) return;
-    let timer = null;
-    let isLongPress = false;
-    const showToastMsg = () => {
-      if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
-        window.AndroidNative.showToast(message);
-      }
-    };
-    btn.addEventListener("pointerdown", () => {
-      isLongPress = false;
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        isLongPress = true;
-        showToastMsg();
-      }, 450);
-    });
-    const cancelTimer = () => {
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-      }
-    };
-    btn.addEventListener("pointerup", cancelTimer);
-    btn.addEventListener("pointercancel", cancelTimer);
-    btn.addEventListener("click", (e) => {
-      if (isLongPress) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        isLongPress = false;
-        return false;
-      }
-    }, true);
-    btn.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-  }
-  function initCustomSearchBar() {
-    const container = document.querySelector("#custom-search-bar");
-    if (!container) return;
-    const searchInput = container.querySelector("#search-input");
-    const replaceInput = container.querySelector("#replace-input");
-    const counter = container.querySelector("#search-counter");
-    const btnPrev = container.querySelector("#search-btn-prev");
-    const btnNext = container.querySelector("#search-btn-next");
-    const btnHighlight = container.querySelector("#search-btn-highlight");
-    const btnRegex = container.querySelector("#search-btn-regex");
-    const btnClose = container.querySelector("#search-btn-close");
-    const btnReplaceOne = container.querySelector("#search-btn-replace-one");
-    const btnReplaceAll = container.querySelector("#search-btn-replace-all");
-    const btnCase = container.querySelector("#search-btn-case");
-    const btnWord = container.querySelector("#search-btn-word");
-    addLongPressToast(btnPrev, "Find Previous");
-    addLongPressToast(btnNext, "Find Next");
-    addLongPressToast(btnHighlight, "Highlight All Instances");
-    addLongPressToast(btnRegex, "Regular Expression");
-    addLongPressToast(btnClose, "Close Search");
-    addLongPressToast(btnReplaceOne, "Replace One");
-    addLongPressToast(btnReplaceAll, "Replace All");
-    addLongPressToast(btnCase, "Match Case");
-    addLongPressToast(btnWord, "Match Whole Word");
-    const executeSearch = () => {
-      if (!activeAdapter) return;
-      const query = searchInput.value || "";
-      if (!query) {
-        counter.textContent = "";
-        if (editorInstance) {
-          try {
-            const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
-            if (findEditing && findEditing.state) {
-              findEditing.state.clear(editorInstance.model);
-            }
-          } catch (e) {
-          }
-        }
-        return;
-      }
-      if (activeAdapter.mode === "source") {
-        const text10 = activeAdapter.getMarkdown();
-        try {
-          const flags = searchState.matchCase ? "g" : "gi";
-          const searchPattern = searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          const reg = new RegExp(searchPattern, flags);
-          const matches2 = [...text10.matchAll(reg)];
-          counter.textContent = matches2.length > 0 ? `1/${matches2.length}` : "0/0";
-        } catch (e) {
-          counter.textContent = "0/0";
-        }
-        return;
-      }
-      if (editorInstance) {
-        try {
-          if (searchState.useRegex) {
-            const flags = searchState.matchCase ? "g" : "gi";
-            const reg = new RegExp(query, flags);
-            const findCallback = ({ text: text10 }) => {
-              const matches2 = [...text10.matchAll(reg)];
-              return matches2.map((m) => ({
-                label: m[0],
-                start: m.index,
-                end: m.index + m[0].length
-              }));
-            };
-            editorInstance.execute("find", findCallback);
-          } else {
-            editorInstance.execute("find", query, {
-              matchCase: searchState.matchCase,
-              wholeWords: searchState.wholeWords
-            });
-          }
-          updateSearchCounter();
-        } catch (e) {
-          if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
-            window.AndroidNative.showToast("Invalid Regex pattern");
-          }
-        }
-      }
-    };
-    const updateSearchCounter = () => {
-      if (!editorInstance) return;
-      try {
-        const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
-        if (findEditing && findEditing.state) {
-          const total = findEditing.state.results ? findEditing.state.results.length : 0;
-          const current = findEditing.state.highlightedOffset || (total > 0 ? 1 : 0);
-          counter.textContent = total > 0 ? `${current}/${total}` : "0/0";
-        }
-      } catch (e) {
-      }
-    };
-    searchInput.addEventListener("input", executeSearch);
-    btnHighlight.onclick = () => {
-      const isActive = btnHighlight.classList.toggle("active");
-      if (!isActive && editorInstance) {
-        try {
-          const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
-          if (findEditing && findEditing.state) {
-            findEditing.state.clear(editorInstance.model);
-          }
-        } catch (e) {
-        }
-      } else {
-        executeSearch();
-      }
-    };
-    btnCase.onclick = () => {
-      searchState.matchCase = !searchState.matchCase;
-      btnCase.classList.toggle("active", searchState.matchCase);
-      executeSearch();
-    };
-    btnWord.onclick = () => {
-      searchState.wholeWords = !searchState.wholeWords;
-      btnWord.classList.toggle("active", searchState.wholeWords);
-      executeSearch();
-    };
-    btnRegex.onclick = () => {
-      searchState.useRegex = !searchState.useRegex;
-      btnRegex.classList.toggle("active", searchState.useRegex);
-      executeSearch();
-    };
-    btnPrev.onclick = () => {
-      if (editorInstance) {
-        editorInstance.execute("findPrevious");
-        updateSearchCounter();
-      }
-    };
-    btnNext.onclick = () => {
-      if (editorInstance) {
-        editorInstance.execute("findNext");
-        updateSearchCounter();
-      }
-    };
-    btnClose.onclick = () => {
-      toggleFindAndReplaceBar(false);
-    };
-    btnReplaceOne.onclick = () => {
-      if (activeAdapter && activeAdapter.mode === "source") {
-        const query = searchInput.value || "";
-        const rep = replaceInput.value || "";
-        if (query && activeAdapter) {
-          const current = activeAdapter.getMarkdown();
-          const flags = searchState.matchCase ? "" : "i";
-          const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
-          const nextText = current.replace(reg, rep);
-          activeAdapter.setMarkdown(nextText);
-          executeSearch();
-        }
-        return;
-      }
-      if (editorInstance) {
-        editorInstance.execute("replace", replaceInput.value || "");
-        updateSearchCounter();
-      }
-    };
-    btnReplaceAll.onclick = () => {
-      if (activeAdapter && activeAdapter.mode === "source") {
-        const query = searchInput.value || "";
-        const rep = replaceInput.value || "";
-        if (query && activeAdapter) {
-          const current = activeAdapter.getMarkdown();
-          const flags = searchState.matchCase ? "g" : "gi";
-          const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
-          const nextText = current.replaceAll(reg, rep);
-          activeAdapter.setMarkdown(nextText);
-          executeSearch();
-        }
-        return;
-      }
-      if (editorInstance) {
-        editorInstance.execute("replaceAll", replaceInput.value || "", searchInput.value || "");
-        updateSearchCounter();
-      }
-    };
-  }
-  function toggleFindAndReplaceBar(forceState) {
-    const container = document.querySelector("#custom-search-bar");
-    if (!container) return;
-    const newState = forceState !== void 0 ? forceState : container.classList.contains("hidden");
-    if (newState) {
-      container.classList.remove("hidden");
-      const input2 = container.querySelector("#search-input");
-      if (input2) {
-        input2.focus();
-        input2.select();
-      }
-    } else {
-      container.classList.add("hidden");
-      if (editorInstance) {
-        try {
-          const findEditing = editorInstance.plugins.get("FindAndReplaceEditing");
-          if (findEditing && findEditing.state) {
-            findEditing.state.clear(editorInstance.model);
-          }
-        } catch (e) {
-        }
-      }
-    }
-  }
   function setupMarkdownFootnotesProcessor(editor) {
     if (!editor || !editor.data || !editor.data.processor) return;
     const processor = editor.data.processor;
@@ -137960,143 +137289,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       return markdownText.trim();
     };
   }
-  var CodeMirrorAdapter = class {
-    constructor() {
-      this.mode = "source";
-      this.view = null;
-      this.lineWrapCompartment = new Compartment();
-      this.revision = 0;
-      this.isProgrammatic = false;
-    }
-    async init(containerEl, initialMarkdown = "") {
-      containerEl.innerHTML = "";
-      const startState = EditorState.create({
-        doc: initialMarkdown,
-        extensions: [
-          lineNumbers(),
-          highlightActiveLineGutter(),
-          highlightSpecialChars(),
-          history(),
-          drawSelection(),
-          dropCursor(),
-          rectangularSelection(),
-          crosshairCursor(),
-          highlightActiveLine(),
-          markdown(),
-          syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-          livePreviewPlugin,
-          this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),
-          EditorView.theme({
-            "&": {
-              height: "100%",
-              fontSize: "var(--body-font-size, 16px)",
-              fontFamily: "var(--code-font-family, monospace)",
-              backgroundColor: "var(--bg-color, #000000)",
-              color: "var(--text-color, #ffffff)"
-            },
-            ".cm-content": {
-              caretColor: "var(--text-color, #ffffff)",
-              fontFamily: "var(--code-font-family, monospace)",
-              padding: "8px 12px"
-            },
-            ".cm-gutters": {
-              backgroundColor: "var(--toolbar-bg, #121212)",
-              color: "var(--text-color, #888888)",
-              borderRight: "1px solid var(--border-color, #444444)"
-            },
-            ".cm-activeLineGutter": {
-              backgroundColor: "rgba(255, 255, 255, 0.1)"
-            },
-            "&.cm-focused": {
-              outline: "none"
-            }
-          }),
-          EditorView.updateListener.of((update) => {
-            if (update.docChanged && !this.isProgrammatic) {
-              this.revision++;
-              if (window.AndroidNative && typeof window.AndroidNative.onDirtyStateChanged === "function") {
-                window.AndroidNative.onDirtyStateChanged(true, this.revision);
-              } else if (window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
-                window.AndroidNative.onContentChanged(null, this.revision);
-              }
-            }
-          }),
-          keymap.of([
-            ...defaultKeymap,
-            ...historyKeymap
-          ])
-        ]
-      });
-      this.view = new EditorView({
-        state: startState,
-        parent: containerEl
-      });
-      setupGroupedControlBar();
-      initCustomSearchBar();
-      setupFastScrollbar();
-      setupTocGestureAndPanel();
-    }
-    setMarkdown(text10) {
-      if (!this.view) return;
-      this.isProgrammatic = true;
-      const currentDoc = this.view.state.doc.toString();
-      if (currentDoc !== text10) {
-        this.view.dispatch({
-          changes: { from: 0, to: currentDoc.length, insert: text10 || "" }
-        });
-      }
-      this.revision = 0;
-      setTimeout(() => {
-        this.isProgrammatic = false;
-      }, 20);
-    }
-    getMarkdown() {
-      if (!this.view) return "";
-      return this.view.state.doc.toString();
-    }
-    getSelectionState() {
-      if (!this.view) return { path: [], offset: 0, head: 0, anchor: 0 };
-      const sel = this.view.state.selection.main;
-      return { path: [], offset: sel.head, head: sel.head, anchor: sel.anchor };
-    }
-    setSelectionState(stateJson, scrollTop) {
-      if (!this.view) return;
-      try {
-        let sel = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;
-        if (sel && typeof sel.head === "number") {
-          const len = this.view.state.doc.length;
-          const head2 = Math.min(Math.max(0, sel.head), len);
-          const anchor = Math.min(Math.max(0, sel.anchor !== void 0 ? sel.anchor : sel.head), len);
-          this.view.dispatch({
-            selection: { anchor, head: head2 }
-          });
-        }
-      } catch (e) {
-        console.error("Error setting CodeMirror selection:", e);
-      }
-      if (typeof scrollTop === "number" && scrollTop >= 0) {
-        this.view.scrollDOM.scrollTop = scrollTop;
-      }
-    }
-    undo() {
-      if (this.view) undo(this.view);
-    }
-    redo() {
-      if (this.view) redo(this.view);
-    }
-    setLineWrap(enabled) {
-      if (!this.view) return;
-      this.view.dispatch({
-        effects: this.lineWrapCompartment.reconfigure(enabled ? EditorView.lineWrapping : [])
-      });
-    }
-    destroy() {
-      if (this.view) {
-        this.view.destroy();
-        this.view = null;
-      }
-    }
-  };
   var CKEditorAdapter = class {
     constructor() {
       this.mode = "rich_text";
@@ -138115,7 +137307,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         Markdown,
         PasteFromOffice
       ];
-      const toolbarItems = [];
+      const toolbarItems = ["undo", "redo", "|"];
       const addIfEnabled = (pluginKey, pluginClass, toolbarKey) => {
         if (!disabledPlugins.includes(pluginKey)) {
           if (pluginClass && !pluginsToLoad.includes(pluginClass)) {
@@ -138128,7 +137320,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         }
         return false;
       };
-      toolbarItems.push("undo", "redo", "|");
       if (addIfEnabled("heading", Heading)) toolbarItems.push("heading", "|");
       addIfEnabled("bold", Bold, "bold");
       addIfEnabled("italic", Italic, "italic");
@@ -138357,9 +137548,139 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       }
     }
   };
+  var CodeMirrorAdapter = class {
+    constructor() {
+      this.mode = "source";
+      this.view = null;
+      this.lineWrapCompartment = new Compartment();
+      this.revision = 0;
+      this.isProgrammatic = false;
+    }
+    async init(containerEl, initialMarkdown = "") {
+      containerEl.innerHTML = "";
+      const startState = EditorState.create({
+        doc: initialMarkdown || "",
+        extensions: [
+          highlightSpecialChars(),
+          history(),
+          drawSelection(),
+          dropCursor(),
+          rectangularSelection(),
+          crosshairCursor(),
+          highlightActiveLine(),
+          markdown(),
+          syntaxHighlighting(customHighlightStyle),
+          livePreviewPlugin,
+          this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),
+          EditorView.theme({
+            "&": {
+              height: "100%",
+              fontSize: "var(--body-font-size, 16px)",
+              fontFamily: 'var(--body-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif)',
+              backgroundColor: "var(--bg-color, #000000)",
+              color: "var(--text-color, #ffffff)"
+            },
+            ".cm-content": {
+              caretColor: "var(--text-color, #ffffff)",
+              fontFamily: 'var(--body-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif)',
+              padding: "12px 16px",
+              lineHeight: "var(--paragraph-line-height, 1.6)"
+            },
+            ".cm-gutters": {
+              display: "none !important"
+            },
+            "&.cm-focused": {
+              outline: "none"
+            }
+          }),
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged && !this.isProgrammatic) {
+              this.revision++;
+              if (window.AndroidNative && typeof window.AndroidNative.onDirtyStateChanged === "function") {
+                window.AndroidNative.onDirtyStateChanged(true, this.revision);
+              } else if (window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
+                window.AndroidNative.onContentChanged(null, this.revision);
+              }
+            }
+          }),
+          keymap.of([
+            ...defaultKeymap,
+            ...historyKeymap
+          ])
+        ]
+      });
+      this.view = new EditorView({
+        state: startState,
+        parent: containerEl
+      });
+      setupGroupedControlBar();
+      initCustomSearchBar();
+      setupFastScrollbar();
+      setupTocGestureAndPanel();
+    }
+    setMarkdown(text10) {
+      if (!this.view) return;
+      this.isProgrammatic = true;
+      const currentDoc = this.view.state.doc.toString();
+      if (currentDoc !== text10) {
+        this.view.dispatch({
+          changes: { from: 0, to: currentDoc.length, insert: text10 || "" }
+        });
+      }
+      this.revision = 0;
+      setTimeout(() => {
+        this.isProgrammatic = false;
+      }, 20);
+    }
+    getMarkdown() {
+      if (!this.view) return "";
+      return this.view.state.doc.toString();
+    }
+    getSelectionState() {
+      if (!this.view) return { path: [], offset: 0, head: 0, anchor: 0 };
+      const sel = this.view.state.selection.main;
+      return { path: [], offset: sel.head, head: sel.head, anchor: sel.anchor };
+    }
+    setSelectionState(stateJson, scrollTop) {
+      if (!this.view) return;
+      try {
+        let sel = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;
+        if (sel && typeof sel.head === "number") {
+          const len = this.view.state.doc.length;
+          const head2 = Math.min(Math.max(0, sel.head), len);
+          const anchor = Math.min(Math.max(0, sel.anchor !== void 0 ? sel.anchor : sel.head), len);
+          this.view.dispatch({
+            selection: { anchor, head: head2 }
+          });
+        }
+      } catch (e) {
+        console.error("Error setting CodeMirror selection:", e);
+      }
+      if (typeof scrollTop === "number" && scrollTop >= 0) {
+        this.view.scrollDOM.scrollTop = scrollTop;
+      }
+    }
+    undo() {
+      if (this.view) undo(this.view);
+    }
+    redo() {
+      if (this.view) redo(this.view);
+    }
+    setLineWrap(enabled) {
+      if (!this.view) return;
+      this.view.dispatch({
+        effects: this.lineWrapCompartment.reconfigure(enabled ? EditorView.lineWrapping : [])
+      });
+    }
+    destroy() {
+      if (this.view) {
+        this.view.destroy();
+        this.view = null;
+      }
+    }
+  };
   async function setEditorMode(mode, disabledPlugins = []) {
-    var _a2, _b, _c, _d;
-    const targetMode = mode === "source" ? "source" : "rich_text";
+    const targetMode = mode === "source" || mode === "live_preview" ? "source" : "rich_text";
     const existingText = activeAdapter ? activeAdapter.getMarkdown() : pendingMarkdown || "";
     if (activeAdapter) {
       activeAdapter.destroy();
@@ -138377,8 +137698,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         editorEl.innerHTML = "";
       }
     }
-    const startTime = Date.now();
-    (_b = (_a2 = window.AndroidNative) == null ? void 0 : _a2.reportDiagnostic) == null ? void 0 : _b.call(_a2, "adapter_init_start", `mode=${targetMode}`);
     if (targetMode === "source") {
       const adapter = new CodeMirrorAdapter();
       const containerEl = document.querySelector("#editor");
@@ -138391,20 +137710,15 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       await adapter.init(containerEl, existingText, disabledPlugins);
       activeAdapter = adapter;
     }
-    (_d = (_c = window.AndroidNative) == null ? void 0 : _c.reportDiagnostic) == null ? void 0 : _d.call(_c, "adapter_init_done", `mode=${targetMode} ms=${Date.now() - startTime}`);
     if (window.AndroidNative && typeof window.AndroidNative.onEditorReady === "function") {
       window.AndroidNative.onEditorReady(targetMode);
     }
-    requestAnimationFrame(() => {
-      var _a3, _b2;
-      (_b2 = (_a3 = window.AndroidNative) == null ? void 0 : _a3.reportDiagnostic) == null ? void 0 : _b2.call(_a3, "first_frame_rendered", `mode=${targetMode}`);
-    });
     return activeAdapter;
   }
   function setupGroupedControlBar() {
-    const topContainer = document.querySelector(".ck-editor__top");
+    const topContainer = document.querySelector(".ck-editor__top") || document.querySelector("#editor-container");
     if (!topContainer) return;
-    let bar = topContainer.querySelector(".grouped-control-bar");
+    let bar = document.querySelector(".grouped-control-bar");
     if (!bar) {
       bar = document.createElement("div");
       bar.className = "grouped-control-bar";
@@ -138455,7 +137769,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       headingBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("heading", headingBtn, [
-          { ckeComponent: "heading" },
+          { ckeComponent: "heading", title: "Paragraph", icon: "P", action: () => execCmd("heading", { value: "paragraph" }) },
+          { title: "Heading 1", icon: "H1", action: () => execCmd("heading", { value: "heading1" }) },
+          { title: "Heading 2", icon: "H2", action: () => execCmd("heading", { value: "heading2" }) },
+          { title: "Heading 3", icon: "H3", action: () => execCmd("heading", { value: "heading3" }) },
+          { title: "Heading 4", icon: "H4", action: () => execCmd("heading", { value: "heading4" }) },
+          { title: "Heading 5", icon: "H5", action: () => execCmd("heading", { value: "heading5" }) },
+          { title: "Heading 6", icon: "H6", action: () => execCmd("heading", { value: "heading6" }) },
           { icon: svgIcons.wrap, title: "Toggle Line Wrap", action: () => window.editorBridge.toggleLineWrap() }
         ]);
       };
@@ -138465,11 +137785,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       listsBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("lists", listsBtn, [
-          { ckeComponent: "bulletedList" },
-          { ckeComponent: "numberedList" },
-          { icon: svgIcons.todoList, title: "Todo List", action: () => execCmd("todoList") },
-          { icon: svgIcons.indent, title: "Indent", action: () => execCmd("indent") },
-          { icon: svgIcons.outdent, title: "Outdent", action: () => execCmd("outdent") }
+          { ckeComponent: "bulletedList", title: "Bulleted List", icon: svgIcons.bulletedList, action: () => execCmd("bulletedList") },
+          { ckeComponent: "numberedList", title: "Numbered List", icon: svgIcons.numberedList, action: () => execCmd("numberedList") },
+          { title: "Todo List", icon: svgIcons.todoList, action: () => execCmd("todoList") },
+          { title: "Indent", icon: svgIcons.indent, action: () => execCmd("indent") },
+          { title: "Outdent", icon: svgIcons.outdent, action: () => execCmd("outdent") }
         ]);
       };
     }
@@ -138487,8 +137807,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { icon: svgIcons.squareMarker("#ff99c8"), title: "Pink Marker", action: () => execCmd("highlight", { value: "pinkMarker" }) },
           { icon: svgIcons.squareMarker("#9bf6ff"), title: "Blue Marker", action: () => execCmd("highlight", { value: "blueMarker" }) },
           { icon: svgIcons.circlePen("#ff595e"), title: "Red Pen", action: () => execCmd("highlight", { value: "redPen" }) },
-          { icon: svgIcons.circlePen("#2ec4b6"), title: "Green Pen", action: () => execCmd("highlight", { value: "greenPen" }) },
-          { icon: "\u2715", title: "Clear Marker / Pen", action: () => execCmd("highlight", { value: null }) }
+          { icon: svgIcons.circlePen("#2ec4b6"), title: "Green Pen", action: () => execCmd("highlight", { value: "greenPen" }) }
         ]);
       };
     }
@@ -138497,10 +137816,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       tableBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("table", tableBtn, [
-          { ckeComponent: "insertTable" },
-          { ckeComponent: "tableColumn" },
-          { ckeComponent: "tableRow" },
-          { ckeComponent: "mergeTableCells" }
+          { ckeComponent: "insertTable", icon: svgIcons.insertTable, title: "Insert Table", action: () => execCmd("insertTable") }
         ]);
       };
     }
@@ -138509,11 +137825,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       insertBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("insert", insertBtn, [
-          { ckeComponent: "insertImage" },
-          { ckeComponent: "link" },
+          { ckeComponent: "insertImage", icon: svgIcons.image, title: "Insert Image", action: () => window.editorBridge.insertImage("https://") },
+          { ckeComponent: "link", icon: svgIcons.link, title: "Insert Link", action: () => execCmd("link") },
           { icon: svgIcons.inlineCode, title: "Inline Code", action: () => execCmd("code") },
           { icon: svgIcons.blockQuote, title: "Insert Quote", action: () => execCmd("blockQuote") },
-          { ckeComponent: "codeBlock" },
+          { ckeComponent: "codeBlock", icon: svgIcons.codeBlock, title: "Code Block", action: () => execCmd("codeBlock") },
           { icon: svgIcons.horizontalLine, title: "Insert Line", action: () => execCmd("horizontalLine") },
           { icon: svgIcons.footnote, title: "Insert Footnote", action: () => execCmd("InsertFootnote") }
         ]);
@@ -138533,7 +137849,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             hidePopupStrip();
             toggleFindAndReplaceBar();
           } },
-          { icon: svgIcons.sourceEditing, title: "Toggle Source View", action: () => toggleSourceEditing() },
           { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
@@ -138555,6 +137870,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       else if (cmdName === "todoList") cmToggleLinePrefix(view, "- [ ] ");
       else if (cmdName === "horizontalLine") cmWrapSelection(view, "\n---\n", "");
       else if (cmdName === "InsertFootnote") cmWrapSelection(view, "[^1]", "\n[^1]: footnote text");
+      else if (cmdName === "link") cmWrapSelection(view, "[", "](https://)");
+      else if (cmdName === "insertTable") cmWrapSelection(view, "\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n", "");
       else if (cmdName === "heading") {
         const val = options ? options.value : "";
         if (val === "paragraph") cmToggleLinePrefix(view, "");
@@ -138564,6 +137881,11 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         else if (val === "heading4") cmToggleLinePrefix(view, "#### ");
         else if (val === "heading5") cmToggleLinePrefix(view, "##### ");
         else if (val === "heading6") cmToggleLinePrefix(view, "###### ");
+      } else if (cmdName === "highlight") {
+        const val = options ? options.value : null;
+        if (val === "yellowMarker" || val === "greenMarker" || val === "pinkMarker" || val === "blueMarker") cmWrapSelection(view, "==", "==");
+        else if (val === "redPen") cmWrapSelection(view, '<span style="color:red">', "</span>");
+        else if (val === "greenPen") cmWrapSelection(view, '<span style="color:green">', "</span>");
       }
       return;
     }
@@ -138596,72 +137918,126 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     targetBtn.classList.add("active");
     const isSourceMode = activeAdapter && activeAdapter.mode === "source";
     items.forEach((item) => {
-      if (item.ckeComponent) {
-        if (!isSourceMode && editorInstance && editorInstance.ui.componentFactory.has(item.ckeComponent)) {
-          try {
-            const view = editorInstance.ui.componentFactory.create(item.ckeComponent);
-            if (!view.element) {
-              view.render();
-            }
-            if (view.element) {
-              strip.appendChild(view.element);
-            }
-          } catch (e) {
-            console.error("Failed to create CKE component:", item.ckeComponent, e);
+      if (item.ckeComponent && !isSourceMode && editorInstance && editorInstance.ui.componentFactory.has(item.ckeComponent)) {
+        try {
+          const view = editorInstance.ui.componentFactory.create(item.ckeComponent);
+          if (!view.element) {
+            view.render();
           }
-        } else if (isSourceMode) {
-          const btn = document.createElement("button");
-          btn.className = "popup-strip-btn";
-          const ckeMap = {
-            heading: { title: "Headings", action: () => execCmd("heading", { value: "heading1" }), icon: svgIcons.paragraph },
-            bulletedList: { title: "Bulleted List", action: () => execCmd("bulletedList"), icon: svgIcons.bulletedList },
-            numberedList: { title: "Numbered List", action: () => execCmd("numberedList"), icon: svgIcons.numberedList },
-            insertTable: { title: "Insert Table", action: () => cmWrapSelection(activeAdapter.view, "\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n", ""), icon: svgIcons.insertTable },
-            tableColumn: { title: "Table", action: () => {
-            }, icon: svgIcons.table },
-            tableRow: { title: "Table", action: () => {
-            }, icon: svgIcons.table },
-            mergeTableCells: { title: "Table", action: () => {
-            }, icon: svgIcons.table },
-            insertImage: { title: "Insert Image", action: () => window.editorBridge.insertImage("https://"), icon: svgIcons.image },
-            link: { title: "Insert Link", action: () => cmWrapSelection(activeAdapter.view, "[", "](https://)"), icon: svgIcons.link },
-            codeBlock: { title: "Code Block", action: () => execCmd("codeBlock"), icon: svgIcons.codeBlock }
-          };
-          const mapped = ckeMap[item.ckeComponent];
-          if (mapped) {
-            btn.title = mapped.title;
-            btn.innerHTML = mapped.icon;
-            btn.onclick = (e) => {
-              e.stopPropagation();
-              mapped.action();
-            };
-            strip.appendChild(btn);
+          if (view.element) {
+            strip.appendChild(view.element);
           }
+        } catch (e) {
+          console.error("Failed to create CKE component:", item.ckeComponent, e);
         }
       } else {
         const btn = document.createElement("button");
         btn.className = "popup-strip-btn";
         if (item.title) btn.title = item.title;
-        btn.innerHTML = item.icon;
+        btn.innerHTML = item.icon || item.title;
         btn.onclick = (e) => {
           e.stopPropagation();
-          item.action();
+          if (typeof item.action === "function") {
+            item.action();
+          }
         };
         strip.appendChild(btn);
       }
     });
     strip.classList.remove("hidden");
   }
-  function toggleSourceEditing() {
-    if (editorInstance && activeAdapter && activeAdapter.mode === "rich_text") {
-      try {
-        const sourceEditing = editorInstance.plugins.get("SourceEditing");
-        if (sourceEditing) {
-          sourceEditing.isSourceEditingMode = !sourceEditing.isSourceEditingMode;
-        }
-      } catch (err) {
-        console.error("Failed to toggle SourceEditing:", err);
+  function initCustomSearchBar() {
+    const container = document.querySelector("#custom-search-bar");
+    if (!container) return;
+    const searchInput = container.querySelector("#search-input");
+    const replaceInput = container.querySelector("#replace-input");
+    const counter = container.querySelector("#search-counter");
+    const btnClose = container.querySelector("#search-btn-close");
+    const btnReplaceOne = container.querySelector("#search-btn-replace-one");
+    const btnReplaceAll = container.querySelector("#search-btn-replace-all");
+    const btnCase = container.querySelector("#search-btn-case");
+    const btnWord = container.querySelector("#search-btn-word");
+    const btnRegex = container.querySelector("#search-btn-regex");
+    let searchState = {
+      matchCase: false,
+      wholeWords: false,
+      useRegex: false
+    };
+    const executeSearch = () => {
+      if (!activeAdapter) return;
+      const query = searchInput.value || "";
+      if (!query) {
+        counter.textContent = "";
+        return;
       }
+      const text10 = activeAdapter.getMarkdown();
+      try {
+        const flags = searchState.matchCase ? "g" : "gi";
+        const searchPattern = searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const reg = new RegExp(searchPattern, flags);
+        const matches2 = [...text10.matchAll(reg)];
+        counter.textContent = matches2.length > 0 ? `1/${matches2.length}` : "0/0";
+      } catch (e) {
+        counter.textContent = "0/0";
+      }
+    };
+    searchInput.addEventListener("input", executeSearch);
+    btnCase.onclick = () => {
+      searchState.matchCase = !searchState.matchCase;
+      btnCase.classList.toggle("active", searchState.matchCase);
+      executeSearch();
+    };
+    btnWord.onclick = () => {
+      searchState.wholeWords = !searchState.wholeWords;
+      btnWord.classList.toggle("active", searchState.wholeWords);
+      executeSearch();
+    };
+    btnRegex.onclick = () => {
+      searchState.useRegex = !searchState.useRegex;
+      btnRegex.classList.toggle("active", searchState.useRegex);
+      executeSearch();
+    };
+    btnClose.onclick = () => {
+      toggleFindAndReplaceBar(false);
+    };
+    btnReplaceOne.onclick = () => {
+      const query = searchInput.value || "";
+      const rep = replaceInput.value || "";
+      if (query && activeAdapter) {
+        const current = activeAdapter.getMarkdown();
+        const flags = searchState.matchCase ? "" : "i";
+        const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
+        const nextText = current.replace(reg, rep);
+        activeAdapter.setMarkdown(nextText);
+        executeSearch();
+      }
+    };
+    btnReplaceAll.onclick = () => {
+      const query = searchInput.value || "";
+      const rep = replaceInput.value || "";
+      if (query && activeAdapter) {
+        const current = activeAdapter.getMarkdown();
+        const flags = searchState.matchCase ? "g" : "gi";
+        const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
+        const nextText = current.replaceAll(reg, rep);
+        activeAdapter.setMarkdown(nextText);
+        executeSearch();
+      }
+    };
+  }
+  function toggleFindAndReplaceBar(forceState) {
+    const container = document.querySelector("#custom-search-bar");
+    if (!container) return;
+    const newState = forceState !== void 0 ? forceState : container.classList.contains("hidden");
+    if (newState) {
+      container.classList.remove("hidden");
+      const input2 = container.querySelector("#search-input");
+      if (input2) {
+        input2.focus();
+        input2.select();
+      }
+    } else {
+      container.classList.add("hidden");
     }
   }
   function setupFastScrollbar() {
@@ -138808,36 +138184,24 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     function buildTocTree() {
       if (!tocContent || !activeAdapter) return;
       tocContent.innerHTML = "";
-      let items = [];
-      if (activeAdapter.mode === "source") {
-        const text10 = activeAdapter.getMarkdown();
-        const lines = text10.split("\n");
-        lines.forEach((line, lineIdx) => {
-          const match = line.match(/^(#{1,6})\s+(.+)$/);
-          if (match) {
-            items.push({
-              level: match[1].length,
-              title: match[2].trim(),
-              lineIndex: lineIdx
-            });
-          }
-        });
-      } else if (editorInstance) {
-        const editable2 = document.querySelector(".ck-content");
-        if (editable2) {
-          const headings = Array.from(editable2.querySelectorAll("h1, h2, h3, h4, h5, h6"));
-          items = headings.map((headingEl, idx) => ({
-            level: parseInt(headingEl.tagName.substring(1), 10) || 1,
-            title: headingEl.textContent.trim() || `Heading ${idx + 1}`,
-            el: headingEl
-          }));
+      const items = [];
+      const text10 = activeAdapter.getMarkdown();
+      const lines = text10.split("\n");
+      lines.forEach((line, lineIdx) => {
+        const match = line.match(/^(#{1,6})\s+(.+)$/);
+        if (match) {
+          items.push({
+            level: match[1].length,
+            title: match[2].trim(),
+            lineIndex: lineIdx
+          });
         }
-      }
+      });
       if (items.length === 0) {
         tocContent.innerHTML = '<div style="padding:16px;color:#888;font-size:14px;">No headings in document.</div>';
         return;
       }
-      items.forEach((item, index2) => {
+      items.forEach((item) => {
         const itemRow = document.createElement("div");
         itemRow.className = `toc-item level-${item.level}`;
         itemRow.dataset.level = item.level;
@@ -138847,11 +138211,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         itemRow.appendChild(textSpan);
         itemRow.onclick = () => {
           closeToc();
-          if (item.el) {
-            setTimeout(() => {
-              item.el.scrollIntoView({ block: "start", behavior: "smooth" });
-            }, 150);
-          } else if (item.lineIndex !== void 0 && activeAdapter && activeAdapter.view) {
+          if (item.lineIndex !== void 0 && activeAdapter && activeAdapter.view) {
             try {
               const line = activeAdapter.view.state.doc.line(item.lineIndex + 1);
               activeAdapter.view.dispatch({
@@ -138907,21 +138267,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     if (keyPart === "," && (keyLower === "," || codeLower === "comma")) return true;
     if (keyPart === "." && (keyLower === "." || codeLower === "period")) return true;
     if (keyPart === "tab" && (keyLower === "tab" || codeLower === "tab")) return true;
-    if (hasShift) {
-      if (keyPart === "8" && (keyLower === "*" || keyLower === "8")) return true;
-      if (keyPart === "7" && (keyLower === "&" || keyLower === "7")) return true;
-      if (keyPart === "x" && (keyLower === "x" || keyLower === "X")) return true;
-      if (keyPart === "c" && (keyLower === "c" || keyLower === "C")) return true;
-      if (keyPart === "u" && (keyLower === "u" || keyLower === "U")) return true;
-      if (keyPart === "h" && (keyLower === "h" || keyLower === "H")) return true;
-      if (keyPart === "q" && (keyLower === "q" || keyLower === "Q")) return true;
-      if (keyPart === "i" && (keyLower === "i" || keyLower === "I")) return true;
-      if (keyPart === "s" && (keyLower === "s" || keyLower === "S")) return true;
-      if (keyPart === "l" && (keyLower === "l" || keyLower === "L")) return true;
-      if (keyPart === "w" && (keyLower === "w" || keyLower === "W")) return true;
-      if (keyPart === "r" && (keyLower === "r" || keyLower === "R")) return true;
-      if (keyPart === "g" && (keyLower === "g" || keyLower === "G")) return true;
-    }
     return false;
   }
   function parseAndMatchHotkey(event, shortcutString) {
@@ -138970,8 +138315,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     }, true);
   }
   window.editorBridge = {
-    setEditorMode: function(mode) {
-      return setEditorMode(mode);
+    setEditorMode: function(mode, disabledPlugins = []) {
+      return setEditorMode(mode, disabledPlugins);
     },
     getEditorMode: function() {
       return currentEditorMode;
@@ -139001,77 +138346,24 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       setCssVar("--bold-font-weight", prefs.pref_font_weight_bold);
       setCssVar("--italic-font-weight", prefs.pref_font_weight_italic);
       setCssVar("--heading-font-weight", prefs.pref_font_weight_heading);
-      setCssVar("--heading-align", prefs.pref_heading_align);
-      setCssVar("--heading-line-height", prefs.pref_heading_line_height);
-      setCssVar("--heading-letter-spacing", prefs.pref_heading_letter_spacing);
-      setCssVar("--heading-text-transform", prefs.pref_heading_text_transform);
-      setCssVar("--heading-underline-style", prefs.pref_heading_underline_style);
-      setCssVar("--heading-underline-thickness", prefs.pref_heading_underline_thickness, "px");
-      setCssVar("--heading-underline-color", prefs.pref_heading_underline_color);
-      setCssVar("--heading-margin-top", prefs.pref_heading_margin_top, "px");
-      setCssVar("--heading-margin-bottom", prefs.pref_heading_margin_bottom, "px");
       for (let i2 = 1; i2 <= 6; i2++) {
         setCssVar(`--heading-${i2}-color`, prefs[`pref_heading_${i2}_color`]);
       }
-      setCssVar("--paragraph-align", prefs.pref_paragraph_align);
-      setCssVar("--paragraph-line-height", prefs.pref_paragraph_line_height);
-      setCssVar("--letter-spacing", prefs.pref_letter_spacing);
-      setCssVar("--paragraph-first-line-indent", prefs.pref_paragraph_first_line_indent, "px");
-      setCssVar("--paragraph-margin-top", prefs.pref_paragraph_margin_top, "px");
-      setCssVar("--paragraph-margin-bottom", prefs.pref_paragraph_margin_bottom, "px");
       setCssVar("--bold-color", prefs.pref_bold_color);
       setCssVar("--italic-color", prefs.pref_italic_color);
       setCssVar("--link-color", prefs.pref_link_color);
-      setCssVar("--link-decoration", prefs.pref_link_decoration);
       setCssVar("--code-color", prefs.pref_code_color);
       setCssVar("--code-bg-color", prefs.pref_code_bg_color);
       setCssVar("--code-padding", prefs.pref_code_padding, "px");
       setCssVar("--code-border-radius", prefs.pref_code_border_radius, "px");
-      setCssVar("--footnote-font-size", prefs.pref_footnote_font_size, "px");
-      setCssVar("--footnote-text-color", prefs.pref_footnote_text_color);
-      setCssVar("--footnote-ref-color", prefs.pref_footnote_ref_color);
-      setCssVar("--footnote-link-color", prefs.pref_footnote_link_color);
-      setCssVar("--footnote-bg-color", prefs.pref_footnote_bg_color);
-      setCssVar("--list-left-indent", prefs.pref_list_left_indent, "px");
-      setCssVar("--list-item-spacing", prefs.pref_list_item_spacing, "px");
-      setCssVar("--list-line-height", prefs.pref_list_line_height);
-      setCssVar("--list-bullet-color", prefs.pref_list_bullet_color);
-      setCssVar("--list-number-color", prefs.pref_list_number_color);
-      setCssVar("--todo-unchecked-color", prefs.pref_todo_unchecked_color);
-      setCssVar("--todo-checked-color", prefs.pref_todo_checked_color);
       setCssVar("--blockquote-border-width", prefs.pref_blockquote_line_thickness, "px");
       setCssVar("--blockquote-border-style", prefs.pref_blockquote_line_style);
       setCssVar("--blockquote-border-color", prefs.pref_blockquote_line_color);
       setCssVar("--blockquote-bg-color", prefs.pref_blockquote_bg_color);
       setCssVar("--blockquote-text-color", prefs.pref_blockquote_text_color);
-      setCssVar("--blockquote-left-indent", prefs.pref_blockquote_left_indent, "px");
-      setCssVar("--blockquote-padding", prefs.pref_blockquote_padding, "px");
-      setCssVar("--callout-border-width", prefs.pref_callout_line_thickness, "px");
-      setCssVar("--callout-border-style", prefs.pref_callout_line_style);
-      setCssVar("--callout-border-color", prefs.pref_callout_line_color);
-      setCssVar("--callout-bg-color", prefs.pref_callout_bg_color);
-      setCssVar("--callout-padding", prefs.pref_callout_padding, "px");
-      setCssVar("--table-border-style", prefs.pref_table_border_style);
-      setCssVar("--table-border-width", prefs.pref_table_border_thickness, "px");
-      setCssVar("--table-border-color", prefs.pref_table_border_color);
-      setCssVar("--table-header-bg", prefs.pref_table_header_bg_color);
-      setCssVar("--table-header-color", prefs.pref_table_header_text_color);
-      setCssVar("--table-header-font-weight", prefs.pref_table_header_font_weight);
-      setCssVar("--table-cell-bg", prefs.pref_table_cell_bg_color);
-      setCssVar("--table-cell-color", prefs.pref_table_cell_text_color);
-      setCssVar("--table-cell-padding", prefs.pref_table_cell_padding, "px");
-      setCssVar("--code-block-color", prefs.pref_code_block_color);
-      setCssVar("--code-block-bg-color", prefs.pref_code_block_bg_color);
-      setCssVar("--code-block-padding", prefs.pref_code_block_padding, "px");
-      setCssVar("--code-block-border-radius", prefs.pref_code_block_border_radius, "px");
-      setCssVar("--code-block-line-height", prefs.pref_code_block_line_height);
-      setCssVar("--code-block-lang-label-color", prefs.pref_code_block_lang_label_color);
       setCssVar("--hr-thickness", prefs.pref_hr_thickness, "px");
       setCssVar("--hr-style", prefs.pref_hr_style);
       setCssVar("--hr-color", prefs.pref_hr_color);
-      setCssVar("--hr-width", prefs.pref_hr_width_percent ? prefs.pref_hr_width_percent + "%" : null);
-      setCssVar("--hr-margin-top", prefs.pref_hr_margin_top, "px");
-      setCssVar("--hr-margin-bottom", prefs.pref_hr_margin_bottom, "px");
       setCssVar("--toolbar-bg", prefs.pref_toolbar_bg_color);
       setCssVar("--toolbar-icon-color", prefs.pref_toolbar_icon_color);
       setCssVar("--toolbar-active-icon-color", prefs.pref_toolbar_active_icon_color);
@@ -139079,37 +138371,25 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     },
     getMarkdown: function() {
       if (pendingMarkdown !== null) return pendingMarkdown;
+      if (pluginConfigurationTask) {
+        if (typeof activeAdapter !== "undefined" && activeAdapter) return activeAdapter.getMarkdown();
+        if (typeof editorInstance !== "undefined" && editorInstance) return editorInstance.getData();
+        return typeof rebuildMarkdown !== "undefined" ? rebuildMarkdown ?? "" : "";
+      }
       if (typeof activeAdapter !== "undefined" && activeAdapter) return activeAdapter.getMarkdown();
       if (typeof editorInstance !== "undefined" && editorInstance) return editorInstance.getData();
-      return rebuildMarkdown ?? "";
+      return typeof rebuildMarkdown !== "undefined" ? rebuildMarkdown ?? "" : "";
     },
     setMarkdown: function(markdownText) {
-      var _a2, _b, _c, _d, _e, _f, _g, _h;
       if (pluginConfigurationTask) {
         pendingMarkdown = markdownText || "";
         return;
       }
       if (typeof activeAdapter !== "undefined" && activeAdapter) {
-        const loadStarted = Date.now();
         isProgrammaticChange = true;
         try {
           activeAdapter.setMarkdown(markdownText || "");
-          (_b = (_a2 = window.AndroidNative) == null ? void 0 : _a2.reportDiagnostic) == null ? void 0 : _b.call(_a2, "set_data_done", Date.now() - loadStarted);
         } catch (e) {
-          (_d = (_c = window.AndroidNative) == null ? void 0 : _c.reportDiagnostic) == null ? void 0 : _d.call(_c, "set_data_error", Date.now() - loadStarted);
-          console.error("Error setting markdown:", e);
-        }
-        setTimeout(() => {
-          isProgrammaticChange = false;
-        }, 50);
-      } else if (typeof editorInstance !== "undefined" && editorInstance) {
-        const loadStarted = Date.now();
-        isProgrammaticChange = true;
-        try {
-          editorInstance.setData(markdownText || "");
-          (_f = (_e = window.AndroidNative) == null ? void 0 : _e.reportDiagnostic) == null ? void 0 : _f.call(_e, "set_data_done", Date.now() - loadStarted);
-        } catch (e) {
-          (_h = (_g = window.AndroidNative) == null ? void 0 : _g.reportDiagnostic) == null ? void 0 : _h.call(_g, "set_data_error", Date.now() - loadStarted);
           console.error("Error setting markdown:", e);
         }
         setTimeout(() => {
@@ -139132,66 +138412,6 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         activeAdapter.setLineWrap(isLineWrapEnabled);
       }
     },
-    setHeadingColors: function(h1, h2, h3, h4, h5, h6) {
-      const colors2 = [h1, h2, h3, h4, h5, h6];
-      colors2.forEach((col, idx) => {
-        const varName = `--heading-${idx + 1}-color`;
-        if (col && col !== "default") {
-          document.documentElement.style.setProperty(varName, col);
-        } else {
-          document.documentElement.style.removeProperty(varName);
-        }
-      });
-    },
-    setToolbarSettings: function(bgColorHex, iconColorHex, heightDp) {
-      if (bgColorHex && bgColorHex !== "default") {
-        document.documentElement.style.setProperty("--toolbar-bg", bgColorHex);
-      } else {
-        document.documentElement.style.removeProperty("--toolbar-bg");
-      }
-      if (iconColorHex && iconColorHex !== "default") {
-        document.documentElement.style.setProperty("--toolbar-icon-color", iconColorHex);
-      } else {
-        document.documentElement.style.removeProperty("--toolbar-icon-color");
-      }
-      if (heightDp && typeof heightDp === "number") {
-        document.documentElement.style.setProperty("--toolbar-height", heightDp + "px");
-      }
-    },
-    getSnapshotDataUrl: function() {
-      return new Promise((resolve2) => {
-        try {
-          const contentEl = document.querySelector(".ck-content") || document.querySelector(".cm-content");
-          if (!contentEl) return resolve2("");
-          const rect = contentEl.getBoundingClientRect();
-          const width = Math.max(rect.width || 600, 400);
-          const height = Math.max(rect.height || 800, 300);
-          const isDark = !document.body.classList.contains("light-theme");
-          const bgColor = isDark ? "#000000" : "#ffffff";
-          const textColor = isDark ? "#ffffff" : "#111111";
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          ctx.fillStyle = bgColor;
-          ctx.fillRect(0, 0, width, height);
-          const htmlString = `<div xmlns="http://www.w3.org/1999/xhtml" style="background-color:${bgColor};color:${textColor};font-family:sans-serif;font-size:16px;line-height:1.6;padding:12px;">${contentEl.innerHTML}</div>`;
-          const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><foreignObject width="100%" height="100%">${htmlString}</foreignObject></svg>`;
-          const img2 = new Image();
-          img2.onload = () => {
-            ctx.drawImage(img2, 0, 0);
-            resolve2(canvas.toDataURL("image/png"));
-          };
-          img2.onerror = () => {
-            resolve2("");
-          };
-          img2.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString);
-        } catch (e) {
-          console.error("Snapshot error:", e);
-          resolve2("");
-        }
-      });
-    },
     setHotkeys: function(hotkeysJson) {
       if (!hotkeysJson) return;
       try {
@@ -139211,7 +138431,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     insertImage: function(imageUrl, altText = "") {
       if (activeAdapter && activeAdapter.mode === "rich_text" && editorInstance) {
         editorInstance.execute("insertImage", { source: imageUrl, alt: altText });
-      } else if (activeAdapter && activeAdapter.mode === "source") {
+      } else if (activeAdapter) {
         const imgMarkdown = `![${altText}](${imageUrl})`;
         const cur = activeAdapter.getMarkdown();
         activeAdapter.setMarkdown(cur ? `${cur}
@@ -139259,8 +138479,6 @@ ${imgMarkdown}` : imgMarkdown);
       setCssVar("--link-color", linkColor);
       setCssVar("--code-color", codeColor);
       setCssVar("--code-bg-color", codeBgColor);
-      setCssVar("--code-block-color", codeBlockColor);
-      setCssVar("--code-block-bg-color", codeBlockBgColor);
       let styleEl = document.querySelector("#custom-fonts-style");
       if (!styleEl) {
         styleEl = document.createElement("style");
@@ -139276,7 +138494,7 @@ ${imgMarkdown}` : imgMarkdown);
             font-family: '${familyName}';
             src: url('${fontData}');
           }
-          .ck-content, .cm-content {
+          .cm-content {
             --custom-${categoryName.toLowerCase()}-font: '${familyName}';
           }
         `;
@@ -139292,55 +138510,10 @@ ${imgMarkdown}` : imgMarkdown);
       applyFontCategory("Code", fontCodeData, "--code-font-family");
       styleEl.innerHTML = fontCss;
     },
-    setHrSettings: function(thicknessPx, colorHex, widthPercent) {
-      if (thicknessPx) {
-        document.documentElement.style.setProperty("--hr-thickness", thicknessPx + "px");
-      }
-      if (colorHex && colorHex !== "default") {
-        document.documentElement.style.setProperty("--hr-color", colorHex);
-      } else {
-        document.documentElement.style.removeProperty("--hr-color");
-      }
-      if (widthPercent) {
-        document.documentElement.style.setProperty("--hr-width", widthPercent + "%");
-      }
-    },
-    setTypographySettings: function(justifyParagraph, paragraphLineHeight, letterSpacing) {
-      document.documentElement.style.setProperty("--paragraph-justify", justifyParagraph ? "justify" : "left");
-      if (paragraphLineHeight && paragraphLineHeight !== "default") {
-        document.documentElement.style.setProperty("--paragraph-line-height", paragraphLineHeight);
-      } else {
-        document.documentElement.style.removeProperty("--paragraph-line-height");
-      }
-      if (letterSpacing && letterSpacing !== "default") {
-        document.documentElement.style.setProperty("--letter-spacing", letterSpacing);
-      } else {
-        document.documentElement.style.removeProperty("--letter-spacing");
-      }
-    },
-    setBlockquoteAndCalloutSettings: function(bqThicknessPx, bqColorHex, calloutThicknessPx, calloutColorHex) {
-      if (bqThicknessPx) {
-        document.documentElement.style.setProperty("--blockquote-border-width", bqThicknessPx + "px");
-      }
-      if (bqColorHex && bqColorHex !== "default") {
-        document.documentElement.style.setProperty("--blockquote-border-color", bqColorHex);
-      } else {
-        document.documentElement.style.removeProperty("--blockquote-border-color");
-      }
-      if (calloutThicknessPx) {
-        document.documentElement.style.setProperty("--callout-border-width", calloutThicknessPx + "px");
-      }
-      if (calloutColorHex && calloutColorHex !== "default") {
-        document.documentElement.style.setProperty("--callout-border-color", calloutColorHex);
-      } else {
-        document.documentElement.style.removeProperty("--callout-border-color");
-      }
-    },
     configurePlugins: function(disabledPluginsJson) {
-      if (typeof currentEditorMode !== "undefined" && currentEditorMode === "source") {
+      if (typeof currentEditorMode !== "undefined" && (currentEditorMode === "source" || currentEditorMode === "live_preview")) {
         return Promise.resolve();
       }
-      let activeMode = typeof currentEditorMode !== "undefined" ? currentEditorMode : "rich_text";
       if (pluginConfigurationTask) {
         return pluginConfigurationTask.then(() => window.editorBridge.configurePlugins(disabledPluginsJson));
       }
@@ -139355,21 +138528,18 @@ ${imgMarkdown}` : imgMarkdown);
         console.error("Invalid disabledPlugins JSON:", e);
       }
       const currentDisabledStr = JSON.stringify(disabledPlugins.sort());
-      const hasActiveEditor = typeof activeAdapter !== "undefined" && activeAdapter && activeAdapter.mode === "rich_text" || typeof editorInstance !== "undefined" && editorInstance;
-      if (window._lastDisabledPluginsStr === currentDisabledStr && hasActiveEditor) {
+      if (window._lastDisabledPluginsStr === currentDisabledStr) {
         return Promise.resolve();
       }
       const currentText = window.editorBridge.getMarkdown();
       rebuildMarkdown = currentText;
       const currentState = window.editorBridge.getSelectionState();
-      const mainEditingArea = document.querySelector(".ck-editor__main");
-      const scrollTop = mainEditingArea ? mainEditingArea.scrollTop : 0;
       isProgrammaticChange = true;
-      pluginConfigurationTask = (typeof setEditorMode !== "undefined" ? setEditorMode("rich_text", disabledPlugins) : initEditor(disabledPlugins)).then(() => {
-        var _a2, _b, _c;
+      const task = typeof setEditorMode !== "undefined" ? setEditorMode("rich_text", disabledPlugins) : typeof initEditor === "function" ? initEditor(disabledPlugins) : Promise.resolve();
+      pluginConfigurationTask = task.then(() => {
+        var _a2;
         window._lastDisabledPluginsStr = currentDisabledStr;
         const hasPendingDocument = pendingMarkdown !== null;
-        const replayStarted = Date.now();
         const textToSet = hasPendingDocument ? pendingMarkdown : currentText;
         pendingMarkdown = null;
         if (typeof activeAdapter !== "undefined" && activeAdapter) {
@@ -139377,11 +138547,10 @@ ${imgMarkdown}` : imgMarkdown);
         } else if (typeof editorInstance !== "undefined" && editorInstance) {
           editorInstance.setData(textToSet);
         }
-        (_b = (_a2 = window.AndroidNative) == null ? void 0 : _a2.reportDiagnostic) == null ? void 0 : _b.call(_a2, "set_data_done", Date.now() - replayStarted);
         if (!hasPendingDocument && currentState) {
-          window.editorBridge.setSelectionState(currentState, scrollTop);
+          window.editorBridge.setSelectionState(currentState, 0);
         }
-        if (hasPendingDocument && ((_c = window.AndroidNative) == null ? void 0 : _c.restoreNativeCursorAndScrollState)) {
+        if (hasPendingDocument && ((_a2 = window.AndroidNative) == null ? void 0 : _a2.restoreNativeCursorAndScrollState)) {
           window.AndroidNative.restoreNativeCursorAndScrollState();
         }
         setTimeout(() => {

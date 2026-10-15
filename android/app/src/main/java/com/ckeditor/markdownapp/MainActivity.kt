@@ -970,9 +970,12 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 val activeMode = mode ?: currentEditorMode
                 currentEditorMode = activeMode
                 AppDiagnostics.record(this@MainActivity, "editor_ready", "mode=$activeMode")
+                val wasReady = isEditorReady
                 isEditorReady = true
-                applyPluginPreferences()
-                applyThemeAndFullscreenPreferences()
+                if (!wasReady) {
+                    applyPluginPreferences()
+                    applyThemeAndFullscreenPreferences()
+                }
                 updateTitle()
 
                 pendingOpenUri?.let { uri ->
