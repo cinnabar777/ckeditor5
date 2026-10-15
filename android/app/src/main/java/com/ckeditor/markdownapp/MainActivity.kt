@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private var isEditorReady: Boolean = false
     private var latestMarkdownContent: String? = null
     private var pendingOpenUri: Uri? = null
-    private var pendingIncomingIntent: android.content.Intent? = null
     private var currentToast: Toast? = null
     private var currentTextPackSession: TextPackSession? = null
     private val documentHistoryStack = java.util.ArrayDeque<Uri>()
@@ -152,21 +151,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        // Android delivers this while the old window can still be paused.
-        // Do not dispatch another document activity or evaluate the paused WebView.
-        pendingIncomingIntent = intent
-    }
-
-    override fun onPostResume() {
-        super.onPostResume()
-        val incoming = pendingIncomingIntent ?: return
-        pendingIncomingIntent = null
-        webView.onResume()
-        handleIntent(incoming)
-        webView.post {
-            webView.requestLayout()
-            webView.invalidate()
-        }
+        handleIntent(intent)
     }
 
     private fun applySystemBarDimming() {
@@ -236,10 +221,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                         action = android.content.Intent.ACTION_VIEW
                         setDataAndType(data, "text/markdown")
                         putExtra("open_target_uri", data.toString())
-                        clipData = intent.clipData
-                        addFlags(intent.flags and (android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                            android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION))
                         addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                     }
                     startActivity(newIntent)
@@ -309,10 +290,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onPause() {
         super.onPause()
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+        if (::webView.isInitialized) {
+            webView.onPause()
+        }
         performAutoSaveOnLeave()
-        // Keep JavaScript available for a fresh save snapshot. Android already
-        // throttles hidden WebViews; explicit pause can defer the snapshot until
-        // the next interaction/resume.
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -1001,22 +982,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
 
         @JavascriptInterface
-        fun onDocumentEdited() {
-            runOnUiThread {
-                // The delayed snapshot is now stale. Autosave must ask JS for the
-                // live document rather than write the previous cached version.
-                latestMarkdownContent = null
-                if (!isDirty) {
-                    isDirty = true
-                    updateTitle()
-                }
-            }
-        }
-
-        @JavascriptInterface
         fun onContentChanged(markdownText: String) {
+            latestMarkdownContent = markdownText
             runOnUiThread {
-                latestMarkdownContent = markdownText
                 if (!isDirty) {
                     isDirty = true
                     updateTitle()
