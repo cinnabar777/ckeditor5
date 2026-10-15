@@ -102,34 +102,34 @@
             app:showSeekBarValue="true" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Heading Colors 1–6">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Heading Colors">
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_1_color"
-            app:title="Heading 1 Color"
+            app:title="Heading 1"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_2_color"
-            app:title="Heading 2 Color"
+            app:title="Heading 2"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_3_color"
-            app:title="Heading 3 Color"
+            app:title="Heading 3"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_4_color"
-            app:title="Heading 4 Color"
+            app:title="Heading 4"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
         <com.ckeditor.markdownapp.ResetColorPickerPreference
             app:key="pref_heading_5_color"
-            app:title="Heading 5 Color"
+            app:title="Heading 5"
             app:summary="Tap to select color or default"
             app:defaultValue="default" />
 
