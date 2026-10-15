@@ -355,6 +355,7 @@ function toggleFindAndReplaceBar(forceState) {
   const newState = forceState !== undefined ? forceState : container.classList.contains('hidden');
   if (newState) {
     container.classList.remove('hidden');
+    toggleBottomToolbar(true);
     const input = container.querySelector('#search-input');
     if (input) {
       input.focus();
@@ -413,6 +414,14 @@ function insertCodeBlockPrompt() {
 
 function insertLinkPrompt() {
   if (!editorInstance) return;
+  try {
+    const linkUI = editorInstance.plugins.get('LinkUI');
+    if (linkUI && typeof linkUI._showUI === 'function') {
+      linkUI._showUI(true);
+      return;
+    }
+  } catch (e) {}
+
   const linkCommand = editorInstance.commands.get('link');
   const currentUrl = (linkCommand && linkCommand.value) ? linkCommand.value : '';
   const url = prompt('Enter link URL:', currentUrl || 'https://');
@@ -446,34 +455,42 @@ function setupMarkdownFootnotesProcessor(editor) {
 
   processor.toView = function(data) {
     if (typeof data !== 'string') return originalToView(data);
+    if (!data.includes('[^')) return originalToView(data);
 
-    // Extract footnote definitions: [^id]: text
-    const footnoteDefRegex = /^\[\^([^\]]+)\]:\s*([\s\S]*?)(?=(?:\n\[\^[^\]]+\]:)|$)/gm;
     const definitions = [];
+    const lines = data.split('\n');
+    const cleanLines = [];
 
-    let cleanMarkdown = data.replace(footnoteDefRegex, (fullMatch, id, text) => {
-      definitions.push({ id, text: text.trim() });
-      return '';
-    }).trim();
-
-    if (definitions.length > 0) {
-      // Replace inline references [^id]
-      definitions.forEach((def, idx) => {
-        const indexNum = idx + 1;
-        const refRegex = new RegExp(`\\[\\^${def.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
-        cleanMarkdown = cleanMarkdown.replace(refRegex, `<sup data-footnote-reference data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><a href="#fn${def.id}" id="fnref${def.id}">${indexNum}</a></sup>`);
-      });
-
-      // Construct footnote section HTML
-      let sectionHtml = `<ol data-footnote-section class="footnote-section footnotes" role="doc-endnotes">`;
-      definitions.forEach((def, idx) => {
-        const indexNum = idx + 1;
-        sectionHtml += `<li data-footnote-item data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><div data-footnote-content><p>${def.text}</p></div><span data-footnote-back-link data-footnote-id="${def.id}"><sup><strong><a href="#fnref${def.id}">^</a></strong></sup></span></li>`;
-      });
-      sectionHtml += `</ol>`;
-
-      cleanMarkdown += '\n\n' + sectionHtml;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const match = line.match(/^\[\^([^\]]+)\]:\s*(.*)$/);
+      if (match) {
+        definitions.push({ id: match[1], text: match[2].trim() });
+      } else {
+        cleanLines.push(line);
+      }
     }
+
+    if (definitions.length === 0) {
+      return originalToView(data);
+    }
+
+    let cleanMarkdown = cleanLines.join('\n').trim();
+
+    definitions.forEach((def, idx) => {
+      const indexNum = idx + 1;
+      const refRegex = new RegExp(`\\[\\^${def.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
+      cleanMarkdown = cleanMarkdown.replace(refRegex, `<sup data-footnote-reference data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><a href="#fn${def.id}" id="fnref${def.id}">${indexNum}</a></sup>`);
+    });
+
+    let sectionHtml = `<ol data-footnote-section class="footnote-section footnotes" role="doc-endnotes">`;
+    definitions.forEach((def, idx) => {
+      const indexNum = idx + 1;
+      sectionHtml += `<li data-footnote-item data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><div data-footnote-content><p>${def.text}</p></div><span data-footnote-back-link data-footnote-id="${def.id}"><sup><strong><a href="#fnref${def.id}">^</a></strong></sup></span></li>`;
+    });
+    sectionHtml += `</ol>`;
+
+    cleanMarkdown += '\n\n' + sectionHtml;
 
     return originalToView(cleanMarkdown);
   };
@@ -481,12 +498,11 @@ function setupMarkdownFootnotesProcessor(editor) {
   processor.toData = function(viewFragment) {
     let markdown = originalToData(viewFragment);
     if (typeof markdown !== 'string') return markdown;
+    if (!markdown.includes('footnote')) return markdown;
 
-    // Convert inline footnote reference tags to [^N]
     markdown = markdown.replace(/<sup[^>]*data-footnote-reference[^>]*data-footnote-index="([^"]+)"[^>]*>[\s\S]*?<\/sup>/gi, '[^$1]');
     markdown = markdown.replace(/<sup[^>]*data-footnote-index="([^"]+)"[^>]*data-footnote-reference[^>]*>[\s\S]*?<\/sup>/gi, '[^$1]');
 
-    // Extract footnote section HTML
     const sectionMatch = markdown.match(/<(ol|div)[^>]*data-footnote-section[^>]*>([\s\S]*?)<\/\1>/i);
     if (sectionMatch) {
       const sectionHtml = sectionMatch[2];
@@ -653,7 +669,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
         toolbar: [ 'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block' ]
       },
       table: {
-        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties' ]
       }
     });
 

@@ -320,9 +320,48 @@
       background-color: var(--button-hover) !important;
     }
 
-    /* Hide standard CKEditor toolbar since grouped control bar handles actions */
-    .ck-toolbar {
+    /* Hide main top toolbar, but allow floating contextual balloon toolbars (Table, Link, Image) */
+    .ck-editor__top .ck-toolbar {
       display: none !important;
+    }
+
+    .ck-balloon-panel {
+      z-index: 10004 !important;
+      background-color: #212121 !important;
+      border: 1px solid #3c3c3c !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+      border-radius: 8px !important;
+    }
+
+    body.light-theme .ck-balloon-panel {
+      background-color: #ffffff !important;
+      border: 1px solid #e0e0e0 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .ck-balloon-panel .ck-toolbar {
+      display: flex !important;
+      background-color: transparent !important;
+      border: none !important;
+    }
+
+    .ck-balloon-panel .ck-button,
+    .ck-balloon-panel .ck-dropdown__button,
+    .ck-balloon-panel .ck-labeled-field-view__status {
+      color: var(--text-color) !important;
+    }
+
+    .ck-balloon-panel .ck-input {
+      background-color: #121212 !important;
+      color: #ffffff !important;
+      border: 1px solid #3a3a3a !important;
+      border-radius: 4px !important;
+    }
+
+    body.light-theme .ck-balloon-panel .ck-input {
+      background-color: #f5f5f5 !important;
+      color: #111111 !important;
+      border: 1px solid #cccccc !important;
     }
 
     .ck-editor__main {
@@ -528,10 +567,18 @@
       line-height: var(--code-block-line-height, 1.4) !important;
     }
 
-    /* Code Block Language Badge (Top-Right) */
-    .ck-content pre[data-language]::before,
+    /* Hide duplicate CKE5 ::after pseudo-element to prevent double label overlap */
+    .ck.ck-editor__editable pre::after,
+    .ck.ck-editor__editable pre[data-language]::after,
+    .ck-content pre::after,
     .ck-content pre .ck-code-block-language-label {
-      content: attr(data-language) !important;
+      content: none !important;
+      display: none !important;
+    }
+
+    /* Single Clean Code Block Language & Copy Badge (Top-Right) */
+    .ck-content pre::before {
+      content: "Plain text" !important;
       position: absolute !important;
       top: 6px !important;
       right: 10px !important;
@@ -545,9 +592,13 @@
       padding: 3px 10px !important;
       cursor: pointer !important;
       user-select: none !important;
-      pointer-events: none !important;
+      pointer-events: auto !important;
       z-index: 10 !important;
       display: inline-block !important;
+    }
+
+    .ck-content pre[data-language]::before {
+      content: attr(data-language) !important;
     }
 
     .ck-content pre code {

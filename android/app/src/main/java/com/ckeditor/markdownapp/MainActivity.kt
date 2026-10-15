@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(data, "text/markdown")
                     putExtra("open_target_uri", data.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK or android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }
                 applicationContext.startActivity(newIntent)
                 return
@@ -243,8 +243,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
 
         val action = intent.action
-        val isLauncherIntent = (action == android.content.Intent.ACTION_MAIN || action == null) &&
-                               (intent.categories?.contains(android.content.Intent.CATEGORY_LAUNCHER) == true || intent.data == null)
+        val isLauncherIntent = (action == android.content.Intent.ACTION_MAIN) &&
+                               (intent.categories?.contains(android.content.Intent.CATEGORY_LAUNCHER) == true)
 
         if (isLauncherIntent) {
             val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
@@ -659,7 +659,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     action = android.content.Intent.ACTION_VIEW
                     setDataAndType(uri, "text/markdown")
                     putExtra("open_target_uri", uri.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK or android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }
                 applicationContext.startActivity(newIntent)
                 return
