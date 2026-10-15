@@ -2,25 +2,25 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Editor Configuration Pages">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Configuration Pages">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_settings_theme"
-            app:title="Settings UI Theme &amp; Custom Colors"
+            app:title="Settings UI Theme"
             app:summary="Customize category header, title, subtext, toggle &amp; background colors" />
 
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_styling"
-            app:title="Styling &amp; Typography Settings"
+            app:title="Styling &amp; Typography"
             app:summary="Fonts, weights, sizes, heading colors, line thickness &amp; element colors" />
 
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_hotkeys"
-            app:title="Custom Keyboard Shortcuts"
+            app:title="Keyboard Shortcuts"
             app:summary="Configure hotkeys for actions, formatting, headings &amp; highlighter markers" />
 
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_plugins"
-            app:title="Editor Plugins &amp; Toolbar Tools"
+            app:title="Plugins"
             app:summary="Enable or disable active editor plugins and toolbar items" />
 
         <com.ckeditor.markdownapp.ResetPreference
@@ -40,7 +40,7 @@
 
         <com.ckeditor.markdownapp.ResetSwitchPreference
             app:key="pref_hide_status_bar"
-            app:title="Hide Status Bar (Notification Bar)"
+            app:title="Hide Status Bar"
             app:summary="Hide top system status bar for fullscreen editing"
             android:defaultValue="false" />
 
@@ -59,7 +59,7 @@
             app:defaultValue="picker" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Window &amp; Document Management Settings">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Management Settings">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_diagnostics"
             app:title="Diagnostic report"
@@ -72,15 +72,15 @@
 
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Backup &amp; Restore Settings (ZIP File)">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Backup &amp; Restore">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_export_backup"
-            app:title="Export Settings &amp; Custom Fonts (.zip)"
+            app:title="Export Settings &amp; Custom Fonts"
             app:summary="Save all preferences and loaded font files to a ZIP backup file" />
 
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_import_backup"
-            app:title="Import Settings &amp; Custom Fonts (.zip)"
+            app:title="Import Settings &amp; Custom Fonts"
             app:summary="Restore preferences and font files from a ZIP backup file" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
