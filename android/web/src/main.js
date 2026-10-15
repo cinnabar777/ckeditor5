@@ -704,7 +704,7 @@ async function initEditor(disabledPlugins = [], isInitialInit = false) {
           const clickX = clientX - rect.left;
           const clickY = clientY - rect.top;
 
-          if (clickX >= 0 && clickX < 160 && clickY >= 0 && clickY < 38) {
+          if (clickX >= rect.width - 88 && clickX <= rect.width - 8 && clickY >= 6 && clickY < 38) {
             e.preventDefault();
             e.stopPropagation();
             if (typeof e.stopImmediatePropagation === 'function') {

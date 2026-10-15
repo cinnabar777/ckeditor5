@@ -297,6 +297,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        // Cursor/scroll persistence is document state, not a theme change. Applying
+        // every preference here reloads fonts/styles on every caret movement.
+        if (key == null || !key.startsWith("pref_")) return
         if (::webView.isInitialized) {
             applyThemeAndFullscreenPreferences()
         }
@@ -316,10 +319,18 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             if (contentToSave != null) {
                 try {
                     currentFileUri?.let { uri ->
-                        contentResolver.openOutputStream(uri, "rwt")?.use { outputStream ->
-                            val writer = OutputStreamWriter(outputStream)
-                            writer.write(contentToSave)
-                            writer.flush()
+                        val session = currentTextPackSession
+                        if (session != null) {
+                            // A textpack is an archive; writing raw Markdown corrupts it.
+                            TextPackManager.saveTextPack(this, session, contentToSave, uri)
+                        } else {
+                            val output = contentResolver.openOutputStream(uri, "rwt")
+                                ?: throw java.io.IOException("Could not open document for writing")
+                            output.use { outputStream ->
+                                val writer = OutputStreamWriter(outputStream)
+                                writer.write(contentToSave)
+                                writer.flush()
+                            }
                         }
                         isDirty = false
                         updateTitle()

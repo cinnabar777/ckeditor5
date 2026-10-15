@@ -269,7 +269,16 @@ object PreferenceResetHelper {
                         marginStart = marginPx
                     }
 
-                    if (titleParent is LinearLayout && titleParent.orientation == LinearLayout.HORIZONTAL) {
+                    val sliderRow = if (preference is SeekBarPreference) {
+                        holder.findViewById(androidx.preference.R.id.seekbar)?.parent as? LinearLayout
+                    } else null
+                    if (sliderRow != null) {
+                        // Keep the title in place: the summary is positioned relative to its ID.
+                        // The weighted slider gives up space for a full-size reset touch target.
+                        params.width = (48 * context.resources.displayMetrics.density).toInt()
+                        params.height = params.width
+                        sliderRow.addView(btnReset, params)
+                    } else if (titleParent is LinearLayout && titleParent.orientation == LinearLayout.HORIZONTAL) {
                         titleParent.addView(btnReset, params)
                     } else {
                         val containerTag = "title_reset_row_container"
@@ -349,6 +358,8 @@ object PreferenceResetHelper {
 
         val widgetFrame = holder.findViewById(android.R.id.widget_frame) as? ViewGroup
         if (widgetFrame != null) {
+            // AndroidX hides empty widget frames before this custom swatch is added.
+            widgetFrame.visibility = View.VISIBLE
             findAndTintSwitches(widgetFrame, switchColor)
         }
     }

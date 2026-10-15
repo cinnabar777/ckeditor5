@@ -791,10 +791,26 @@
       line-height: var(--code-block-line-height, 1.4) !important;
     }
 
-    /* Hide pseudo-element badge to avoid double stacked language text */
-    .ck-content pre[data-language]::before {
-      content: none !important;
-      display: none !important;
+    /* CKEditor supplies the language name on the editing-view pre element. */
+    .ck-content pre::before {
+      content: 'Plain text' !important;
+      position: absolute !important;
+      top: 6px !important;
+      left: 8px !important;
+      max-width: calc(100% - 110px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px !important;
+      color: var(--code-block-lang-label-color, #aaaaaa) !important;
+      pointer-events: none !important;
+      display: block !important;
+    }
+    .ck-content pre[data-language]:not([data-language=""])::before {
+      content: attr(data-language) !important;
+    }
+    .ck-content pre[data-language="plaintext"]::before {
+      content: 'Plain text' !important;
     }
 
     .ck-content pre .ck-code-block-language-label {
@@ -816,18 +832,20 @@
       display: inline-block !important;
     }
 
-    /* Transparent Click/Touch Copy Overlay over language label */
+    /* Copy has its own target, separate from the language label. */
     .ck-content pre::after {
       content: 'COPY' !important;
       position: absolute !important;
       top: 6px !important;
-      left: 8px !important;
-      right: auto !important;
+      left: auto !important;
+      right: 8px !important;
       height: 26px !important;
-      min-width: 80px !important;
+      width: 60px !important;
+      text-align: center !important;
+      font-size: 12px !important;
       padding: 3px 10px !important;
       background: transparent !important;
-      color: transparent !important;
+      color: var(--code-block-lang-label-color, #aaaaaa) !important;
       border: none !important;
       cursor: pointer !important;
       user-select: none !important;
