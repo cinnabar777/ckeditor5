@@ -136,7 +136,9 @@ object TextPackManager {
             infoFile.writeText(json.toString(2))
         }
 
-        context.contentResolver.openOutputStream(targetUri, "rwt")?.use { outputStream ->
+        val output = context.contentResolver.openOutputStream(targetUri, "rwt")
+            ?: throw java.io.IOException("Could not open textpack for writing")
+        output.use { outputStream ->
             ZipOutputStream(outputStream).use { zipOut ->
                 compressFolder(session.sessionDir, session.sessionDir, zipOut)
                 zipOut.flush()
