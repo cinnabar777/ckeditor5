@@ -37,11 +37,16 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private lateinit var progressBar: ProgressBar
 
     private var currentFileUri: Uri? = null
+        set(value) {
+            field = value
+            WindowRegistry.register(this, value)
+        }
     private var currentFileName: String = "Untitled.md"
     private var isDirty: Boolean = false
     private var isEditorReady: Boolean = false
     private var latestMarkdownContent: String? = null
     private var pendingOpenUri: Uri? = null
+    private var pendingSharedText: String? = null
     private var currentToast: Toast? = null
     private var currentTextPackSession: TextPackSession? = null
     private val documentHistoryStack = java.util.ArrayDeque<Uri>()
@@ -122,13 +127,13 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         updateTitle()
 
         setupWebView()
+        savedInstanceState?.getStringArrayList("document_history")?.forEach {
+            documentHistoryStack.addLast(Uri.parse(it))
+        }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val prefs = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
-                val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
-
-                if (!isMultiWindowEnabled && documentHistoryStack.isNotEmpty()) {
+                if (documentHistoryStack.isNotEmpty()) {
                     if (isDirty) {
                         showUnsavedChangesDialog { navigateBackOrFinish() }
                     } else {
@@ -145,13 +150,21 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
         })
 
-        handleIntent(intent, allowStartupDocument = true)
+        AppDiagnostics.record(this, "window_created")
+        handleIntent(intent)
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
-        setIntent(intent)
-        handleIntent(intent)
+        // All new opens go through DocumentDispatchActivity. A task brought to
+        // the foreground must not replay its old URI or shared text.
+        AppDiagnostics.record(this, "window_refocused")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putStringArrayList("document_history",
+            ArrayList(documentHistoryStack.map { it.toString() }))
+        super.onSaveInstanceState(outState)
     }
 
     private fun applySystemBarDimming() {
@@ -191,10 +204,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    private fun handleIntent(intent: android.content.Intent?, allowStartupDocument: Boolean = false) {
+    private fun handleIntent(intent: android.content.Intent?) {
         if (intent == null) return
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
 
         if (intent.getBooleanExtra("is_new_document", false)) {
             currentFileUri = null
@@ -207,27 +218,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             return
         }
 
-        val targetUriExtra = intent.getStringExtra("open_target_uri")
-        val data: Uri? = if (targetUriExtra != null) Uri.parse(targetUriExtra) else intent.data
+        val data: Uri? = if (WindowRegistry.hasState(this, taskId)) WindowRegistry.current(this, taskId) else intent.data
 
         if (data != null) {
             if (currentFileUri == data) {
                 return
             }
 
-            if (isMultiWindowEnabled) {
-                if (currentFileUri != null && (intent.flags and android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0)) {
-                    val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
-                        action = android.content.Intent.ACTION_VIEW
-                        setDataAndType(data, "text/markdown")
-                        putExtra("open_target_uri", data.toString())
-                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                    }
-                    startActivity(newIntent)
-                    return
-                }
-            }
-
+            WindowRegistry.register(this, data)
             if (isEditorReady) {
                 openFile(data)
             } else {
@@ -236,50 +234,13 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             return
         }
 
-        // A repeated launcher tap only focuses this window. File intents have
-        // already been handled above and must never fall through to startup.
-        if (!allowStartupDocument || intent.action != android.content.Intent.ACTION_MAIN ||
-            !intent.hasCategory(android.content.Intent.CATEGORY_LAUNCHER) ||
-            currentFileUri != null || isDirty) {
-            return
-        }
-
-        val startupMode = prefs.getString("pref_startup_document", "last_opened") ?: "last_opened"
-        when (startupMode) {
-            "last_opened" -> {
-                val lastUriString = prefs.getString("last_opened_uri", null)
-                if (lastUriString != null) {
-                    val lastUri = Uri.parse(lastUriString)
-                    if (isEditorReady) {
-                        openFile(lastUri)
-                    } else {
-                        pendingOpenUri = lastUri
-                    }
-                } else {
-                    createNewDocument()
-                }
-            }
-            "custom" -> {
-                val customUriString = prefs.getString("pref_startup_custom_document_uri", null)
-                if (customUriString != null) {
-                    val customUri = Uri.parse(customUriString)
-                    if (isEditorReady) {
-                        openFile(customUri)
-                    } else {
-                        pendingOpenUri = customUri
-                    }
-                } else {
-                    createNewDocument()
-                }
-            }
-            else -> {
-                createNewDocument()
-            }
-        }
+        pendingSharedText = intent.getStringExtra("shared_text")
+        WindowRegistry.register(this, null)
     }
 
     override fun onResume() {
         super.onResume()
+        AppDiagnostics.record(this, "window_resumed")
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
         if (::webView.isInitialized) {
             webView.onResume()
@@ -288,6 +249,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onPause() {
+        AppDiagnostics.record(this, "window_paused")
         super.onPause()
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
         if (::webView.isInitialized) {
@@ -303,6 +265,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         if (::webView.isInitialized) {
             applyThemeAndFullscreenPreferences()
         }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        AppDiagnostics.record(this, "window_focus", hasFocus.toString())
     }
 
     override fun onStop() {
@@ -367,6 +334,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                AppDiagnostics.record(this@MainActivity, "web_page_ready")
                 progressBar.visibility = View.GONE
             }
         }
@@ -515,11 +483,16 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        menu?.add(0, 0x4d44, 100, "Diagnostic report")
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            0x4d44 -> {
+                AppDiagnostics.show(this)
+                true
+            }
             R.id.action_new -> {
                 handleNewFile()
                 true
@@ -554,14 +527,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun handleNewFile() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
-
-        if (isMultiWindowEnabled && currentFileUri != null) {
-            handleNewWindow()
-            return
-        }
-
         if (isDirty) {
             showUnsavedChangesDialog { createNewDocument() }
         } else {
@@ -570,12 +535,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun createNewDocument() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
-        if (!isMultiWindowEnabled && currentFileUri != null) {
+        if (currentFileUri != null) {
             documentHistoryStack.push(currentFileUri)
         }
         currentTextPackSession = null
+        latestMarkdownContent = ""
         currentFileUri = null
         currentFileName = getString(R.string.untitled_document)
         isDirty = false
@@ -584,10 +548,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun navigateBackOrFinish() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
-
-        if (!isMultiWindowEnabled && documentHistoryStack.isNotEmpty()) {
+        if (documentHistoryStack.isNotEmpty()) {
             val previousUri = documentHistoryStack.pop()
             openFileFromHistory(previousUri)
         } else {
@@ -596,34 +557,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun openFileFromHistory(uri: Uri) {
-        if (!isEditorReady) return
-        try {
-            contentResolver.openInputStream(uri)?.use { inputStream ->
-                val reader = BufferedReader(InputStreamReader(inputStream))
-                val content = reader.readText()
-                currentFileUri = uri
-                currentFileName = getFileNameFromUri(uri)
-                isDirty = false
-                updateTitle()
-
-                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-                prefs.edit().putString("last_opened_uri", uri.toString()).apply()
-
-                val escaped = JSONObjectWrapper.quote(content)
-                webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
-                    restoreCursorAndScrollState()
-                    webView.post {
-                        webView.requestLayout()
-                        webView.invalidate()
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Failed to open file from history: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-            if (documentHistoryStack.isNotEmpty()) {
-                navigateBackOrFinish()
-            }
-        }
+        openFile(uri, rememberHistory = false)
     }
 
     private fun handleOpenFile() {
@@ -634,35 +568,19 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    private fun openFile(uri: Uri) {
+    private fun openFile(uri: Uri, rememberHistory: Boolean = true) {
         if (!isEditorReady) {
             pendingOpenUri = uri
             return
         }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
-
-        if (isMultiWindowEnabled) {
-            if (currentFileUri == uri) {
-                return
-            }
-
-            if (currentFileUri != null) {
-                val newIntent = android.content.Intent(this, MainActivity::class.java).apply {
-                    action = android.content.Intent.ACTION_VIEW
-                    setDataAndType(uri, "text/markdown")
-                    putExtra("open_target_uri", uri.toString())
-                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                }
-                startActivity(newIntent)
-                return
-            }
-        } else {
-            if (currentFileUri != null && currentFileUri != uri) {
-                documentHistoryStack.push(currentFileUri)
-            }
+        if (currentFileUri == uri) return
+        if (WindowRegistry.focus(this, uri, excludeTask = taskId)) return
+        if (rememberHistory && currentFileUri != null) {
+            documentHistoryStack.push(currentFileUri)
         }
+        AppDiagnostics.record(this, "file_load_begin")
 
         try {
             try {
@@ -678,6 +596,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
             if (TextPackManager.isTextPackFile(this, uri, fileName)) {
                 val session = TextPackManager.openTextPack(this, uri)
+                AppDiagnostics.record(this, "textpack_read_done", "chars=${session.markdownContent.length}")
                 currentTextPackSession = session
                 currentFileUri = uri
                 currentFileName = fileName
@@ -701,6 +620,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 contentResolver.openInputStream(uri)?.use { inputStream ->
                     val reader = BufferedReader(InputStreamReader(inputStream))
                     val content = reader.readText()
+                    AppDiagnostics.record(this, "file_read_done", "chars=${content.length}")
                     currentFileUri = uri
                     currentFileName = fileName
                     isDirty = false
@@ -721,6 +641,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 }
             }
         } catch (e: Exception) {
+            WindowRegistry.register(this, currentFileUri)
+            AppDiagnostics.record(this, "file_load_error", e.javaClass.simpleName)
             Toast.makeText(this, "Failed to open file: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
@@ -835,14 +757,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun handleNewWindow() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val isMultiWindowEnabled = prefs.getBoolean("pref_multi_window", true)
-
-        if (!isMultiWindowEnabled) {
-            Toast.makeText(this, "Multi-window mode is disabled in Settings", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val intent = android.content.Intent(this, MainActivity::class.java).apply {
             action = android.content.Intent.ACTION_MAIN
             addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT or android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
@@ -993,8 +907,17 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
 
         @JavascriptInterface
+        fun reportDiagnostic(event: String, elapsed: Long) {
+            // Whitelist labels; never persist arbitrary JS messages/content.
+            if (event in setOf("set_data_done", "set_data_error", "js_error", "js_rejection")) {
+                AppDiagnostics.record(this@MainActivity, event, elapsed.toString())
+            }
+        }
+
+        @JavascriptInterface
         fun onEditorReady() {
             runOnUiThread {
+                AppDiagnostics.record(this@MainActivity, "editor_ready")
                 isEditorReady = true
                 applyPluginPreferences()
                 applyThemeAndFullscreenPreferences()
@@ -1003,6 +926,15 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 pendingOpenUri?.let { uri ->
                     pendingOpenUri = null
                     openFile(uri)
+                }
+                pendingSharedText?.let { text ->
+                    pendingSharedText = null
+                    val escaped = JSONObjectWrapper.quote(text)
+                    webView.evaluateJavascript("window.editorBridge.setMarkdown($escaped);") {
+                        latestMarkdownContent = text
+                        isDirty = text.isNotEmpty()
+                        updateTitle()
+                    }
                 }
 
                 webView.post {

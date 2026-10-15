@@ -10,13 +10,11 @@
         android:theme="@style/Theme.CKEditorMarkdown">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".DocumentDispatchActivity"
             android:exported="true"
-            android:launchMode="singleTop"
-            android:maxRecents="10"
-            android:resizeableActivity="true"
-            android:supportsPictureInPicture="false"
-            android:windowSoftInputMode="adjustResize">
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,8 +25,25 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:mimeType="text/markdown" />
                 <data android:mimeType="text/plain" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:maxRecents="20"
+            android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".SettingsActivity"

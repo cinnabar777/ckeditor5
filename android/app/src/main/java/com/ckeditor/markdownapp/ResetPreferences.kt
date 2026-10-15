@@ -153,7 +153,6 @@ object PreferenceResetHelper {
             key == "pref_toolbar_height" -> 48
             key == "pref_app_theme" -> "amoled"
             key == "pref_image_mode" -> "picker"
-            key == "pref_startup_document" -> "last_opened"
             key == "pref_settings_category_title_color" -> "#00E5FF"
             key == "pref_settings_title_color" -> "#FFFFFF"
             key == "pref_settings_summary_color" -> "#AAAAAA"
@@ -161,7 +160,6 @@ object PreferenceResetHelper {
             key == "pref_settings_reset_icon_color" -> "#00E5FF"
             key == "pref_settings_bg_color" -> "#000000"
             key == "pref_auto_save_on_leave" -> true
-            key == "pref_multi_window" -> true
             key == "pref_hotkey_new" -> "ctrl+n"
             key == "pref_hotkey_open" -> "ctrl+o"
             key == "pref_hotkey_save" -> "ctrl+s"
@@ -216,12 +214,6 @@ object PreferenceResetHelper {
             val fontPath = prefs.getString("${key}_path", null)
             val fontName = prefs.getString("${key}_name", null)
             return !fontPath.isNullOrEmpty() || !fontName.isNullOrEmpty()
-        }
-
-        if (key == "pref_startup_custom_document_pick") {
-            val customUri = prefs.getString("pref_startup_custom_document_uri", null)
-            val customName = prefs.getString("pref_startup_custom_document_name", null)
-            return !customUri.isNullOrEmpty() || !customName.isNullOrEmpty()
         }
 
         if (!prefs.contains(key)) return false
@@ -401,16 +393,6 @@ object PreferenceResetHelper {
                 pref.callNotifyChanged()
             }
             Toast.makeText(context, "Font reset to default system font", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (key == "pref_startup_custom_document_pick") {
-            prefs.edit().remove("pref_startup_custom_document_uri").remove("pref_startup_custom_document_name").apply()
-            pref.summary = "Tap to select custom file to open on startup"
-            if (pref is ResettablePreference) {
-                pref.callNotifyChanged()
-            }
-            Toast.makeText(context, "Custom startup document reset", Toast.LENGTH_SHORT).show()
             return
         }
 

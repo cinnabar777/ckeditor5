@@ -1700,10 +1700,13 @@ window.editorBridge = {
       return;
     }
     if (!editorInstance) return;
+    const loadStarted = Date.now();
     isProgrammaticChange = true;
     try {
       editorInstance.setData(markdownText || '');
+      window.AndroidNative?.reportDiagnostic?.('set_data_done', Date.now() - loadStarted);
     } catch (e) {
+      window.AndroidNative?.reportDiagnostic?.('set_data_error', Date.now() - loadStarted);
       console.error('Error setting markdown:', e);
     }
     setTimeout(() => { isProgrammaticChange = false; }, 50);
@@ -2023,7 +2026,9 @@ window.editorBridge = {
       if (!editorInstance) throw new Error('Plugin configuration did not create an editor');
       window._lastDisabledPluginsStr = currentDisabledStr;
       const hasPendingDocument = pendingMarkdown !== null;
+      const replayStarted = Date.now();
       editorInstance.setData(hasPendingDocument ? pendingMarkdown : currentText);
+      window.AndroidNative?.reportDiagnostic?.('set_data_done', Date.now() - replayStarted);
       pendingMarkdown = null;
       if (!hasPendingDocument && currentState) {
         window.editorBridge.setSelectionState(currentState, scrollTop);
@@ -2042,3 +2047,6 @@ window.editorBridge = {
 window.addEventListener('DOMContentLoaded', () => {
   initEditor([], true);
 });
+
+window.addEventListener('error', () => window.AndroidNative?.reportDiagnostic?.('js_error', 0));
+window.addEventListener('unhandledrejection', () => window.AndroidNative?.reportDiagnostic?.('js_rejection', 0));

@@ -42,6 +42,18 @@ task buildWebAssets(type: Exec) {
 
 preBuild.dependsOn buildWebAssets
 
+task testEditorBridge(type: Exec) {
+    workingDir "$projectDir/.."
+    commandLine 'node', '--test', 'web/test/native-bridge.test.cjs'
+}
+preBuild.dependsOn testEditorBridge
+
+// Keep routing policy tests in the debug-build verification path, including
+// builds launched by the existing manual GitHub workflow.
+tasks.matching { it.name == 'assembleDebug' }.configureEach {
+    dependsOn 'testDebugUnitTest'
+}
+
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.7.0'
