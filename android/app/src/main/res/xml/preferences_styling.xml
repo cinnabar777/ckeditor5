@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Element Styling &amp; Typography Categories">
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Styling &amp; Typography">
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_styling_page_headings"
             app:title="Headings (H1 – H6)"
@@ -45,7 +45,7 @@
 
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_styling_page_controlbar"
-            app:title="Bottom Control Bar &amp; UI Theme"
+            app:title="Bottom Toolbar"
             app:summary="Toolbar height, background color, icon color &amp; active selection color" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
