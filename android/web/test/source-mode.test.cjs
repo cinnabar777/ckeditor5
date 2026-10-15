@@ -93,3 +93,17 @@ test('Large document with long lines builds without memory overflow', () => {
   assert.ok(longDoc.length >= 3000000);
   assert.ok(longDoc.includes('a'.repeat(2000)));
 });
+
+test('MD CHEAT SHEET document loads and parses all Markdown syntax elements', () => {
+  const mdCheatSheet = `# MD CHEAT SHEET\n\n## MARKDOWN QR\n\n1. Bold: ** or __\n2. Code: \`\n3. Embed: ![[ ]]\n` +
+    `4. Escape: \\\n5. Footnote: ^[]\n6. Headings: #\n7. Highlight: ==text==\n8. Horizontal line: ---\n` +
+    `9. Image: ![](url)\n10. Italic: *or _\n11. Links: [title](url)\n12. Numbered list: 1.\n` +
+    `13. Quote: > quote\n14. Strikethrough: ~~text~~\n15. Tables: | h1 | h2 |\n` +
+    `16. Tasks: - [ ] todo\n17. Wikilinks: [[Link]]\n18. Underline: <u>text</u>\n`;
+
+  assert.ok(mdCheatSheet.includes('# MD CHEAT SHEET'));
+  assert.ok(mdCheatSheet.includes('==text=='));
+  assert.ok(mdCheatSheet.includes('[[Link]]'));
+  assert.ok(mdCheatSheet.includes('<u>text</u>'));
+  assert.ok(mdCheatSheet.includes('~~text~~'));
+});

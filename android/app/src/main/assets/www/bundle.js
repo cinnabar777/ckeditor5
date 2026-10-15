@@ -137568,7 +137568,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           rectangularSelection(),
           crosshairCursor(),
           highlightActiveLine(),
-          markdown(),
+          markdown({ extensions: [GFM, Table2, Strikethrough2, TaskList] }),
           syntaxHighlighting(customHighlightStyle),
           livePreviewPlugin,
           this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),

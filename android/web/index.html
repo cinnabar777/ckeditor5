@@ -1190,12 +1190,12 @@
       font-weight: var(--heading-font-weight, 700) !important;
       line-height: var(--heading-line-height, 1.2) !important;
     }
-    .cm-heading-1 { font-size: calc(2.0em * var(--heading-scale, 1.0)) !important; color: var(--heading-1-color, inherit) !important; }
-    .cm-heading-2 { font-size: calc(1.6em * var(--heading-scale, 1.0)) !important; color: var(--heading-2-color, inherit) !important; }
-    .cm-heading-3 { font-size: calc(1.3em * var(--heading-scale, 1.0)) !important; color: var(--heading-3-color, inherit) !important; }
-    .cm-heading-4 { font-size: calc(1.1em * var(--heading-scale, 1.0)) !important; color: var(--heading-4-color, inherit) !important; }
-    .cm-heading-5 { font-size: calc(1.0em * var(--heading-scale, 1.0)) !important; color: var(--heading-5-color, inherit) !important; }
-    .cm-heading-6 { font-size: calc(0.9em * var(--heading-scale, 1.0)) !important; color: var(--heading-6-color, inherit) !important; }
+    .cm-heading-1 { font-size: calc(2.0em * var(--heading-scale, 1.0)) !important; color: var(--heading-1-color, inherit) !important; margin-top: var(--heading-margin-top, 16px) !important; margin-bottom: var(--heading-margin-bottom, 8px) !important; }
+    .cm-heading-2 { font-size: calc(1.6em * var(--heading-scale, 1.0)) !important; color: var(--heading-2-color, inherit) !important; margin-top: var(--heading-margin-top, 16px) !important; margin-bottom: var(--heading-margin-bottom, 8px) !important; }
+    .cm-heading-3 { font-size: calc(1.3em * var(--heading-scale, 1.0)) !important; color: var(--heading-3-color, inherit) !important; margin-top: var(--heading-margin-top, 16px) !important; margin-bottom: var(--heading-margin-bottom, 8px) !important; }
+    .cm-heading-4 { font-size: calc(1.1em * var(--heading-scale, 1.0)) !important; color: var(--heading-4-color, inherit) !important; margin-top: var(--heading-margin-top, 16px) !important; margin-bottom: var(--heading-margin-bottom, 8px) !important; }
+    .cm-heading-5 { font-size: calc(1.0em * var(--heading-scale, 1.0)) !important; color: var(--heading-5-color, inherit) !important; margin-top: var(--heading-margin-top, 16px) !important; margin-bottom: var(--heading-margin-bottom, 8px) !important; }
+    .cm-heading-6 { font-size: calc(0.9em * var(--heading-scale, 1.0)) !important; color: var(--heading-6-color, inherit) !important; margin-top: var(--heading-margin-top, 16px) !important; margin-bottom: var(--heading-margin-bottom, 8px) !important; }
 
     .cm-bold { font-weight: var(--bold-font-weight, 700) !important; color: var(--bold-color, inherit) !important; }
     .cm-italic { font-style: italic !important; color: var(--italic-color, inherit) !important; }
@@ -1226,6 +1226,26 @@
       transform: scale(1.1) !important;
       vertical-align: middle !important;
       cursor: pointer !important;
+    }
+    .cm-highlight {
+      background-color: #ffe066 !important;
+      color: #111111 !important;
+      border-radius: 3px !important;
+      padding: 1px 4px !important;
+    }
+    .cm-wikilink {
+      color: var(--link-color, #29b6f6) !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+    }
+    .cm-underline {
+      text-decoration: underline !important;
+    }
+    .cm-callout {
+      border-left: var(--callout-border-width, 4px) solid var(--callout-border-color, #29b6f6) !important;
+      background-color: var(--callout-bg-color, rgba(41, 182, 246, 0.12)) !important;
+      padding-left: 12px !important;
+      border-radius: 4px !important;
     }
   </style>
 </head>

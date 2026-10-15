@@ -54,6 +54,7 @@ import { defaultKeymap, history, historyKeymap, undo as cmUndo, redo as cmRedo }
 import { markdown as cmMarkdown } from '@codemirror/lang-markdown';
 import { defaultHighlightStyle, syntaxHighlighting, syntaxTree, HighlightStyle } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
+import { GFM, Table as GFMTable, Strikethrough as GFMStrikethrough, TaskList as GFMTaskList } from '@lezer/markdown';
 
 import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
 import '../../../packages/ckeditor5-ui/theme/index-editor.css';
@@ -705,7 +706,7 @@ class CodeMirrorAdapter {
         rectangularSelection(),
         crosshairCursor(),
         highlightActiveLine(),
-        cmMarkdown(),
+        cmMarkdown({ extensions: [GFM, GFMTable, GFMStrikethrough, GFMTaskList] }),
         syntaxHighlighting(customHighlightStyle),
         livePreviewPlugin,
         this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),
