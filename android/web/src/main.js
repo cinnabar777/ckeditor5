@@ -1,75 +1,15 @@
-import {
-  ClassicEditor,
-  Markdown,
-  Essentials,
-  Paragraph,
-  Heading,
-  Bold,
-  Italic,
-  Strikethrough,
-  Code,
-  Subscript,
-  Superscript,
-  Underline,
-  BlockQuote,
-  CodeBlock,
-  List,
-  ListProperties,
-  TodoList,
-  Link,
-  Table,
-  TableToolbar,
-  TableProperties,
-  TableCellProperties,
-  Image,
-  ImageCaption,
-  ImageStyle,
-  ImageToolbar,
-  ImageUpload,
-  ImageResize,
-  ImageInsert,
-  ImageBlock,
-  ImageInline,
-  MediaEmbed,
-  HorizontalLine,
-  FindAndReplace,
-  FindAndReplaceEditing,
-  SelectAll,
-  Undo,
-  SourceEditing,
-  HtmlEmbed,
-  Font,
-  Highlight,
-  Autoformat,
-  Indent,
-  IndentBlock,
-  PasteFromOffice
-} from 'ckeditor5';
-
-import { Footnotes } from '@tomaitken/ckeditor5-footnotes';
-
 import { EditorState, Compartment } from '@codemirror/state';
 import { EditorView, keymap, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine, Decoration, ViewPlugin, WidgetType, lineNumbers } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap, undo as cmUndo, redo as cmRedo } from '@codemirror/commands';
 import { markdown as cmMarkdown } from '@codemirror/lang-markdown';
-import { defaultHighlightStyle, syntaxHighlighting, syntaxTree, HighlightStyle } from '@codemirror/language';
+import { syntaxHighlighting, syntaxTree, HighlightStyle } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
 import { GFM, Table as GFMTable, Strikethrough as GFMStrikethrough, TaskList as GFMTaskList } from '@lezer/markdown';
 
-import '../../../packages/ckeditor5-editor-classic/theme/classiceditor.css';
-import '../../../packages/ckeditor5-ui/theme/index-editor.css';
-import '../../../packages/ckeditor5-highlight/theme/index-editor.css';
-import '../../../packages/ckeditor5-highlight/theme/index-content.css';
-import '../../../node_modules/@tomaitken/ckeditor5-footnotes/dist/index-editor.css';
-
-let editorInstance = null;
 let activeAdapter = null;
-let currentEditorMode = 'rich_text';
+let currentEditorMode = 'wysiwyg'; // 'wysiwyg' | 'live_preview' | 'source'
 let isProgrammaticChange = false;
-let pluginConfigurationTask = null;
 let pendingMarkdown = null;
-let rebuildMarkdown = null;
-let isToolbarVisible = false;
 let isLineWrapEnabled = true;
 let activePopupGroup = null;
 
@@ -215,6 +155,22 @@ class CodeBlockHeaderWidget extends WidgetType {
   }
 }
 
+class ImagePreviewWidget extends WidgetType {
+  constructor(url, alt) {
+    super();
+    this.url = url;
+    this.alt = alt || 'image';
+  }
+
+  toDOM() {
+    const img = document.createElement('img');
+    img.src = this.url;
+    img.alt = this.alt;
+    img.style.cssText = 'max-width: 100%; height: auto; border-radius: 6px; margin: 6px 0; display: block; border: 1px solid var(--border-color, #444);';
+    return img;
+  }
+}
+
 const customHighlightStyle = HighlightStyle.define([
   { tag: tags.heading, color: 'var(--heading-1-color, #ffffff)', fontWeight: 'bold' },
   { tag: tags.emphasis, fontStyle: 'italic', color: 'var(--italic-color, inherit)' },
@@ -243,9 +199,13 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
 
   buildDecorations(view) {
     const builder = [];
+    if (currentEditorMode === 'source') {
+      return Decoration.none;
+    }
+
     const tree = syntaxTree(view.state);
     const selection = view.state.selection.main;
-    const activeLine = view.state.doc.lineAt(selection.head).number;
+    const isPureWysiwyg = (currentEditorMode === 'wysiwyg');
 
     for (const { from, to } of view.visibleRanges) {
       tree.iterate({
@@ -254,7 +214,7 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
         enter: (node) => {
           const line = view.state.doc.lineAt(node.from);
           const cursor = selection.head;
-          const isNodeActive = (cursor >= node.from && cursor <= node.to);
+          const isNodeActive = !isPureWysiwyg && (cursor >= node.from && cursor <= node.to);
 
           if (node.name.startsWith('ATXHeading')) {
             const level = node.name.replace('ATXHeading', '');
@@ -339,6 +299,16 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
           if (node.name === 'URL' || node.name === 'Link') {
             builder.push(Decoration.mark({ class: 'cm-link' }).range(node.from, node.to));
           }
+
+          if (node.name === 'Image') {
+            const imgText = view.state.doc.sliceString(node.from, node.to);
+            const match = imgText.match(/!\[([^\]]*)\]\(([^)]+)\)/);
+            if (match && !isNodeActive) {
+              const alt = match[1];
+              const url = match[2];
+              builder.push(Decoration.replace({ widget: new ImagePreviewWidget(url, alt) }).range(node.from, node.to));
+            }
+          }
         }
       });
     }
@@ -374,6 +344,7 @@ function cmToggleLinePrefix(view, prefix) {
       changes: { from: line.from, to: line.to, insert: prefix + cleanText }
     });
   }
+  view.focus();
 }
 
 function cmWrapSelection(view, before, after = before) {
@@ -399,6 +370,7 @@ function cmIndentSelection(view, spaces = '  ') {
     changes.push({ from: l.from, to: l.from, insert: spaces });
   }
   view.dispatch({ changes });
+  view.focus();
 }
 
 function cmOutdentSelection(view, spaces = '  ') {
@@ -416,369 +388,12 @@ function cmOutdentSelection(view, spaces = '  ') {
   if (changes.length > 0) {
     view.dispatch({ changes });
   }
-}
-
-function setupMarkdownFootnotesProcessor(editor) {
-  if (!editor || !editor.data || !editor.data.processor) return;
-  const processor = editor.data.processor;
-
-  const originalToView = processor.toView.bind(processor);
-  const originalToData = processor.toData.bind(processor);
-
-  processor.toView = function(data) {
-    if (typeof data !== 'string') return originalToView(data);
-
-    const footnoteDefRegex = /^\[\^([^\]]+)\]:\s*([\s\S]*?)(?=(?:\n\[\^[^\]]+\]:)|$)/gm;
-    const definitions = [];
-
-    let cleanMarkdown = data.replace(footnoteDefRegex, (fullMatch, id, text) => {
-      definitions.push({ id, text: text.trim() });
-      return '';
-    }).trim();
-
-    if (definitions.length > 0) {
-      definitions.forEach((def, idx) => {
-        const indexNum = idx + 1;
-        const refRegex = new RegExp(`\\[\\^${def.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
-        cleanMarkdown = cleanMarkdown.replace(refRegex, `<sup data-footnote-reference data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><a href="#fn${def.id}" id="fnref${def.id}">${indexNum}</a></sup>`);
-      });
-
-      let sectionHtml = `<ol data-footnote-section class="footnote-section footnotes" role="doc-endnotes">`;
-      definitions.forEach((def, idx) => {
-        const indexNum = idx + 1;
-        sectionHtml += `<li data-footnote-item data-footnote-id="${def.id}" data-footnote-index="${indexNum}"><div data-footnote-content><p>${def.text}</p></div><span data-footnote-back-link data-footnote-id="${def.id}"><sup><strong><a href="#fnref${def.id}">^</a></strong></sup></span></li>`;
-      });
-      sectionHtml += `</ol>`;
-
-      cleanMarkdown += '\n\n' + sectionHtml;
-    }
-
-    return originalToView(cleanMarkdown);
-  };
-
-  processor.toData = function(viewFragment) {
-    let markdownText = originalToData(viewFragment);
-    if (typeof markdownText !== 'string') return markdownText;
-
-    markdownText = markdownText.replace(/<sup[^>]*data-footnote-reference[^>]*data-footnote-index="([^"]+)"[^>]*>[\s\S]*?<\/sup>/gi, '[^$1]');
-    markdownText = markdownText.replace(/<sup[^>]*data-footnote-index="([^"]+)"[^>]*data-footnote-reference[^>]*>[\s\S]*?<\/sup>/gi, '[^$1]');
-
-    const sectionMatch = markdownText.match(/<(ol|div)[^>]*data-footnote-section[^>]*>([\s\S]*?)<\/\1>/i);
-    if (sectionMatch) {
-      const sectionHtml = sectionMatch[2];
-      const items = [];
-      const itemRegex = /<li[^>]*data-footnote-id="([^"]+)"[^>]*data-footnote-index="([^"]+)"[^>]*>([\s\S]*?)<\/li>/gi;
-      let itemMatch;
-      while ((itemMatch = itemRegex.exec(sectionHtml)) !== null) {
-        const fnId = itemMatch[1];
-        const fnIndex = itemMatch[2];
-        const itemContentHtml = itemMatch[3];
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = itemContentHtml;
-        const backLink = tempDiv.querySelector('[data-footnote-back-link]');
-        if (backLink) backLink.remove();
-        const text = tempDiv.innerText.trim().replace(/\n+/g, ' ');
-        items.push({ id: fnIndex || fnId, text });
-      }
-
-      markdownText = markdownText.replace(sectionMatch[0], '').trim();
-
-      if (items.length > 0) {
-        markdownText += '\n\n' + items.map(item => `[^${item.id}]: ${item.text}`).join('\n');
-      }
-    }
-
-    return markdownText.trim();
-  };
-}
-
-class CKEditorAdapter {
-  constructor() {
-    this.mode = 'rich_text';
-    this.editor = null;
-  }
-
-  async init(containerEl, initialMarkdown = '', disabledPlugins = []) {
-    let editorElement = containerEl.querySelector('#editor');
-    if (!editorElement) {
-      editorElement = document.createElement('div');
-      editorElement.id = 'editor';
-      containerEl.appendChild(editorElement);
-    }
-
-    const pluginsToLoad = [
-      Essentials,
-      Paragraph,
-      Markdown,
-      PasteFromOffice
-    ];
-
-    const toolbarItems = ['undo', 'redo', '|'];
-
-    const addIfEnabled = (pluginKey, pluginClass, toolbarKey) => {
-      if (!disabledPlugins.includes(pluginKey)) {
-        if (pluginClass && !pluginsToLoad.includes(pluginClass)) {
-          pluginsToLoad.push(pluginClass);
-        }
-        if (toolbarKey) {
-          toolbarItems.push(toolbarKey);
-        }
-        return true;
-      }
-      return false;
-    };
-
-    if (addIfEnabled('heading', Heading)) toolbarItems.push('heading', '|');
-
-    addIfEnabled('bold', Bold, 'bold');
-    addIfEnabled('italic', Italic, 'italic');
-    addIfEnabled('underline', Underline, 'underline');
-    addIfEnabled('strikethrough', Strikethrough, 'strikethrough');
-    addIfEnabled('highlight', Highlight, 'highlight');
-    addIfEnabled('code', Code, 'code');
-    if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== '|') {
-      toolbarItems.push('|');
-    }
-
-    addIfEnabled('link', Link, 'link');
-    if (addIfEnabled('image', Image)) {
-      pluginsToLoad.push(ImageBlock, ImageInline, ImageCaption, ImageStyle, ImageToolbar, ImageResize, ImageInsert);
-      toolbarItems.push('insertImage');
-    }
-    addIfEnabled('blockQuote', BlockQuote, 'blockQuote');
-    addIfEnabled('codeBlock', CodeBlock, 'codeBlock');
-    if (addIfEnabled('table', Table)) {
-      pluginsToLoad.push(TableToolbar, TableProperties, TableCellProperties);
-      toolbarItems.push('insertTable');
-    }
-    if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== '|') {
-      toolbarItems.push('|');
-    }
-
-    if (addIfEnabled('list', List)) {
-      pluginsToLoad.push(ListProperties);
-      toolbarItems.push('bulletedList', 'numberedList');
-    }
-    addIfEnabled('todoList', TodoList, 'todoList');
-    if (addIfEnabled('indent', Indent)) {
-      pluginsToLoad.push(IndentBlock);
-      toolbarItems.push('outdent', 'indent');
-    }
-    if (toolbarItems.length > 0 && toolbarItems[toolbarItems.length - 1] !== '|') {
-      toolbarItems.push('|');
-    }
-
-    addIfEnabled('horizontalLine', HorizontalLine, 'horizontalLine');
-    addIfEnabled('sourceEditing', SourceEditing, 'sourceEditing');
-    addIfEnabled('findAndReplace', FindAndReplace, 'findAndReplace');
-    addIfEnabled('autoformat', Autoformat);
-    addIfEnabled('footnotes', Footnotes);
-
-    this.editor = await ClassicEditor.create(editorElement, {
-      licenseKey: 'GPL',
-      plugins: pluginsToLoad,
-      toolbar: {
-        items: toolbarItems,
-        shouldNotGroupWhenFull: true
-      },
-      heading: {
-        options: [
-          { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-          { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-          { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-          { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-          { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
-          { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
-          { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
-        ]
-      },
-      highlight: {
-        options: [
-          { model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
-          { model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
-          { model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: 'var(--ck-highlight-marker-pink)', type: 'marker' },
-          { model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
-          { model: 'redPen', class: 'pen-red', title: 'Red pen', color: 'var(--ck-highlight-pen-red)', type: 'pen' },
-          { model: 'greenPen', class: 'pen-green', title: 'Green pen', color: 'var(--ck-highlight-pen-green)', type: 'pen' }
-        ]
-      },
-      codeBlock: {
-        languages: [
-          { language: 'plaintext', label: 'Plain text' },
-          { language: 'c', label: 'C' },
-          { language: 'cs', label: 'C#' },
-          { language: 'cpp', label: 'C++' },
-          { language: 'css', label: 'CSS' },
-          { language: 'html', label: 'HTML' },
-          { language: 'java', label: 'Java' },
-          { language: 'javascript', label: 'JavaScript' },
-          { language: 'json', label: 'JSON' },
-          { language: 'kotlin', label: 'Kotlin' },
-          { language: 'markdown', label: 'Markdown' },
-          { language: 'python', label: 'Python' },
-          { language: 'sql', label: 'SQL' },
-          { language: 'typescript', label: 'TypeScript' },
-          { language: 'xml', label: 'XML' },
-          { language: 'yaml', label: 'YAML' }
-        ]
-      },
-      image: {
-        toolbar: [ 'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block' ]
-      },
-      table: {
-        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
-      }
-    });
-
-    editorInstance = this.editor;
-    setupMarkdownFootnotesProcessor(this.editor);
-
-    if (initialMarkdown) {
-      this.editor.setData(initialMarkdown);
-    }
-
-    this.editor.model.document.on('change:data', () => {
-      if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onContentChanged === 'function') {
-        const text = this.editor.getData();
-        window.AndroidNative.onContentChanged(text);
-      }
-    });
-
-    this.editor.model.document.selection.on('change:range', () => {
-      const sourceEditingPlugin = this.editor.plugins ? this.editor.plugins.get('SourceEditing') : null;
-      if (sourceEditingPlugin && sourceEditingPlugin.isSourceEditingMode) {
-        return;
-      }
-      if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onSelectionChanged === 'function') {
-        const state = window.editorBridge.getSelectionState();
-        if (state && Array.isArray(state.path) && state.path.length > 0) {
-          window.AndroidNative.onSelectionChanged(JSON.stringify(state));
-        }
-      }
-    });
-
-    const mainEditingArea = document.querySelector('.ck-editor__main');
-    if (mainEditingArea) {
-      mainEditingArea.addEventListener('scroll', () => {
-        if (!isProgrammaticChange && window.AndroidNative && typeof window.AndroidNative.onScrollChanged === 'function') {
-          window.AndroidNative.onScrollChanged(mainEditingArea.scrollTop);
-        }
-      }, { passive: true });
-    }
-
-    setupGroupedControlBar();
-    initCustomSearchBar();
-    setupFastScrollbar();
-    setupTocGestureAndPanel();
-  }
-
-  setMarkdown(text) {
-    if (!this.editor) return;
-    this.editor.setData(text || '');
-  }
-
-  getMarkdown() {
-    if (!this.editor) return '';
-    return this.editor.getData();
-  }
-
-  getSelectionState() {
-    if (!this.editor) return { path: [], offset: 0 };
-    try {
-      const selection = this.editor.model.document.selection;
-      const range = selection.getFirstRange();
-      if (range && range.start) {
-        return {
-          path: range.start.path ? Array.from(range.start.path) : [],
-          offset: range.start.offset || 0
-        };
-      }
-    } catch (e) {
-      console.error('Error getting selection state:', e);
-    }
-    return { path: [], offset: 0 };
-  }
-
-  setSelectionState(stateJson, scrollTop) {
-    if (!this.editor) return;
-    isProgrammaticChange = true;
-    try {
-      if (stateJson) {
-        let state = typeof stateJson === 'string' ? JSON.parse(stateJson) : stateJson;
-        if (typeof state === 'string') {
-          state = JSON.parse(state);
-        }
-        if (state && Array.isArray(state.path) && state.path.length > 0) {
-          const doc = this.editor.model.document;
-          const root = doc.getRoot();
-          let curr = root;
-          let safePath = [];
-          for (let i = 0; i < state.path.length; i++) {
-            const isLast = (i === state.path.length - 1);
-            const requestedIdx = state.path[i];
-            if (isLast) {
-              const maxOff = curr.maxOffset !== undefined ? curr.maxOffset : (curr.childCount || 0);
-              const safeOff = Math.min(Math.max(0, requestedIdx), maxOff);
-              safePath.push(safeOff);
-            } else {
-              if (curr.childCount > 0) {
-                const safeIdx = Math.min(Math.max(0, requestedIdx), curr.childCount - 1);
-                safePath.push(safeIdx);
-                curr = curr.getChild(safeIdx);
-              } else {
-                safePath.push(0);
-              }
-            }
-          }
-          const position = this.editor.model.createPositionFromPath(root, safePath);
-          if (position) {
-            this.editor.model.change(writer => {
-              writer.setSelection(position);
-            });
-          }
-        }
-      }
-    } catch (e) {
-      console.error('Error restoring selection state:', e);
-    }
-    if (typeof scrollTop === 'number' && scrollTop >= 0) {
-      setTimeout(() => {
-        const mainEditingArea = document.querySelector('.ck-editor__main');
-        if (mainEditingArea) {
-          mainEditingArea.scrollTop = scrollTop;
-        }
-      }, 50);
-    }
-  }
-
-  undo() {
-    if (this.editor) this.editor.execute('undo');
-  }
-
-  redo() {
-    if (this.editor) this.editor.execute('redo');
-  }
-
-  setLineWrap(enabled) {
-    if (enabled) {
-      document.body.classList.remove('no-line-wrap');
-    } else {
-      document.body.classList.add('no-line-wrap');
-    }
-  }
-
-  destroy() {
-    if (this.editor) {
-      this.editor.destroy();
-      this.editor = null;
-      editorInstance = null;
-    }
-  }
+  view.focus();
 }
 
 class CodeMirrorAdapter {
   constructor() {
-    this.mode = 'source';
+    this.mode = currentEditorMode;
     this.view = null;
     this.lineWrapCompartment = new Compartment();
     this.lineNumbersCompartment = new Compartment();
@@ -926,14 +541,6 @@ class CodeMirrorAdapter {
     return this.showLineNumbers;
   }
 
-  toggleRawSourceView() {
-    this.isRawSourceView = !this.isRawSourceView;
-    if (this.view) {
-      this.view.dispatch({});
-    }
-    return this.isRawSourceView;
-  }
-
   insertImage(imageUrl, altText = 'image') {
     if (this.view) {
       const imgMarkdown = `![${altText}](${imageUrl})`;
@@ -954,8 +561,8 @@ class CodeMirrorAdapter {
   }
 }
 
-async function setEditorMode(mode, disabledPlugins = []) {
-  const targetMode = (mode === 'source' || mode === 'live_preview') ? 'source' : 'rich_text';
+async function setEditorMode(mode) {
+  const targetMode = (mode === 'live_preview' || mode === 'source') ? mode : 'wysiwyg';
 
   const existingText = activeAdapter ? activeAdapter.getMarkdown() : (pendingMarkdown || '');
   if (activeAdapter) {
@@ -976,18 +583,10 @@ async function setEditorMode(mode, disabledPlugins = []) {
     }
   }
 
-  if (targetMode === 'source') {
-    const adapter = new CodeMirrorAdapter();
-    const containerEl = document.querySelector('#editor');
-    await adapter.init(containerEl, existingText);
-    activeAdapter = adapter;
-  } else {
-    window._lastDisabledPluginsStr = JSON.stringify([...disabledPlugins].sort());
-    const adapter = new CKEditorAdapter();
-    const containerEl = document.querySelector('#editor-container');
-    await adapter.init(containerEl, existingText, disabledPlugins);
-    activeAdapter = adapter;
-  }
+  const adapter = new CodeMirrorAdapter();
+  const containerEl = document.querySelector('#editor');
+  await adapter.init(containerEl, existingText);
+  activeAdapter = adapter;
 
   if (window.AndroidNative && typeof window.AndroidNative.onEditorReady === 'function') {
     window.AndroidNative.onEditorReady(targetMode);
@@ -1059,7 +658,7 @@ function setupGroupedControlBar() {
     headingBtn.onclick = (e) => {
       e.stopPropagation();
       togglePopupStrip('heading', headingBtn, [
-        { ckeComponent: 'heading', title: 'Paragraph', icon: 'P', action: () => execCmd('heading', { value: 'paragraph' }) },
+        { title: 'Paragraph', icon: 'P', action: () => execCmd('heading', { value: 'paragraph' }) },
         { title: 'Heading 1', icon: 'H1', action: () => execCmd('heading', { value: 'heading1' }) },
         { title: 'Heading 2', icon: 'H2', action: () => execCmd('heading', { value: 'heading2' }) },
         { title: 'Heading 3', icon: 'H3', action: () => execCmd('heading', { value: 'heading3' }) },
@@ -1077,8 +676,8 @@ function setupGroupedControlBar() {
     listsBtn.onclick = (e) => {
       e.stopPropagation();
       togglePopupStrip('lists', listsBtn, [
-        { ckeComponent: 'bulletedList', title: 'Bulleted List', icon: svgIcons.bulletedList, action: () => execCmd('bulletedList') },
-        { ckeComponent: 'numberedList', title: 'Numbered List', icon: svgIcons.numberedList, action: () => execCmd('numberedList') },
+        { title: 'Bulleted List', icon: svgIcons.bulletedList, action: () => execCmd('bulletedList') },
+        { title: 'Numbered List', icon: svgIcons.numberedList, action: () => execCmd('numberedList') },
         { title: 'Todo List', icon: svgIcons.todoList, action: () => execCmd('todoList') },
         { title: 'Indent', icon: svgIcons.indent, action: () => execCmd('indent') },
         { title: 'Outdent', icon: svgIcons.outdent, action: () => execCmd('outdent') }
@@ -1110,7 +709,7 @@ function setupGroupedControlBar() {
     tableBtn.onclick = (e) => {
       e.stopPropagation();
       togglePopupStrip('table', tableBtn, [
-        { ckeComponent: 'insertTable', icon: svgIcons.insertTable, title: 'Insert Table', action: () => execCmd('insertTable') }
+        { icon: svgIcons.insertTable, title: 'Insert Table', action: () => execCmd('insertTable') }
       ]);
     };
   }
@@ -1120,11 +719,11 @@ function setupGroupedControlBar() {
     insertBtn.onclick = (e) => {
       e.stopPropagation();
       togglePopupStrip('insert', insertBtn, [
-        { ckeComponent: 'insertImage', icon: svgIcons.image, title: 'Insert Image', action: () => window.editorBridge.insertImage('https://') },
-        { ckeComponent: 'link', icon: svgIcons.link, title: 'Insert Link', action: () => execCmd('link') },
+        { icon: svgIcons.image, title: 'Insert Image', action: () => window.editorBridge.insertImage('https://') },
+        { icon: svgIcons.link, title: 'Insert Link', action: () => execCmd('link') },
         { icon: svgIcons.inlineCode, title: 'Inline Code', action: () => execCmd('code') },
         { icon: svgIcons.blockQuote, title: 'Insert Quote', action: () => execCmd('blockQuote') },
-        { ckeComponent: 'codeBlock', icon: svgIcons.codeBlock, title: 'Code Block', action: () => execCmd('codeBlock') },
+        { icon: svgIcons.codeBlock, title: 'Code Block', action: () => execCmd('codeBlock') },
         { icon: svgIcons.horizontalLine, title: 'Insert Line', action: () => execCmd('horizontalLine') },
         { icon: svgIcons.footnote, title: 'Insert Footnote', action: () => execCmd('InsertFootnote') }
       ]);
@@ -1142,7 +741,7 @@ function setupGroupedControlBar() {
         { icon: svgIcons.saveAsFile, title: 'Save As', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('save_as') },
         { icon: svgIcons.saveFile, title: 'Export HTML / MHTML', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('export') },
         { icon: svgIcons.search, title: 'Find & Replace', action: () => { hidePopupStrip(); toggleFindAndReplaceBar(); } },
-        { icon: svgIcons.newWindow, title: 'Open in Alternate Engine', action: () => openWithOtherEngine() },
+        { icon: svgIcons.newWindow, title: 'Switch View Mode', action: () => openWithOtherEngine() },
         { icon: svgIcons.newWindow, title: 'New Window', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('new_window') },
         { icon: svgIcons.settings, title: 'Settings', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('settings') }
       ]);
@@ -1151,7 +750,7 @@ function setupGroupedControlBar() {
 }
 
 function execCmd(cmdName, options) {
-  if (activeAdapter && activeAdapter.mode === 'source' && activeAdapter.view) {
+  if (activeAdapter && activeAdapter.view) {
     const view = activeAdapter.view;
     if (cmdName === 'bold') cmWrapSelection(view, '**');
     else if (cmdName === 'italic') cmWrapSelection(view, '*');
@@ -1184,20 +783,6 @@ function execCmd(cmdName, options) {
       else if (val === 'redPen') cmWrapSelection(view, '<span style="color:red">', '</span>');
       else if (val === 'greenPen') cmWrapSelection(view, '<span style="color:green">', '</span>');
     }
-    return;
-  }
-
-  if (editorInstance && activeAdapter && activeAdapter.mode === 'rich_text') {
-    try {
-      editorInstance.execute(cmdName, options);
-    } catch (err) {
-      console.error(`Command ${cmdName} failed:`, err);
-    }
-  } else if (activeAdapter && typeof activeAdapter.toggleRawSourceView === 'function') {
-    const isRaw = activeAdapter.toggleRawSourceView();
-    if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
-      window.AndroidNative.showToast(isRaw ? 'Switched to Raw Source View' : 'Switched to Live Preview');
-    }
   }
 }
 
@@ -1224,34 +809,18 @@ function togglePopupStrip(groupKey, targetBtn, items) {
   activePopupGroup = groupKey;
   targetBtn.classList.add('active');
 
-  const isSourceMode = activeAdapter && activeAdapter.mode === 'source';
-
   items.forEach(item => {
-    if (item.ckeComponent && !isSourceMode && editorInstance && editorInstance.ui.componentFactory.has(item.ckeComponent)) {
-      try {
-        const view = editorInstance.ui.componentFactory.create(item.ckeComponent);
-        if (!view.element) {
-          view.render();
-        }
-        if (view.element) {
-          strip.appendChild(view.element);
-        }
-      } catch (e) {
-        console.error('Failed to create CKE component:', item.ckeComponent, e);
+    const btn = document.createElement('button');
+    btn.className = 'popup-strip-btn';
+    if (item.title) btn.title = item.title;
+    btn.innerHTML = item.icon || item.title;
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      if (typeof item.action === 'function') {
+        item.action();
       }
-    } else {
-      const btn = document.createElement('button');
-      btn.className = 'popup-strip-btn';
-      if (item.title) btn.title = item.title;
-      btn.innerHTML = item.icon || item.title;
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        if (typeof item.action === 'function') {
-          item.action();
-        }
-      };
-      strip.appendChild(btn);
-    }
+    };
+    strip.appendChild(btn);
   });
 
   strip.classList.remove('hidden');
@@ -1366,7 +935,7 @@ function toggleFindAndReplaceBar(forceState) {
 }
 
 function setupFastScrollbar() {
-  const mainArea = document.querySelector('.ck-editor__main') || document.querySelector('.cm-scroller');
+  const mainArea = document.querySelector('.cm-scroller');
   const track = document.querySelector('#fast-scrollbar-track');
   const thumb = document.querySelector('#fast-scrollbar-thumb');
   if (!mainArea || !track || !thumb) return;
@@ -1587,17 +1156,15 @@ function setupTocGestureAndPanel() {
 }
 
 function openWithOtherEngine() {
-  const altMode = currentEditorMode === 'rich_text' ? 'live_preview' : 'rich_text';
-  let disabledPlugins = [];
-  try {
-    if (window._lastDisabledPluginsStr) {
-      disabledPlugins = JSON.parse(window._lastDisabledPluginsStr);
-    }
-  } catch (e) {}
-  setEditorMode(altMode, disabledPlugins).then(() => {
+  const modes = ['wysiwyg', 'live_preview', 'source'];
+  const nextIdx = (modes.indexOf(currentEditorMode) + 1) % modes.length;
+  const targetMode = modes[nextIdx];
+
+  setEditorMode(targetMode).then(() => {
     toggleBottomToolbar(true);
     if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
-      window.AndroidNative.showToast(altMode === 'rich_text' ? 'Opened in Rich text (CKEditor)' : 'Opened in Live Preview (CodeMirror)');
+      const names = { wysiwyg: 'Pure WYSIWYG', live_preview: 'Obsidian Live Preview', source: 'Raw Source View' };
+      window.AndroidNative.showToast(`Switched to ${names[targetMode]}`);
     }
   });
 }
@@ -1750,8 +1317,8 @@ function setupKeyboardShortcuts() {
 
 // Global JS Bridge exposure
 window.editorBridge = {
-  setEditorMode: function(mode, disabledPlugins = []) {
-    return setEditorMode(mode, disabledPlugins);
+  setEditorMode: function(mode) {
+    return setEditorMode(mode);
   },
   getEditorMode: function() {
     return currentEditorMode;
@@ -1814,20 +1381,10 @@ window.editorBridge = {
   },
   getMarkdown: function() {
     if (pendingMarkdown !== null) return pendingMarkdown;
-    if (pluginConfigurationTask) {
-      if (typeof activeAdapter !== 'undefined' && activeAdapter) return activeAdapter.getMarkdown();
-      if (typeof editorInstance !== 'undefined' && editorInstance) return editorInstance.getData();
-      return typeof rebuildMarkdown !== 'undefined' ? (rebuildMarkdown ?? '') : '';
-    }
     if (typeof activeAdapter !== 'undefined' && activeAdapter) return activeAdapter.getMarkdown();
-    if (typeof editorInstance !== 'undefined' && editorInstance) return editorInstance.getData();
-    return typeof rebuildMarkdown !== 'undefined' ? (rebuildMarkdown ?? '') : '';
+    return '';
   },
   setMarkdown: function(markdownText) {
-    if (pluginConfigurationTask) {
-      pendingMarkdown = markdownText || '';
-      return;
-    }
     if (typeof activeAdapter !== 'undefined' && activeAdapter) {
       isProgrammaticChange = true;
       try {
@@ -1878,9 +1435,7 @@ window.editorBridge = {
     if (activeAdapter) activeAdapter.setSelectionState(stateJson, scrollTop);
   },
   insertImage: function(imageUrl, altText = '') {
-    if (activeAdapter && activeAdapter.mode === 'rich_text' && editorInstance) {
-      editorInstance.execute('insertImage', { source: imageUrl, alt: altText });
-    } else if (activeAdapter && typeof activeAdapter.insertImage === 'function') {
+    if (activeAdapter && typeof activeAdapter.insertImage === 'function') {
       activeAdapter.insertImage(imageUrl, altText);
     } else if (activeAdapter) {
       const imgMarkdown = `![${altText}](${imageUrl})`;
@@ -1965,56 +1520,8 @@ window.editorBridge = {
 
     styleEl.innerHTML = fontCss;
   },
-  configurePlugins: function(disabledPluginsJson) {
-    if (typeof currentEditorMode !== 'undefined' && (currentEditorMode === 'source' || currentEditorMode === 'live_preview')) {
-      return Promise.resolve();
-    }
-    if (pluginConfigurationTask) {
-      return pluginConfigurationTask.then(() => window.editorBridge.configurePlugins(disabledPluginsJson));
-    }
-    let disabledPlugins = [];
-    try {
-      if (typeof disabledPluginsJson === 'string') {
-        disabledPlugins = JSON.parse(disabledPluginsJson);
-      } else if (Array.isArray(disabledPluginsJson)) {
-        disabledPlugins = disabledPluginsJson;
-      }
-    } catch (e) {
-      console.error('Invalid disabledPlugins JSON:', e);
-    }
-
-    const currentDisabledStr = JSON.stringify(disabledPlugins.sort());
-    if (window._lastDisabledPluginsStr === currentDisabledStr) {
-      return Promise.resolve();
-    }
-
-    const currentText = window.editorBridge.getMarkdown();
-    rebuildMarkdown = currentText;
-    const currentState = window.editorBridge.getSelectionState();
-
-    isProgrammaticChange = true;
-    const task = (typeof setEditorMode !== 'undefined') ? setEditorMode('rich_text', disabledPlugins) : ((typeof initEditor === 'function') ? initEditor(disabledPlugins) : Promise.resolve());
-    pluginConfigurationTask = task.then(() => {
-      window._lastDisabledPluginsStr = currentDisabledStr;
-      const hasPendingDocument = pendingMarkdown !== null;
-      const textToSet = hasPendingDocument ? pendingMarkdown : currentText;
-      pendingMarkdown = null;
-      if (typeof activeAdapter !== 'undefined' && activeAdapter) {
-        activeAdapter.setMarkdown(textToSet);
-      } else if (typeof editorInstance !== 'undefined' && editorInstance) {
-        editorInstance.setData(textToSet);
-      }
-      if (!hasPendingDocument && currentState) {
-        window.editorBridge.setSelectionState(currentState, 0);
-      }
-      if (hasPendingDocument && window.AndroidNative?.restoreNativeCursorAndScrollState) {
-        window.AndroidNative.restoreNativeCursorAndScrollState();
-      }
-      setTimeout(() => { isProgrammaticChange = false; }, 50);
-    }).finally(() => {
-      pluginConfigurationTask = null;
-    });
-    return pluginConfigurationTask;
+  configurePlugins: function() {
+    return Promise.resolve();
   }
 };
 
@@ -2024,7 +1531,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (window.AndroidNative && typeof window.AndroidNative.onHostReady === 'function') {
     window.AndroidNative.onHostReady();
   } else {
-    setEditorMode('rich_text', []);
+    setEditorMode('wysiwyg');
   }
 });
 

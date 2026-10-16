@@ -63,10 +63,10 @@
         <com.ckeditor.markdownapp.ResetListPreference
             app:key="pref_editor_mode"
             app:title="Document Editor Mode"
-            app:summary="Select Rich text (CKEditor) or Large-file source (CodeMirror raw Markdown)"
+            app:summary="Select Pure WYSIWYG, Obsidian Live Preview, or Raw Source View"
             app:entries="@array/pref_editor_mode_entries"
             app:entryValues="@array/pref_editor_mode_values"
-            app:defaultValue="rich_text" />
+            app:defaultValue="wysiwyg" />
         <com.ckeditor.markdownapp.ResetPreference
             app:key="pref_page_diagnostics"
             app:title="Diagnostic report"
