@@ -26139,7 +26139,7 @@
                 builder.push(Decoration.replace({}).range(node.from, end));
               }
             }
-            if (node.name === "TaskMarker" || node.name === "Task") {
+            if (node.name === "TaskMarker") {
               const taskText = view.state.doc.sliceString(node.from, node.to);
               const isChecked = taskText.includes("[x]") || taskText.includes("[X]");
               if (!isNodeActive && node.to - node.from >= 3) {
@@ -26222,11 +26222,31 @@
   function cmWrapSelection(view, before, after = before) {
     if (!view) return;
     const sel = view.state.selection.main;
-    const selectedText = view.state.doc.sliceString(sel.from, sel.to);
-    const replacement = before + (selectedText || "") + after;
+    let selectedText = view.state.doc.sliceString(sel.from, sel.to);
+    if (selectedText.startsWith(before) && selectedText.endsWith(after) && selectedText.length >= before.length + after.length) {
+      const unwrapped = selectedText.slice(before.length, selectedText.length - after.length);
+      view.dispatch({
+        changes: { from: sel.from, to: sel.to, insert: unwrapped },
+        selection: { anchor: sel.from, head: sel.from + unwrapped.length }
+      });
+      view.focus();
+      return;
+    }
+    let startOffset = 0;
+    let endOffset = 0;
+    while (startOffset < selectedText.length && /\s/.test(selectedText[startOffset])) {
+      startOffset++;
+    }
+    while (endOffset < selectedText.length - startOffset && /\s/.test(selectedText[selectedText.length - 1 - endOffset])) {
+      endOffset++;
+    }
+    const coreText = selectedText.slice(startOffset, selectedText.length - endOffset);
+    const leadingWs = selectedText.slice(0, startOffset);
+    const trailingWs = selectedText.slice(selectedText.length - endOffset);
+    const replacement = leadingWs + before + coreText + after + trailingWs;
     view.dispatch({
       changes: { from: sel.from, to: sel.to, insert: replacement },
-      selection: { anchor: sel.from + before.length, head: sel.from + before.length + selectedText.length }
+      selection: { anchor: sel.from + startOffset + before.length, head: sel.from + startOffset + before.length + coreText.length }
     });
     view.focus();
   }
@@ -26566,12 +26586,7 @@
     if (tableBtn) {
       tableBtn.onclick = (e) => {
         e.stopPropagation();
-        togglePopupStrip("table", tableBtn, [
-          { icon: "2x2", title: "Insert 2x2 Table", action: () => insertCustomTable(2, 2) },
-          { icon: "3x3", title: "Insert 3x3 Table", action: () => insertCustomTable(3, 3) },
-          { icon: "4x4", title: "Insert 4x4 Table", action: () => insertCustomTable(4, 4) },
-          { icon: "5x5", title: "Insert 5x5 Table", action: () => insertCustomTable(5, 5) }
-        ]);
+        showTableGridPickerModal();
       };
     }
     const insertBtn = bar.querySelector("#grp-btn-insert");
@@ -26608,6 +26623,60 @@
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
       };
+    }
+  }
+  function showTableGridPickerModal() {
+    let modal = document.querySelector("#table-grid-modal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "table-grid-modal";
+      modal.style.cssText = "position: fixed; bottom: calc(var(--toolbar-height, 48px) + 12px); left: 50%; transform: translateX(-50%); background: #222428; border: 1px solid #444; border-radius: 12px; padding: 12px; z-index: 10008; box-shadow: 0 8px 24px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; gap: 8px;";
+      const label = document.createElement("div");
+      label.id = "table-grid-label";
+      label.style.cssText = "font-size: 13px; font-weight: bold; color: #ffffff;";
+      label.textContent = "1 x 1 Table";
+      modal.appendChild(label);
+      const grid = document.createElement("div");
+      grid.style.cssText = "display: grid; grid-template-columns: repeat(10, 18px); grid-template-rows: repeat(10, 18px); gap: 3px; cursor: pointer;";
+      for (let r = 1; r <= 10; r++) {
+        for (let c = 1; c <= 10; c++) {
+          const cell = document.createElement("div");
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.className = "grid-picker-cell";
+          cell.style.cssText = "width: 18px; height: 18px; border: 1px solid #555; background: #333; border-radius: 2px;";
+          cell.addEventListener("pointerenter", () => updateGridHighlight(r, c));
+          cell.addEventListener("click", () => {
+            insertCustomTable(r, c);
+            modal.remove();
+          });
+          grid.appendChild(cell);
+        }
+      }
+      modal.appendChild(grid);
+      document.body.appendChild(modal);
+      const closeHandler = (e) => {
+        if (!modal.contains(e.target) && !e.target.closest("#grp-btn-table")) {
+          modal.remove();
+          document.removeEventListener("pointerdown", closeHandler);
+        }
+      };
+      document.addEventListener("pointerdown", closeHandler);
+    }
+    function updateGridHighlight(maxR, maxC) {
+      const label = document.querySelector("#table-grid-label");
+      if (label) label.textContent = `${maxR} x ${maxC} Table`;
+      document.querySelectorAll(".grid-picker-cell").forEach((cell) => {
+        const r = parseInt(cell.dataset.row, 10);
+        const c = parseInt(cell.dataset.col, 10);
+        if (r <= maxR && c <= maxC) {
+          cell.style.background = "#0078d4";
+          cell.style.borderColor = "#0078d4";
+        } else {
+          cell.style.background = "#333";
+          cell.style.borderColor = "#555";
+        }
+      });
     }
   }
   function insertCustomTable(rows, cols) {
