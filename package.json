@@ -13,7 +13,7 @@
   },
   "engines": {
     "node": ">=24.11.0",
-    "pnpm": "^12.8.2",
+    "pnpm": "^11.8.0",
     "yarn": "\n\n┌─────────────────────────┐\n│  Hey, we use pnpm now!  │\n└─────────────────────────┘\n\n"
   },
   "keywords": [
@@ -132,5 +132,13 @@
   },
   "ck-lts-versions": [
     47
-  ]
+  ],
+  "dependencies": {
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.14",
+    "@tomaitken/ckeditor5-footnotes": "^0.0.4"
+  }
 }
