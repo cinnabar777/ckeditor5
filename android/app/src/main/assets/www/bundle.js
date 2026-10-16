@@ -26060,6 +26060,49 @@
       return img;
     }
   };
+  var GFMTableWidget = class extends WidgetType {
+    constructor(tableText) {
+      super();
+      this.tableText = tableText;
+    }
+    toDOM() {
+      const container = document.createElement("div");
+      container.className = "cm-gfm-table-container";
+      container.style.cssText = "overflow-x: auto; margin: 8px 0; border: 1px solid var(--table-border-color, var(--border-color, #444)); border-radius: 6px;";
+      const table = document.createElement("table");
+      table.style.cssText = "width: 100%; border-collapse: collapse; color: var(--text-color, #ffffff); font-size: var(--body-font-size, 16px);";
+      const lines = this.tableText.trim().split("\n").filter((l) => l.trim().length > 0);
+      if (lines.length > 0) {
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        const headerCells = lines[0].split("|").map((c) => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+        headerCells.forEach((cellText) => {
+          const th = document.createElement("th");
+          th.style.cssText = "border: 1px solid var(--table-border-color, var(--border-color, #444)); padding: 8px 12px; background-color: var(--table-header-bg, rgba(255,255,255,0.12)); font-weight: bold; text-align: left;";
+          th.textContent = cellText;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        const dataLines = lines.slice(1).filter((l) => !l.match(/^\|?\s*[-:]+[-|\s:]*$/));
+        dataLines.forEach((lineText) => {
+          const tr = document.createElement("tr");
+          const cells = lineText.split("|").map((c) => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+          cells.forEach((cellText) => {
+            const td = document.createElement("td");
+            td.style.cssText = "border: 1px solid var(--table-border-color, var(--border-color, #444)); padding: 8px 12px; text-align: left;";
+            td.textContent = cellText;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+      }
+      container.appendChild(table);
+      return container;
+    }
+  };
   var customHighlightStyle = HighlightStyle.define([
     { tag: tags.heading, color: "var(--heading-1-color, #ffffff)", fontWeight: "bold" },
     { tag: tags.emphasis, fontStyle: "italic", color: "var(--italic-color, inherit)" },
@@ -26105,7 +26148,7 @@
             }
             if (node.name === "HeaderMark" && !isNodeActive) {
               const end = Math.min(node.to + 1, line.to);
-              if (end > node.from) {
+              if (end > node.from && end <= line.to) {
                 builder.push(Decoration.replace({}).range(node.from, end));
               }
             }
@@ -26139,7 +26182,7 @@
                 builder.push(Decoration.replace({}).range(node.from, end));
               }
             }
-            if (node.name === "Task") {
+            if (node.name === "Task" || node.name === "TaskMarker") {
               const taskText = view.state.doc.sliceString(node.from, node.to);
               const isChecked = taskText.includes("[x]") || taskText.includes("[X]");
               if (!isNodeActive) {
@@ -26161,11 +26204,11 @@
                 builder.push(Decoration.widget({ widget: new CodeBlockHeaderWidget(lang, codeText), side: -1 }).range(line.from));
               }
             }
-            if (node.name === "TableHeader") {
-              builder.push(Decoration.mark({ class: "cm-table-header" }).range(node.from, node.to));
-            }
-            if (node.name === "Table" || node.name === "TableRow") {
-              builder.push(Decoration.line({ attributes: { class: "cm-table" } }).range(line.from));
+            if (node.name === "Table") {
+              if (!isNodeActive) {
+                const tableText = view.state.doc.sliceString(node.from, node.to);
+                builder.push(Decoration.replace({ widget: new GFMTableWidget(tableText) }).range(node.from, node.to));
+              }
             }
             if (node.name === "URL" || node.name === "Link") {
               builder.push(Decoration.mark({ class: "cm-link" }).range(node.from, node.to));
@@ -26289,10 +26332,17 @@
               color: "var(--text-color, #ffffff)"
             },
             ".cm-content": {
-              caretColor: "var(--text-color, #ffffff)",
+              caretColor: "var(--text-color, #ffffff) !important",
               fontFamily: 'var(--body-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif)',
               padding: "12px 16px",
-              lineHeight: "var(--paragraph-line-height, 1.6)"
+              lineHeight: "var(--paragraph-line-height, 1.6)",
+              color: "var(--text-color, #ffffff) !important"
+            },
+            ".cm-cursor, .cm-dropCursor": {
+              borderLeft: "2px solid var(--text-color, #ffffff) !important"
+            },
+            ".cm-line": {
+              color: "var(--text-color, #ffffff) !important"
             },
             "&.cm-focused": {
               outline: "none"
@@ -26306,6 +26356,10 @@
               } else if (window.AndroidNative && typeof window.AndroidNative.onContentChanged === "function") {
                 window.AndroidNative.onContentChanged(null, this.revision);
               }
+            }
+            if (update.selectionSet && !this.isProgrammatic && window.AndroidNative && typeof window.AndroidNative.onSelectionChanged === "function") {
+              const state = this.getSelectionState();
+              window.AndroidNative.onSelectionChanged(JSON.stringify(state));
             }
           }),
           keymap.of([
@@ -26329,7 +26383,8 @@
       const currentDoc = this.view.state.doc.toString();
       if (currentDoc !== text) {
         this.view.dispatch({
-          changes: { from: 0, to: currentDoc.length, insert: text || "" }
+          changes: { from: 0, to: currentDoc.length, insert: text || "" },
+          annotations: Transaction.addToHistory.of(false)
         });
       }
       this.revision = 0;
@@ -26350,12 +26405,16 @@
       if (!this.view) return;
       try {
         let sel = typeof stateJson === "string" ? JSON.parse(stateJson) : stateJson;
+        if (typeof sel === "string") {
+          sel = JSON.parse(sel);
+        }
         if (sel && typeof sel.head === "number") {
           const len = this.view.state.doc.length;
           const head = Math.min(Math.max(0, sel.head), len);
           const anchor = Math.min(Math.max(0, sel.anchor !== void 0 ? sel.anchor : sel.head), len);
           this.view.dispatch({
-            selection: { anchor, head }
+            selection: { anchor, head },
+            scrollIntoView: true
           });
         }
       } catch (e) {
@@ -26550,7 +26609,7 @@
       insertBtn.onclick = (e) => {
         e.stopPropagation();
         togglePopupStrip("insert", insertBtn, [
-          { icon: svgIcons.image, title: "Insert Image", action: () => window.editorBridge.insertImage("https://") },
+          { icon: svgIcons.image, title: "Insert Image", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("image") },
           { icon: svgIcons.link, title: "Insert Link", action: () => execCmd("link") },
           { icon: svgIcons.inlineCode, title: "Inline Code", action: () => execCmd("code") },
           { icon: svgIcons.blockQuote, title: "Insert Quote", action: () => execCmd("blockQuote") },
@@ -26906,13 +26965,36 @@
         tocContent.innerHTML = '<div style="padding:16px;color:#888;font-size:14px;">No headings in document.</div>';
         return;
       }
+      let currentActiveLine = 0;
+      if (activeAdapter && activeAdapter.view) {
+        const sel = activeAdapter.view.state.selection.main;
+        currentActiveLine = activeAdapter.view.state.doc.lineAt(sel.head).number - 1;
+      }
       items.forEach((item) => {
         const itemRow = document.createElement("div");
         itemRow.className = `toc-item level-${item.level}`;
         itemRow.dataset.level = item.level;
+        if (currentActiveLine >= item.lineIndex) {
+          document.querySelectorAll(".toc-item").forEach((r) => r.classList.remove("active-section"));
+          itemRow.classList.add("active-section");
+        }
+        const toggleSpan = document.createElement("span");
+        toggleSpan.className = "toc-toggle";
+        toggleSpan.textContent = "-";
+        toggleSpan.onclick = (e) => {
+          e.stopPropagation();
+          const isCollapsed = toggleSpan.textContent === "+";
+          toggleSpan.textContent = isCollapsed ? "-" : "+";
+          let sibling = itemRow.nextElementSibling;
+          while (sibling && parseInt(sibling.dataset.level, 10) > item.level) {
+            sibling.style.display = isCollapsed ? "flex" : "none";
+            sibling = sibling.nextElementSibling;
+          }
+        };
         const textSpan = document.createElement("span");
         textSpan.className = "toc-text";
         textSpan.textContent = item.title;
+        itemRow.appendChild(toggleSpan);
         itemRow.appendChild(textSpan);
         itemRow.onclick = () => {
           closeToc();
