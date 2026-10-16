@@ -314,11 +314,12 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
             }
           }
 
-          if (node.name === 'TaskMarker') {
+          if (node.name === 'TaskMarker' || node.name === 'Task') {
             const taskText = view.state.doc.sliceString(node.from, node.to);
             const isChecked = taskText.includes('[x]') || taskText.includes('[X]');
             if (!isNodeActive && (node.to - node.from >= 3)) {
-              builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, node.from) }).range(node.from, node.from + 3));
+              const replaceFrom = line.text.startsWith('- ') ? line.from : node.from;
+              builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, replaceFrom) }).range(replaceFrom, node.from + 3));
             }
           }
 
@@ -335,7 +336,11 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
               const firstLineText = line.text;
               const langMatch = firstLineText.match(/^```(\w+)/);
               const lang = langMatch ? langMatch[1] : 'Plain text';
-              builder.push(Decoration.widget({ widget: new CodeBlockHeaderWidget(lang, codeText), side: -1 }).range(line.from));
+              if (!isNodeActive) {
+                builder.push(Decoration.replace({ widget: new CodeBlockHeaderWidget(lang, codeText) }).range(line.from, line.to));
+              } else {
+                builder.push(Decoration.widget({ widget: new CodeBlockHeaderWidget(lang, codeText), side: -1 }).range(line.from));
+              }
             }
           }
 
@@ -781,7 +786,10 @@ function setupGroupedControlBar() {
     tableBtn.onclick = (e) => {
       e.stopPropagation();
       togglePopupStrip('table', tableBtn, [
-        { icon: svgIcons.insertTable, title: 'Insert Table', action: () => execCmd('insertTable') }
+        { icon: '2x2', title: 'Insert 2x2 Table', action: () => insertCustomTable(2, 2) },
+        { icon: '3x3', title: 'Insert 3x3 Table', action: () => insertCustomTable(3, 3) },
+        { icon: '4x4', title: 'Insert 4x4 Table', action: () => insertCustomTable(4, 4) },
+        { icon: '5x5', title: 'Insert 5x5 Table', action: () => insertCustomTable(5, 5) }
       ]);
     };
   }
@@ -819,6 +827,27 @@ function setupGroupedControlBar() {
       ]);
     };
   }
+}
+
+function insertCustomTable(rows, cols) {
+  if (!activeAdapter || !activeAdapter.view) return;
+  const view = activeAdapter.view;
+  let headers = '|';
+  let dividers = '|';
+  for (let c = 1; c <= cols; c++) {
+    headers += ` Header ${c} |`;
+    dividers += ' --- |';
+  }
+  let tableMarkdown = `\n${headers}\n${dividers}\n`;
+  for (let r = 1; r <= rows; r++) {
+    let rowStr = '|';
+    for (let c = 1; c <= cols; c++) {
+      rowStr += ` Cell ${r}-${c} |`;
+    }
+    tableMarkdown += `${rowStr}\n`;
+  }
+  cmWrapSelection(view, tableMarkdown, '');
+  hidePopupStrip();
 }
 
 function execCmd(cmdName, options) {
