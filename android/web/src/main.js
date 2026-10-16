@@ -5,6 +5,7 @@ import { markdown as cmMarkdown } from '@codemirror/lang-markdown';
 import { syntaxHighlighting, syntaxTree, HighlightStyle } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
 import { GFM, Table as GFMTable, Strikethrough as GFMStrikethrough, TaskList as GFMTaskList } from '@lezer/markdown';
+import { search, SearchQuery, setSearchQuery, findNext, findPrevious, replaceNext, replaceAll, highlightSelectionMatches } from '@codemirror/search';
 
 let activeAdapter = null;
 let currentEditorMode = 'wysiwyg'; // 'wysiwyg' | 'live_preview' | 'source'
@@ -345,11 +346,19 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
           }
 
           if (node.name === 'Table') {
-            builder.push(Decoration.line({ attributes: { class: 'cm-table' } }).range(line.from));
-          }
+            const tableText = view.state.doc.sliceString(node.from, node.to);
+            const startLine = view.state.doc.lineAt(node.from);
+            const endLine = view.state.doc.lineAt(node.to);
 
-          if (node.name === 'TableHeader') {
-            builder.push(Decoration.mark({ class: 'cm-table-header' }).range(node.from, node.to));
+            for (let l = startLine.number; l <= endLine.number; l++) {
+              const lineObj = view.state.doc.line(l);
+              if (l === startLine.number) {
+                builder.push(Decoration.replace({ widget: new GFMTableWidget(tableText, node.from, node.to) }).range(lineObj.from, lineObj.to));
+              } else {
+                builder.push(Decoration.replace({}).range(lineObj.from, lineObj.to));
+              }
+            }
+            return false;
           }
 
           if (node.name === 'URL' || node.name === 'Link') {
@@ -498,6 +507,8 @@ class CodeMirrorAdapter {
         rectangularSelection(),
         crosshairCursor(),
         highlightActiveLine(),
+        search({ top: true }),
+        highlightSelectionMatches(),
         cmMarkdown({ extensions: [GFM, GFMTable, GFMStrikethrough, GFMTaskList] }),
         syntaxHighlighting(customHighlightStyle),
         livePreviewPlugin,
@@ -1009,6 +1020,36 @@ function togglePopupStrip(groupKey, targetBtn, items) {
   strip.classList.remove('hidden');
 }
 
+function addLongPressToast(element, toastMessage) {
+  if (!element || !toastMessage) return;
+  let timer = null;
+
+  const startPress = () => {
+    timer = setTimeout(() => {
+      if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+        window.AndroidNative.showToast(toastMessage);
+      }
+    }, 450);
+  };
+
+  const clearTimer = () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+
+  element.addEventListener('pointerdown', startPress);
+  element.addEventListener('pointerup', clearTimer);
+  element.addEventListener('pointercancel', clearTimer);
+  element.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+      window.AndroidNative.showToast(toastMessage);
+    }
+  });
+}
+
 function initCustomSearchBar() {
   const container = document.querySelector('#custom-search-bar');
   if (!container) return;
@@ -1016,12 +1057,15 @@ function initCustomSearchBar() {
   const searchInput = container.querySelector('#search-input');
   const replaceInput = container.querySelector('#replace-input');
   const counter = container.querySelector('#search-counter');
+  const btnPrev = container.querySelector('#search-btn-prev');
+  const btnNext = container.querySelector('#search-btn-next');
   const btnClose = container.querySelector('#search-btn-close');
   const btnReplaceOne = container.querySelector('#search-btn-replace-one');
   const btnReplaceAll = container.querySelector('#search-btn-replace-all');
   const btnCase = container.querySelector('#search-btn-case');
   const btnWord = container.querySelector('#search-btn-word');
   const btnRegex = container.querySelector('#search-btn-regex');
+  const btnHighlight = container.querySelector('#search-btn-highlight');
 
   let searchState = {
     matchCase: false,
@@ -1029,75 +1073,114 @@ function initCustomSearchBar() {
     useRegex: false
   };
 
-  const executeSearch = () => {
-    if (!activeAdapter) return;
-    const query = searchInput.value || '';
-    if (!query) {
+  const updateSearchQuery = () => {
+    if (!activeAdapter || !activeAdapter.view) return;
+    const view = activeAdapter.view;
+    const queryStr = searchInput.value || '';
+    const repStr = replaceInput.value || '';
+
+    if (!queryStr) {
       counter.textContent = '';
+      view.dispatch({ effects: setSearchQuery.of(new SearchQuery({ search: '' })) });
       return;
     }
 
-    const text = activeAdapter.getMarkdown();
     try {
-      const flags = searchState.matchCase ? 'g' : 'gi';
-      const searchPattern = searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const reg = new RegExp(searchPattern, flags);
-      const matches = [...text.matchAll(reg)];
-      counter.textContent = matches.length > 0 ? `1/${matches.length}` : '0/0';
+      const sq = new SearchQuery({
+        search: queryStr,
+        caseSensitive: searchState.matchCase,
+        regexp: searchState.useRegex,
+        wholeWord: searchState.wholeWords,
+        replace: repStr
+      });
+
+      view.dispatch({ effects: setSearchQuery.of(sq) });
+
+      const queryObj = sq.create(view.state);
+      let cursor = queryObj.cursor(view.state.doc);
+      let total = 0;
+      let currentIdx = 0;
+      const head = view.state.selection.main.head;
+
+      while (!cursor.next().done) {
+        total++;
+        if (cursor.value.from <= head && head <= cursor.value.to) {
+          currentIdx = total;
+        }
+      }
+      if (total > 0 && currentIdx === 0) currentIdx = 1;
+      counter.textContent = total > 0 ? `${currentIdx}/${total}` : '0/0';
     } catch (e) {
       counter.textContent = '0/0';
     }
   };
 
-  searchInput.addEventListener('input', executeSearch);
+  searchInput.addEventListener('input', updateSearchQuery);
+  replaceInput.addEventListener('input', updateSearchQuery);
 
   btnCase.onclick = () => {
     searchState.matchCase = !searchState.matchCase;
     btnCase.classList.toggle('active', searchState.matchCase);
-    executeSearch();
+    updateSearchQuery();
   };
 
   btnWord.onclick = () => {
     searchState.wholeWords = !searchState.wholeWords;
     btnWord.classList.toggle('active', searchState.wholeWords);
-    executeSearch();
+    updateSearchQuery();
   };
 
   btnRegex.onclick = () => {
     searchState.useRegex = !searchState.useRegex;
     btnRegex.classList.toggle('active', searchState.useRegex);
-    executeSearch();
+    updateSearchQuery();
   };
+
+  if (btnPrev) {
+    btnPrev.onclick = () => {
+      if (activeAdapter && activeAdapter.view) {
+        findPrevious(activeAdapter.view);
+        updateSearchQuery();
+      }
+    };
+  }
+
+  if (btnNext) {
+    btnNext.onclick = () => {
+      if (activeAdapter && activeAdapter.view) {
+        findNext(activeAdapter.view);
+        updateSearchQuery();
+      }
+    };
+  }
 
   btnClose.onclick = () => {
     toggleFindAndReplaceBar(false);
   };
 
   btnReplaceOne.onclick = () => {
-    const query = searchInput.value || '';
-    const rep = replaceInput.value || '';
-    if (query && activeAdapter) {
-      const current = activeAdapter.getMarkdown();
-      const flags = searchState.matchCase ? '' : 'i';
-      const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
-      const nextText = current.replace(reg, rep);
-      activeAdapter.setMarkdown(nextText);
-      executeSearch();
+    if (activeAdapter && activeAdapter.view) {
+      replaceNext(activeAdapter.view);
+      updateSearchQuery();
     }
   };
 
   btnReplaceAll.onclick = () => {
-    const query = searchInput.value || '';
-    const rep = replaceInput.value || '';
-    if (query && activeAdapter) {
-      const current = activeAdapter.getMarkdown();
-      const flags = searchState.matchCase ? 'g' : 'gi';
-      const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
-      const nextText = current.replaceAll(reg, rep);
-      activeAdapter.setMarkdown(nextText);
-      executeSearch();
+    if (activeAdapter && activeAdapter.view) {
+      replaceAll(activeAdapter.view);
+      updateSearchQuery();
     }
   };
+
+  addLongPressToast(btnPrev, 'Find Previous');
+  addLongPressToast(btnNext, 'Find Next');
+  addLongPressToast(btnHighlight, 'Highlight All Instances');
+  addLongPressToast(btnRegex, 'Regular Expression');
+  addLongPressToast(btnClose, 'Close Find & Replace');
+  addLongPressToast(btnReplaceOne, 'Replace One');
+  addLongPressToast(btnReplaceAll, 'Replace All');
+  addLongPressToast(btnCase, 'Match Case');
+  addLongPressToast(btnWord, 'Match Whole Word');
 }
 
 function toggleFindAndReplaceBar(forceState) {

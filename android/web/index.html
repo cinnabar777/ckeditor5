@@ -1244,11 +1244,51 @@
       border-bottom: var(--hr-thickness, 2px) var(--hr-style, solid) var(--hr-color, #444444) !important;
     }
     .cm-todo-checkbox {
-      accent-color: var(--todo-checked-color, #00e5ff) !important;
-      margin-right: 6px !important;
-      transform: scale(1.1) !important;
-      vertical-align: middle !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      width: 16px !important;
+      height: 16px !important;
+      border: 1.5px solid #666666 !important;
+      border-radius: 3px !important;
+      background-color: #222222 !important;
       cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin-right: 6px !important;
+      position: relative !important;
+      vertical-align: text-bottom !important;
+      box-sizing: border-box !important;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .cm-todo-checkbox:checked {
+      background-color: #333333 !important;
+      border-color: #888888 !important;
+    }
+
+    .cm-todo-checkbox:checked::after {
+      content: '' !important;
+      width: 4px !important;
+      height: 8px !important;
+      border: solid #ffffff !important;
+      border-width: 0 2px 2px 0 !important;
+      transform: rotate(45deg) translate(-1px, -1px) !important;
+      display: block !important;
+    }
+
+    body.light-theme .cm-todo-checkbox {
+      background-color: #ffffff !important;
+      border-color: #999999 !important;
+    }
+
+    body.light-theme .cm-todo-checkbox:checked {
+      background-color: #e0e0e0 !important;
+      border-color: #555555 !important;
+    }
+
+    body.light-theme .cm-todo-checkbox:checked::after {
+      border-color: #111111 !important;
     }
     .cm-highlight {
       background-color: #ffe066 !important;
@@ -1263,6 +1303,9 @@
     }
     .cm-underline {
       text-decoration: underline !important;
+    }
+    .cm-syntax-hidden {
+      display: none !important;
     }
     .cm-callout {
       border-left: var(--callout-border-width, 4px) solid var(--callout-border-color, #29b6f6) !important;
