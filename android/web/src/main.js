@@ -179,6 +179,42 @@ class CheckboxWidget extends WidgetType {
   }
 }
 
+class CodeBlockHeaderWidget extends WidgetType {
+  constructor(lang, codeText) {
+    super();
+    this.lang = lang || 'Plain text';
+    this.codeText = codeText;
+  }
+
+  toDOM() {
+    const header = document.createElement('div');
+    header.className = 'cm-codeblock-header';
+    header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 4px 4px 0 0; font-size: 12px; font-weight: bold; font-family: monospace; color: var(--code-block-lang-label-color, #ffffff); user-select: none; border-bottom: 1px solid rgba(255,255,255,0.2);';
+
+    const langSpan = document.createElement('span');
+    langSpan.textContent = this.lang;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'cm-codeblock-copy-btn';
+    copyBtn.textContent = 'COPY';
+    copyBtn.style.cssText = 'background: transparent; border: 1px solid rgba(255,255,255,0.35); color: inherit; border-radius: 3px; padding: 2px 8px; font-size: 11px; cursor: pointer; font-weight: bold;';
+    copyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(this.codeText).catch(() => {});
+      }
+      if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+        window.AndroidNative.showToast('Code block copied to clipboard');
+      }
+    });
+
+    header.appendChild(langSpan);
+    header.appendChild(copyBtn);
+    return header;
+  }
+}
+
 const customHighlightStyle = HighlightStyle.define([
   { tag: tags.heading, color: 'var(--heading-1-color, #ffffff)', fontWeight: 'bold' },
   { tag: tags.emphasis, fontStyle: 'italic', color: 'var(--italic-color, inherit)' },
@@ -280,6 +316,24 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
             if (!isNodeActive) {
               builder.push(Decoration.replace({}).range(node.from, node.to));
             }
+          }
+
+          if (node.name === 'FencedCode' || node.name === 'CodeBlock') {
+            if (line.from === node.from) {
+              const codeText = view.state.doc.sliceString(node.from, node.to);
+              const firstLineText = line.text;
+              const langMatch = firstLineText.match(/^```(\w+)/);
+              const lang = langMatch ? langMatch[1] : 'Plain text';
+              builder.push(Decoration.widget({ widget: new CodeBlockHeaderWidget(lang, codeText), side: -1 }).range(line.from));
+            }
+          }
+
+          if (node.name === 'TableHeader') {
+            builder.push(Decoration.mark({ class: 'cm-table-header' }).range(node.from, node.to));
+          }
+
+          if (node.name === 'Table' || node.name === 'TableRow') {
+            builder.push(Decoration.line({ attributes: { class: 'cm-table' } }).range(line.from));
           }
 
           if (node.name === 'URL' || node.name === 'Link') {
@@ -764,9 +818,6 @@ class CodeMirrorAdapter {
             padding: '12px 16px',
             lineHeight: 'var(--paragraph-line-height, 1.6)'
           },
-          '.cm-gutters': {
-            display: 'none !important'
-          },
           '&.cm-focused': {
             outline: 'none'
           }
@@ -861,10 +912,26 @@ class CodeMirrorAdapter {
   toggleLineNumbers() {
     if (!this.view) return false;
     this.showLineNumbers = !this.showLineNumbers;
+    const cmEl = this.view.dom;
+    if (cmEl) {
+      if (this.showLineNumbers) {
+        cmEl.classList.add('cm-show-line-numbers');
+      } else {
+        cmEl.classList.remove('cm-show-line-numbers');
+      }
+    }
     this.view.dispatch({
       effects: this.lineNumbersCompartment.reconfigure(this.showLineNumbers ? lineNumbers() : [])
     });
     return this.showLineNumbers;
+  }
+
+  toggleRawSourceView() {
+    this.isRawSourceView = !this.isRawSourceView;
+    if (this.view) {
+      this.view.dispatch({});
+    }
+    return this.isRawSourceView;
   }
 
   insertImage(imageUrl, altText = 'image') {
@@ -1125,6 +1192,11 @@ function execCmd(cmdName, options) {
       editorInstance.execute(cmdName, options);
     } catch (err) {
       console.error(`Command ${cmdName} failed:`, err);
+    }
+  } else if (activeAdapter && typeof activeAdapter.toggleRawSourceView === 'function') {
+    const isRaw = activeAdapter.toggleRawSourceView();
+    if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+      window.AndroidNative.showToast(isRaw ? 'Switched to Raw Source View' : 'Switched to Live Preview');
     }
   }
 }
@@ -1516,10 +1588,18 @@ function setupTocGestureAndPanel() {
 
 function openWithOtherEngine() {
   const altMode = currentEditorMode === 'rich_text' ? 'live_preview' : 'rich_text';
-  setEditorMode(altMode);
-  if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
-    window.AndroidNative.showToast(altMode === 'rich_text' ? 'Opened in Rich text (CKEditor)' : 'Opened in Live Preview (CodeMirror)');
-  }
+  let disabledPlugins = [];
+  try {
+    if (window._lastDisabledPluginsStr) {
+      disabledPlugins = JSON.parse(window._lastDisabledPluginsStr);
+    }
+  } catch (e) {}
+  setEditorMode(altMode, disabledPlugins).then(() => {
+    toggleBottomToolbar(true);
+    if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+      window.AndroidNative.showToast(altMode === 'rich_text' ? 'Opened in Rich text (CKEditor)' : 'Opened in Live Preview (CodeMirror)');
+    }
+  });
 }
 
 function toggleBottomToolbar(forceState) {
@@ -1586,7 +1666,7 @@ function setupKeyboardShortcuts() {
     const k = (e.key || '').toLowerCase();
     const c = (e.code || '').toLowerCase();
 
-    if (k === 'enter' || k === 'return' || k === 'space' || k === 'backspace' || k === 'delete') {
+    if (k === 'enter' || k === 'return' || c === 'enter' || c === 'numpadenter' || k === 'space' || k === 'backspace' || k === 'delete') {
       return;
     }
 

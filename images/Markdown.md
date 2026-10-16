@@ -363,7 +363,7 @@ Indent the line next line by one or more spaces before the identifier, the more 
 - [?] what's this, ? Used in brackets
 
 * [ ] Clean
-* [ ] COOK 
+* [ ] COOK
 
 ---
 
@@ -550,13 +550,13 @@ hashtag symbol (#) in the editor followed by a keyword. Can be used in the prope
 ---
 tag: meeting
 ---
-Or, add several tags:  
+Or, add several tags:
 ---
 tags:
   - recipe
   - cooking
 ---
-Or  
+Or
 ---
 tags: recipe, cooking
 ---
