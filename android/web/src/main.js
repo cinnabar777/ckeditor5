@@ -314,11 +314,11 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
             }
           }
 
-          if (node.name === 'Task' || node.name === 'TaskMarker') {
+          if (node.name === 'TaskMarker') {
             const taskText = view.state.doc.sliceString(node.from, node.to);
             const isChecked = taskText.includes('[x]') || taskText.includes('[X]');
-            if (!isNodeActive) {
-              builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, node.from) }).range(node.from, node.to));
+            if (!isNodeActive && (node.to - node.from >= 3)) {
+              builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, node.from) }).range(node.from, node.from + 3));
             }
           }
 
@@ -340,10 +340,11 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
           }
 
           if (node.name === 'Table') {
-            if (!isNodeActive) {
-              const tableText = view.state.doc.sliceString(node.from, node.to);
-              builder.push(Decoration.replace({ widget: new GFMTableWidget(tableText) }).range(node.from, node.to));
-            }
+            builder.push(Decoration.line({ attributes: { class: 'cm-table' } }).range(line.from));
+          }
+
+          if (node.name === 'TableHeader') {
+            builder.push(Decoration.mark({ class: 'cm-table-header' }).range(node.from, node.to));
           }
 
           if (node.name === 'URL' || node.name === 'Link') {
@@ -390,8 +391,10 @@ function cmToggleLinePrefix(view, prefix) {
     });
   } else {
     const cleanText = lineText.replace(/^(#{1,6}\s+|- \[\s?[xX]?\]\s+|- |\d+\.\s+|> )/, '');
+    const newText = prefix + cleanText;
     view.dispatch({
-      changes: { from: line.from, to: line.to, insert: prefix + cleanText }
+      changes: { from: line.from, to: line.to, insert: newText },
+      selection: { anchor: line.from + prefix.length, head: line.from + prefix.length }
     });
   }
   view.focus();
@@ -506,6 +509,9 @@ class CodeMirrorAdapter {
           if (update.selectionSet && !this.isProgrammatic && window.AndroidNative && typeof window.AndroidNative.onSelectionChanged === 'function') {
             const state = this.getSelectionState();
             window.AndroidNative.onSelectionChanged(JSON.stringify(state));
+          }
+          if ((update.selectionSet || update.docChanged) && typeof updateTocActiveSection === 'function') {
+            updateTocActiveSection();
           }
         }),
         keymap.of([
@@ -1094,6 +1100,30 @@ function setupFastScrollbar() {
   thumb.addEventListener('pointercancel', stopDrag);
 }
 
+function updateTocActiveSection() {
+  const tocContent = document.querySelector('#toc-content');
+  if (!tocContent || !activeAdapter || !activeAdapter.view) return;
+
+  const sel = activeAdapter.view.state.selection.main;
+  const currentLine = activeAdapter.view.state.doc.lineAt(sel.head).number - 1;
+
+  const rows = Array.from(tocContent.querySelectorAll('.toc-item'));
+  let activeRow = null;
+
+  rows.forEach(row => {
+    row.classList.remove('active-section');
+    const idx = parseInt(row.dataset.lineIndex, 10);
+    if (!isNaN(idx) && currentLine >= idx) {
+      activeRow = row;
+    }
+  });
+
+  if (activeRow) {
+    activeRow.classList.add('active-section');
+    activeRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
 function setupTocGestureAndPanel() {
   const panel = document.querySelector('#toc-panel');
   const overlay = document.querySelector('#toc-overlay');
@@ -1193,21 +1223,11 @@ function setupTocGestureAndPanel() {
       return;
     }
 
-    let currentActiveLine = 0;
-    if (activeAdapter && activeAdapter.view) {
-      const sel = activeAdapter.view.state.selection.main;
-      currentActiveLine = activeAdapter.view.state.doc.lineAt(sel.head).number - 1;
-    }
-
     items.forEach((item) => {
       const itemRow = document.createElement('div');
       itemRow.className = `toc-item level-${item.level}`;
       itemRow.dataset.level = item.level;
-
-      if (currentActiveLine >= item.lineIndex) {
-        document.querySelectorAll('.toc-item').forEach(r => r.classList.remove('active-section'));
-        itemRow.classList.add('active-section');
-      }
+      itemRow.dataset.lineIndex = item.lineIndex;
 
       const toggleSpan = document.createElement('span');
       toggleSpan.className = 'toc-toggle';
@@ -1245,6 +1265,8 @@ function setupTocGestureAndPanel() {
 
       tocContent.appendChild(itemRow);
     });
+
+    updateTocActiveSection();
   }
 }
 
