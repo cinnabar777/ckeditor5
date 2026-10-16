@@ -56,6 +56,18 @@
             app:title="Toggle Line Wrap Shortcut"
             app:summary="Key combination (e.g. ctrl+alt+w)"
             app:defaultValue="ctrl+alt+w" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_open_with"
+            app:title="Open with Alternate Engine Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+o)"
+            app:defaultValue="ctrl+shift+o" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_line_numbers"
+            app:title="Toggle Line Numbers Shortcut"
+            app:summary="Key combination (e.g. ctrl+alt+l)"
+            app:defaultValue="ctrl+alt+l" />
     </com.ckeditor.markdownapp.ResetPreferenceCategory>
 
     <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Formatting &amp; Tools)">

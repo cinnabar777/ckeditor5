@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private val openDocumentLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        uri?.let { openFile(it) }
+        uri?.let { openFile(it, forceReload = true) }
     }
 
     private val createDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { uri ->
@@ -567,14 +567,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    private fun openFile(uri: Uri, rememberHistory: Boolean = true) {
+    private fun openFile(uri: Uri, rememberHistory: Boolean = true, forceReload: Boolean = false) {
         if (!isEditorReady) {
             pendingOpenUri = uri
             return
         }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if (currentFileUri == uri) return
+        if (!forceReload && currentFileUri == uri && !isDirty) return
         if (WindowRegistry.focus(this, uri, excludeTask = taskId)) return
         if (rememberHistory && currentFileUri != null) {
             documentHistoryStack.push(currentFileUri)

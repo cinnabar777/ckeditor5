@@ -49,7 +49,7 @@ import {
 import { Footnotes } from '@tomaitken/ckeditor5-footnotes';
 
 import { EditorState, Compartment } from '@codemirror/state';
-import { EditorView, keymap, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine, Decoration, ViewPlugin, WidgetType } from '@codemirror/view';
+import { EditorView, keymap, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine, Decoration, ViewPlugin, WidgetType, lineNumbers } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap, undo as cmUndo, redo as cmRedo } from '@codemirror/commands';
 import { markdown as cmMarkdown } from '@codemirror/lang-markdown';
 import { defaultHighlightStyle, syntaxHighlighting, syntaxTree, HighlightStyle } from '@codemirror/language';
@@ -83,6 +83,8 @@ let customHotkeys = {
   settings: 'ctrl+,',
   toggle_toolbar: 'ctrl+t',
   line_wrap: 'ctrl+alt+w',
+  open_with: 'ctrl+shift+o',
+  line_numbers: 'ctrl+alt+l',
   bold: 'ctrl+b',
   italic: 'ctrl+i',
   underline: 'ctrl+u',
@@ -215,14 +217,15 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
         to,
         enter: (node) => {
           const line = view.state.doc.lineAt(node.from);
-          const isLineActive = (activeLine === line.number);
+          const cursor = selection.head;
+          const isNodeActive = (cursor >= node.from && cursor <= node.to);
 
           if (node.name.startsWith('ATXHeading')) {
             const level = node.name.replace('ATXHeading', '');
             builder.push(Decoration.line({ attributes: { class: `cm-heading cm-heading-${level}` } }).range(line.from));
           }
 
-          if (node.name === 'HeaderMark' && !isLineActive) {
+          if (node.name === 'HeaderMark' && !isNodeActive) {
             const end = Math.min(node.to + 1, line.to);
             if (end > node.from) {
               builder.push(Decoration.replace({}).range(node.from, end));
@@ -232,7 +235,7 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
           if (node.name === 'StrongEmphasis') {
             builder.push(Decoration.mark({ class: 'cm-bold' }).range(node.from, node.to));
           }
-          if (node.name === 'EmphasisMark' && !isLineActive) {
+          if (node.name === 'EmphasisMark' && !isNodeActive) {
             builder.push(Decoration.replace({}).range(node.from, node.to));
           }
 
@@ -243,21 +246,21 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
           if (node.name === 'Strikethrough') {
             builder.push(Decoration.mark({ class: 'cm-strikethrough' }).range(node.from, node.to));
           }
-          if (node.name === 'StrikethroughMark' && !isLineActive) {
+          if (node.name === 'StrikethroughMark' && !isNodeActive) {
             builder.push(Decoration.replace({}).range(node.from, node.to));
           }
 
           if (node.name === 'InlineCode') {
             builder.push(Decoration.mark({ class: 'cm-inline-code' }).range(node.from, node.to));
           }
-          if (node.name === 'CodeMark' && !isLineActive) {
+          if (node.name === 'CodeMark' && !isNodeActive) {
             builder.push(Decoration.replace({}).range(node.from, node.to));
           }
 
           if (node.name === 'Blockquote') {
             builder.push(Decoration.line({ attributes: { class: 'cm-blockquote' } }).range(line.from));
           }
-          if (node.name === 'QuoteMark' && !isLineActive) {
+          if (node.name === 'QuoteMark' && !isNodeActive) {
             const end = Math.min(node.to + 1, line.to);
             if (end > node.from) {
               builder.push(Decoration.replace({}).range(node.from, end));
@@ -267,13 +270,16 @@ const livePreviewPlugin = ViewPlugin.fromClass(class {
           if (node.name === 'Task') {
             const taskText = view.state.doc.sliceString(node.from, node.to);
             const isChecked = taskText.includes('[x]') || taskText.includes('[X]');
-            if (!isLineActive) {
+            if (!isNodeActive) {
               builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, node.from) }).range(node.from, node.to));
             }
           }
 
           if (node.name === 'HorizontalRule') {
             builder.push(Decoration.line({ attributes: { class: 'cm-hr' } }).range(line.from));
+            if (!isNodeActive) {
+              builder.push(Decoration.replace({}).range(node.from, node.to));
+            }
           }
 
           if (node.name === 'URL' || node.name === 'Link') {
@@ -320,11 +326,42 @@ function cmWrapSelection(view, before, after = before) {
   if (!view) return;
   const sel = view.state.selection.main;
   const selectedText = view.state.doc.sliceString(sel.from, sel.to);
-  const replacement = before + (selectedText || 'text') + after;
+  const replacement = before + (selectedText || '') + after;
   view.dispatch({
     changes: { from: sel.from, to: sel.to, insert: replacement },
-    selection: { anchor: sel.from + before.length, head: sel.from + before.length + (selectedText.length || 4) }
+    selection: { anchor: sel.from + before.length, head: sel.from + before.length + selectedText.length }
   });
+  view.focus();
+}
+
+function cmIndentSelection(view, spaces = '  ') {
+  if (!view) return;
+  const sel = view.state.selection.main;
+  const startLine = view.state.doc.lineAt(sel.from).number;
+  const endLine = view.state.doc.lineAt(sel.to).number;
+  const changes = [];
+  for (let i = startLine; i <= endLine; i++) {
+    const l = view.state.doc.line(i);
+    changes.push({ from: l.from, to: l.from, insert: spaces });
+  }
+  view.dispatch({ changes });
+}
+
+function cmOutdentSelection(view, spaces = '  ') {
+  if (!view) return;
+  const sel = view.state.selection.main;
+  const startLine = view.state.doc.lineAt(sel.from).number;
+  const endLine = view.state.doc.lineAt(sel.to).number;
+  const changes = [];
+  for (let i = startLine; i <= endLine; i++) {
+    const l = view.state.doc.line(i);
+    if (l.text.startsWith(spaces)) {
+      changes.push({ from: l.from, to: l.from + spaces.length, insert: '' });
+    }
+  }
+  if (changes.length > 0) {
+    view.dispatch({ changes });
+  }
 }
 
 function setupMarkdownFootnotesProcessor(editor) {
@@ -690,6 +727,8 @@ class CodeMirrorAdapter {
     this.mode = 'source';
     this.view = null;
     this.lineWrapCompartment = new Compartment();
+    this.lineNumbersCompartment = new Compartment();
+    this.showLineNumbers = false;
     this.revision = 0;
     this.isProgrammatic = false;
   }
@@ -710,6 +749,7 @@ class CodeMirrorAdapter {
         syntaxHighlighting(customHighlightStyle),
         livePreviewPlugin,
         this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),
+        this.lineNumbersCompartment.of(this.showLineNumbers ? lineNumbers() : []),
         EditorView.theme({
           '&': {
             height: '100%',
@@ -816,6 +856,27 @@ class CodeMirrorAdapter {
     this.view.dispatch({
       effects: this.lineWrapCompartment.reconfigure(enabled ? EditorView.lineWrapping : [])
     });
+  }
+
+  toggleLineNumbers() {
+    if (!this.view) return false;
+    this.showLineNumbers = !this.showLineNumbers;
+    this.view.dispatch({
+      effects: this.lineNumbersCompartment.reconfigure(this.showLineNumbers ? lineNumbers() : [])
+    });
+    return this.showLineNumbers;
+  }
+
+  insertImage(imageUrl, altText = 'image') {
+    if (this.view) {
+      const imgMarkdown = `![${altText}](${imageUrl})`;
+      const sel = this.view.state.selection.main;
+      this.view.dispatch({
+        changes: { from: sel.from, to: sel.to, insert: imgMarkdown },
+        selection: { anchor: sel.from + imgMarkdown.length, head: sel.from + imgMarkdown.length }
+      });
+      this.view.focus();
+    }
   }
 
   destroy() {
@@ -938,7 +999,8 @@ function setupGroupedControlBar() {
         { title: 'Heading 4', icon: 'H4', action: () => execCmd('heading', { value: 'heading4' }) },
         { title: 'Heading 5', icon: 'H5', action: () => execCmd('heading', { value: 'heading5' }) },
         { title: 'Heading 6', icon: 'H6', action: () => execCmd('heading', { value: 'heading6' }) },
-        { icon: svgIcons.wrap, title: 'Toggle Line Wrap', action: () => window.editorBridge.toggleLineWrap() }
+        { icon: svgIcons.wrap, title: 'Toggle Line Wrap', action: () => window.editorBridge.toggleLineWrap() },
+        { icon: '#', title: 'Toggle Line Numbers', action: () => window.editorBridge.toggleLineNumbers() }
       ]);
     };
   }
@@ -1013,6 +1075,7 @@ function setupGroupedControlBar() {
         { icon: svgIcons.saveAsFile, title: 'Save As', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('save_as') },
         { icon: svgIcons.saveFile, title: 'Export HTML / MHTML', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('export') },
         { icon: svgIcons.search, title: 'Find & Replace', action: () => { hidePopupStrip(); toggleFindAndReplaceBar(); } },
+        { icon: svgIcons.newWindow, title: 'Open in Alternate Engine', action: () => openWithOtherEngine() },
         { icon: svgIcons.newWindow, title: 'New Window', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('new_window') },
         { icon: svgIcons.settings, title: 'Settings', action: () => window.AndroidNative && window.AndroidNative.onNativeAction('settings') }
       ]);
@@ -1033,6 +1096,8 @@ function execCmd(cmdName, options) {
     else if (cmdName === 'bulletedList') cmToggleLinePrefix(view, '- ');
     else if (cmdName === 'numberedList') cmToggleLinePrefix(view, '1. ');
     else if (cmdName === 'todoList') cmToggleLinePrefix(view, '- [ ] ');
+    else if (cmdName === 'indent') cmIndentSelection(view, '  ');
+    else if (cmdName === 'outdent') cmOutdentSelection(view, '  ');
     else if (cmdName === 'horizontalLine') cmWrapSelection(view, '\n---\n', '');
     else if (cmdName === 'InsertFootnote') cmWrapSelection(view, '[^1]', '\n[^1]: footnote text');
     else if (cmdName === 'link') cmWrapSelection(view, '[', '](https://)');
@@ -1449,6 +1514,14 @@ function setupTocGestureAndPanel() {
   }
 }
 
+function openWithOtherEngine() {
+  const altMode = currentEditorMode === 'rich_text' ? 'live_preview' : 'rich_text';
+  setEditorMode(altMode);
+  if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+    window.AndroidNative.showToast(altMode === 'rich_text' ? 'Opened in Rich text (CKEditor)' : 'Opened in Live Preview (CodeMirror)');
+  }
+}
+
 function toggleBottomToolbar(forceState) {
   const toggleBtn = document.querySelector('#floating-toggle-btn');
   const isCurrentlyHidden = document.body.classList.contains('toolbar-hidden');
@@ -1513,6 +1586,10 @@ function setupKeyboardShortcuts() {
     const k = (e.key || '').toLowerCase();
     const c = (e.code || '').toLowerCase();
 
+    if (k === 'enter' || k === 'return' || k === 'space' || k === 'backspace' || k === 'delete') {
+      return;
+    }
+
     if (k === 'undo' || k === 'redo' || c === 'undo' || c === 'redo' || (e.ctrlKey && (k === 'z' || k === 'y'))) {
       return;
     }
@@ -1544,10 +1621,50 @@ function setupKeyboardShortcuts() {
     } else if (parseAndMatchHotkey(e, customHotkeys.line_wrap)) {
       e.preventDefault();
       window.editorBridge.toggleLineWrap();
+    } else if (parseAndMatchHotkey(e, customHotkeys.open_with)) {
+      e.preventDefault();
+      openWithOtherEngine();
+    } else if (parseAndMatchHotkey(e, customHotkeys.line_numbers)) {
+      e.preventDefault();
+      window.editorBridge.toggleLineNumbers();
     } else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) {
       e.preventDefault();
       toggleFindAndReplaceBar();
     }
+
+    // Formatting shortcuts
+    else if (parseAndMatchHotkey(e, customHotkeys.bold)) { e.preventDefault(); execCmd('bold'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.italic)) { e.preventDefault(); execCmd('italic'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.underline)) { e.preventDefault(); execCmd('underline'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.strikethrough)) { e.preventDefault(); execCmd('strikethrough'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.code)) { e.preventDefault(); execCmd('code'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.link)) { e.preventDefault(); execCmd('link'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.blockQuote)) { e.preventDefault(); execCmd('blockQuote'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.codeBlock)) { e.preventDefault(); execCmd('codeBlock'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.bulletedList)) { e.preventDefault(); execCmd('bulletedList'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.numberedList)) { e.preventDefault(); execCmd('numberedList'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.todoList)) { e.preventDefault(); execCmd('todoList'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.indent)) { e.preventDefault(); execCmd('indent'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.outdent)) { e.preventDefault(); execCmd('outdent'); }
+    else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) { e.preventDefault(); execCmd('horizontalLine'); }
+
+    // Headings shortcuts
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_p)) { e.preventDefault(); execCmd('heading', { value: 'paragraph' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_1)) { e.preventDefault(); execCmd('heading', { value: 'heading1' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_2)) { e.preventDefault(); execCmd('heading', { value: 'heading2' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_3)) { e.preventDefault(); execCmd('heading', { value: 'heading3' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_4)) { e.preventDefault(); execCmd('heading', { value: 'heading4' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_5)) { e.preventDefault(); execCmd('heading', { value: 'heading5' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.heading_6)) { e.preventDefault(); execCmd('heading', { value: 'heading6' }); }
+
+    // Highlight Markers & Pens
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_yellow)) { e.preventDefault(); execCmd('highlight', { value: 'yellowMarker' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_green)) { e.preventDefault(); execCmd('highlight', { value: 'greenMarker' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_pink)) { e.preventDefault(); execCmd('highlight', { value: 'pinkMarker' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_blue)) { e.preventDefault(); execCmd('highlight', { value: 'blueMarker' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_red_pen) || parseAndMatchHotkey(e, customHotkeys.highlight_red)) { e.preventDefault(); execCmd('highlight', { value: 'redPen' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_green_pen)) { e.preventDefault(); execCmd('highlight', { value: 'greenPen' }); }
+    else if (parseAndMatchHotkey(e, customHotkeys.highlight_remove)) { e.preventDefault(); execCmd('highlight', { value: null }); }
   }, true);
 }
 
@@ -1656,6 +1773,14 @@ window.editorBridge = {
       activeAdapter.setLineWrap(isLineWrapEnabled);
     }
   },
+  toggleLineNumbers: function() {
+    if (activeAdapter && typeof activeAdapter.toggleLineNumbers === 'function') {
+      const state = activeAdapter.toggleLineNumbers();
+      if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
+        window.AndroidNative.showToast(state ? 'Line numbers enabled' : 'Line numbers disabled');
+      }
+    }
+  },
   setHotkeys: function(hotkeysJson) {
     if (!hotkeysJson) return;
     try {
@@ -1675,6 +1800,8 @@ window.editorBridge = {
   insertImage: function(imageUrl, altText = '') {
     if (activeAdapter && activeAdapter.mode === 'rich_text' && editorInstance) {
       editorInstance.execute('insertImage', { source: imageUrl, alt: altText });
+    } else if (activeAdapter && typeof activeAdapter.insertImage === 'function') {
+      activeAdapter.insertImage(imageUrl, altText);
     } else if (activeAdapter) {
       const imgMarkdown = `![${altText}](${imageUrl})`;
       const cur = activeAdapter.getMarkdown();

@@ -124526,6 +124526,420 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
   GutterMarker.prototype.mapMode = MapMode.TrackBefore;
   GutterMarker.prototype.startSide = GutterMarker.prototype.endSide = -1;
   GutterMarker.prototype.point = true;
+  var gutterLineClass = /* @__PURE__ */ Facet.define();
+  var gutterWidgetClass = /* @__PURE__ */ Facet.define();
+  var activeGutters = /* @__PURE__ */ Facet.define();
+  var unfixGutters = /* @__PURE__ */ Facet.define({
+    combine: (values2) => values2.some((x) => x)
+  });
+  function gutters(config) {
+    let result = [
+      gutterView
+    ];
+    if (config && config.fixed === false)
+      result.push(unfixGutters.of(true));
+    return result;
+  }
+  var gutterView = /* @__PURE__ */ ViewPlugin.fromClass(class {
+    constructor(view) {
+      this.view = view;
+      this.domAfter = null;
+      this.prevViewport = view.viewport;
+      this.dom = document.createElement("div");
+      this.dom.className = "cm-gutters cm-gutters-before";
+      this.dom.setAttribute("aria-hidden", "true");
+      this.dom.style.minHeight = this.view.contentHeight / this.view.scaleY + "px";
+      this.gutters = view.state.facet(activeGutters).map((conf) => new SingleGutterView(view, conf));
+      this.fixed = !view.state.facet(unfixGutters);
+      for (let gutter2 of this.gutters) {
+        if (gutter2.config.side == "after")
+          this.getDOMAfter().appendChild(gutter2.dom);
+        else
+          this.dom.appendChild(gutter2.dom);
+      }
+      if (this.fixed) {
+        this.dom.style.position = "sticky";
+      }
+      this.syncGutters(false);
+      view.scrollDOM.insertBefore(this.dom, view.contentDOM);
+    }
+    getDOMAfter() {
+      if (!this.domAfter) {
+        this.domAfter = document.createElement("div");
+        this.domAfter.className = "cm-gutters cm-gutters-after";
+        this.domAfter.setAttribute("aria-hidden", "true");
+        this.domAfter.style.minHeight = this.view.contentHeight / this.view.scaleY + "px";
+        this.domAfter.style.position = this.fixed ? "sticky" : "";
+        this.view.scrollDOM.appendChild(this.domAfter);
+      }
+      return this.domAfter;
+    }
+    update(update) {
+      if (this.updateGutters(update)) {
+        let vpA = this.prevViewport, vpB = update.view.viewport;
+        let vpOverlap = Math.min(vpA.to, vpB.to) - Math.max(vpA.from, vpB.from);
+        this.syncGutters(vpOverlap < (vpB.to - vpB.from) * 0.8);
+      }
+      if (update.geometryChanged) {
+        let min = this.view.contentHeight / this.view.scaleY + "px";
+        this.dom.style.minHeight = min;
+        if (this.domAfter)
+          this.domAfter.style.minHeight = min;
+      }
+      if (this.view.state.facet(unfixGutters) != !this.fixed) {
+        this.fixed = !this.fixed;
+        this.dom.style.position = this.fixed ? "sticky" : "";
+        if (this.domAfter)
+          this.domAfter.style.position = this.fixed ? "sticky" : "";
+      }
+      this.prevViewport = update.view.viewport;
+    }
+    syncGutters(detach) {
+      let after2 = this.dom.nextSibling;
+      if (detach) {
+        this.dom.remove();
+        if (this.domAfter)
+          this.domAfter.remove();
+      }
+      let lineClasses = RangeSet.iter(this.view.state.facet(gutterLineClass), this.view.viewport.from);
+      let classSet = [];
+      let contexts2 = this.gutters.map((gutter2) => new UpdateContext(gutter2, this.view.viewport, -this.view.documentPadding.top));
+      for (let line of this.view.viewportLineBlocks) {
+        if (classSet.length)
+          classSet = [];
+        if (Array.isArray(line.type)) {
+          let first2 = true;
+          for (let b of line.type) {
+            if (b.type == BlockType.Text && first2) {
+              advanceCursor(lineClasses, classSet, b.from);
+              for (let cx of contexts2)
+                cx.line(this.view, b, classSet);
+              first2 = false;
+            } else if (b.widget) {
+              for (let cx of contexts2)
+                cx.widget(this.view, b);
+            }
+          }
+        } else if (line.type == BlockType.Text) {
+          advanceCursor(lineClasses, classSet, line.from);
+          for (let cx of contexts2)
+            cx.line(this.view, line, classSet);
+        } else if (line.widget) {
+          for (let cx of contexts2)
+            cx.widget(this.view, line);
+        }
+      }
+      for (let cx of contexts2)
+        cx.finish();
+      if (detach) {
+        this.view.scrollDOM.insertBefore(this.dom, after2);
+        if (this.domAfter)
+          this.view.scrollDOM.appendChild(this.domAfter);
+      }
+    }
+    updateGutters(update) {
+      let prev = update.startState.facet(activeGutters), cur = update.state.facet(activeGutters);
+      let change = update.docChanged || update.heightChanged || update.viewportChanged || !RangeSet.eq(update.startState.facet(gutterLineClass), update.state.facet(gutterLineClass), update.view.viewport.from, update.view.viewport.to);
+      if (prev == cur) {
+        for (let gutter2 of this.gutters)
+          if (gutter2.update(update))
+            change = true;
+      } else {
+        change = true;
+        let gutters2 = [];
+        for (let conf of cur) {
+          let known = prev.indexOf(conf);
+          if (known < 0) {
+            gutters2.push(new SingleGutterView(this.view, conf));
+          } else {
+            this.gutters[known].update(update);
+            gutters2.push(this.gutters[known]);
+          }
+        }
+        for (let g of this.gutters) {
+          g.dom.remove();
+          if (gutters2.indexOf(g) < 0)
+            g.destroy();
+        }
+        for (let g of gutters2) {
+          if (g.config.side == "after")
+            this.getDOMAfter().appendChild(g.dom);
+          else
+            this.dom.appendChild(g.dom);
+        }
+        this.gutters = gutters2;
+      }
+      return change;
+    }
+    destroy() {
+      for (let view of this.gutters)
+        view.destroy();
+      this.dom.remove();
+      if (this.domAfter)
+        this.domAfter.remove();
+    }
+  }, {
+    provide: (plugin) => EditorView.scrollMargins.of((view) => {
+      let value = view.plugin(plugin);
+      if (!value || value.gutters.length == 0 || !value.fixed)
+        return null;
+      let before = value.dom.offsetWidth * view.scaleX, after2 = value.domAfter ? value.domAfter.offsetWidth * view.scaleX : 0;
+      return view.textDirection == Direction.LTR ? { left: before, right: after2 } : { right: before, left: after2 };
+    })
+  });
+  function asArray2(val) {
+    return Array.isArray(val) ? val : [val];
+  }
+  function advanceCursor(cursor, collect, pos) {
+    while (cursor.value && cursor.from <= pos) {
+      if (cursor.from == pos)
+        collect.push(cursor.value);
+      cursor.next();
+    }
+  }
+  var UpdateContext = class {
+    constructor(gutter2, viewport, height) {
+      this.gutter = gutter2;
+      this.height = height;
+      this.i = 0;
+      this.cursor = RangeSet.iter(gutter2.markers, viewport.from);
+    }
+    addElement(view, block, markers) {
+      let { gutter: gutter2 } = this, above = (block.top - this.height) / view.scaleY, height = block.height / view.scaleY;
+      if (this.i == gutter2.elements.length) {
+        let newElt = new GutterElement(view, height, above, markers);
+        gutter2.elements.push(newElt);
+        gutter2.dom.appendChild(newElt.dom);
+      } else {
+        gutter2.elements[this.i].update(view, height, above, markers);
+      }
+      this.height = block.bottom;
+      this.i++;
+    }
+    line(view, line, extraMarkers) {
+      let localMarkers = [];
+      advanceCursor(this.cursor, localMarkers, line.from);
+      if (extraMarkers.length)
+        localMarkers = localMarkers.concat(extraMarkers);
+      let forLine = this.gutter.config.lineMarker(view, line, localMarkers);
+      if (forLine)
+        localMarkers.unshift(forLine);
+      let gutter2 = this.gutter;
+      if (localMarkers.length == 0 && !gutter2.config.renderEmptyElements)
+        return;
+      this.addElement(view, line, localMarkers);
+    }
+    widget(view, block) {
+      let marker = this.gutter.config.widgetMarker(view, block.widget, block), markers = marker ? [marker] : null;
+      for (let cls of view.state.facet(gutterWidgetClass)) {
+        let marker2 = cls(view, block.widget, block);
+        if (marker2)
+          (markers || (markers = [])).push(marker2);
+      }
+      if (markers)
+        this.addElement(view, block, markers);
+    }
+    finish() {
+      let gutter2 = this.gutter;
+      while (gutter2.elements.length > this.i) {
+        let last2 = gutter2.elements.pop();
+        gutter2.dom.removeChild(last2.dom);
+        last2.destroy();
+      }
+    }
+  };
+  var SingleGutterView = class {
+    constructor(view, config) {
+      this.view = view;
+      this.config = config;
+      this.elements = [];
+      this.spacer = null;
+      this.dom = document.createElement("div");
+      this.dom.className = "cm-gutter" + (this.config.class ? " " + this.config.class : "");
+      for (let prop in config.domEventHandlers) {
+        this.dom.addEventListener(prop, (event) => {
+          let target = event.target, y;
+          if (target != this.dom && this.dom.contains(target)) {
+            while (target.parentNode != this.dom)
+              target = target.parentNode;
+            let rect = target.getBoundingClientRect();
+            y = (rect.top + rect.bottom) / 2;
+          } else {
+            y = event.clientY;
+          }
+          let line = view.lineBlockAtHeight(y - view.documentTop);
+          if (config.domEventHandlers[prop](view, line, event))
+            event.preventDefault();
+        });
+      }
+      this.markers = asArray2(config.markers(view));
+      if (config.initialSpacer) {
+        this.spacer = new GutterElement(view, 0, 0, [config.initialSpacer(view)]);
+        this.dom.appendChild(this.spacer.dom);
+        this.spacer.dom.style.cssText += "visibility: hidden; pointer-events: none";
+      }
+    }
+    update(update) {
+      let prevMarkers = this.markers;
+      this.markers = asArray2(this.config.markers(update.view));
+      if (this.spacer && this.config.updateSpacer) {
+        let updated = this.config.updateSpacer(this.spacer.markers[0], update);
+        if (updated != this.spacer.markers[0])
+          this.spacer.update(update.view, 0, 0, [updated]);
+      }
+      let vp = update.view.viewport;
+      return !RangeSet.eq(this.markers, prevMarkers, vp.from, vp.to) || (this.config.lineMarkerChange ? this.config.lineMarkerChange(update) : false);
+    }
+    destroy() {
+      for (let elt2 of this.elements)
+        elt2.destroy();
+    }
+  };
+  var GutterElement = class {
+    constructor(view, height, above, markers) {
+      this.height = -1;
+      this.above = 0;
+      this.markers = [];
+      this.dom = document.createElement("div");
+      this.dom.className = "cm-gutterElement";
+      this.update(view, height, above, markers);
+    }
+    update(view, height, above, markers) {
+      if (this.height != height) {
+        this.height = height;
+        this.dom.style.height = height + "px";
+      }
+      if (this.above != above)
+        this.dom.style.marginTop = (this.above = above) ? above + "px" : "";
+      if (!sameMarkers(this.markers, markers))
+        this.setMarkers(view, markers);
+    }
+    setMarkers(view, markers) {
+      let cls = "cm-gutterElement", domPos = this.dom.firstChild;
+      for (let iNew = 0, iOld = 0; ; ) {
+        let skipTo = iOld, marker = iNew < markers.length ? markers[iNew++] : null, matched = false;
+        if (marker) {
+          let c = marker.elementClass;
+          if (c)
+            cls += " " + c;
+          for (let i2 = iOld; i2 < this.markers.length; i2++)
+            if (this.markers[i2].compare(marker)) {
+              skipTo = i2;
+              matched = true;
+              break;
+            }
+        } else {
+          skipTo = this.markers.length;
+        }
+        while (iOld < skipTo) {
+          let next = this.markers[iOld++];
+          if (next.toDOM) {
+            next.destroy(domPos);
+            let after2 = domPos.nextSibling;
+            domPos.remove();
+            domPos = after2;
+          }
+        }
+        if (!marker)
+          break;
+        if (marker.toDOM) {
+          if (matched)
+            domPos = domPos.nextSibling;
+          else
+            this.dom.insertBefore(marker.toDOM(view), domPos);
+        }
+        if (matched)
+          iOld++;
+      }
+      this.dom.className = cls;
+      this.markers = markers;
+    }
+    destroy() {
+      this.setMarkers(null, []);
+    }
+  };
+  function sameMarkers(a2, b) {
+    if (a2.length != b.length)
+      return false;
+    for (let i2 = 0; i2 < a2.length; i2++)
+      if (!a2[i2].compare(b[i2]))
+        return false;
+    return true;
+  }
+  var lineNumberMarkers = /* @__PURE__ */ Facet.define();
+  var lineNumberWidgetMarker = /* @__PURE__ */ Facet.define();
+  var lineNumberConfig = /* @__PURE__ */ Facet.define({
+    combine(values2) {
+      return combineConfig(values2, { formatNumber: String, domEventHandlers: {} }, {
+        domEventHandlers(a2, b) {
+          let result = Object.assign({}, a2);
+          for (let event in b) {
+            let exists = result[event], add2 = b[event];
+            result[event] = exists ? (view, line, event2) => exists(view, line, event2) || add2(view, line, event2) : add2;
+          }
+          return result;
+        }
+      });
+    }
+  });
+  var NumberMarker = class extends GutterMarker {
+    constructor(number3) {
+      super();
+      this.number = number3;
+    }
+    eq(other) {
+      return this.number == other.number;
+    }
+    toDOM() {
+      return document.createTextNode(this.number);
+    }
+  };
+  function formatNumber(view, number3) {
+    return view.state.facet(lineNumberConfig).formatNumber(number3, view.state);
+  }
+  var lineNumberGutter = /* @__PURE__ */ activeGutters.compute([lineNumberConfig], (state) => ({
+    class: "cm-lineNumbers",
+    renderEmptyElements: false,
+    markers(view) {
+      return view.state.facet(lineNumberMarkers);
+    },
+    lineMarker(view, line, others) {
+      if (others.some((m) => m.toDOM))
+        return null;
+      return new NumberMarker(formatNumber(view, view.state.doc.lineAt(line.from).number));
+    },
+    widgetMarker: (view, widget, block) => {
+      for (let m of view.state.facet(lineNumberWidgetMarker)) {
+        let result = m(view, widget, block);
+        if (result)
+          return result;
+      }
+      return null;
+    },
+    lineMarkerChange: (update) => update.startState.facet(lineNumberConfig) != update.state.facet(lineNumberConfig),
+    initialSpacer(view) {
+      return new NumberMarker(formatNumber(view, maxLineNumber(view.state.doc.lines)));
+    },
+    updateSpacer(spacer, update) {
+      let max = formatNumber(update.view, maxLineNumber(update.view.state.doc.lines));
+      return max == spacer.number ? spacer : new NumberMarker(max);
+    },
+    domEventHandlers: state.facet(lineNumberConfig).domEventHandlers,
+    side: "before"
+  }));
+  function lineNumbers(config = {}) {
+    return [
+      lineNumberConfig.of(config),
+      gutters(),
+      lineNumberGutter
+    ];
+  }
+  function maxLineNumber(lines) {
+    let last2 = 9;
+    while (last2 < lines)
+      last2 = last2 * 10 + 9;
+    return last2;
+  }
 
   // ../node_modules/.pnpm/@lezer+common@1.5.3/node_modules/@lezer/common/dist/index.js
   var DefaultBufferLength = 1024;
@@ -137010,6 +137424,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     settings: "ctrl+,",
     toggle_toolbar: "ctrl+t",
     line_wrap: "ctrl+alt+w",
+    open_with: "ctrl+shift+o",
+    line_numbers: "ctrl+alt+l",
     bold: "ctrl+b",
     italic: "ctrl+i",
     underline: "ctrl+u",
@@ -137134,12 +137550,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           to,
           enter: (node2) => {
             const line = view.state.doc.lineAt(node2.from);
-            const isLineActive = activeLine === line.number;
+            const cursor = selection.head;
+            const isNodeActive = cursor >= node2.from && cursor <= node2.to;
             if (node2.name.startsWith("ATXHeading")) {
               const level = node2.name.replace("ATXHeading", "");
               builder.push(Decoration.line({ attributes: { class: `cm-heading cm-heading-${level}` } }).range(line.from));
             }
-            if (node2.name === "HeaderMark" && !isLineActive) {
+            if (node2.name === "HeaderMark" && !isNodeActive) {
               const end = Math.min(node2.to + 1, line.to);
               if (end > node2.from) {
                 builder.push(Decoration.replace({}).range(node2.from, end));
@@ -137148,7 +137565,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             if (node2.name === "StrongEmphasis") {
               builder.push(Decoration.mark({ class: "cm-bold" }).range(node2.from, node2.to));
             }
-            if (node2.name === "EmphasisMark" && !isLineActive) {
+            if (node2.name === "EmphasisMark" && !isNodeActive) {
               builder.push(Decoration.replace({}).range(node2.from, node2.to));
             }
             if (node2.name === "Emphasis") {
@@ -137157,19 +137574,19 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             if (node2.name === "Strikethrough") {
               builder.push(Decoration.mark({ class: "cm-strikethrough" }).range(node2.from, node2.to));
             }
-            if (node2.name === "StrikethroughMark" && !isLineActive) {
+            if (node2.name === "StrikethroughMark" && !isNodeActive) {
               builder.push(Decoration.replace({}).range(node2.from, node2.to));
             }
             if (node2.name === "InlineCode") {
               builder.push(Decoration.mark({ class: "cm-inline-code" }).range(node2.from, node2.to));
             }
-            if (node2.name === "CodeMark" && !isLineActive) {
+            if (node2.name === "CodeMark" && !isNodeActive) {
               builder.push(Decoration.replace({}).range(node2.from, node2.to));
             }
             if (node2.name === "Blockquote") {
               builder.push(Decoration.line({ attributes: { class: "cm-blockquote" } }).range(line.from));
             }
-            if (node2.name === "QuoteMark" && !isLineActive) {
+            if (node2.name === "QuoteMark" && !isNodeActive) {
               const end = Math.min(node2.to + 1, line.to);
               if (end > node2.from) {
                 builder.push(Decoration.replace({}).range(node2.from, end));
@@ -137178,12 +137595,15 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             if (node2.name === "Task") {
               const taskText = view.state.doc.sliceString(node2.from, node2.to);
               const isChecked = taskText.includes("[x]") || taskText.includes("[X]");
-              if (!isLineActive) {
+              if (!isNodeActive) {
                 builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, node2.from) }).range(node2.from, node2.to));
               }
             }
             if (node2.name === "HorizontalRule") {
               builder.push(Decoration.line({ attributes: { class: "cm-hr" } }).range(line.from));
+              if (!isNodeActive) {
+                builder.push(Decoration.replace({}).range(node2.from, node2.to));
+              }
             }
             if (node2.name === "URL" || node2.name === "Link") {
               builder.push(Decoration.mark({ class: "cm-link" }).range(node2.from, node2.to));
@@ -137224,11 +137644,40 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     if (!view) return;
     const sel = view.state.selection.main;
     const selectedText = view.state.doc.sliceString(sel.from, sel.to);
-    const replacement = before + (selectedText || "text") + after2;
+    const replacement = before + (selectedText || "") + after2;
     view.dispatch({
       changes: { from: sel.from, to: sel.to, insert: replacement },
-      selection: { anchor: sel.from + before.length, head: sel.from + before.length + (selectedText.length || 4) }
+      selection: { anchor: sel.from + before.length, head: sel.from + before.length + selectedText.length }
     });
+    view.focus();
+  }
+  function cmIndentSelection(view, spaces2 = "  ") {
+    if (!view) return;
+    const sel = view.state.selection.main;
+    const startLine = view.state.doc.lineAt(sel.from).number;
+    const endLine = view.state.doc.lineAt(sel.to).number;
+    const changes = [];
+    for (let i2 = startLine; i2 <= endLine; i2++) {
+      const l = view.state.doc.line(i2);
+      changes.push({ from: l.from, to: l.from, insert: spaces2 });
+    }
+    view.dispatch({ changes });
+  }
+  function cmOutdentSelection(view, spaces2 = "  ") {
+    if (!view) return;
+    const sel = view.state.selection.main;
+    const startLine = view.state.doc.lineAt(sel.from).number;
+    const endLine = view.state.doc.lineAt(sel.to).number;
+    const changes = [];
+    for (let i2 = startLine; i2 <= endLine; i2++) {
+      const l = view.state.doc.line(i2);
+      if (l.text.startsWith(spaces2)) {
+        changes.push({ from: l.from, to: l.from + spaces2.length, insert: "" });
+      }
+    }
+    if (changes.length > 0) {
+      view.dispatch({ changes });
+    }
   }
   function setupMarkdownFootnotesProcessor(editor) {
     if (!editor || !editor.data || !editor.data.processor) return;
@@ -137553,6 +138002,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       this.mode = "source";
       this.view = null;
       this.lineWrapCompartment = new Compartment();
+      this.lineNumbersCompartment = new Compartment();
+      this.showLineNumbers = false;
       this.revision = 0;
       this.isProgrammatic = false;
     }
@@ -137572,6 +138023,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           syntaxHighlighting(customHighlightStyle),
           livePreviewPlugin,
           this.lineWrapCompartment.of(isLineWrapEnabled ? EditorView.lineWrapping : []),
+          this.lineNumbersCompartment.of(this.showLineNumbers ? lineNumbers() : []),
           EditorView.theme({
             "&": {
               height: "100%",
@@ -137671,6 +138123,25 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       this.view.dispatch({
         effects: this.lineWrapCompartment.reconfigure(enabled ? EditorView.lineWrapping : [])
       });
+    }
+    toggleLineNumbers() {
+      if (!this.view) return false;
+      this.showLineNumbers = !this.showLineNumbers;
+      this.view.dispatch({
+        effects: this.lineNumbersCompartment.reconfigure(this.showLineNumbers ? lineNumbers() : [])
+      });
+      return this.showLineNumbers;
+    }
+    insertImage(imageUrl, altText = "image") {
+      if (this.view) {
+        const imgMarkdown = `![${altText}](${imageUrl})`;
+        const sel = this.view.state.selection.main;
+        this.view.dispatch({
+          changes: { from: sel.from, to: sel.to, insert: imgMarkdown },
+          selection: { anchor: sel.from + imgMarkdown.length, head: sel.from + imgMarkdown.length }
+        });
+        this.view.focus();
+      }
     }
     destroy() {
       if (this.view) {
@@ -137776,7 +138247,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
           { title: "Heading 4", icon: "H4", action: () => execCmd("heading", { value: "heading4" }) },
           { title: "Heading 5", icon: "H5", action: () => execCmd("heading", { value: "heading5" }) },
           { title: "Heading 6", icon: "H6", action: () => execCmd("heading", { value: "heading6" }) },
-          { icon: svgIcons.wrap, title: "Toggle Line Wrap", action: () => window.editorBridge.toggleLineWrap() }
+          { icon: svgIcons.wrap, title: "Toggle Line Wrap", action: () => window.editorBridge.toggleLineWrap() },
+          { icon: "#", title: "Toggle Line Numbers", action: () => window.editorBridge.toggleLineNumbers() }
         ]);
       };
     }
@@ -137849,6 +138321,7 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
             hidePopupStrip();
             toggleFindAndReplaceBar();
           } },
+          { icon: svgIcons.newWindow, title: "Open in Alternate Engine", action: () => openWithOtherEngine() },
           { icon: svgIcons.newWindow, title: "New Window", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("new_window") },
           { icon: svgIcons.settings, title: "Settings", action: () => window.AndroidNative && window.AndroidNative.onNativeAction("settings") }
         ]);
@@ -137868,6 +138341,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       else if (cmdName === "bulletedList") cmToggleLinePrefix(view, "- ");
       else if (cmdName === "numberedList") cmToggleLinePrefix(view, "1. ");
       else if (cmdName === "todoList") cmToggleLinePrefix(view, "- [ ] ");
+      else if (cmdName === "indent") cmIndentSelection(view, "  ");
+      else if (cmdName === "outdent") cmOutdentSelection(view, "  ");
       else if (cmdName === "horizontalLine") cmWrapSelection(view, "\n---\n", "");
       else if (cmdName === "InsertFootnote") cmWrapSelection(view, "[^1]", "\n[^1]: footnote text");
       else if (cmdName === "link") cmWrapSelection(view, "[", "](https://)");
@@ -138226,6 +138701,13 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       });
     }
   }
+  function openWithOtherEngine() {
+    const altMode = currentEditorMode === "rich_text" ? "live_preview" : "rich_text";
+    setEditorMode(altMode);
+    if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
+      window.AndroidNative.showToast(altMode === "rich_text" ? "Opened in Rich text (CKEditor)" : "Opened in Live Preview (CodeMirror)");
+    }
+  }
   function toggleBottomToolbar(forceState) {
     const toggleBtn = document.querySelector("#floating-toggle-btn");
     const isCurrentlyHidden = document.body.classList.contains("toolbar-hidden");
@@ -138278,6 +138760,9 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     window.addEventListener("keydown", (e) => {
       const k = (e.key || "").toLowerCase();
       const c = (e.code || "").toLowerCase();
+      if (k === "enter" || k === "return" || k === "space" || k === "backspace" || k === "delete") {
+        return;
+      }
       if (k === "undo" || k === "redo" || c === "undo" || c === "redo" || e.ctrlKey && (k === "z" || k === "y")) {
         return;
       }
@@ -138308,9 +138793,99 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
       } else if (parseAndMatchHotkey(e, customHotkeys.line_wrap)) {
         e.preventDefault();
         window.editorBridge.toggleLineWrap();
+      } else if (parseAndMatchHotkey(e, customHotkeys.open_with)) {
+        e.preventDefault();
+        openWithOtherEngine();
+      } else if (parseAndMatchHotkey(e, customHotkeys.line_numbers)) {
+        e.preventDefault();
+        window.editorBridge.toggleLineNumbers();
       } else if (parseAndMatchHotkey(e, customHotkeys.findAndReplace)) {
         e.preventDefault();
         toggleFindAndReplaceBar();
+      } else if (parseAndMatchHotkey(e, customHotkeys.bold)) {
+        e.preventDefault();
+        execCmd("bold");
+      } else if (parseAndMatchHotkey(e, customHotkeys.italic)) {
+        e.preventDefault();
+        execCmd("italic");
+      } else if (parseAndMatchHotkey(e, customHotkeys.underline)) {
+        e.preventDefault();
+        execCmd("underline");
+      } else if (parseAndMatchHotkey(e, customHotkeys.strikethrough)) {
+        e.preventDefault();
+        execCmd("strikethrough");
+      } else if (parseAndMatchHotkey(e, customHotkeys.code)) {
+        e.preventDefault();
+        execCmd("code");
+      } else if (parseAndMatchHotkey(e, customHotkeys.link)) {
+        e.preventDefault();
+        execCmd("link");
+      } else if (parseAndMatchHotkey(e, customHotkeys.blockQuote)) {
+        e.preventDefault();
+        execCmd("blockQuote");
+      } else if (parseAndMatchHotkey(e, customHotkeys.codeBlock)) {
+        e.preventDefault();
+        execCmd("codeBlock");
+      } else if (parseAndMatchHotkey(e, customHotkeys.bulletedList)) {
+        e.preventDefault();
+        execCmd("bulletedList");
+      } else if (parseAndMatchHotkey(e, customHotkeys.numberedList)) {
+        e.preventDefault();
+        execCmd("numberedList");
+      } else if (parseAndMatchHotkey(e, customHotkeys.todoList)) {
+        e.preventDefault();
+        execCmd("todoList");
+      } else if (parseAndMatchHotkey(e, customHotkeys.indent)) {
+        e.preventDefault();
+        execCmd("indent");
+      } else if (parseAndMatchHotkey(e, customHotkeys.outdent)) {
+        e.preventDefault();
+        execCmd("outdent");
+      } else if (parseAndMatchHotkey(e, customHotkeys.horizontalLine)) {
+        e.preventDefault();
+        execCmd("horizontalLine");
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_p)) {
+        e.preventDefault();
+        execCmd("heading", { value: "paragraph" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_1)) {
+        e.preventDefault();
+        execCmd("heading", { value: "heading1" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_2)) {
+        e.preventDefault();
+        execCmd("heading", { value: "heading2" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_3)) {
+        e.preventDefault();
+        execCmd("heading", { value: "heading3" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_4)) {
+        e.preventDefault();
+        execCmd("heading", { value: "heading4" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_5)) {
+        e.preventDefault();
+        execCmd("heading", { value: "heading5" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.heading_6)) {
+        e.preventDefault();
+        execCmd("heading", { value: "heading6" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_yellow)) {
+        e.preventDefault();
+        execCmd("highlight", { value: "yellowMarker" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_green)) {
+        e.preventDefault();
+        execCmd("highlight", { value: "greenMarker" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_pink)) {
+        e.preventDefault();
+        execCmd("highlight", { value: "pinkMarker" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_blue)) {
+        e.preventDefault();
+        execCmd("highlight", { value: "blueMarker" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_red_pen) || parseAndMatchHotkey(e, customHotkeys.highlight_red)) {
+        e.preventDefault();
+        execCmd("highlight", { value: "redPen" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_green_pen)) {
+        e.preventDefault();
+        execCmd("highlight", { value: "greenPen" });
+      } else if (parseAndMatchHotkey(e, customHotkeys.highlight_remove)) {
+        e.preventDefault();
+        execCmd("highlight", { value: null });
       }
     }, true);
   }
@@ -138412,6 +138987,14 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
         activeAdapter.setLineWrap(isLineWrapEnabled);
       }
     },
+    toggleLineNumbers: function() {
+      if (activeAdapter && typeof activeAdapter.toggleLineNumbers === "function") {
+        const state = activeAdapter.toggleLineNumbers();
+        if (window.AndroidNative && typeof window.AndroidNative.showToast === "function") {
+          window.AndroidNative.showToast(state ? "Line numbers enabled" : "Line numbers disabled");
+        }
+      }
+    },
     setHotkeys: function(hotkeysJson) {
       if (!hotkeysJson) return;
       try {
@@ -138431,6 +139014,8 @@ Original error: ${originalError.name}: ${originalError.message}` : "";
     insertImage: function(imageUrl, altText = "") {
       if (activeAdapter && activeAdapter.mode === "rich_text" && editorInstance) {
         editorInstance.execute("insertImage", { source: imageUrl, alt: altText });
+      } else if (activeAdapter && typeof activeAdapter.insertImage === "function") {
+        activeAdapter.insertImage(imageUrl, altText);
       } else if (activeAdapter) {
         const imgMarkdown = `![${altText}](${imageUrl})`;
         const cur = activeAdapter.getMarkdown();
