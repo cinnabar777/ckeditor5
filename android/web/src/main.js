@@ -545,6 +545,114 @@ function cmOutdentSelection(view, spaces = '  ') {
   view.focus();
 }
 
+
+function parseTableCells(doc, startLineNum, endLineNum) {
+  const cells = [];
+  for (let lNum = startLineNum; lNum <= endLineNum; lNum++) {
+    const line = doc.line(lNum);
+    const text = line.text;
+    const trimmed = text.trim();
+    if (!trimmed.startsWith('|')) continue;
+    // Skip separator row (|---|---|)
+    if (/^\|\s*[:\-]+\s*(\|\s*[:\-]+\s*)+\|?$/.test(trimmed)) continue;
+
+    // Find unescaped pipe positions
+    const pipes = [];
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === '|' && (i === 0 || text[i - 1] !== '\')) {
+        pipes.push(line.from + i);
+      }
+    }
+    for (let c = 0; c < pipes.length - 1; c++) {
+      const pStart = pipes[c];
+      const pEnd = pipes[c + 1];
+      let cStart = pStart + 1;
+      while (cStart < pEnd && doc.sliceDoc(cStart, cStart + 1) === ' ') cStart++;
+      let cEnd = pEnd;
+      while (cEnd > cStart && doc.sliceDoc(cEnd - 1, cEnd) === ' ') cEnd--;
+      cells.push({ from: cStart, to: cEnd, lineNum: lNum });
+    }
+  }
+  return cells;
+}
+
+function navigateTableCell(view, direction) {
+  const state = view.state;
+  const pos = state.selection.main.head;
+  const line = state.doc.lineAt(pos);
+  const trimmed = line.text.trim();
+  if (!trimmed.startsWith('|')) return false;
+
+  // Find table block boundaries
+  let startL = line.number;
+  let endL = line.number;
+  for (let l = line.number; l >= 1; l--) {
+    if (state.doc.line(l).text.trim().startsWith('|')) startL = l;
+    else break;
+  }
+  for (let l = line.number; l <= state.doc.lines; l++) {
+    if (state.doc.line(l).text.trim().startsWith('|')) endL = l;
+    else break;
+  }
+
+  const cells = parseTableCells(state.doc, startL, endL);
+  if (cells.length === 0) return false;
+
+  // Find current cell index
+  let currentIdx = -1;
+  for (let i = 0; i < cells.length; i++) {
+    if (pos >= cells[i].from - 1 && pos <= cells[i].to + 1) {
+      currentIdx = i;
+      break;
+    }
+  }
+
+  if (currentIdx === -1) {
+    // Find closest
+    let minDist = Infinity;
+    for (let i = 0; i < cells.length; i++) {
+      const dist = Math.abs(pos - cells[i].from);
+      if (dist < minDist) {
+        minDist = dist;
+        currentIdx = i;
+      }
+    }
+  }
+
+  const targetIdx = currentIdx + direction;
+  if (targetIdx < 0) {
+    // Exit table upward
+    const prevLinePos = Math.max(0, state.doc.line(startL).from - 1);
+    view.dispatch({ selection: { anchor: prevLinePos, head: prevLinePos }, scrollIntoView: true });
+    return true;
+  }
+  if (targetIdx >= cells.length) {
+    // Exit table downward
+    const nextLinePos = Math.min(state.doc.length, state.doc.line(endL).to + 1);
+    view.dispatch({ selection: { anchor: nextLinePos, head: nextLinePos }, scrollIntoView: true });
+    return true;
+  }
+
+  const targetCell = cells[targetIdx];
+  view.dispatch({
+    selection: { anchor: targetCell.from, head: targetCell.to },
+    scrollIntoView: true
+  });
+  return true;
+}
+
+export const tableNavigationKeymap = keymap.of([
+  {
+    key: 'Tab',
+    run: (view) => navigateTableCell(view, 1)
+  },
+  {
+    key: 'Shift-Tab',
+    run: (view) => navigateTableCell(view, -1)
+  }
+]);
+
+
 class CodeMirrorAdapter {
   constructor() {
     this.mode = currentEditorMode;
