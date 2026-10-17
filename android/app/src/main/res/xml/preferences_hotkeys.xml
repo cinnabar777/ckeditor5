@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (App Actions)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_new"
+            app:title="New Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+n)"
+            app:defaultValue="ctrl+n" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_open"
+            app:title="Open Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+o)"
+            app:defaultValue="ctrl+o" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_save"
+            app:title="Save Document Shortcut"
+            app:summary="Key combination (e.g. ctrl+s)"
+            app:defaultValue="ctrl+s" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_save_as"
+            app:title="Save As Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+s)"
+            app:defaultValue="ctrl+shift+s" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_export"
+            app:title="Export HTML / MHTML Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+e)"
+            app:defaultValue="ctrl+shift+e" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_image"
+            app:title="Insert Image Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+i)"
+            app:defaultValue="ctrl+shift+i" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_settings"
+            app:title="Open Settings Shortcut"
+            app:summary="Key combination (e.g. ctrl+,)"
+            app:defaultValue="ctrl+," />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_toggle_toolbar"
+            app:title="Toggle Bottom Toolbar Shortcut"
+            app:summary="Key combination (e.g. ctrl+t)"
+            app:defaultValue="ctrl+t" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_line_wrap"
+            app:title="Toggle Line Wrap Shortcut"
+            app:summary="Key combination (e.g. ctrl+alt+w)"
+            app:defaultValue="ctrl+alt+w" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_open_with"
+            app:title="Open with Alternate Engine Shortcut"
+            app:summary="Key combination (e.g. ctrl+shift+o)"
+            app:defaultValue="ctrl+shift+o" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_line_numbers"
+            app:title="Toggle Line Numbers Shortcut"
+            app:summary="Key combination (e.g. ctrl+alt+l)"
+            app:defaultValue="ctrl+alt+l" />
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
+
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Formatting &amp; Tools)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_bold"
+            app:title="Bold Shortcut"
+            app:defaultValue="ctrl+b" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_italic"
+            app:title="Italic Shortcut"
+            app:defaultValue="ctrl+i" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_underline"
+            app:title="Underline Shortcut"
+            app:defaultValue="ctrl+u" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_footnote"
+            app:title="Insert Footnote Shortcut"
+            app:defaultValue="ctrl+shift+f" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_strikethrough"
+            app:title="Strikethrough Shortcut"
+            app:defaultValue="ctrl+shift+x" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_code"
+            app:title="Inline Code Shortcut"
+            app:defaultValue="ctrl+e" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_link"
+            app:title="Link Shortcut"
+            app:defaultValue="ctrl+k" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_blockQuote"
+            app:title="Block Quote Shortcut"
+            app:defaultValue="ctrl+shift+q" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_codeBlock"
+            app:title="Code Block Shortcut"
+            app:defaultValue="ctrl+shift+c" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_bulletedList"
+            app:title="Bulleted List Shortcut"
+            app:defaultValue="ctrl+shift+8" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_numberedList"
+            app:title="Numbered List Shortcut"
+            app:defaultValue="ctrl+shift+7" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_todoList"
+            app:title="To-Do List Shortcut"
+            app:defaultValue="ctrl+shift+l" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_indent"
+            app:title="Increase Indent Shortcut"
+            app:defaultValue="tab" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_outdent"
+            app:title="Decrease Indent Shortcut"
+            app:defaultValue="shift+tab" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_horizontalLine"
+            app:title="Horizontal Line Shortcut"
+            app:defaultValue="ctrl+shift+h" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_findAndReplace"
+            app:title="Find &amp; Replace Shortcut"
+            app:defaultValue="ctrl+f" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_sourceEditing"
+            app:title="Source Code View Shortcut"
+            app:defaultValue="ctrl+shift+u" />
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
+
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Headings)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_p"
+            app:title="Paragraph / Normal Text Shortcut"
+            app:defaultValue="ctrl+alt+0" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_1"
+            app:title="Heading 1 Shortcut"
+            app:defaultValue="ctrl+alt+1" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_2"
+            app:title="Heading 2 Shortcut"
+            app:defaultValue="ctrl+alt+2" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_3"
+            app:title="Heading 3 Shortcut"
+            app:defaultValue="ctrl+alt+3" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_4"
+            app:title="Heading 4 Shortcut"
+            app:defaultValue="ctrl+alt+4" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_5"
+            app:title="Heading 5 Shortcut"
+            app:defaultValue="ctrl+alt+5" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_heading_6"
+            app:title="Heading 6 Shortcut"
+            app:defaultValue="ctrl+alt+6" />
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
+
+    <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Custom Keyboard Shortcuts (Highlight Markers &amp; Pens)">
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_yellow"
+            app:title="Yellow Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+y" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_green"
+            app:title="Green Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+g" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_pink"
+            app:title="Pink Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+p" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_blue"
+            app:title="Blue Marker Highlight Shortcut"
+            app:defaultValue="ctrl+alt+b" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_red_pen"
+            app:title="Red Pen Text Color Shortcut"
+            app:defaultValue="ctrl+alt+r" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_green_pen"
+            app:title="Green Pen Text Color Shortcut"
+            app:defaultValue="ctrl+alt+shift+g" />
+
+        <com.ckeditor.markdownapp.ResetEditTextPreference
+            app:key="pref_hotkey_highlight_remove"
+            app:title="Remove Highlight / Pen Shortcut"
+            app:defaultValue="ctrl+alt+x" />
+    </com.ckeditor.markdownapp.ResetPreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

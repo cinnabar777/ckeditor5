@@ -26,9 +26,7 @@ import {
 ClassicEditor
 	.create( {
 		licenseKey: '<YOUR_LICENSE_KEY>', // Or 'GPL'.
-		plugins: [
-			Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, LinkImage
-		],
+		plugins: [ Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, LinkImage ],
 		toolbar: [ 'insertImage', /* ... */ ],
 		image: {
 			// Configuration.

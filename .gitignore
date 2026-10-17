@@ -40,3 +40,9 @@ scripts/memory/assets/*.css
 
 # Ignore local environment variables.
 .env
+
+# Android build artifacts and images
+android/app/build/
+android/.gradle/
+android/app/src/main/assets/www/
+images/
