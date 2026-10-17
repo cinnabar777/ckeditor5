@@ -5,7 +5,6 @@ import { markdown as cmMarkdown } from '@codemirror/lang-markdown';
 import { syntaxHighlighting, syntaxTree, HighlightStyle } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
 import { GFM, Table as GFMTable, Strikethrough as GFMStrikethrough, TaskList as GFMTaskList } from '@lezer/markdown';
-import { search, SearchQuery, setSearchQuery, findNext, findPrevious, replaceNext, replaceAll, highlightSelectionMatches } from '@codemirror/search';
 
 let activeAdapter = null;
 let currentEditorMode = 'wysiwyg'; // 'wysiwyg' | 'live_preview' | 'source'
@@ -173,50 +172,112 @@ class ImagePreviewWidget extends WidgetType {
 }
 
 class GFMTableWidget extends WidgetType {
-  constructor(tableText) {
+  constructor(tableText, from, to) {
     super();
     this.tableText = tableText;
+    this.from = from;
+    this.to = to;
   }
 
-  toDOM() {
+  eq(other) {
+    return (
+      other instanceof GFMTableWidget &&
+      other.tableText === this.tableText &&
+      other.from === this.from &&
+      other.to === this.to
+    );
+  }
+
+  ignoreEvent(event) {
+    return true;
+  }
+
+  toDOM(view) {
     const container = document.createElement('div');
     container.className = 'cm-gfm-table-container';
-    container.style.cssText = 'overflow-x: auto; margin: 8px 0; border: 1px solid var(--table-border-color, var(--border-color, #444)); border-radius: 6px;';
+    container.style.cssText =
+      'overflow-x: auto; margin: 12px 0; border: 1px solid var(--table-border-color, var(--border-color, #444)); border-radius: 6px; position: relative; width: 100%; box-sizing: border-box; background-color: var(--bg-color, #000);';
 
     const table = document.createElement('table');
-    table.style.cssText = 'width: 100%; border-collapse: collapse; color: var(--text-color, #ffffff); font-size: var(--body-font-size, 16px);';
+    table.style.cssText =
+      'width: 100%; border-collapse: collapse; color: var(--text-color, #ffffff); font-size: var(--body-font-size, 16px); table-layout: auto;';
 
-    const lines = this.tableText.trim().split('\n').filter(l => l.trim().length > 0);
-    if (lines.length > 0) {
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      const headerCells = lines[0].split('|').map(c => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+    const lines = this.tableText
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
 
-      headerCells.forEach(cellText => {
-        const th = document.createElement('th');
-        th.style.cssText = 'border: 1px solid var(--table-border-color, var(--border-color, #444)); padding: 8px 12px; background-color: var(--table-header-bg, rgba(255,255,255,0.12)); font-weight: bold; text-align: left;';
-        th.textContent = cellText;
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
+    if (lines.length === 0) return container;
 
-      const tbody = document.createElement('tbody');
-      const dataLines = lines.slice(1).filter(l => !l.match(/^\|?\s*[-:]+[-|\s:]*$/));
+    const isSeparator = (line) =>
+      /^\|?\s*[:?]-+[:?]?(\s*\|\s*[:?]-+[:?]?)*\s*\|?$/.test(line);
 
-      dataLines.forEach(lineText => {
-        const tr = document.createElement('tr');
-        const cells = lineText.split('|').map(c => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
-        cells.forEach(cellText => {
-          const td = document.createElement('td');
-          td.style.cssText = 'border: 1px solid var(--table-border-color, var(--border-color, #444)); padding: 8px 12px; text-align: left;';
-          td.textContent = cellText;
-          tr.appendChild(td);
+    const parseCells = (line) => {
+      let trimmed = line.trim();
+      if (trimmed.startsWith('|')) trimmed = trimmed.slice(1);
+      if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1);
+      return trimmed.split('|').map(c => c.trim());
+    };
+
+    const headerLine = lines[0];
+    const dataLines = lines.slice(1).filter(l => !isSeparator(l));
+
+    const headers = parseCells(headerLine);
+    const rows = dataLines.map(parseCells);
+
+    const updateDoc = () => {
+      const headerRowStr = '| ' + headers.join(' | ') + ' |';
+      const sepRowStr = '| ' + headers.map(() => '---').join(' | ') + ' |';
+      const dataRowStrs = rows.map(r => '| ' + r.join(' | ') + ' |');
+
+      const newMarkdown = [headerRowStr, sepRowStr, ...dataRowStrs].join('\n');
+      if (newMarkdown !== this.tableText) {
+        view.dispatch({
+          changes: { from: this.from, to: this.to, insert: newMarkdown }
         });
-        tbody.appendChild(tr);
+      }
+    };
+
+    const thead = document.createElement('thead');
+    const trHead = document.createElement('tr');
+    headers.forEach((hText, colIdx) => {
+      const th = document.createElement('th');
+      th.contentEditable = 'true';
+      th.style.cssText =
+        'border: 1px solid var(--table-border-color, var(--border-color, #444)); padding: 8px 12px; background-color: var(--table-header-bg, rgba(255,255,255,0.12)); font-weight: bold; text-align: left; outline: none; min-width: 60px; color: var(--text-color, #ffffff);';
+      th.textContent = hText;
+      th.addEventListener('input', () => {
+        headers[colIdx] = th.textContent || '';
       });
-      table.appendChild(tbody);
-    }
+      th.addEventListener('blur', () => {
+        updateDoc();
+      });
+      trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    rows.forEach((rowCells, rowIdx) => {
+      const tr = document.createElement('tr');
+      while (rowCells.length < headers.length) rowCells.push('');
+      rowCells.forEach((cellText, colIdx) => {
+        const td = document.createElement('td');
+        td.contentEditable = 'true';
+        td.style.cssText =
+          'border: 1px solid var(--table-border-color, var(--border-color, #444)); padding: 8px 12px; text-align: left; outline: none; min-width: 60px; color: var(--text-color, #ffffff);';
+        td.textContent = cellText;
+        td.addEventListener('input', () => {
+          rows[rowIdx][colIdx] = td.textContent || '';
+        });
+        td.addEventListener('blur', () => {
+          updateDoc();
+        });
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
 
     container.appendChild(table);
     return container;
@@ -507,8 +568,6 @@ class CodeMirrorAdapter {
         rectangularSelection(),
         crosshairCursor(),
         highlightActiveLine(),
-        search({ top: true }),
-        highlightSelectionMatches(),
         cmMarkdown({ extensions: [GFM, GFMTable, GFMStrikethrough, GFMTaskList] }),
         syntaxHighlighting(customHighlightStyle),
         livePreviewPlugin,
@@ -580,8 +639,7 @@ class CodeMirrorAdapter {
     const currentDoc = this.view.state.doc.toString();
     if (currentDoc !== text) {
       this.view.dispatch({
-        changes: { from: 0, to: currentDoc.length, insert: text || '' },
-        annotations: Transaction.addToHistory.of(false)
+        changes: { from: 0, to: currentDoc.length, insert: text || '' }
       });
     }
     this.revision = 0;
@@ -1020,36 +1078,6 @@ function togglePopupStrip(groupKey, targetBtn, items) {
   strip.classList.remove('hidden');
 }
 
-function addLongPressToast(element, toastMessage) {
-  if (!element || !toastMessage) return;
-  let timer = null;
-
-  const startPress = () => {
-    timer = setTimeout(() => {
-      if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
-        window.AndroidNative.showToast(toastMessage);
-      }
-    }, 450);
-  };
-
-  const clearTimer = () => {
-    if (timer) {
-      clearTimeout(timer);
-      timer = null;
-    }
-  };
-
-  element.addEventListener('pointerdown', startPress);
-  element.addEventListener('pointerup', clearTimer);
-  element.addEventListener('pointercancel', clearTimer);
-  element.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    if (window.AndroidNative && typeof window.AndroidNative.showToast === 'function') {
-      window.AndroidNative.showToast(toastMessage);
-    }
-  });
-}
-
 function initCustomSearchBar() {
   const container = document.querySelector('#custom-search-bar');
   if (!container) return;
@@ -1057,15 +1085,12 @@ function initCustomSearchBar() {
   const searchInput = container.querySelector('#search-input');
   const replaceInput = container.querySelector('#replace-input');
   const counter = container.querySelector('#search-counter');
-  const btnPrev = container.querySelector('#search-btn-prev');
-  const btnNext = container.querySelector('#search-btn-next');
   const btnClose = container.querySelector('#search-btn-close');
   const btnReplaceOne = container.querySelector('#search-btn-replace-one');
   const btnReplaceAll = container.querySelector('#search-btn-replace-all');
   const btnCase = container.querySelector('#search-btn-case');
   const btnWord = container.querySelector('#search-btn-word');
   const btnRegex = container.querySelector('#search-btn-regex');
-  const btnHighlight = container.querySelector('#search-btn-highlight');
 
   let searchState = {
     matchCase: false,
@@ -1073,114 +1098,75 @@ function initCustomSearchBar() {
     useRegex: false
   };
 
-  const updateSearchQuery = () => {
-    if (!activeAdapter || !activeAdapter.view) return;
-    const view = activeAdapter.view;
-    const queryStr = searchInput.value || '';
-    const repStr = replaceInput.value || '';
-
-    if (!queryStr) {
+  const executeSearch = () => {
+    if (!activeAdapter) return;
+    const query = searchInput.value || '';
+    if (!query) {
       counter.textContent = '';
-      view.dispatch({ effects: setSearchQuery.of(new SearchQuery({ search: '' })) });
       return;
     }
 
+    const text = activeAdapter.getMarkdown();
     try {
-      const sq = new SearchQuery({
-        search: queryStr,
-        caseSensitive: searchState.matchCase,
-        regexp: searchState.useRegex,
-        wholeWord: searchState.wholeWords,
-        replace: repStr
-      });
-
-      view.dispatch({ effects: setSearchQuery.of(sq) });
-
-      const queryObj = sq.create(view.state);
-      let cursor = queryObj.cursor(view.state.doc);
-      let total = 0;
-      let currentIdx = 0;
-      const head = view.state.selection.main.head;
-
-      while (!cursor.next().done) {
-        total++;
-        if (cursor.value.from <= head && head <= cursor.value.to) {
-          currentIdx = total;
-        }
-      }
-      if (total > 0 && currentIdx === 0) currentIdx = 1;
-      counter.textContent = total > 0 ? `${currentIdx}/${total}` : '0/0';
+      const flags = searchState.matchCase ? 'g' : 'gi';
+      const searchPattern = searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const reg = new RegExp(searchPattern, flags);
+      const matches = [...text.matchAll(reg)];
+      counter.textContent = matches.length > 0 ? `1/${matches.length}` : '0/0';
     } catch (e) {
       counter.textContent = '0/0';
     }
   };
 
-  searchInput.addEventListener('input', updateSearchQuery);
-  replaceInput.addEventListener('input', updateSearchQuery);
+  searchInput.addEventListener('input', executeSearch);
 
   btnCase.onclick = () => {
     searchState.matchCase = !searchState.matchCase;
     btnCase.classList.toggle('active', searchState.matchCase);
-    updateSearchQuery();
+    executeSearch();
   };
 
   btnWord.onclick = () => {
     searchState.wholeWords = !searchState.wholeWords;
     btnWord.classList.toggle('active', searchState.wholeWords);
-    updateSearchQuery();
+    executeSearch();
   };
 
   btnRegex.onclick = () => {
     searchState.useRegex = !searchState.useRegex;
     btnRegex.classList.toggle('active', searchState.useRegex);
-    updateSearchQuery();
+    executeSearch();
   };
-
-  if (btnPrev) {
-    btnPrev.onclick = () => {
-      if (activeAdapter && activeAdapter.view) {
-        findPrevious(activeAdapter.view);
-        updateSearchQuery();
-      }
-    };
-  }
-
-  if (btnNext) {
-    btnNext.onclick = () => {
-      if (activeAdapter && activeAdapter.view) {
-        findNext(activeAdapter.view);
-        updateSearchQuery();
-      }
-    };
-  }
 
   btnClose.onclick = () => {
     toggleFindAndReplaceBar(false);
   };
 
   btnReplaceOne.onclick = () => {
-    if (activeAdapter && activeAdapter.view) {
-      replaceNext(activeAdapter.view);
-      updateSearchQuery();
+    const query = searchInput.value || '';
+    const rep = replaceInput.value || '';
+    if (query && activeAdapter) {
+      const current = activeAdapter.getMarkdown();
+      const flags = searchState.matchCase ? '' : 'i';
+      const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
+      const nextText = current.replace(reg, rep);
+      activeAdapter.setMarkdown(nextText);
+      executeSearch();
     }
   };
 
   btnReplaceAll.onclick = () => {
-    if (activeAdapter && activeAdapter.view) {
-      replaceAll(activeAdapter.view);
-      updateSearchQuery();
+    const query = searchInput.value || '';
+    const rep = replaceInput.value || '';
+    if (query && activeAdapter) {
+      const current = activeAdapter.getMarkdown();
+      const flags = searchState.matchCase ? 'g' : 'gi';
+      const reg = new RegExp(searchState.useRegex ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
+      const nextText = current.replaceAll(reg, rep);
+      activeAdapter.setMarkdown(nextText);
+      executeSearch();
     }
   };
-
-  addLongPressToast(btnPrev, 'Find Previous');
-  addLongPressToast(btnNext, 'Find Next');
-  addLongPressToast(btnHighlight, 'Highlight All Instances');
-  addLongPressToast(btnRegex, 'Regular Expression');
-  addLongPressToast(btnClose, 'Close Find & Replace');
-  addLongPressToast(btnReplaceOne, 'Replace One');
-  addLongPressToast(btnReplaceAll, 'Replace All');
-  addLongPressToast(btnCase, 'Match Case');
-  addLongPressToast(btnWord, 'Match Whole Word');
 }
 
 function toggleFindAndReplaceBar(forceState) {
