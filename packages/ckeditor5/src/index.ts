@@ -32,6 +32,7 @@ export * from '@ckeditor/ckeditor5-editor-inline';
 export * from '@ckeditor/ckeditor5-editor-multi-root';
 export * from '@ckeditor/ckeditor5-emoji';
 export * from '@ckeditor/ckeditor5-engine';
+export { ModelElement as Element, ModelTextProxy as TextProxy, ModelText as Text } from '@ckeditor/ckeditor5-engine';
 export * from '@ckeditor/ckeditor5-enter';
 export * from '@ckeditor/ckeditor5-essentials';
 export * from '@ckeditor/ckeditor5-find-and-replace';

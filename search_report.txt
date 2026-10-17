@@ -1,0 +1,41 @@
+Total matches: 798
+android/app/src/test/java/com/ckeditor/markdownapp/WindowPolicyTest.kt:1 [ckeditor] -> package com.ckeditor.markdownapp
+android/app/src/test/java/com/ckeditor/markdownapp/WindowPolicyTest.kt:1 [cke] -> package com.ckeditor.markdownapp
+android/app/src/main/AndroidManifest.xml:10 [ckeditor] -> android:theme="@style/Theme.CKEditorMarkdown">
+android/app/src/main/AndroidManifest.xml:10 [cke] -> android:theme="@style/Theme.CKEditorMarkdown">
+android/app/src/main/res/values/arrays.xml:40 [cke] -> <item>Android Local File Picker</item>
+android/app/src/main/res/values/arrays.xml:44 [cke] -> <item>picker</item>
+android/app/src/main/res/values/themes.xml:3 [ckeditor] -> <style name="Theme.CKEditorMarkdown" parent="Theme.MaterialComponents.DayNight.N
+android/app/src/main/res/values/themes.xml:3 [cke] -> <style name="Theme.CKEditorMarkdown" parent="Theme.MaterialComponents.DayNight.N
+android/app/src/main/res/drawable/ic_launcher_foreground.xml:8 [cke] -> <!-- Large, bold "CKE" Text Vector Logo fill (x=16..92, y=32..76) -->
+android/app/src/main/res/xml/preferences_styling_headings.xml:5 [ckeditor] -> <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Heading Font &amp;
+android/app/src/main/res/xml/preferences_styling_headings.xml:5 [cke] -> <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Heading Font &amp;
+android/app/src/main/res/xml/preferences_styling_headings.xml:6 [ckeditor] -> <com.ckeditor.markdownapp.ResetSeekBarPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:6 [cke] -> <com.ckeditor.markdownapp.ResetSeekBarPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:15 [ckeditor] -> <com.ckeditor.markdownapp.ResetSeekBarPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:15 [cke] -> <com.ckeditor.markdownapp.ResetSeekBarPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:24 [ckeditor] -> <com.ckeditor.markdownapp.ResetPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:24 [cke] -> <com.ckeditor.markdownapp.ResetPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:28 [ckeditor] -> </com.ckeditor.markdownapp.ResetPreferenceCategory>
+android/app/src/main/res/xml/preferences_styling_headings.xml:28 [cke] -> </com.ckeditor.markdownapp.ResetPreferenceCategory>
+android/app/src/main/res/xml/preferences_styling_headings.xml:30 [ckeditor] -> <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Typography &amp; Al
+android/app/src/main/res/xml/preferences_styling_headings.xml:30 [cke] -> <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Typography &amp; Al
+android/app/src/main/res/xml/preferences_styling_headings.xml:31 [ckeditor] -> <com.ckeditor.markdownapp.ResetListPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:31 [cke] -> <com.ckeditor.markdownapp.ResetListPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:39 [ckeditor] -> <com.ckeditor.markdownapp.ResetEditTextPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:39 [cke] -> <com.ckeditor.markdownapp.ResetEditTextPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:45 [ckeditor] -> <com.ckeditor.markdownapp.ResetEditTextPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:45 [cke] -> <com.ckeditor.markdownapp.ResetEditTextPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:51 [ckeditor] -> <com.ckeditor.markdownapp.ResetListPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:51 [cke] -> <com.ckeditor.markdownapp.ResetListPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:58 [ckeditor] -> </com.ckeditor.markdownapp.ResetPreferenceCategory>
+android/app/src/main/res/xml/preferences_styling_headings.xml:58 [cke] -> </com.ckeditor.markdownapp.ResetPreferenceCategory>
+android/app/src/main/res/xml/preferences_styling_headings.xml:60 [ckeditor] -> <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Underline / Text De
+android/app/src/main/res/xml/preferences_styling_headings.xml:60 [cke] -> <com.ckeditor.markdownapp.ResetPreferenceCategory app:title="Underline / Text De
+android/app/src/main/res/xml/preferences_styling_headings.xml:61 [ckeditor] -> <com.ckeditor.markdownapp.ResetListPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:61 [cke] -> <com.ckeditor.markdownapp.ResetListPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:69 [ckeditor] -> <com.ckeditor.markdownapp.ResetSeekBarPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:69 [cke] -> <com.ckeditor.markdownapp.ResetSeekBarPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:78 [ckeditor] -> <com.ckeditor.markdownapp.ResetColorPickerPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:78 [cke] -> <com.ckeditor.markdownapp.ResetColorPickerPreference
+android/app/src/main/res/xml/preferences_styling_headings.xml:83 [ckeditor] -> </com.ckeditor.markdownapp.ResetPreferenceCategory>
