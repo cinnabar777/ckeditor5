@@ -559,7 +559,7 @@ function parseTableCells(doc, startLineNum, endLineNum) {
     // Find unescaped pipe positions
     const pipes = [];
     for (let i = 0; i < text.length; i++) {
-      if (text[i] === '|' && (i === 0 || text[i - 1] !== '\')) {
+      if (text[i] === '|' && (i === 0 || text[i - 1] !== '\\')) {
         pipes.push(line.from + i);
       }
     }
