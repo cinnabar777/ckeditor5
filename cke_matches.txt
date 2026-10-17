@@ -1,0 +1,11 @@
+--- CKE5 / CKEditor references in main.js ---
+100:   constructor(checked, pos) {
+102:     this.checked = checked;
+109:     input.checked = this.checked;
+113:       const newText = this.checked ? '[ ]' : '[x]';
+381:             const isChecked = taskText.includes('[x]') || taskText.includes('[X]');
+384:               builder.push(Decoration.replace({ widget: new CheckboxWidget(isChecked, replaceFrom) }
+991:       showTableGridPickerModal();
+1030: function showTableGridPickerModal() {
+1051:         cell.className = 'grid-picker-cell';
+1077:     document.querySelectorAll('.grid-picker-cell').forEach(cell => {

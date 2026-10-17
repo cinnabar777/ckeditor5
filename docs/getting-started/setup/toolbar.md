@@ -321,9 +321,7 @@ DecoupledEditor
 		toolbar: [ 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList' ],
 	} )
 	.then( editor => {
-		document.querySelector( '#toolbarContainer' ).appendChild(
-			editor.ui.view.toolbar.element
-		);
+		document.querySelector( '#toolbarContainer' ).appendChild( editor.ui.view.toolbar.element );
 	} );
 ```
 ### Balloon toolbar

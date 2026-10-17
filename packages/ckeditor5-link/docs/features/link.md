@@ -148,8 +148,7 @@ ClassicEditor
 	.create( {
 		// ... Other configuration options ...
 		link: {
-			// Automatically add target="_blank" and rel="noopener noreferrer"
-			// to all external links.
+			// Automatically add target="_blank" and rel="noopener noreferrer" to all external links.
 			addTargetToExternalLinks: true,
 
 			// Let the users control the "download" attribute of each link.
@@ -285,8 +284,7 @@ ClassicEditor
 	.create( {
 		// ... Other configuration options ...
 		link: {
-			// You can use `s?` suffix like below to allow both
-			// `http` and `https` protocols at the same time.
+			// You can use `s?` suffix like below to allow both `http` and `https` protocols at the same time.
 			allowedProtocols: [ 'https?', 'tel', 'sms', 'sftp', 'smb', 'slack' ]
 		}
 		// More of the editor's configuration.
@@ -463,8 +461,7 @@ class SocialLinksPlugin extends Plugin {
 				}
 			],
 
-			// Optionally: You can customize your link preview
-			// by custom implementation of link getter.
+			// Optionally: You can customize your link preview by custom implementation of link getter.
 			getItem: href => {
 				return {
 					href,
