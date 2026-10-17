@@ -25,14 +25,14 @@ Listed below is an example configuration adding the {@link features/indent block
 
 <code-switcher>
 ```js
-import { ClassicEditor, Indent, IndentBlock, Bold } from 'ckeditor5';
+import { ClassicEditor, Indent, IndentBlock, BlockQuote } from 'ckeditor5';
 /* ... */
 
 ClassicEditor
 	.create( {
 		licenseKey: '<YOUR_LICENSE_KEY>', // Or 'GPL'.
-		plugins: [ Indent, IndentBlock, Bold, /* ... */ ], // Plugins import.
-		toolbar: [ 'outdent', 'indent', 'bold', /* ... */ ] // Toolbar configuration.
+		plugins: [ Indent, IndentBlock, BlockQuote, /* ... */ ], // Plugins import.
+		toolbar: [ 'outdent', 'indent', 'blockquote', /* ... */ ] // Toolbar configuration.
 	} )
 	.then( /* ... */ )
 	.catch( /* ... */ );
@@ -88,9 +88,7 @@ When integrating an editor into your application, you can customize its features
 
 <code-switcher>
 ```js
-import {
-	ClassicEditor, Heading, BlockQuote, Bold, Italic, Font, Link, List
-} from 'ckeditor5';
+import { ClassicEditor, Heading, BlockQuote, Bold, Italic, Font, Link, List } from 'ckeditor5';
 
 ClassicEditor
 	.create( {
@@ -111,23 +109,9 @@ ClassicEditor
 			],
 		heading: {
 			options: [
-				{
-					model: 'paragraph',
-					title: 'Paragraph',
-					class: 'ck-heading_paragraph'
-				},
-				{
-					model: 'heading1',
-					view: 'h1',
-					title: 'Heading 1',
-					class: 'ck-heading_heading1'
-				},
-				{
-					model: 'heading2',
-					view: 'h2',
-					title: 'Heading 2',
-					class: 'ck-heading_heading2'
-				}
+				{ model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+				{ model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+				{ model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
 			]
 		},
 		fontFamily: {
@@ -175,9 +159,7 @@ import { ClassicEditor, Heading, BlockQuote, Bold, Italic, Link, List } from 'ck
 ClassicEditor
 	.create( {
 		removePlugins: [ 'Heading' ], // Remove a plugin from the setup.
-		toolbar: [
-			'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote', 'link'
-		]
+		toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' , 'link' ]
 	} )
 	.catch( error => {
 		console.log( error );
@@ -213,14 +195,11 @@ This is a good time to remind you that some plugins in CKEditor&nbsp;5 depend on
 
 <code-switcher>
 ```js
-import {
-	ClassicEditor, Heading, BlockQuote, Bold, Italic, Autolink, Link, List
-} from 'ckeditor5';
+import { ClassicEditor, Heading, BlockQuote, Bold, Italic, Autolink, Link, List } from 'ckeditor5';
 
 ClassicEditor
 	.create( {
-		// Remove a few plugins from the setup.
-		removePlugins: [ 'Heading', 'Link', 'Autolink' ],
+		removePlugins: [ 'Heading', 'Link', 'Autolink' ], // Remove a few plugins from the setup.
 		toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
 	} )
 	.catch( error => {
